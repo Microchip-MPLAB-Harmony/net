@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCP_H__
-#define __TCP_H__
+#ifndef H__TCP_H__
+#define H__TCP_H__
 
 
 // DOM-IGNORE-BEGIN
@@ -117,6 +117,9 @@ typedef int16_t TCP_SOCKET;
 
   Description:
     Enumeration describing the possible states of a TCP socket.
+ 
+  Remarks:
+    8 bit value only.
 */
 
 typedef enum
@@ -147,15 +150,18 @@ typedef enum
 
   Description:
     Enumeration describing the possible flags of a TCP socket.
+ 
+  Remarks:
+    At most 16 bits.
 */
 
 typedef enum
 {
-    TCP_SOCKET_FLAG_NONE        = 0,        // No flag set, invalid socket
-    TCP_SOCKET_FLAG_VALID       = 0x01,     // socket exists: validity flag
-    TCP_SOCKET_FLAG_CONNECTED   = 0x02,     // socket is currently connected
-    TCP_SOCKET_FLAG_RST         = 0x04,     // remote party issued a reset
-    TCP_SOCKET_FLAG_FIN         = 0x08,     // remote party issued a FIN
+    TCP_SOCKET_FLAG_NONE        = 0x00U,    // No flag set, invalid socket
+    TCP_SOCKET_FLAG_VALID       = 0x01U,    // socket exists: validity flag
+    TCP_SOCKET_FLAG_CONNECTED   = 0x02U,    // socket is currently connected
+    TCP_SOCKET_FLAG_RST         = 0x04U,    // remote party issued a reset
+    TCP_SOCKET_FLAG_FIN         = 0x08U,    // remote party issued a FIN
 } TCP_SOCKET_FLAGS;
 
 
@@ -201,12 +207,12 @@ typedef struct
 */
 typedef enum
 {
-    TCP_ADJUST_GIVE_REST_TO_RX  = 0x01,     // Resize flag: extra bytes go to RX
-    TCP_ADJUST_GIVE_REST_TO_TX  = 0x02,     // Resize flag: extra bytes go to TX
-    TCP_ADJUST_PRESERVE_RX      = 0x04,     // Resize flag: attempt to preserve RX buffer
-    TCP_ADJUST_PRESERVE_TX      = 0x08,     // Resize flag: attempt to preserve TX buffer
-    TCP_ADJUST_TX_ONLY          = 0x10,     // Resize flag: adjust the TX buffer only
-    TCP_ADJUST_RX_ONLY          = 0x20,     // Resize flag: adjust the RX buffer only
+    TCP_ADJUST_GIVE_REST_TO_RX  = 0x01U,    // Resize flag: extra bytes go to RX
+    TCP_ADJUST_GIVE_REST_TO_TX  = 0x02U,    // Resize flag: extra bytes go to TX
+    TCP_ADJUST_PRESERVE_RX      = 0x04U,    // Resize flag: attempt to preserve RX buffer
+    TCP_ADJUST_PRESERVE_TX      = 0x08U,    // Resize flag: attempt to preserve TX buffer
+    TCP_ADJUST_TX_ONLY          = 0x10U,    // Resize flag: adjust the TX buffer only
+    TCP_ADJUST_RX_ONLY          = 0x20U,    // Resize flag: adjust the RX buffer only
 
 }TCP_ADJUST_FLAGS;
 
@@ -342,7 +348,7 @@ typedef enum
 typedef enum
 {
     // TX related signals
-    TCPIP_TCP_SIGNAL_TX_DONE         = 0x0001,  // A TCP packet was successfully 
+    TCPIP_TCP_SIGNAL_TX_DONE         = 0x0001U, // A TCP packet was successfully 
                                                 // transmitted on the interface.
                                                 // This may indicate or not that new 
                                                 // data can be sent with this socket.
@@ -357,36 +363,36 @@ typedef enum
         //      4: This notification is the result of an user action (explicit call to 
         //         TCPIP_TCP_Flush) or as a result of the internal TCP state machine
 
-    TCPIP_TCP_SIGNAL_TX_DATA_DONE    = 0x0002,   // A TCP data packet carrying valid payload 
+    TCPIP_TCP_SIGNAL_TX_DATA_DONE    = 0x0002U, // A TCP data packet carrying valid payload 
                                                  // was successfully transmitted on the interface.
                                                 // This may indicate or not that new data can be 
                                                 // sent with this socket.
                                                 // Note: The previous notes for TCPIP_TCP_SIGNAL_TX_DONE 
                                                 // still apply.
                                                
-    TCPIP_TCP_SIGNAL_TX_SPACE        = 0x0004,  // New TX space is available in the socket TX buffer.
+    TCPIP_TCP_SIGNAL_TX_SPACE        = 0x0004U, // New TX space is available in the socket TX buffer.
                                                 // This event signals that the remote party has acknowledged 
                                                 // some data and, as a result, TX buffer space is available.
 
-    TCPIP_TCP_SIGNAL_TX_RST          = 0x0008,  // Reset sent to the remote host and connection is reset
+    TCPIP_TCP_SIGNAL_TX_RST          = 0x0008U, // Reset sent to the remote host and connection is reset
 
     // RX related signals
-    TCPIP_TCP_SIGNAL_ESTABLISHED     = 0x0100,  // Socket established a connection (client or server socket)
+    TCPIP_TCP_SIGNAL_ESTABLISHED     = 0x0100U, // Socket established a connection (client or server socket)
 
-    TCPIP_TCP_SIGNAL_RX_DATA         = 0x0200,  // A data packet was successfully received and there is data 
+    TCPIP_TCP_SIGNAL_RX_DATA         = 0x0200U, // A data packet was successfully received and there is data 
                                                 // available for this socket
 
-    TCPIP_TCP_SIGNAL_RX_FIN          = 0x0400,  // Remote host finished its data and sent a FIN; 
+    TCPIP_TCP_SIGNAL_RX_FIN          = 0x0400U, // Remote host finished its data and sent a FIN; 
 
-    TCPIP_TCP_SIGNAL_RX_RST          = 0x0800,  // Remote host reset the connection; 
+    TCPIP_TCP_SIGNAL_RX_RST          = 0x0800U, // Remote host reset the connection; 
 
-    TCPIP_TCP_SIGNAL_KEEP_ALIVE_TMO  = 0x1000,  // Keep alive has timed out;  Connection to the remote 
+    TCPIP_TCP_SIGNAL_KEEP_ALIVE_TMO  = 0x1000U, // Keep alive has timed out;  Connection to the remote 
                                                 // host has been aborted;
 
     // interface related signals
-    TCPIP_TCP_SIGNAL_IF_DOWN         = 0x2000,  // associated interface is going down;
+    TCPIP_TCP_SIGNAL_IF_DOWN         = 0x2000U, // associated interface is going down;
                                                 // sockets connected on this interface will be disconnected, but still alive
-    TCPIP_TCP_SIGNAL_IF_CHANGE       = 0x4000,  // associated interface has changed address
+    TCPIP_TCP_SIGNAL_IF_CHANGE       = 0x4000U, // associated interface has changed address
                                                 // sockets connected on this interface will be disconnected, but still alive
 
 }TCPIP_TCP_SIGNAL_TYPE;
@@ -454,7 +460,7 @@ typedef const void* TCPIP_TCP_PROCESS_HANDLE;
 /* TCP packet handler Pointer
 
   Function:
-    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
   Summary:
     Pointer to a function(handler) that will get called to process an incoming TCP packet.
@@ -502,7 +508,7 @@ typedef const void* TCPIP_TCP_PROCESS_HANDLE;
     See the tcpip_mac.h for details.
     
  */
-typedef bool(*TCPIP_TCP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+typedef bool(*TCPIP_TCP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
 
 // *****************************************************************************
@@ -519,7 +525,7 @@ typedef bool(*TCPIP_TCP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP
 //
 typedef struct
 {
-    int             nSockets;       // Number of sockets to be created
+    unsigned int    nSockets;       // Number of sockets to be created
     uint16_t        sktTxBuffSize;  // Size of the socket TX buffer
     uint16_t        sktRxBuffSize;  // Size of the socket RX buffer
 
@@ -1058,7 +1064,7 @@ bool  TCPIP_TCP_Close(TCP_SOCKET hTCP);
 //*****************************************************************************
 /*
   Function:
-    bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
+    bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* pInfo)
 
   Summary:
     Obtains information about a currently open socket.
@@ -1071,7 +1077,8 @@ bool  TCPIP_TCP_Close(TCP_SOCKET hTCP);
     TCP is initialized and the socket is connected.
 
   Parameters:
-    hTCP - The socket to check.
+    hTCP    - The socket to check.
+    pInfo   - address to store the socket info
 
   Returns:
     - true  - if the call succeeded
@@ -1166,7 +1173,7 @@ uint16_t  TCPIP_TCP_PutIsReady(TCP_SOCKET hTCP);
     The default TCP_AUTO_TRANSMIT_TIMEOUT_VAL is 40 ms.
 
  */
-uint16_t  TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* Data, uint16_t Len);
+uint16_t  TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len);
 
 //*****************************************************************************
 /*
@@ -1200,7 +1207,7 @@ uint16_t  TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* Data, uint16_t Len)
     byte. Save the return value as the new starting *data pointer otherwise.
 
  */
-const uint8_t*      TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* Data);
+const uint8_t*      TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* data);
 
 
 //*****************************************************************************
@@ -1289,7 +1296,7 @@ uint16_t  TCPIP_TCP_FifoTxFreeGet(TCP_SOCKET hTCP);
 //******************************************************************************
 /*
   Function:
-    uint16_t  TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t byte)
+    uint16_t  TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t data)
 
   Description:
     Writes a single byte to a TCP socket.
@@ -1300,7 +1307,7 @@ uint16_t  TCPIP_TCP_FifoTxFreeGet(TCP_SOCKET hTCP);
 
   Parameters:
     hTCP - The socket to which data is to be written.
-    byte - The byte to write.
+    data - The byte to write.
 
   Return Values:
     - 1 - The byte was written to the transmit buffer.
@@ -1310,7 +1317,7 @@ uint16_t  TCPIP_TCP_FifoTxFreeGet(TCP_SOCKET hTCP);
     Note that this function is inefficient and its use is discouraged.
     A buffered approach (TCPIP_TCP_ArrayPut) is preferred.
   */
-uint16_t  TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t byte);
+uint16_t  TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t data);
 
 //*****************************************************************************
 /*
@@ -1343,7 +1350,7 @@ uint16_t  TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP);
 //*****************************************************************************
 /*
   Function:
-    uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
+    uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* dataBuff, uint16_t len)
 
   Summary:
     Reads an array of data bytes from a TCP socket's RX buffer/FIFO.
@@ -1357,7 +1364,7 @@ uint16_t  TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP);
 
   Parameters:
     hTCP - The socket from which data is to be read.
-    buffer - Pointer to the array to store data that was read.
+    dataBuff - Pointer to the array to store data that was read.
     len  - Number of bytes to be read.
 
   Returns:
@@ -1368,7 +1375,7 @@ uint16_t  TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP);
     If the supplied buffer is null, the data is simply discarded.
 
  */
-uint16_t  TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t count);
+uint16_t  TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* dataBuff, uint16_t len);
 
 //*****************************************************************************
 /*
@@ -1507,7 +1514,7 @@ uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP);
 // *****************************************************************************
 /*
   Function:
-    uint16_t  TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* byte)
+    uint16_t  TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* data)
 
   Summary:
     Retrieves a single byte to a TCP socket.
@@ -1521,7 +1528,7 @@ uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP);
 
   Parameters:
     hTCP - The socket from which to read.
-    byte - Pointer to location in which the read byte should be stored.
+    data - Pointer to location in which the read byte should be stored.
 
   Return Values:
     - 1 - A byte was read from the buffer.
@@ -1532,7 +1539,7 @@ uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP);
     A buffered approach (TCPIP_TCP_ArrayGet) is preferred.
 
   */
-uint16_t  TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* byte);
+uint16_t  TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* data);
 
 
 //*****************************************************************************
@@ -1870,7 +1877,7 @@ bool             TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNA
 
 // *****************************************************************************
 /* Function:
-    int TCPIP_TCP_SocketsNumberGet(void)
+    unsigned int TCPIP_TCP_SocketsNumberGet(void)
 
   Summary:
     Returns the number of existent TCP sockets.
@@ -1890,7 +1897,7 @@ bool             TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNA
     The number of TCP sockets
  */
 
-int     TCPIP_TCP_SocketsNumberGet(void);
+unsigned int     TCPIP_TCP_SocketsNumberGet(void);
 
 // *****************************************************************************
 /* Function:
@@ -1978,7 +1985,7 @@ bool    TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable);
 
   Example:
     <code>
-    TCPIP_TCP_PROCESS_HANDLE pktHandle = TCPIP_TCP_PacketHandlerRegister( myPktHandler, myParam );
+    TCPIP_TCP_PROCESS_HANDLE procHandle = TCPIP_TCP_PacketHandlerRegister( myPktHandler, myParam );
     </code>
 
   Remarks:
@@ -1995,7 +2002,7 @@ TCPIP_TCP_PROCESS_HANDLE     TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HA
 //*******************************************************************************
 /*
   Function:
-    bool    TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE pktHandle);
+    bool    TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE procHandle);
 
   Summary:
     Deregisters a previously registered packet handler.
@@ -2007,7 +2014,7 @@ TCPIP_TCP_PROCESS_HANDLE     TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HA
     TCP properly initialized
 
   Parameters:
-    pktHandle   - TCPIP packet handle obtained by a call to TCPIP_TCP_PacketHandlerRegister
+    procHandle   - TCPIP packet process handle obtained by a call to TCPIP_TCP_PacketHandlerRegister
 
 
   Returns:
@@ -2017,8 +2024,8 @@ TCPIP_TCP_PROCESS_HANDLE     TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HA
   Example:
     <code>
     TCPIP_TCP_PROCESS_HANDLE myHandle = TCPIP_TCP_PacketHandlerRegister(myPacketHandler, myParam );
-    // process incoming packets
-    // now we're done with it
+    - process incoming packets
+    - now we're done with it
     TCPIP_TCP_PacketHandlerDeregister(myHandle);
     </code>
 
@@ -2026,7 +2033,7 @@ TCPIP_TCP_PROCESS_HANDLE     TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HA
     Exists only if TCPIP_TCP_EXTERN_PACKET_PROCESS is true 
 
   */
-bool    TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE pktHandle);
+bool    TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE procHandle);
 
 // *****************************************************************************
 /*
@@ -2059,7 +2066,7 @@ void  TCPIP_TCP_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __TCP_H__
+#endif  // H__TCP_H__
 
 /*
  End of File

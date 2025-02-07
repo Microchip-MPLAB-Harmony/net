@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -53,12 +53,12 @@ Microchip or any third party.
     TCP Header Data Types
   ***************************************************************************/
 
-#define FIN             (0x01)      // FIN Flag as defined in RFC
-#define SYN             (0x02)      // SYN Flag as defined in RFC
-#define RST             (0x04)      // Reset Flag as defined in RFC
-#define PSH             (0x08)      // Push Flag as defined in RFC
-#define ACK             (0x10)      // Acknowledge Flag as defined in RFC
-#define URG             (0x20)      // Urgent Flag as defined in RFC
+#define FIN             (0x01U)      // FIN Flag as defined in RFC
+#define SYN             (0x02U)      // SYN Flag as defined in RFC
+#define RST             (0x04U)      // Reset Flag as defined in RFC
+#define PSH             (0x08U)      // Push Flag as defined in RFC
+#define ACK             (0x10U)      // Acknowledge Flag as defined in RFC
+#define URG             (0x20U)      // Urgent Flag as defined in RFC
 
 
 
@@ -73,47 +73,47 @@ typedef struct
 } TCP_OPTIONS;                                  // TCP Options data structure                           
 
 // Indicates if this packet is a retransmission (no reset) or a new packet (reset required)
-#define SENDTCP_RESET_TIMERS    0x01
+#define SENDTCP_RESET_TIMERS    0x01U
 // Instead of transmitting normal data, a garbage octet is transmitted according to RFC 1122 section 4.2.3.6
-#define SENDTCP_KEEP_ALIVE      0x02
+#define SENDTCP_KEEP_ALIVE      0x02U
 
-// Internal _TcpSend result
+// Internal F_TcpSend result
 typedef enum
 {
     // positive success codes
-    _TCP_SEND_NOT_CONN  = 1,    // socket is not connected, no data is actually sent 
-    _TCP_SEND_OK        = 0,    // success
+    TCP_SEND_NOT_CONN  = 1,    // socket is not connected, no data is actually sent 
+    TCP_SEND_OK        = 0,    // success
 
     // negative failure codes
-    _TCP_SEND_IP_FAIL   = -1,   // IP layer rejected the packet
+    TCP_SEND_IP_FAIL   = -1,   // IP layer rejected the packet
                                 // most probably an ill formatted packet
-    _TCP_SEND_NO_PKT    = -2,   // socket has no packet, cannot send data
-    _TCP_SEND_NO_MEMORY = -3,   // out of memory; however the operation can be retried
-    _TCP_SEND_NO_IF     = -4,   // IP layer could not get an interface for this packet
-    _TCP_SEND_QUIET     = -5,   // TCP layer is in quiet time could not send this packet
-}_TCP_SEND_RES;
+    TCP_SEND_NO_PKT    = -2,   // socket has no packet, cannot send data
+    TCP_SEND_NO_MEMORY = -3,   // out of memory; however the operation can be retried
+    TCP_SEND_NO_IF     = -4,   // IP layer could not get an interface for this packet
+    TCP_SEND_QUIET     = -5,   // TCP layer is in quiet time could not send this packet
+}TCP_SEND_RES;
 
 // abort operation flags
 typedef enum
 {
-    _TCP_ABORT_FLAG_REGULAR     = 0x00,     // regular abort
-    _TCP_ABORT_FLAG_FORCE_CLOSE = 0x01,     // kill the socket according to its state
-    _TCP_ABORT_FLAG_SHUTDOWN    = 0x02,     // shutdown: kill no matter what
-}_TCP_ABORT_FLAGS;
+    TCP_ABORT_FLAG_REGULAR     = 0x00,     // regular abort
+    TCP_ABORT_FLAG_FORCE_CLOSE = 0x01,     // kill the socket according to its state
+    TCP_ABORT_FLAG_SHUTDOWN    = 0x02,     // shutdown: kill no matter what
+}TCP_ABORT_FLAGS;
 /****************************************************************************
   Section:
     TCB Definitions
   ***************************************************************************/
 
-static TCB_STUB** TCBStubs = 0;
+static TCB_STUB** TCBStubs = NULL;
 
 static int        tcpLockCount = 0;                 // lock protection counter
 static int        tcpInitCount = 0;                 // initialization counter
 
-static const void*  tcpHeapH = 0;                    // memory allocation handle
+static const void*  tcpHeapH = NULL;                 // memory allocation handle
 static unsigned int TcpSockets;                      // number of sockets in the current TCP configuration
 
-static tcpipSignalHandle    tcpSignalHandle = 0;
+static TCPIP_SIGNAL_HANDLE    tcpSignalHandle = NULL;
 
 static uint16_t             tcpDefTxSize;               // default size of the TX buffer
 static uint16_t             tcpDefRxSize;               // default size of the RX buffer
@@ -126,7 +126,7 @@ static bool                 tcpQuietDone;               // the quiet time has el
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 
 #if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
-static TCPIP_TCP_PACKET_HANDLER tcpPktHandler = 0;
+static TCPIP_TCP_PACKET_HANDLER tcpPktHandler = NULL;
 static const void* tcpPktHandlerParam;
 #endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
 
@@ -137,26 +137,26 @@ static uint32_t             sysTickFreq;            // the system tick counter f
     Function Prototypes
   ***************************************************************************/
 
-static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFlags);
-static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t len, TCPIP_MAC_PACKET* pRxPkt, TCPIP_TCP_SIGNAL_TYPE* pSktEvent);
-static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * remoteIP, const void * localIP, IP_ADDRESS_TYPE addressType);
-static void _TcpSwapHeader(TCP_HEADER* header);
-static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent);
-static void _TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuff, uint16_t txBuffSize, uint8_t* rxBuff, uint16_t rxBuffSize);
-static void _TcpSocketSetIdleState(TCB_STUB* pSkt);
+static TCP_SEND_RES F_TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFlags);
+static void F_TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_MAC_PACKET* pRxPkt, uint32_t* pSktEvent);
+static TCB_STUB* F_TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * remoteIP, const void * localIP, IP_ADDRESS_TYPE addressType);
+static void F_TcpSwapHeader(TCP_HEADER* header);
+static void F_TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent);
+static void F_TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuff, uint16_t txBuffSize, uint8_t* rxBuff, uint16_t rxBuffSize);
+static void F_TcpSocketSetIdleState(TCB_STUB* pSkt);
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-static void _TcpCleanup(void);
+static void F_TcpCleanup(void);
 #else
-#define _TcpCleanup();
+#define F_TcpCleanup();
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-#if (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
-static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType); 
-#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+#if (TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+static void F_TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType); 
+#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 
 // function to get the socket signal in a consistent/safe way
-static __inline__ uint16_t __attribute__((always_inline)) _TcpSktGetSignalLocked(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_FUNCTION* pSigHandler, const void** pSigParam)
+static __inline__ uint16_t __attribute__((always_inline)) F_TcpSktGetSignalLocked(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_FUNCTION* pSigHandler, const void** pSigParam)
 {
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     *pSigHandler = pSkt->sigHandler;
@@ -166,18 +166,67 @@ static __inline__ uint16_t __attribute__((always_inline)) _TcpSktGetSignalLocked
     return sigMask;
 }
 
-static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL_TYPE tcpEvent);
-static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN);
+// conversion helper functions
+static __inline__ TCPIP_TCP_SIGNAL_HANDLE __attribute__((always_inline)) FC_SigFunc2SigHndl(TCPIP_TCP_SIGNAL_FUNCTION sFunc)
+{
+    union
+    {
+        TCPIP_TCP_SIGNAL_FUNCTION   sFunc;
+        TCPIP_TCP_SIGNAL_HANDLE     sHandle;
+    }U_SIG_FNC_HANDLE;
+
+    U_SIG_FNC_HANDLE.sFunc = sFunc;
+    return U_SIG_FNC_HANDLE.sHandle;
+}
+
+static __inline__ TCPIP_TCP_SIGNAL_FUNCTION __attribute__((always_inline)) FC_SigHndl2SigFunc(TCPIP_TCP_SIGNAL_HANDLE sHandle)
+{
+    union
+    {
+        TCPIP_TCP_SIGNAL_HANDLE     sHandle;
+        TCPIP_TCP_SIGNAL_FUNCTION   sFunc;
+    }U_SIG_HNDL_FNC;
+
+    U_SIG_HNDL_FNC.sHandle = sHandle;
+    return U_SIG_HNDL_FNC.sFunc;
+}
+
+static __inline__ TCPIP_TCP_PACKET_HANDLER __attribute__((always_inline)) FC_ProcHndl2PktHndl(TCPIP_TCP_PROCESS_HANDLE procHandle)
+{
+    union
+    {
+        TCPIP_TCP_PROCESS_HANDLE procHandle;
+        TCPIP_TCP_PACKET_HANDLER pktHandler;
+    }U_PROC_PKT_HANDLE;
+
+    U_PROC_PKT_HANDLE.procHandle = procHandle;
+    return U_PROC_PKT_HANDLE.pktHandler;
+}
+
+static __inline__ TCPIP_TCP_PROCESS_HANDLE __attribute__((always_inline)) FC_PktHndl2ProcHndl(TCPIP_TCP_PACKET_HANDLER pktHandler)
+{
+    union
+    {
+        TCPIP_TCP_PACKET_HANDLER pktHandler;
+        TCPIP_TCP_PROCESS_HANDLE procHandle;
+    }U_PKT_PROC_HANDLE;
+
+    U_PKT_PROC_HANDLE.pktHandler = pktHandler;
+    return U_PKT_PROC_HANDLE.procHandle;
+}
+
+static void F_TcpAbort(TCB_STUB* pSkt, TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL_TYPE tcpEvent);
+static TCP_SEND_RES F_TcpDisconnect(TCB_STUB* pSkt, bool signalFIN);
 
 
 static void         TCPIP_TCP_Tick(void);
 
 static void         TCPIP_TCP_Process(void);
 
-static TCP_PORT     _TCP_EphemeralPortAllocate(void);
-static bool         _TCP_PortIsAvailable(TCP_PORT port);
+static TCP_PORT     F_TCP_EphemeralPortAllocate(void);
+static bool         F_TCP_PortIsAvailable(TCP_PORT port);
 
-static uint16_t     _TCP_ClientIPV4RemoteHash(const IPV4_ADDR* pAdd, TCB_STUB* pSkt);
+static uint16_t     F_TCP_ClientIPV4RemoteHash(const IPV4_ADDR* pAdd, TCB_STUB* pSkt);
 
 typedef enum
 {
@@ -187,21 +236,21 @@ typedef enum
 }TCP_OPEN_TYPE;
 
 
-static TCP_SOCKET   _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address);
+static TCP_SOCKET   F_TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* hostAddress);
 
-static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt);
+static TCP_SOCKET_FLAGS F_TCP_SktFlagsGet(TCB_STUB* pSkt);
 
-static uint32_t         _TCP_SktSetSequenceNo(const TCB_STUB* pSkt);
+static uint32_t         F_TCP_SktSetSequenceNo(const TCB_STUB* pSkt);
 
 #if defined (TCPIP_STACK_USE_IPV4)
-static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType);
-static TCP_V4_PACKET*   _Tcpv4AllocateTxPacketIfQueued(TCB_STUB * pSkt, bool resetOldPkt);
-static void             _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
-static void             _Tcpv4UnlinkDataSeg(TCP_V4_PACKET* pPkt);
-static void             _Tcpv4LinkDataSeg(TCP_V4_PACKET* pPkt, uint8_t* pBuff1, uint16_t bSize1, uint8_t* pBuff2, uint16_t bSize2);
-static bool             _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, uint16_t loadLen);
-static TCP_V4_PACKET*   _TxSktGetLockedV4Pkt(TCB_STUB* pSkt);
-static TCPIP_MAC_PACKET *_TxSktFreeLockedV4Pkt(TCB_STUB* pSkt);
+static TCP_V4_PACKET* F_TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType);
+static TCP_V4_PACKET*   F_Tcpv4AllocateTxPacketIfQueued(TCB_STUB * pSkt, bool resetOldPkt);
+static void             F_Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
+static void             F_Tcpv4UnlinkDataSeg(TCP_V4_PACKET* pTcpPkt);
+static void             F_Tcpv4LinkDataSeg(TCP_V4_PACKET* pTcpPkt, uint8_t* pBuff1, uint16_t bSize1, uint8_t* pBuff2, uint16_t bSize2);
+static bool             F_TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, uint16_t loadLen);
+static TCP_V4_PACKET*   F_TxSktGetLockedV4Pkt(TCB_STUB* pSkt);
+static TCPIP_MAC_PACKET *F_TxSktFreeLockedV4Pkt(TCB_STUB* pSkt);
 static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt);
 
 
@@ -211,55 +260,55 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt);
 #if defined (TCPIP_STACK_USE_IPV6)
 
 
-static IPV6_PACKET*     _TCPv6AllocateTxPacketStruct (TCB_STUB * stub);
-static void             _Tcpv6AckFnc (void * pkt, bool sent, const void * param);
-static void             _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pkt,  const void* param);
-static IPV6_PACKET*     _Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt);
-static IPV6_PACKET*     _TxSktGetLockedV6Pkt(TCB_STUB* pSkt, IPV6_PACKET** ppSktPkt, bool setQueued);
-static IPV6_PACKET*     _TxSktFreeLockedV6Pkt(TCB_STUB* pSkt);
+static IPV6_PACKET*     F_TCPv6AllocateTxPacketStruct (TCB_STUB * pSkt);
+static void             F_Tcpv6AckFnc (void * pkt, bool success, const void * param);
+static void             F_Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param);
+static IPV6_PACKET*     F_Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt);
+static IPV6_PACKET*     F_TxSktGetLockedV6Pkt(TCB_STUB* pSkt, IPV6_PACKET** ppSktPkt, bool setQueued);
+static IPV6_PACKET*     F_TxSktFreeLockedV6Pkt(TCB_STUB* pSkt);
 static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt);
 
 
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
-static bool         _TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt);
+static bool         F_TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt);
 
-static bool         _TCP_TxPktValid(TCB_STUB * pSkt);
+static bool         F_TCP_TxPktValid(TCB_STUB * pSkt);
 
-static void         _TCP_PayloadSet(TCB_STUB * stub, void* pPkt, uint8_t* payload1, uint16_t len1, uint8_t* payload2, uint16_t len2);
-static bool         _TCP_Flush(TCB_STUB * pSkt, void* pPkt, uint16_t hdrLen, uint16_t loadLen);
+static void         F_TCP_PayloadSet(TCB_STUB * pSkt, void* pPkt, uint8_t* payload1, uint16_t len1, uint8_t* payload2, uint16_t len2);
+static bool         F_TCP_Flush(TCB_STUB * pSkt, void* pPkt, uint16_t hdrLen, uint16_t loadLen);
 
-static bool         _TcpFlush(TCB_STUB* pSkt);
+static bool         F_TcpFlush(TCB_STUB* pSkt);
 
-static void         _TcpDiscardTx(TCB_STUB* pSkt);
+static void         F_TcpDiscardTx(TCB_STUB* pSkt);
 
-static uint16_t     _TCPIsPutReady(TCB_STUB* pSkt);
+static uint16_t     F_TCPIsPutReady(TCB_STUB* pSkt);
 
-static uint16_t     _TCPIsGetReady(TCB_STUB* pSkt);
+static uint16_t     F_TCPIsGetReady(TCB_STUB* pSkt);
 
-static uint16_t     _TCPGetRxFIFOFree(TCB_STUB* pSkt);
+static uint16_t     F_TCPGetRxFIFOFree(TCB_STUB* pSkt);
 
-static bool         _TCPSendWinIncUpdate(TCB_STUB* pSkt);
+static bool         F_TCPSendWinIncUpdate(TCB_STUB* pSkt);
 
-static uint16_t     _TCPSocketTxFreeSize(TCB_STUB* pSkt);
+static uint16_t     F_TCPSocketTxFreeSize(TCB_STUB* pSkt);
 
-static bool         _TCPNeedSend(TCB_STUB* pSkt);
+static bool         F_TCPNeedSend(TCB_STUB* pSkt);
 
-static void         _TCPSetHalfFlushFlag(TCB_STUB* pSkt);
+static void         F_TCPSetHalfFlushFlag(TCB_STUB* pSkt);
 
-static bool         _TCPSetSourceAddress(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* localAddress)
+static bool         F_TCPSetSourceAddress(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType, const IP_MULTI_ADDRESS* localAddress)
 {
-    if(localAddress == 0)
+    if(localAddress == NULL)
     {   // nothing to set
         return false;
     }
 
-    while(pSkt->addType == addType)
+    while(pSkt->addType == (uint8_t)addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
         if (addType == IP_ADDRESS_TYPE_IPV6)
         {
-            if(pSkt->pV6Pkt != 0)
+            if(pSkt->pV6Pkt != NULL)
             {
                TCPIP_IPV6_SourceAddressSet(pSkt->pV6Pkt, &localAddress->v6Add);
                return true;
@@ -284,63 +333,70 @@ static bool         _TCPSetSourceAddress(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType
 
 }
 
-static bool _TCP_TxPktValid(TCB_STUB * pSkt)
+static bool F_TCP_TxPktValid(TCB_STUB * pSkt)
 {
+
+    bool res;
 
     switch(pSkt->addType)
     {
 #if defined(TCPIP_STACK_USE_IPV6)
-        case IP_ADDRESS_TYPE_IPV6:
-            return pSkt->pV6Pkt != 0;
+        case (uint8_t)IP_ADDRESS_TYPE_IPV6:
+            res = pSkt->pV6Pkt != NULL;
+            break;
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
 #if defined(TCPIP_STACK_USE_IPV4)
-        case IP_ADDRESS_TYPE_IPV4:
-            return pSkt->pV4Pkt != 0;
+        case (uint8_t)IP_ADDRESS_TYPE_IPV4:
+            res = pSkt->pV4Pkt != NULL;
+            break;
             
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
         default:
-            return false;
+            res = false;
+            break;
     }
+
+    return res;
 
 }
 
 
-static void _TcpSocketBind(TCB_STUB* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_ADDRESS* srcAddress)
+static void F_TcpSocketBind(TCB_STUB* pSkt, const TCPIP_NET_IF* pNet, const IP_MULTI_ADDRESS* srcAddress)
 {
     pSkt->pSktNet = pNet;
 #if defined (TCPIP_STACK_USE_IPV6)
-    if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+    if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
     {
-        if(pSkt->pV6Pkt != 0)
+        if(pSkt->pV6Pkt != NULL)
         {
             pSkt->pV6Pkt->netIfH = pNet;
         }
     }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
-    _TCPSetSourceAddress(pSkt, pSkt->addType, srcAddress);
+   (void) F_TCPSetSourceAddress(pSkt, (IP_ADDRESS_TYPE)pSkt->addType, srcAddress);
 }
 
-/*static __inline__*/static  TCB_STUB* /*__attribute__((always_inline))*/ _TcpSocketChk(TCP_SOCKET hTCP)
+/*static __inline__*/static  TCB_STUB* /*__attribute__((always_inline))*/ F_TcpSocketChk(TCP_SOCKET hTCP)
 {
-    if(hTCP >= 0 && hTCP < TcpSockets)
+    if(hTCP >= 0 && (uint32_t)hTCP < TcpSockets)
     {
         return TCBStubs[hTCP];
     }
 
-    return 0;
+    return NULL;
 }
 
 
-static __inline__ bool __attribute__((always_inline)) _TCP_IsConnected(TCB_STUB* pSkt)
+static __inline__ bool __attribute__((always_inline)) F_TCP_IsConnected(TCB_STUB* pSkt)
 {
-    return (pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_1 || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_2 || pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT);
+    return (pSkt->smState == (uint8_t)TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1 || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2 || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT);
 } 
 
-#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
-static const char* _tcpTraceStateName[] = 
+#if ((TCPIP_TCP_DEBUG_LEVEL & (TCPIP_TCP_DEBUG_MASK_TRACE_STATE | TCPIP_TCP_DEBUG_MASK_HANDLE_SEG)) != 0)
+static const char* s_tcpTraceStateName[] = 
 {
     "listen",       // TCPIP_TCP_STATE_LISTEN
     "syn-sent",     // TCPIP_TCP_STATE_SYN_SENT
@@ -356,34 +412,36 @@ static const char* _tcpTraceStateName[] =
     "wait-conn",    // TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT
     "killed",       // TCPIP_TCP_STATE_KILLED
 };
+#endif  // ((TCPIP_TCP_DEBUG_LEVEL & (TCPIP_TCP_DEBUG_MASK_TRACE_STATE | TCPIP_TCP_DEBUG_MASK_HANDLE_SEG)) != 0)
 
-static void _TcpSocketSetState(TCB_STUB* pSkt, TCPIP_TCP_STATE newState)
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
+static void F_TcpSocketSetState(TCB_STUB* pSkt, TCPIP_TCP_STATE newState)
 {
     if(pSkt->dbgFlags.traceStateFlag != 0)
     {   // socket state is traced
         if(pSkt->dbgFlags.tracePrevState != newState)
         {
             pSkt->dbgFlags.tracePrevState = newState;
-            SYS_CONSOLE_PRINT("TCP socket: %d, state: %s\r\n", pSkt->sktIx, _tcpTraceStateName[newState]);
+            SYS_CONSOLE_PRINT("TCP socket: %d, state: %s\r\n", pSkt->sktIx, s_tcpTraceStateName[newState]);
         } 
     }
-    pSkt->smState = newState;
+    pSkt->smState = (uint8_t)newState;
 }
 
-static uint32_t    _tcpTraceMask = 0;      // currently only first 32 sockets could be traced from the creation moment
+static uint32_t    tcpTraceMask = 0;      // currently only first 32 sockets could be traced from the creation moment
 bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
 {
     TCB_STUB* pSkt;
 
-    if(sktNo >= 0 && sktNo < TcpSockets && (sktNo < sizeof(_tcpTraceMask) * 8))
+    if(sktNo >= 0 && sktNo < TcpSockets && (sktNo < sizeof(tcpTraceMask) * 8))
     {
         if(enable)
         {
-            _tcpTraceMask |= (1 << sktNo);
+            tcpTraceMask |= (1 << sktNo);
         }
         else
         {
-            _tcpTraceMask &= ~(1 << sktNo);
+            tcpTraceMask &= ~(1 << sktNo);
         }
 
         if((pSkt = TCBStubs[sktNo]) != 0)
@@ -394,18 +452,40 @@ bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
     }
 
     return false;
-} 
+}
 
 #else
-static __inline__ void __attribute__((always_inline)) _TcpSocketSetState(TCB_STUB* pSkt, TCPIP_TCP_STATE newState)
+static __inline__ void __attribute__((always_inline)) F_TcpSocketSetState(TCB_STUB* pSkt, TCPIP_TCP_STATE newState)
 {
-    pSkt->smState = newState;
+    pSkt->smState = (uint8_t)newState;
 }
 bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
 {
     return false;
 }
 #endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
+
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_HANDLE_SEG) != 0)
+static uint32_t hsegCount = 0;
+static void F_TcpHandleSegEnter(TCB_STUB* pSkt)
+{
+    SYS_CONSOLE_PRINT("hseg enter - skt: %d, count: %d\r\n", pSkt->sktIx, hsegCount++);
+}
+
+static void F_TcpHandleSegDbg(TCB_STUB* pSkt, const char* msg, uint32_t code)
+{
+    SYS_CONSOLE_PRINT("hseg - skt: %d, stat: %s, msg: %s, code: %d\r\n", pSkt->sktIx, s_tcpTraceStateName[pSkt->smState], msg, code);
+}
+static void F_TcpHandleSegDbgData(TCB_STUB* pSkt, const char* msg, uint32_t dataSz, uint32_t code)
+{
+    SYS_CONSOLE_PRINT("hseg - skt: %d, stat: %s, msg: %s, data: %d, code: %d\r\n", pSkt->sktIx, s_tcpTraceStateName[pSkt->smState], msg, dataSz, code);
+}
+#else
+#define F_TcpHandleSegEnter(pSkt)
+#define F_TcpHandleSegDbg(pSkt, msg, code)
+#define F_TcpHandleSegDbgData(pSkt, msg, dataSz, code)
+#endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_HANDLE_SEG) != 0)
+
 
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_RX_CHECK) != 0)
 // check ports: 0 - irrelevant; otherwise it's considered in match
@@ -421,8 +501,8 @@ static bool TCPIP_TCP_CheckRxPkt(TCP_HEADER* pHdr)
     TCP_PORT srcPort = pHdr->SourcePort;
     TCP_PORT destPort = pHdr->DestPort;
 
-    bool srcMatch = (srcPort == 0 || srcPort == checkTcpSrcPort);
-    bool destMatch = (destPort == 0 || destPort == checkTcpDstPort);
+    bool srcMatch = (checkTcpSrcPort == 0 || srcPort == checkTcpSrcPort);
+    bool destMatch = (checkTcpDstPort == 0 || destPort == checkTcpDstPort);
 
     bool match = 0;
 
@@ -448,66 +528,79 @@ static bool TCPIP_TCP_CheckRxPkt(TCP_HEADER* pHdr)
 #endif // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_RX_CHECK) != 0)
 
 
-/*static __inline__*/static  void /*__attribute__((always_inline))*/ _TcpSocketKill(TCB_STUB* pSkt)
+/*static __inline__*/static  void /*__attribute__((always_inline))*/ F_TcpSocketKill(TCB_STUB* pSkt)
 {
-    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_KILLED);       // trace purpose only
+    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_KILLED);       // trace purpose only
     
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-    TCBStubs[pSkt->sktIx] = 0;
+    TCBStubs[pSkt->sktIx] = NULL;
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
 
-    TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->rxStart);
-    TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->txStart);
-    TCPIP_HEAP_Free(tcpHeapH, pSkt);
+    (void) TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->rxStart);
+    (void) TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->txStart);
+    (void) TCPIP_HEAP_Free(tcpHeapH, pSkt);
 }
 
 // returns:  0 if a SYN could be sent
 //           > 0 if the operation failed but can be retried
 //           < 0 if there is no valid destination or some other error
 // client sockets only!
-static int _TcpClientSocketConnect(TCB_STUB* pSkt)
+static int F_TcpClientSocketConnect(TCB_STUB* pSkt)
 {
+    int res = 0;
+#if defined (TCPIP_STACK_USE_IPV6)
+    const IPV6_ADDR* pV6Addr;
+#endif // defined (TCPIP_STACK_USE_IPV6)
 
     switch(pSkt->addType)
     {
 #if defined (TCPIP_STACK_USE_IPV4)
-        case IP_ADDRESS_TYPE_IPV4:
-            if( pSkt->destAddress.Val == 0)
+        case (uint8_t)IP_ADDRESS_TYPE_IPV4:
+            if( pSkt->destAddress.Val == 0U)
             {
-                return -1;
+                res = -1;
             }
-            // destination known
-            pSkt->remoteHash = _TCP_ClientIPV4RemoteHash(&pSkt->destAddress, pSkt);
+            else
+            {   // destination known
+                pSkt->remoteHash = F_TCP_ClientIPV4RemoteHash(&pSkt->destAddress, pSkt);
+            }
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
-        case IP_ADDRESS_TYPE_IPV6:
-            if(memcmp(TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), IPV6_FIXED_ADDR_UNSPECIFIED.v, sizeof (IPV6_ADDR)) == 0)
+        case (uint8_t)IP_ADDRESS_TYPE_IPV6:
+            pV6Addr = TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt);
+            if(memcmp(pV6Addr->v, IPV6_FIXED_ADDR_UNSPECIFIED.v, sizeof (IPV6_ADDR)) == 0)
             {
-                return -1;
+                res = -1;
             }
-            // destination known
-            pSkt->remoteHash = TCPIP_IPV6_GetHash( TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), pSkt->remotePort, pSkt->localPort);
+            else
+            {   // destination known
+                pSkt->remoteHash = TCPIP_IPV6_GetHash(pV6Addr, pSkt->remotePort, pSkt->localPort);
+            }
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
         default:
-            return -1;  // IP_ADDRESS_TYPE_ANY
+            res = -1;  // IP_ADDRESS_TYPE_ANY
+            break;
     }
 
-
+    if(res != 0)
+    {   // failed
+        return res;
+    }
     // try to send SYN
 
     pSkt->retryCount = 0;
-    pSkt->retryInterval = (sysTickFreq/4);
-    _TCP_SEND_RES sendRes = _TcpSend(pSkt, SYN, SENDTCP_RESET_TIMERS);
-    if(sendRes == _TCP_SEND_OK)
+    pSkt->retryInterval = (sysTickFreq / 4U);
+    TCP_SEND_RES sendRes = F_TcpSend(pSkt, SYN, SENDTCP_RESET_TIMERS);
+    if(sendRes == TCP_SEND_OK)
     {   // success
         return 0;
     }
 
-    return sendRes > 0 ? 1 : -1;
+    return (int32_t)sendRes > 0 ? 1 : -1;
 }
 
 #if defined (TCPIP_STACK_USE_IPV4)
@@ -518,26 +611,26 @@ static int _TcpClientSocketConnect(TCB_STUB* pSkt)
 // to protect between user threads and the TX thread
 // It protects:
 //  - the socket TX buffer resources which are updated by the user threads
-//    and the TX thread via the _Tcpv4TxAckFnc
+//    and the TX thread via the F_Tcpv4TxAckFnc
 //
 // protects user vs TX threads when the user needs to allocate a new TX packet for a socket
 // returns:
 //  - valid packet : the socket has a packet that is no longer in use and can be safely modified
 //  - 0: a new packet needs to be allocated and safely updated
 //  Note: there's no corresponding unlock function!
-static TCP_V4_PACKET* _TxSktGetLockedV4Pkt(TCB_STUB* pSkt)
+static TCP_V4_PACKET* F_TxSktGetLockedV4Pkt(TCB_STUB* pSkt)
 {
-    TCP_V4_PACKET* pktValid = 0;
+    TCP_V4_PACKET* pktValid = NULL;
     
     // don't let TX thread interfere
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     
-    if(pSkt->pV4Pkt != 0)
+    if(pSkt->pV4Pkt != NULL)
     {   // we have a current TX packet
-        if((pSkt->pV4Pkt->macPkt.pktFlags & TCPIP_MAC_PKT_FLAG_QUEUED) == 0)
+        if((pSkt->pV4Pkt->macPkt.pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED) == 0U)
         {   // mark it in use
-            pSkt->pV4Pkt->macPkt.pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
-            pktValid = (TCP_V4_PACKET*)pSkt->pV4Pkt;
+            pSkt->pV4Pkt->macPkt.pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED;
+            pktValid = pSkt->pTcpV4Pkt;
         }
         // else queued, cannot use it
     }
@@ -547,24 +640,24 @@ static TCP_V4_PACKET* _TxSktGetLockedV4Pkt(TCB_STUB* pSkt)
 }
 
 // returns a pointer to the packet to be freed or 0 if no free needed
-static TCPIP_MAC_PACKET* _TxSktFreeLockedV4Pkt(TCB_STUB* pSkt)
+static TCPIP_MAC_PACKET* F_TxSktFreeLockedV4Pkt(TCB_STUB* pSkt)
 {
-    TCPIP_MAC_PACKET* toFreePkt = 0;
+    TCPIP_MAC_PACKET* toFreePkt = NULL;
     
     // don't let TX thread interfere
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
 
-    if(pSkt->pV4Pkt != 0)
+    if(pSkt->pV4Pkt != NULL)
     {   // socket has packet
-        if((pSkt->pV4Pkt->macPkt.pktFlags & TCPIP_MAC_PKT_FLAG_QUEUED) == 0)
+        if((pSkt->pV4Pkt->macPkt.pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED) == 0U)
         {   // not queued; could be freed
             toFreePkt = &pSkt->pV4Pkt->macPkt;
         }
         // else queued and cannot be freed; it will be freed by the acknowledge
 
         // one way or another the socket is done with this packet
-        pSkt->pTxPkt = 0;
+        pSkt->pTxPkt = NULL;
     }
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
@@ -576,30 +669,30 @@ static TCPIP_MAC_PACKET* _TxSktFreeLockedV4Pkt(TCB_STUB* pSkt)
 // helper to set the socket retransmission timeout
 // if reload, it initializes it
 // else it doubles it (exp back off)
-static void _TCP_LoadRetxTmo(TCB_STUB* pSkt, bool reload)
+static void F_TCP_LoadRetxTmo(TCB_STUB* pSkt, bool reload)
 {
     uint32_t retxTmo;
     if(reload)
     {
-        retxTmo = _TCP_SOCKET_RETX_TMO;
+        retxTmo = TCP_SOCKET_RETX_TMO;
     }
     else
     {
         retxTmo = pSkt->retxTmo << 1;
-        if(retxTmo > _TCP_SOCKET_MAX_RETX_TIME)
+        if(retxTmo > TCP_SOCKET_MAX_RETX_TIME)
         {
-            retxTmo = _TCP_SOCKET_MAX_RETX_TIME;
+            retxTmo = TCP_SOCKET_MAX_RETX_TIME;
         } 
     }
 
     pSkt->retxTmo = retxTmo;
-    pSkt->retxTime = SYS_TMR_TickCountGet() + (pSkt->retxTmo * sysTickFreq)/1000;
+    pSkt->retxTime = SYS_TMR_TickCountGet() + (pSkt->retxTmo * sysTickFreq) / 1000U;
 }
 
 
 /*****************************************************************************
   Function:
-    bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, TCPIP_TCP_MODULE_CONFIG* pTcpInit)
+    bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_TCP_MODULE_CONFIG* pTcpInit)
 
   Summary:
     Initializes the TCP module.
@@ -628,10 +721,10 @@ static void _TCP_LoadRetxTmo(TCB_STUB* pSkt, bool reload)
    from other threads is supported.
 
   ***************************************************************************/
-bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_TCP_MODULE_CONFIG* pTcpInit)
+bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const void* initData)
 {
-    int     nSockets;
-    bool    tcpSemaphoreEnabled;
+    unsigned int nSockets;
+    OSAL_RESULT  tcpSemCreate;
     bool    initRes = false;
     bool    doInit = false;
     bool    initFault = false;
@@ -640,7 +733,7 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);  // System Lock
     if(tcpLockCount == 0)
     {   // performing 1st initialization
-        if(tcpInitCount != 0 || stackInit->stackAction != TCPIP_STACK_ACTION_INIT)
+        if(tcpInitCount != 0 || stackInit->stackAction != (uint8_t)TCPIP_STACK_ACTION_INIT)
         {
             initFault = true;
         }
@@ -659,13 +752,16 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
         else
         {
             initRes = true;
-            if(stackInit->stackAction == TCPIP_STACK_ACTION_INIT)
+            if(stackInit->stackAction == (uint8_t)TCPIP_STACK_ACTION_INIT)
             {   // just another interface initializing
                 tcpInitCount++;
             }
         }
     }
-    // else another init/deinit is in progress
+    else
+    {   // else another init/deinit is in progress
+        // Do Nothing
+    }
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);  // System unlock
     
@@ -682,7 +778,8 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
 
     // do the module initialization
     // check configuration data is not missing
-    if(stackInit->memH == 0 || pTcpInit == 0 || pTcpInit->nSockets == 0)
+    const TCPIP_TCP_MODULE_CONFIG* pTcpInit = (const TCPIP_TCP_MODULE_CONFIG*)initData;
+    if(stackInit->memH == NULL || pTcpInit == NULL || pTcpInit->nSockets == 0U)
     {
         SYS_ERROR(SYS_ERROR_ERROR, "TCP NULL dynamic allocation handle/init data");
         tcpLockCount = 0; // leave it uninitialized
@@ -696,8 +793,8 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
     tcpDefTxSize = pTcpInit->sktTxBuffSize;
     tcpDefRxSize = pTcpInit->sktRxBuffSize;
 
-    TCBStubs = (TCB_STUB**)TCPIP_HEAP_Calloc(tcpHeapH, nSockets, sizeof(*TCBStubs));
-    if(TCBStubs == 0)
+    TCBStubs = (TCB_STUB**)TCPIP_HEAP_Calloc(tcpHeapH, (size_t)nSockets, sizeof(*TCBStubs));
+    if(TCBStubs == NULL)
     {
         SYS_ERROR(SYS_ERROR_ERROR, " TCP Dynamic allocation failed");
         tcpLockCount = 0; // leave it uninitialized
@@ -711,14 +808,14 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
     tcpStartTime = 0;
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
-    _tcpTraceMask = 0;
+    tcpTraceMask = 0;
 #endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
 
     // create the TCP timer
-    tcpSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_TCP_Task, TCPIP_TCP_TASK_TICK_RATE);
-    if(tcpSignalHandle == 0)
+    tcpSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_TCP_Task, TCPIP_TCP_TASK_TICK_RATE);
+    if(tcpSignalHandle == NULL)
     {   // cannot create the TCP timer
-        _TcpCleanup();
+        F_TcpCleanup();
         tcpLockCount = 0; // leave it uninitialized
         return false;
     }
@@ -726,17 +823,17 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
     // initialize some default data
     tcpInitCount++;
 
-    tcpSemaphoreEnabled = OSAL_SEM_Create(&tcpSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) == OSAL_RESULT_TRUE;
+    tcpSemCreate = OSAL_SEM_Create(&tcpSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1);
     (void)tcpSemaphore;  // Remove a warning
-    if(!tcpSemaphoreEnabled)
+    if(tcpSemCreate != OSAL_RESULT_SUCCESS)
     {
-        _TcpCleanup();
+        F_TcpCleanup();
         tcpLockCount = 0; // leave it uninitialized
         return false;
     }
 
 #if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
-    tcpPktHandler = 0;
+    tcpPktHandler = NULL;
 #endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
 
     tcpInitCount = 1; // initialized
@@ -800,12 +897,20 @@ void TCPIP_TCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit)
     else if(doDeinit)
     {   // we're up and running
         // interface is going down
-        _TCPAbortSockets(1 << stackInit->netIx, TCPIP_TCP_SIGNAL_IF_DOWN); 
+        F_TCPAbortSockets(1UL << (uint32_t)stackInit->netIx, TCPIP_TCP_SIGNAL_IF_DOWN); 
 
-        if(stackInit->stackAction == TCPIP_STACK_ACTION_DEINIT && --tcpInitCount == 0)
+        bool doRelease = false;
+        if(stackInit->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
+        {
+            if(--tcpInitCount == 0)
+            {
+                doRelease = true;
+            }
+        }
+        if(doRelease)
         {   // stack shut down and all closed; release resources
-            _TcpCleanup();
-            OSAL_SEM_Delete(&tcpSemaphore);
+            F_TcpCleanup();
+            (void) OSAL_SEM_Delete(&tcpSemaphore);
             tcpLockCount = 0;   // leave it uninitialized
         }
         else
@@ -813,71 +918,75 @@ void TCPIP_TCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit)
             tcpLockCount = 1;   // release lock
         }
     }
+    else
+    {
+        /* Do Nothing */
+    }
 }
 
 // performs the clean-up of resources
-static void _TcpCleanup(void)
+static void F_TcpCleanup(void)
 {
-    int ix;
+    unsigned int ix;
     TCB_STUB* pSkt;
 
-    if(TCBStubs)
+    if(TCBStubs != NULL)
     {
         // all sockets should be closed here
         // just a sanity check
         for(ix = 0; ix < TcpSockets; ix++)
         {
             pSkt = TCBStubs[ix]; 
-            if(pSkt) 
+            if(pSkt != NULL) 
             {
-                _TcpAbort(pSkt, _TCP_ABORT_FLAG_SHUTDOWN, 0);
+                F_TcpAbort(pSkt, TCP_ABORT_FLAG_SHUTDOWN, (TCPIP_TCP_SIGNAL_TYPE)0);
             }
         }
     }
 
-    TCPIP_HEAP_Free(tcpHeapH, TCBStubs);
-    TCBStubs = 0;
+    (void) TCPIP_HEAP_Free(tcpHeapH, TCBStubs);
+    TCBStubs = NULL;
 
     TcpSockets = 0;
 
-    if(tcpSignalHandle)
+    if(tcpSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(tcpSignalHandle);
-        tcpSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(tcpSignalHandle);
+        tcpSignalHandle = NULL;
     }
 
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-#if (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+#if (TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 // netMask is the mask of interfaces going down: 1 << netIx
-static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
+static void F_TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
 {
-    int ix;
+    unsigned int ix;
     TCB_STUB* pSkt;
 
     for(ix = 0; ix < TcpSockets; ix++)
     {
-        if((pSkt = TCBStubs[ix]) != 0)  
+        if((pSkt = TCBStubs[ix]) != NULL)  
         {
             int netIx = TCPIP_STACK_NetIxGet(pSkt->pSktNet);
             if(netIx >= 0 )
             {   // interface exists
-                uint32_t sktIfMask = 1 << netIx;
-                if((sktIfMask & netMask) != 0)
+                uint32_t sktIfMask = 1UL << (uint32_t)netIx;
+                if((sktIfMask & netMask) != 0U)
                 {   // match
                     // just disconnect, don't kill sockets
-                    bool isServer = pSkt->Flags.bServer;
-                    pSkt->Flags.bServer = 1;
-                    _TcpAbort(pSkt, _TCP_ABORT_FLAG_REGULAR, sigType);
+                    bool isServer = (pSkt->flags.bServer != 0U);
+                    pSkt->flags.bServer = 1U;
+                    F_TcpAbort(pSkt, TCP_ABORT_FLAG_REGULAR, sigType);
                     // restore the setting
-                    pSkt->Flags.bServer = isServer;
+                    pSkt->flags.bServer = isServer ? 1U : 0U;
                 }
             }
         }
     }
 } 
-#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 
 /*****************************************************************************
   Function:
@@ -909,7 +1018,7 @@ static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
 TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP_MULTI_ADDRESS* localAddress)
 {
     TCP_SOCKET  skt;
-    TCPIP_NET_IF* pDefIf = 0;
+    TCPIP_NET_IF* pDefIf = NULL;
 
 #if !defined (TCPIP_STACK_USE_IPV6)
    if(addType == IP_ADDRESS_TYPE_IPV6)
@@ -934,10 +1043,10 @@ TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-    if(addType == IP_ADDRESS_TYPE_IPV4 && localAddress != 0 && localAddress->v4Add.Val != 0)
+    if(addType == IP_ADDRESS_TYPE_IPV4 && localAddress != NULL && localAddress->v4Add.Val != 0U)
     {
         pDefIf = TCPIP_STACK_IPAddToNet(&localAddress->v4Add, false);
-        if(pDefIf == 0)
+        if(pDefIf == NULL)
         {    // no such interface
             return INVALID_SOCKET;
         }
@@ -945,26 +1054,26 @@ TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
-   if(addType == IP_ADDRESS_TYPE_IPV6 && localAddress != 0)
+   if(addType == IP_ADDRESS_TYPE_IPV6 && localAddress != NULL)
    {
-       pDefIf = _TCPIPStackIPv6AddToNet(&localAddress->v6Add, IPV6_ADDR_TYPE_UNICAST, false);
-       if(pDefIf == 0)
+       pDefIf = TCPIPStackIPv6AddToNet(&localAddress->v6Add, IPV6_ADDR_TYPE_UNICAST, false);
+       if(pDefIf == NULL)
        {    // no such interface
            return INVALID_SOCKET;
        }
    }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
-    skt = _TCP_Open(addType, TCP_OPEN_SERVER, localPort, 0);
+    skt = F_TCP_Open(addType, TCP_OPEN_SERVER, localPort, NULL);
     if(skt != INVALID_SOCKET)
     {
         TCB_STUB* pSkt = TCBStubs[skt]; 
-        _TcpSocketBind(pSkt, pDefIf, localAddress);
-        if(pDefIf != 0)
+        F_TcpSocketBind(pSkt, pDefIf, localAddress);
+        if(pDefIf != NULL)
         {
             pSkt->flags.openBindIf = 1;
         }
-        if(localAddress != 0)
+        if(localAddress != NULL)
         {
             pSkt->flags.openBindAdd = 1;
         }
@@ -1039,7 +1148,7 @@ TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP
     }
 
 
-    skt = _TCP_Open(addType, TCP_OPEN_CLIENT, remotePort, remoteAddress);
+    skt = F_TCP_Open(addType, TCP_OPEN_CLIENT, remotePort, remoteAddress);
     // leave it unbound
 
     return skt;
@@ -1054,7 +1163,7 @@ TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP
 
 /*****************************************************************************
   Function:
-    TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address)
+    TCP_SOCKET F_TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address)
     
   Summary:
     Opens a TCP socket for listening or as a client.
@@ -1094,7 +1203,7 @@ TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP
     IP_ADDRESS_TYPE_ANY is supported for server sockets only!
 
   *****************************************************************************/
-static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* hostAddress)
+static TCP_SOCKET F_TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* hostAddress)
 {
     TCB_STUB*  pSkt;
     TCP_SOCKET hTCP;
@@ -1113,10 +1222,10 @@ static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_P
     }
 
     // allocate an ephemeral port for both server and client
-    if(localPort == 0)
+    if(localPort == 0U)
     {
-        localPort = _TCP_EphemeralPortAllocate();
-        if(localPort  == 0)
+        localPort = F_TCP_EphemeralPortAllocate();
+        if(localPort  == 0u)
         {
             return INVALID_SOCKET;
         }
@@ -1125,23 +1234,23 @@ static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_P
 
     pSkt = (TCB_STUB*)1;
     // Shared Data Lock
-    if (OSAL_SEM_Pend(&tcpSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+    if (OSAL_SEM_Pend(&tcpSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
     {
         // SYS_DEBUG message
     }
-    for(hTCP = 0; hTCP < TcpSockets; hTCP++)
+    for(hTCP = 0; (uint32_t)hTCP < TcpSockets; hTCP++)
     {
         pSkt = TCBStubs[hTCP];
-        if(pSkt == 0)
+        if(pSkt == NULL)
         {   // found an empty slot
             break;
         }
     }
 
 
-    if(pSkt != 0)
+    if(pSkt != NULL)
     {   // all slots taken
-        if (OSAL_SEM_Post(&tcpSemaphore) != OSAL_RESULT_TRUE)
+        if (OSAL_SEM_Post(&tcpSemaphore) != OSAL_RESULT_SUCCESS)
         {
             // SYS_DEBUG message
         }
@@ -1149,64 +1258,64 @@ static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_P
     }
 
     pSkt = (TCB_STUB*)TCPIP_HEAP_Calloc(tcpHeapH, 1, sizeof(*pSkt));
-    txBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, tcpDefTxSize + 1);
-    rxBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, tcpDefRxSize + 1);
+    txBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, (uint16_t)(tcpDefTxSize + 1U));
+    rxBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, (uint16_t)(tcpDefRxSize + 1U));
 
-    if(pSkt == 0 || txBuff == 0 || rxBuff == 0)
+    if(pSkt == NULL || txBuff == NULL || rxBuff == NULL)
     {   // out of memory
-        TCPIP_HEAP_Free(tcpHeapH, rxBuff);
-        TCPIP_HEAP_Free(tcpHeapH, txBuff);
-        TCPIP_HEAP_Free(tcpHeapH, pSkt);
+        (void) TCPIP_HEAP_Free(tcpHeapH, rxBuff);
+        (void) TCPIP_HEAP_Free(tcpHeapH, txBuff);
+        (void) TCPIP_HEAP_Free(tcpHeapH, pSkt);
         // Shared Data Lock
-        if (OSAL_SEM_Post(&tcpSemaphore) != OSAL_RESULT_TRUE)
+        if (OSAL_SEM_Post(&tcpSemaphore) != OSAL_RESULT_SUCCESS)
         {
             // SYS_DEBUG message
         }
         return INVALID_SOCKET;
     }
 
-    _TcpSocketInitialize(pSkt, hTCP, txBuff, tcpDefTxSize, rxBuff, tcpDefRxSize);
+    F_TcpSocketInitialize(pSkt, hTCP, txBuff, tcpDefTxSize, rxBuff, tcpDefRxSize);
     // Shared Data Lock
-    if (OSAL_SEM_Post(&tcpSemaphore) != OSAL_RESULT_TRUE)
+    if (OSAL_SEM_Post(&tcpSemaphore) != OSAL_RESULT_SUCCESS)
     {
         // SYS_DEBUG message
     }
     // set all the proper members 
-    _TcpSocketSetIdleState(pSkt);
+    F_TcpSocketSetIdleState(pSkt);
 
-    pSkt->addType = addType;
+    pSkt->addType = (uint8_t)addType;
     switch(addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
         case IP_ADDRESS_TYPE_IPV6:
-            pSkt->pTxPkt = _TCPv6AllocateTxPacketStruct (pSkt);
+            pSkt->pTxPkt = F_TCPv6AllocateTxPacketStruct (pSkt);
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
         case IP_ADDRESS_TYPE_IPV4:
-            pSkt->pTxPkt = _TcpAllocateTxPacket (pSkt, IP_ADDRESS_TYPE_IPV4);
+            pSkt->pTxPkt = F_TcpAllocateTxPacket (pSkt, IP_ADDRESS_TYPE_IPV4);
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
         default:
-            pSkt->pTxPkt = 0;   // default for IP_ADDRESS_TYPE_ANY
+            pSkt->pTxPkt = NULL;   // default for IP_ADDRESS_TYPE_ANY
             break;
     }
 
-    if (pSkt->pTxPkt == 0 && pSkt->addType != IP_ADDRESS_TYPE_ANY)
+    if (pSkt->pTxPkt == NULL && pSkt->addType != (uint8_t)IP_ADDRESS_TYPE_ANY)
     {   // failed to allocate memory
-        _TcpSocketKill(pSkt);
+        F_TcpSocketKill(pSkt);
         return INVALID_SOCKET;
     }
 
-    pSkt->flags.openAddType = addType;
+    pSkt->flags.openAddType = (uint8_t)addType;
 
     if(opType == TCP_OPEN_SERVER)
     {
         pSkt->localPort = localPort;
-        pSkt->Flags.bServer = true;
-        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LISTEN);
+        pSkt->flags.bServer = 1U;
+        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LISTEN);
         pSkt->remoteHash = localPort;
     }
     // Handle all the client mode socket types
@@ -1218,14 +1327,14 @@ static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_P
 
         // Flag to start the SYN process
         pSkt->eventTime = SYS_TMR_TickCountGet();
-        pSkt->Flags.bTimerEnabled = 1;
+        pSkt->flags.bTimerEnabled = 1;
 
         switch(addType)
         {
 #if defined (TCPIP_STACK_USE_IPV4)
             case IP_ADDRESS_TYPE_IPV4:
                 // hostAddress is a literal IP address.
-                if(hostAddress != 0 && hostAddress->v4Add.Val != 0)
+                if(hostAddress != NULL && hostAddress->v4Add.Val != 0U)
                 {   // socket remote host known
                     pSkt->destAddress.Val = hostAddress->v4Add.Val;
                 }
@@ -1236,18 +1345,19 @@ static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_P
             case IP_ADDRESS_TYPE_IPV6:
                 // hostAddress is a pointer to an IPv6 address. 
                 TCPIP_IPV6_PacketIPProtocolSet (pSkt->pV6Pkt);
-                TCPIP_IPV6_DestAddressSet(pSkt->pV6Pkt, hostAddress ? &hostAddress->v6Add : 0);
+                TCPIP_IPV6_DestAddressSet(pSkt->pV6Pkt, (hostAddress != NULL) ? &hostAddress->v6Add : NULL);
                 // IPv6 client socket needs a source interface for selecting a source address
-                _TcpSocketBind(pSkt, (TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet(), 0); 
+                F_TcpSocketBind(pSkt, (const TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet(), NULL); 
 
                 break;
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
             default:
+                /* Do Nothing */
                 break;  // IP_ADDRESS_TYPE_ANY
         }
 
-        _TcpSocketSetState(pSkt, (_TcpClientSocketConnect(pSkt) >= 0) ? TCPIP_TCP_STATE_SYN_SENT : TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT);
+        F_TcpSocketSetState(pSkt, (F_TcpClientSocketConnect(pSkt) >= 0) ? TCPIP_TCP_STATE_SYN_SENT : TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT);
     }
 
     return hTCP;        
@@ -1275,25 +1385,25 @@ void  TCPIP_TCP_Task(void)
     }
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 
-#if (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+#if (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
     uint32_t  ifMask;
 
-    sigPend = _TCPIPStackModuleSignalParamGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL, &ifMask);
+    sigPend = TCPIPStackModuleSignalParamGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL, &ifMask);
 
-    if((sigPend & (TCPIP_MODULE_SIGNAL_INTERFACE_CHANGE)) != 0)
+    if(((uint32_t)sigPend & (uint32_t)(TCPIP_MODULE_SIGNAL_IF_CHANGE)) != 0U)
     { // interface address change occurred
-        _TCPAbortSockets(ifMask, TCPIP_TCP_SIGNAL_IF_CHANGE); 
+        F_TCPAbortSockets(ifMask, TCPIP_TCP_SIGNAL_IF_CHANGE); 
     }
 #else
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
-#endif  // (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+#endif  // (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_RX_PENDING) != 0)
+    if(((uint32_t)sigPend & (uint32_t)TCPIP_MODULE_SIGNAL_RX_PENDING) != 0U)
     { //  RX signal occurred
         TCPIP_TCP_Process();
     }
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
+    if(((uint32_t)sigPend & (uint32_t)TCPIP_MODULE_SIGNAL_TMO) != 0U)
     { // regular TMO occurred
         TCPIP_TCP_Tick();
     }
@@ -1305,11 +1415,11 @@ static void TCPIP_TCP_Process(void)
     TCPIP_MAC_PKT_ACK_RES ackRes;
 
     // extract queued TCP packets
-    while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
+    while((pRxPkt = TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != NULL)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
 #if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
-        if(tcpPktHandler != 0)
+        if(tcpPktHandler != NULL)
         {
             bool was_processed = (*tcpPktHandler)(pRxPkt->pktIf, pRxPkt, tcpPktHandlerParam);
             if(was_processed)
@@ -1325,21 +1435,25 @@ static void TCPIP_TCP_Process(void)
         if(tcpQuietDone)
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
         {
-            if(!_TCP_RxPktValidate(pRxPkt))
+            if(!F_TCP_RxPktValidate(pRxPkt))
             {   // discard packet
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
             }
 #if defined (TCPIP_STACK_USE_IPV4)
-            else if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
+            else if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
             {
                 ackRes = TCPIP_TCP_ProcessIPv4(pRxPkt);
             }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
-            else if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV6) 
+            else if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV6) 
             {
                 ackRes = TCPIP_TCP_ProcessIPv6(pRxPkt);
+            }
+            else
+            {
+               /* Do Nothing */
             }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
         }
@@ -1353,7 +1467,7 @@ static void TCPIP_TCP_Process(void)
 
 // validates a rx-ed TCP packet
 // returns true if OK, false if packet should be discarded
-static bool _TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt)
+static bool F_TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt)
 {
     while(true)
     {
@@ -1364,14 +1478,14 @@ static bool _TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt)
         }
 
         // check options validity
-        TCP_HEADER* pHdr = (TCP_HEADER*)pRxPkt->pTransportLayer;
+        TCP_HEADER* pHdr = FC_U8Ptr2TcpHdr(pRxPkt->pTransportLayer);
         uint8_t optionsField = pHdr->DataOffset.Val;
         if(optionsField < TCP_DATA_OFFSET_VAL_MIN)
         {
            break;
         }
 
-        if(tcpTotLength < optionsField << 2)
+        if(tcpTotLength < (uint16_t)optionsField << 2)
         {   // no payload?
             break;
         }
@@ -1385,12 +1499,12 @@ static bool _TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt)
 
 #if defined (TCPIP_STACK_USE_IPV4)
 
-static bool     _TcpSocketSetSourceInterface(TCB_STUB * pSkt)
+static bool     F_TcpSocketSetSourceInterface(TCB_STUB * pSkt)
 {
-    if(pSkt->flags.srcSet == 0 || pSkt->pSktNet == 0)
+    if(pSkt->flags.srcSet == 0U || pSkt->pSktNet == NULL)
     {
-        pSkt->pSktNet = (TCPIP_NET_IF*)TCPIP_IPV4_SelectSourceInterface(pSkt->pSktNet, &pSkt->destAddress, &pSkt->srcAddress, pSkt->flags.srcSet != 0);
-        if(pSkt->pSktNet == 0)
+        pSkt->pSktNet = (const TCPIP_NET_IF*)TCPIP_IPV4_SelectSourceInterface(pSkt->pSktNet, &pSkt->destAddress, &pSkt->srcAddress, pSkt->flags.srcSet != 0U);
+        if(pSkt->pSktNet == NULL)
         {   // cannot find an route?
             return false;
         }
@@ -1403,18 +1517,18 @@ static bool     _TcpSocketSetSourceInterface(TCB_STUB * pSkt)
 // allocates an(other) TX packet if none or the current one is queued
 // returns true for success (including not queued), false otherwise
 // resetOldPkt will reset the status of an old packet, if exists
-static TCP_V4_PACKET* _Tcpv4AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt)
+static TCP_V4_PACKET* F_Tcpv4AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt)
 {
-    TCP_V4_PACKET* oldPkt = _TxSktGetLockedV4Pkt(pSkt);
+    TCP_V4_PACKET* oldPkt = F_TxSktGetLockedV4Pkt(pSkt);
 
-    if(!oldPkt)
+    if(oldPkt == NULL)
     {   // no packet or queued, try to get another
-        TCP_V4_PACKET* pPkt = _TcpAllocateTxPacket(pSkt, IP_ADDRESS_TYPE_IPV4);
-        if(pPkt != 0)
+        TCP_V4_PACKET* pPkt = F_TcpAllocateTxPacket(pSkt, IP_ADDRESS_TYPE_IPV4);
+        if(pPkt != NULL)
         {   // mark it as taken
-            pPkt->v4Pkt.macPkt.pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
+            pPkt->v4Pkt.macPkt.pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED;
             OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-            if(pSkt->pV4Pkt == 0)
+            if(pSkt->pV4Pkt == NULL)
             {   // no current packet
                 pSkt->pTxPkt = pPkt;
             }
@@ -1428,33 +1542,41 @@ static TCP_V4_PACKET* _Tcpv4AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool rese
     // else valid old packet
     if(resetOldPkt)
     {
-        _Tcpv4UnlinkDataSeg(oldPkt);  // clean packet
+        F_Tcpv4UnlinkDataSeg(oldPkt);  // clean packet
     }
 
     return oldPkt;
 }
 
-static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType)
+static TCP_V4_PACKET* F_TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType)
 {
-    TCPIP_MAC_PACKET_FLAGS allocFlags;
-    TCP_V4_PACKET*   pv4Pkt;
+    uint32_t allocFlags;
+    TCP_V4_PACKET*  pv4Pkt;
+    union
+    {
+        TCPIP_MAC_PACKET*   pMacPkt;
+        TCP_V4_PACKET*      pTcp4Pkt;
+        IPV4_PACKET*        pIp4Pkt;
+    }U_TCPV4_PACKET;
+
 
     if(addType != IP_ADDRESS_TYPE_IPV4)
     {   // allocation occurs only for IP_ADDRESS_TYPE_IPV4
-        return 0;
+        return NULL;
     }
 
     // allocate IPv4 packet
-    allocFlags = TCPIP_MAC_PKT_FLAG_IPV4 | TCPIP_MAC_PKT_FLAG_SPLIT | TCPIP_MAC_PKT_FLAG_TX | TCPIP_MAC_PKT_FLAG_TCP;
+    allocFlags  = ((uint32_t)TCPIP_MAC_PKT_FLAG_IPV4 | (uint32_t)TCPIP_MAC_PKT_FLAG_SPLIT | (uint32_t)TCPIP_MAC_PKT_FLAG_TX | (uint32_t)TCPIP_MAC_PKT_FLAG_TCP);
     // allocate from main packet pool
     // make sure there's enough room for TCP_OPTIONS
-    pv4Pkt = (TCP_V4_PACKET*)TCPIP_PKT_SocketAlloc(sizeof(TCP_V4_PACKET), sizeof(TCP_HEADER), sizeof(TCP_OPTIONS), allocFlags);
+    U_TCPV4_PACKET.pMacPkt = TCPIP_PKT_SocketAlloc((uint16_t)(sizeof(TCP_V4_PACKET)), (uint16_t)(sizeof(TCP_HEADER)), (uint16_t)(sizeof(TCP_OPTIONS)), (TCPIP_MAC_PACKET_FLAGS)allocFlags);
 
-    if(pv4Pkt)
+    pv4Pkt = U_TCPV4_PACKET.pTcp4Pkt;
+    if(pv4Pkt != NULL)
     {   // lazy linking of the data segments, when needed
-        TCPIP_PKT_PacketAcknowledgeSet(&pv4Pkt->v4Pkt.macPkt, _Tcpv4TxAckFnc, pSkt);
+        TCPIP_PKT_PacketAcknowledgeSet(&pv4Pkt->v4Pkt.macPkt, &F_Tcpv4TxAckFnc, pSkt);
 
-        pv4Pkt->tcpSeg[0].segFlags = pv4Pkt->tcpSeg[1].segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in packet itself
+        pv4Pkt->tcpSeg[0].segFlags = pv4Pkt->tcpSeg[1].segFlags = (uint16_t)TCPIP_MAC_SEG_FLAG_STATIC; // embedded in packet itself
 
     }
 
@@ -1463,54 +1585,65 @@ static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addTy
 }
 
 
-static void _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
+static void F_Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
 {
-    TCPIP_NET_HANDLE pktIf = 0;
-    TCPIP_TCP_SIGNAL_TYPE sigType = 0;
+    TCPIP_NET_HANDLE pktIf = NULL;
+    uint32_t sigType = 0;
     TCP_SOCKET   sktIx = 0;
-    TCB_STUB* pSkt = (TCB_STUB*)param;
+    const TCB_STUB* pSkt = (const TCB_STUB*)param;
     bool critLock = false;
     bool freePkt = true;
-    TCPIP_TCP_SIGNAL_FUNCTION sigHandler = 0;
-    const void* sigParam = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sigHandler = NULL;
+    const void* sigParam = NULL;
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
-    while(pSkt != 0)
+    while(pSkt != NULL)
     {  
         // make sure the user threads don't mess with the socket right now
         status =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
         critLock = true;
 
         sktIx = pSkt->sktIx;
-        if(TCBStubs == 0 || sktIx < 0 || sktIx >= TcpSockets || pSkt != TCBStubs[sktIx])
+        if(TCBStubs == NULL || sktIx < 0 || (uint32_t)sktIx >= TcpSockets || pSkt != TCBStubs[sktIx])
         {   // no longer this socket/invalid
             break;
         }
 
-        if((pPkt->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_USER_PAYLOAD) != 0)
+        if((pPkt->pDSeg->segFlags & (uint16_t)TCPIP_MAC_SEG_FLAG_USER_PAYLOAD) != 0U)
         {
-            sigType = TCPIP_TCP_SIGNAL_TX_DATA_DONE | TCPIP_TCP_SIGNAL_TX_DONE;
+            sigType = (uint32_t)TCPIP_TCP_SIGNAL_TX_DATA_DONE | (uint32_t)TCPIP_TCP_SIGNAL_TX_DONE;
         }
         else
         {
-            sigType = TCPIP_TCP_SIGNAL_TX_DONE;
+            sigType = (uint32_t)TCPIP_TCP_SIGNAL_TX_DONE;
         }
 
-        if((sigType &= pSkt->sigMask) != 0)
+        sigType &= (uint32_t)pSkt->sigMask;
+        
+        if (sigType != 0U)
         {
             sigHandler = pSkt->sigHandler;
             sigParam = pSkt->sigParam;
             pktIf = pPkt->pktIf;
         }
 
-        if(pSkt->pV4Pkt != &((TCP_V4_PACKET*)pPkt)->v4Pkt)
+        union
+        {
+            TCPIP_MAC_PACKET*   pMacPkt;
+            TCP_V4_PACKET*      pTcp4Pkt;
+            IPV4_PACKET*        pIp4Pkt;
+        }U_TCPV4_PACKET;
+
+
+        U_TCPV4_PACKET.pMacPkt = pPkt; 
+        if(pSkt->pTcpV4Pkt != U_TCPV4_PACKET.pTcp4Pkt)
         {   // no longer using this packet;
             break;
         }
 
         // OK, keep the current packet
-        _Tcpv4UnlinkDataSeg((TCP_V4_PACKET*)pSkt->pV4Pkt);
-        pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+        F_Tcpv4UnlinkDataSeg(pSkt->pTcpV4Pkt);
+        pPkt->pktFlags &= ~((uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED);
         freePkt = false;
         break;
     }
@@ -1527,35 +1660,35 @@ static void _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
         TCPIP_PKT_PacketFree(pPkt);
     }
 
-    if(sigHandler)
+    if(sigHandler != NULL)
     {   // notify socket user
-        (*sigHandler)(sktIx, pktIf, sigType, sigParam);
+        (*sigHandler)(sktIx, pktIf, (TCPIP_TCP_SIGNAL_TYPE)sigType, sigParam);
     }
 
 }
 
 // unlinks the data segments
-static void _Tcpv4UnlinkDataSeg(TCP_V4_PACKET* pTcpPkt)
+static void F_Tcpv4UnlinkDataSeg(TCP_V4_PACKET* pTcpPkt)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg = pTcpPkt->tcpSeg;
     pSeg->segLen = pSeg->segSize = 0;
-    pSeg->next = 0;
+    pSeg->next = NULL;
     pSeg++;
     pSeg->segLen = pSeg->segSize = 0;
-    pSeg->next = 0;
+    pSeg->next = NULL;
 
-    pTcpPkt->v4Pkt.macPkt.pDSeg->next = 0;    // unlink to the 1st data seg; leave header only
+    pTcpPkt->v4Pkt.macPkt.pDSeg->next = NULL;    // unlink to the 1st data seg; leave header only
     pTcpPkt->v4Pkt.macPkt.pDSeg->segLen = 0;  // clear the payload
 
 }
 
 // links at most 2 data segments to a TCP socket
-static void _Tcpv4LinkDataSeg(TCP_V4_PACKET* pTcpPkt, uint8_t* pBuff1, uint16_t bSize1, uint8_t* pBuff2, uint16_t bSize2)
+static void F_Tcpv4LinkDataSeg(TCP_V4_PACKET* pTcpPkt, uint8_t* pBuff1, uint16_t bSize1, uint8_t* pBuff2, uint16_t bSize2)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg0 = pTcpPkt->tcpSeg + 0;
     TCPIP_MAC_DATA_SEGMENT* pSeg1 = pTcpPkt->tcpSeg + 1;
 
-    if(pBuff2)
+    if(pBuff2 != NULL)
     {
 
         pSeg1->segLen = pSeg1->segSize = bSize2;
@@ -1564,10 +1697,10 @@ static void _Tcpv4LinkDataSeg(TCP_V4_PACKET* pTcpPkt, uint8_t* pBuff1, uint16_t 
     }
     else
     {   // unused
-        pSeg0->next = 0;
+        pSeg0->next = NULL;
     }
 
-    if(pBuff1)
+    if(pBuff1 != NULL)
     {
         pSeg0->segLen = pSeg0->segSize = bSize1;
         pSeg0->segLoad = pBuff1;
@@ -1575,24 +1708,24 @@ static void _Tcpv4LinkDataSeg(TCP_V4_PACKET* pTcpPkt, uint8_t* pBuff1, uint16_t 
     }
     else
     {   // unused
-        pTcpPkt->v4Pkt.macPkt.pDSeg->next = 0;  // link to the 1st data seg to be transmitted
+        pTcpPkt->v4Pkt.macPkt.pDSeg->next = NULL;  // link to the 1st data seg to be transmitted
     }
 
 }
 
-static bool _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, uint16_t loadLen)
+static bool F_TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, uint16_t loadLen)
 {
     TCP_HEADER*         pTCPHdr;
     IPV4_PSEUDO_HEADER  pseudoHdr;
     TCPIP_IPV4_PACKET_PARAMS pktParams;
     uint16_t            checksum;
 
-    if(pSkt->destAddress.Val == 0)
+    if(pSkt->destAddress.Val == 0U)
     {   // don't even bother
         return 0;
     }
 
-    if(!_TcpSocketSetSourceInterface(pSkt))
+    if(!F_TcpSocketSetSourceInterface(pSkt))
     {   // cannot find an route?
         return 0;
     }
@@ -1605,28 +1738,37 @@ static bool _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, u
     pv4Pkt->macPkt.pDSeg->segLen += hdrLen;
 
     // add the TCP header
-    pTCPHdr = (TCP_HEADER*)pv4Pkt->macPkt.pTransportLayer;
+    pTCPHdr = FC_U8Ptr2TcpHdr(pv4Pkt->macPkt.pTransportLayer);
     pTCPHdr->Checksum = 0;
 
-    if((pSkt->pSktNet->txOffload & TCPIP_MAC_CHECKSUM_TCP) == 0)
+    if((pSkt->pSktNet->txOffload & (uint8_t)TCPIP_MAC_CHECKSUM_TCP) == 0U)
     {   // not handled by hardware
         // add the pseudo header
+        union
+        {
+            TCPIP_MAC_PACKET*   pMacPkt;
+            TCP_V4_PACKET*      pTcp4Pkt;
+            IPV4_PACKET*        pIp4Pkt;
+        }U_TCPV4_PACKET;
+
+        U_TCPV4_PACKET.pMacPkt = &pv4Pkt->macPkt; 
+
         pseudoHdr.SourceAddress.Val = pv4Pkt->srcAddress.Val;
         pseudoHdr.DestAddress.Val = pv4Pkt->destAddress.Val;
         pseudoHdr.Zero = 0;
-        pseudoHdr.Protocol = IP_PROT_TCP;
+        pseudoHdr.Protocol = (uint8_t)IP_PROT_TCP;
         pseudoHdr.Length = TCPIP_Helper_htons(hdrLen + loadLen);
-        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
+        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, (uint16_t)sizeof(pseudoHdr), 0U);
 
         checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, hdrLen, checksum);
-        if(loadLen)
+        if(loadLen != 0U)
         {   // add the data segments
-            pv4Pkt->macPkt.pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_USER_PAYLOAD;
-            checksum = ~TCPIP_Helper_PacketChecksum(&pv4Pkt->macPkt, ((TCP_V4_PACKET*)pv4Pkt)->tcpSeg[0].segLoad, loadLen, checksum);
+            pv4Pkt->macPkt.pDSeg->segFlags |= ((uint16_t)TCPIP_MAC_SEG_FLAG_USER_PAYLOAD);
+            checksum = ~TCPIP_Helper_PacketChecksum(&pv4Pkt->macPkt, (U_TCPV4_PACKET.pTcp4Pkt)->tcpSeg[0].segLoad, loadLen, checksum);
         }
         else
         {   // packet not carying user payload
-            pv4Pkt->macPkt.pDSeg->segFlags &= ~TCPIP_MAC_SEG_FLAG_USER_PAYLOAD;
+            pv4Pkt->macPkt.pDSeg->segFlags &= ~((uint16_t)TCPIP_MAC_SEG_FLAG_USER_PAYLOAD);
         }
 
         pTCPHdr->Checksum = ~checksum;
@@ -1634,13 +1776,13 @@ static bool _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, u
 
 
     pktParams.ttl = pSkt->ttl;
-    pktParams.tosFlags = pSkt->tos;
+    pktParams.tosFlags = (TCPIP_IPV4_TOS_FLAGS)pSkt->tos;
     pktParams.df = 0;
 
     // and we're done
-    TCPIP_IPV4_PacketFormatTx(pv4Pkt, IP_PROT_TCP, hdrLen + loadLen, &pktParams);
-    pv4Pkt->macPkt.next = 0;    // single packet
-    TCPIP_PKT_FlightLogTxSkt(&pv4Pkt->macPkt, TCPIP_THIS_MODULE_ID, ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort, pSkt->sktIx);
+    TCPIP_IPV4_PacketFormatTx(pv4Pkt, (uint8_t)IP_PROT_TCP, hdrLen + loadLen, &pktParams);
+    pv4Pkt->macPkt.next = NULL;    // single packet
+    TCPIP_PKT_FlightLogTxSkt(&pv4Pkt->macPkt, TCPIP_THIS_MODULE_ID, ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort, (uint16_t)pSkt->sktIx);
     if(TCPIP_IPV4_PacketTransmit(pv4Pkt))
     {
         return true; 
@@ -1665,26 +1807,26 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     const void*         sigParam;
     uint16_t            sigMask;
     TCPIP_MAC_PKT_ACK_RES ackRes;
-    TCPIP_TCP_SIGNAL_TYPE sktEvent = 0;
+    uint32_t            sktEvent = 0;
 
-    pTCPHdr = (TCP_HEADER*)pRxPkt->pTransportLayer;
+    pTCPHdr = FC_U8Ptr2TcpHdr(pRxPkt->pTransportLayer);
     tcpTotLength = pRxPkt->totTransportLen;
 
     pPktSrcAdd = TCPIP_IPV4_PacketGetSourceAddress(pRxPkt);
     pPktDstAdd = TCPIP_IPV4_PacketGetDestAddress(pRxPkt);
 
-    if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP) == 0)
+    if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP) == 0U)
     {
         // Calculate IP pseudoheader checksum.
         pseudoHdr.SourceAddress.Val = pPktSrcAdd->Val;
         pseudoHdr.DestAddress.Val = pPktDstAdd->Val;
         pseudoHdr.Zero  = 0;
-        pseudoHdr.Protocol = IP_PROT_TCP;
+        pseudoHdr.Protocol = (uint8_t)IP_PROT_TCP;
         pseudoHdr.Length = TCPIP_Helper_ntohs(tcpTotLength);
 
-        calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
+        calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, (uint16_t)(sizeof(pseudoHdr)), 0);
         // Note: pseudoHdr length is multiple of 4!
-        if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_SPLIT) != 0)
+        if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_SPLIT) != 0U)
         {
             calcChkSum = TCPIP_Helper_PacketChecksum(pRxPkt, (uint8_t*)pTCPHdr, tcpTotLength, calcChkSum);
         }
@@ -1693,24 +1835,24 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
             calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, tcpTotLength, calcChkSum);
         }
 
-        if(calcChkSum != 0)
+        if(calcChkSum != 0U)
         {   // discard packet
             return TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
         }
     }
 
 
-    _TcpSwapHeader(pTCPHdr);
+    F_TcpSwapHeader(pTCPHdr);
     TCPIP_TCP_CheckRxPkt(pTCPHdr);
 
     // Skip over options to retrieve data bytes
-    optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
+    optionsSize = (((uint16_t)pTCPHdr->DataOffset.Val << 2) - (uint16_t)(sizeof(*pTCPHdr)));
 
     while(true)
     {
         // Find matching socket.
-        pSkt = _TcpFindMatchingSocket(pRxPkt, pPktSrcAdd, pPktDstAdd, IP_ADDRESS_TYPE_IPV4);
-        if(pSkt == 0)
+        pSkt = F_TcpFindMatchingSocket(pRxPkt, pPktSrcAdd, pPktDstAdd, IP_ADDRESS_TYPE_IPV4);
+        if(pSkt == NULL)
         {
             // If there is no matching socket, There is no one to handle
             // this data.  Discard it.
@@ -1720,15 +1862,16 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 
 
         // extract header
-        pRxPkt->pDSeg->segLen -=  optionsSize + sizeof(*pTCPHdr);    
-        _TcpHandleSeg(pSkt, pTCPHdr, tcpTotLength - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
+        pRxPkt->pDSeg->segLen -=  (uint16_t)(optionsSize + sizeof(*pTCPHdr));    
+        F_TcpHandleSeg(pSkt, pTCPHdr, (tcpTotLength - optionsSize - (uint16_t)sizeof(*pTCPHdr)), pRxPkt, &sktEvent);
 
-        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
-        if((sktEvent &= sigMask) != 0)
+        sigMask = F_TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        sktEvent &= (uint32_t)sigMask;
+        if(sktEvent != 0U)
         {
-            if(sigHandler != 0)
+            if(sigHandler != NULL)
             {
-                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, sktEvent, sigParam);
+                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, (TCPIP_TCP_SIGNAL_TYPE)sktEvent, sigParam);
             }
         }
 
@@ -1739,8 +1882,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 
     // log 
 #if (TCPIP_PACKET_LOG_ENABLE)
-    uint32_t logPort = (pSkt != 0) ? ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort : ((uint32_t)pTCPHdr->DestPort << 16) | pTCPHdr->SourcePort;
-    TCPIP_PKT_FlightLogRxSkt(pRxPkt, TCPIP_MODULE_LAYER3, logPort, pSkt != 0 ? pSkt->sktIx: 0xffff);
+    uint32_t logPort = (pSkt != NULL) ? ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort : ((uint32_t)pTCPHdr->DestPort << 16) | pTCPHdr->SourcePort;
+    TCPIP_PKT_FlightLogRxSkt(pRxPkt, TCPIP_MODULE_LAYER3, logPort, pSkt != NULL ? (uint16_t)pSkt->sktIx: (uint16_t)0xffffU);
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
     return ackRes;
@@ -1755,33 +1898,33 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 // to protect between user threads and the TX thread
 // It protects:
 //  - the socket TX buffer resources which are updated by the user threads
-//    and the TX thread via the _Tcpv4TxAckFnc
+//    and the TX thread via the F_Tcpv4TxAckFnc
 //
 // protects user vs TX threads when the user needs to allocate a new TX packet for a socket
 // returns:
 //  - true: the socket has a packet that is no longer in use and can be safely modified
 //  - false: a new packet needs to be allocated and safely updated
 //  Note: there's no corresponding unlock function!
-static IPV6_PACKET* _TxSktGetLockedV6Pkt(TCB_STUB* pSkt, IPV6_PACKET** ppSktPkt, bool setQueued)
+static IPV6_PACKET* F_TxSktGetLockedV6Pkt(TCB_STUB* pSkt, IPV6_PACKET** ppSktPkt, bool setQueued)
 {
-    IPV6_PACKET* pktValid = 0;
+    IPV6_PACKET* pktValid = NULL;
 
-    if(ppSktPkt)
+    if(ppSktPkt != NULL)
     {
-        *ppSktPkt = 0;
+        *ppSktPkt = NULL;
     }
 
     // don't let TX thread interfere
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(pSkt->pV6Pkt != 0)
+    if(pSkt->pV6Pkt != NULL)
     {   // we have a current TX packet
-        if(ppSktPkt)
+        if(ppSktPkt != NULL)
         {
             *ppSktPkt = pSkt->pV6Pkt;
         }
 
-        if(!TCPIP_IPV6_IsPacketQueued(pSkt->pV6Pkt))
+        if(TCPIP_IPV6_IsPacketQueued(pSkt->pV6Pkt) == 0U)
         {   
             if(setQueued)
             {   // mark in use
@@ -1796,24 +1939,24 @@ static IPV6_PACKET* _TxSktGetLockedV6Pkt(TCB_STUB* pSkt, IPV6_PACKET** ppSktPkt,
 }
 
 // returns a pointer to the packet to be freed or 0 if no free needed
-static IPV6_PACKET* _TxSktFreeLockedV6Pkt(TCB_STUB* pSkt)
+static IPV6_PACKET* F_TxSktFreeLockedV6Pkt(TCB_STUB* pSkt)
 {
-    IPV6_PACKET* toFreePkt = 0;
+    IPV6_PACKET* toFreePkt = NULL;
     
     // don't let TX thread interfere
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
 
-    if(pSkt->pV6Pkt != 0)
+    if(pSkt->pV6Pkt != NULL)
     {   // socket has packet
-        if(!TCPIP_IPV6_IsPacketQueued(pSkt->pV6Pkt))
+        if(TCPIP_IPV6_IsPacketQueued(pSkt->pV6Pkt) == 0U)
         {   // not queued; could be freed
             toFreePkt = pSkt->pV6Pkt;
         }
         // else queued and cannot be freed; it will be freed by the acknowledge
 
         // one way or another the socket is done with this packet
-        pSkt->pTxPkt = 0;
+        pSkt->pTxPkt = NULL;
     }
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
@@ -1827,18 +1970,18 @@ static IPV6_PACKET* _TxSktFreeLockedV6Pkt(TCB_STUB* pSkt)
 // allocates an(other) TX packet if none or the current one is queued
 // returns true for success (including not queued), false otherwise
 // resetOldPkt will reset the status of an old packet, if exists
-static IPV6_PACKET* _Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt)
+static IPV6_PACKET* F_Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt)
 {
 
     IPV6_PACKET* pSktPkt;
-    IPV6_PACKET* unqueuedPkt = _TxSktGetLockedV6Pkt(pSkt, &pSktPkt, true);
+    IPV6_PACKET* unqueuedPkt = F_TxSktGetLockedV6Pkt(pSkt, &pSktPkt, true);
 
-    if(!unqueuedPkt)
+    if(unqueuedPkt == NULL)
     {   // no packet or queued, try to get another
-        IPV6_PACKET * tempPtr = _TCPv6AllocateTxPacketStruct (pSkt);
-        if(tempPtr != 0)
+        IPV6_PACKET * tempPtr = F_TCPv6AllocateTxPacketStruct (pSkt);
+        if(tempPtr != NULL)
         {   // success
-            if(pSktPkt == 0)
+            if(pSktPkt == NULL)
             {   // no current socket packet; use this one
                 pSkt->pV6Pkt = tempPtr;
             }
@@ -1847,7 +1990,7 @@ static IPV6_PACKET* _Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetO
                 if (!TCPIP_IPV6_TxPacketStructCopy (tempPtr, pSkt->pV6Pkt))
                 {   // failed
                     TCPIP_IPV6_PacketFree (tempPtr);
-                    tempPtr = 0;
+                    tempPtr = NULL;
                 }
             }
         }
@@ -1866,50 +2009,52 @@ static IPV6_PACKET* _Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetO
 }
 
 
-static IPV6_PACKET * _TCPv6AllocateTxPacketStruct (TCB_STUB * pSkt)
+static IPV6_PACKET * F_TCPv6AllocateTxPacketStruct (TCB_STUB * pSkt)
 {
     IPV6_PACKET * pkt;
 
-    pkt = TCPIP_IPV6_TxPacketAllocate (pSkt->pSktNet, _Tcpv6AckFnc, pSkt);
+    pkt = TCPIP_IPV6_TxPacketAllocate (pSkt->pSktNet, &F_Tcpv6AckFnc, pSkt);
 
     if (pkt == NULL)
+    {
         return NULL;
+    }
 
-    if (!TCPIP_IPV6_UpperLayerHeaderPut (pkt, NULL, sizeof (TCP_HEADER), IP_PROT_TCP, TCP_CHECKSUM_OFFSET))
+    if (TCPIP_IPV6_UpperLayerHeaderPut (pkt, NULL, (uint16_t)(sizeof (TCP_HEADER)), ((uint8_t)IP_PROT_TCP), TCP_CHECKSUM_OFFSET) == NULL)
     {
         TCPIP_IPV6_PacketFree (pkt);
         return NULL;
     }
     
-    TCPIP_IPV6_SetPacketMacAcknowledge(pkt, _Tcpv6MacAckFnc);
+    TCPIP_IPV6_SetPacketMacAcknowledge(pkt, &F_Tcpv6MacAckFnc);
 
     return pkt;
 }
 
-static void _Tcpv6AckFnc (void * pkt, bool success, const void * param)
+static void F_Tcpv6AckFnc (void * pkt, bool success, const void * param)
 {
     IPV6_PACKET*    pV6Pkt;
-    TCB_STUB* pSkt = (TCB_STUB*)param;
+    const TCB_STUB* pSkt = (const TCB_STUB*)param;
     TCP_SOCKET   sktIx;
     bool critLock = false;
     bool freePkt = true;
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
-    if((pV6Pkt = (IPV6_PACKET*)pkt) == 0)
+    if((pV6Pkt = (IPV6_PACKET*)pkt) == NULL)
     {   // shouldn't happen
         return;
     }
 
-    while(pSkt != 0)
+    while(pSkt != NULL)
     {  
         // make sure the user threads don't mess with the socket right now
         status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
         critLock = true;
 
         sktIx = pSkt->sktIx;
-        if(TCBStubs == 0 || sktIx < 0 || sktIx >= TcpSockets || pSkt != TCBStubs[sktIx])
+        if(TCBStubs == NULL || sktIx < 0 || (uint32_t)sktIx >= TcpSockets || pSkt != TCBStubs[sktIx])
         {   // no longer this socket?
-            pSkt = 0;
+            pSkt = NULL;
             break;
         }
 
@@ -1937,39 +2082,40 @@ static void _Tcpv6AckFnc (void * pkt, bool success, const void * param)
 
 }
 
-static void _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
+static void F_Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
 {
-    TCPIP_NET_HANDLE pktIf = 0;
-    TCPIP_TCP_SIGNAL_TYPE sigType = 0;
+    TCPIP_NET_HANDLE pktIf = NULL;
+    uint32_t sigType = 0;
     TCP_SOCKET   sktIx = 0;
-    TCB_STUB* pSkt = (TCB_STUB*)param;
+    const TCB_STUB* pSkt = (const TCB_STUB*)param;
     bool critLock = false;
-    TCPIP_TCP_SIGNAL_FUNCTION sigHandler = 0;
-    const void* sigParam = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sigHandler = NULL;
+    const void* sigParam = NULL;
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
-    while(pSkt != 0)
+    while(pSkt != NULL)
     {  
         // make sure the user threads don't mess with the socket right now
         status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
         critLock = true;
 
         sktIx = pSkt->sktIx;
-        if(TCBStubs == 0 || sktIx < 0 || sktIx >= TcpSockets || pSkt != TCBStubs[sktIx])
+        if(TCBStubs == NULL || sktIx < 0 || (uint32_t)sktIx >= TcpSockets || pSkt != TCBStubs[sktIx])
         {   // no longer this socket?
             break;
         }
 
-        if((pPkt->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_USER_PAYLOAD) != 0)
+        if((pPkt->pDSeg->segFlags & (uint16_t)TCPIP_MAC_SEG_FLAG_USER_PAYLOAD) != 0U)
         {
-            sigType = TCPIP_TCP_SIGNAL_TX_DATA_DONE | TCPIP_TCP_SIGNAL_TX_DONE;
+            sigType = (uint32_t)TCPIP_TCP_SIGNAL_TX_DATA_DONE | (uint32_t)TCPIP_TCP_SIGNAL_TX_DONE;
         }
         else
         {
-            sigType = TCPIP_TCP_SIGNAL_TX_DONE;
+            sigType = (uint32_t)TCPIP_TCP_SIGNAL_TX_DONE;
         }
 
-        if((sigType &= pSkt->sigMask) != 0)
+        sigType &= (uint32_t)pSkt->sigMask; 
+        if( sigType != 0U)
         {
             sigHandler = pSkt->sigHandler;
             sigParam = pSkt->sigParam;
@@ -1986,9 +2132,9 @@ static void _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
 
     TCPIP_PKT_PacketFree(pPkt);
     
-    if(sigHandler)
+    if(sigHandler != NULL)
     {   // notify socket user
-        (*sigHandler)(sktIx, pktIf, sigType, sigParam);
+        (*sigHandler)(sktIx, pktIf, (TCPIP_TCP_SIGNAL_TYPE)sigType, sigParam);
 
     }
 }
@@ -2009,13 +2155,13 @@ static void _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
   ***************************************************************************/
 bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        if(pSkt->Flags.bSocketReset)
+        if(pSkt->flags.bSocketReset != 0U)
         {
-            pSkt->Flags.bSocketReset = 0;
+            pSkt->flags.bSocketReset = 0;
             return true;
         }   
         return false;
@@ -2027,11 +2173,11 @@ bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 
 bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        return pSkt->Flags.bRxFin != 0;
+        return pSkt->flags.bRxFin != 0U;
     }
 
     // no such socket
@@ -2047,7 +2193,7 @@ bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
 
   Description:
     This function determines if a socket has an established connection to 
-    a remote node.  Call this function after calling _TCP_Open to determine 
+    a remote node.  Call this function after calling F_TCP_Open to determine 
     when the connection is set up and ready for use.  This function was 
     historically used to check for disconnections, but TCPIP_TCP_WasReset is now a
     more appropriate solution. 
@@ -2072,41 +2218,41 @@ bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
   ***************************************************************************/
 bool TCPIP_TCP_IsConnected(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    return (pSkt) ? _TCP_IsConnected(pSkt) : false;
+    return (pSkt != NULL) ? F_TCP_IsConnected(pSkt) : false;
 }
 
 // This function closes a connection to a remote node by sending a FIN
 // (if currently connected).
 bool TCPIP_TCP_Disconnect(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        _TCP_SEND_RES sRes = _TcpDisconnect(pSkt, true);
-        return sRes >= 0;
+        TCP_SEND_RES sRes = F_TcpDisconnect(pSkt, true);
+        return (int32_t)sRes >= 0;
     }
 
     return false;
 }
 
 
-static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
+static TCP_SEND_RES F_TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
 {
     uint8_t         tcpFlags;
     bool            sendData;
-    _TCP_SEND_RES   sendRes;
+    TCP_SEND_RES   sendRes;
 
     switch(pSkt->smState)
     {
 
-        case TCPIP_TCP_STATE_SYN_RECEIVED:
-        case TCPIP_TCP_STATE_ESTABLISHED:
+        case (uint8_t)TCPIP_TCP_STATE_SYN_RECEIVED:
+        case (uint8_t)TCPIP_TCP_STATE_ESTABLISHED:
 
             // fall through
-        case TCPIP_TCP_STATE_CLOSE_WAIT:
+        case (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT:
             // Send the FIN.
             // If the socket linger is on we should keep the socket opened (for the specified timeout)
             // until all the queued TX data can be sent in the background
@@ -2117,9 +2263,9 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
             //
             //
             //
-            if(pSkt->flags.nonLinger != 0)
+            if(pSkt->flags.nonLinger != 0U)
             {
-                _TcpDiscardTx(pSkt);
+                F_TcpDiscardTx(pSkt);
             }
 
             // send something out only if we need a FIN or we have some data
@@ -2136,46 +2282,48 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
                 tcpFlags = signalFIN? FIN | ACK : ACK;
                 do
                 {   
-                    sendRes = _TcpSend(pSkt, tcpFlags, SENDTCP_RESET_TIMERS);
-                    if(sendRes < 0 || pSkt->remoteWindow == 0u)
+                    sendRes = F_TcpSend(pSkt, tcpFlags, SENDTCP_RESET_TIMERS);
+                    if((int32_t)sendRes < 0 || pSkt->remoteWindow == 0u)
+                    {
                         break;
+                    }
                 } while(pSkt->txHead != pSkt->txUnackedTail);
             }
             else
             {
-                sendRes = _TCP_SEND_OK; 
+                sendRes = TCP_SEND_OK; 
             }
             
-            if(sendRes < 0)
+            if((int32_t)sendRes < 0)
             {   
                 // let the user know
                 // another attempt may be done
                 // if it's followed by an close/abort won't matter anyway
-                pSkt->Flags.failedDisconnect = 1;
+                pSkt->flags.failedDisconnect = 1;
             }
             else
             {
-                pSkt->Flags.failedDisconnect = 0;
-                _TcpSocketSetState(pSkt, pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT ? TCPIP_TCP_STATE_LAST_ACK : TCPIP_TCP_STATE_FIN_WAIT_1);
+                pSkt->flags.failedDisconnect = 0;
+                F_TcpSocketSetState(pSkt, pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT ? TCPIP_TCP_STATE_LAST_ACK : TCPIP_TCP_STATE_FIN_WAIT_1);
             }
             break;
 
-        case TCPIP_TCP_STATE_FIN_WAIT_1:
-        case TCPIP_TCP_STATE_FIN_WAIT_2:
-        case TCPIP_TCP_STATE_CLOSING:
-        case TCPIP_TCP_STATE_TIME_WAIT:
-        case TCPIP_TCP_STATE_LAST_ACK:
-            sendRes = _TCP_SEND_OK;
+        case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1:
+        case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2:
+        case (uint8_t)TCPIP_TCP_STATE_CLOSING:
+        case (uint8_t)TCPIP_TCP_STATE_TIME_WAIT:
+        case (uint8_t)TCPIP_TCP_STATE_LAST_ACK:
+            sendRes = TCP_SEND_OK;
             break;
             
-        case TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT:
+        case (uint8_t)TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT:
             // special client socket state
-            _TcpCloseSocket(pSkt, 0);
-            sendRes = _TCP_SEND_OK;
+            F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
+            sendRes = TCP_SEND_OK;
             break;
 
         default:
-            sendRes = _TCP_SEND_NOT_CONN;
+            sendRes = TCP_SEND_NOT_CONN;
             break;
     }
 
@@ -2186,54 +2334,55 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
 // aborts a connection sending a RST to the other end of the socket
 void TCPIP_TCP_Abort(TCP_SOCKET hTCP, bool killSocket)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        _TcpAbort(pSkt, killSocket ? _TCP_ABORT_FLAG_FORCE_CLOSE : _TCP_ABORT_FLAG_REGULAR, 0);
+        F_TcpAbort(pSkt, killSocket ? TCP_ABORT_FLAG_FORCE_CLOSE : TCP_ABORT_FLAG_REGULAR, (TCPIP_TCP_SIGNAL_TYPE)0);
     }
 
 }
 
 // internal function to abort a connection
-static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
+static void F_TcpAbort(TCB_STUB* pSkt, TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 {
     bool    sktReset = false;
 
     switch(pSkt->smState)
     {
-        case TCPIP_TCP_STATE_SYN_RECEIVED:
-        case TCPIP_TCP_STATE_ESTABLISHED:
-        case TCPIP_TCP_STATE_CLOSE_WAIT:
-        case TCPIP_TCP_STATE_FIN_WAIT_1:
-        case TCPIP_TCP_STATE_FIN_WAIT_2:
-        case TCPIP_TCP_STATE_LAST_ACK:
+        case (uint8_t)TCPIP_TCP_STATE_SYN_RECEIVED:
+        case (uint8_t)TCPIP_TCP_STATE_ESTABLISHED:
+        case (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT:
+        case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1:
+        case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2:
+        case (uint8_t)TCPIP_TCP_STATE_LAST_ACK:
             sktReset = true;
             break;
 
-        case TCPIP_TCP_STATE_TIME_WAIT:
-            if((abFlags & _TCP_ABORT_FLAG_SHUTDOWN) == 0)
+        case (uint8_t)TCPIP_TCP_STATE_TIME_WAIT:
+            if(((uint32_t)abFlags & (uint32_t)TCP_ABORT_FLAG_SHUTDOWN) == 0U)
             {
                 return; // nothing to do here
             }
             break;
 
         default:
+            /* Do Nothing */
             break;
     }
 
     if(sktReset)
     {
-        _TcpDiscardTx(pSkt);
-        _TcpSend(pSkt, RST | ACK, 0);
+        F_TcpDiscardTx(pSkt);
+        (void) F_TcpSend(pSkt, RST | ACK, 0);
     }
 
-    if((abFlags & (_TCP_ABORT_FLAG_FORCE_CLOSE | _TCP_ABORT_FLAG_SHUTDOWN)) != 0)
+    if(((uint32_t)abFlags & ((uint32_t)TCP_ABORT_FLAG_FORCE_CLOSE | (uint32_t)TCP_ABORT_FLAG_SHUTDOWN)) != 0U)
     {
         pSkt->flags.forceKill = 1;
     }
 
-    _TcpCloseSocket(pSkt, tcpEvent);
+    F_TcpCloseSocket(pSkt, tcpEvent);
 }
 
 // tries to initiate a connection on a client socket
@@ -2241,13 +2390,13 @@ static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL
 // returns true if succeded, false otherwise
 bool TCPIP_TCP_Connect(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt && pSkt->smState == TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
+    if((pSkt != NULL) && pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
     {
-        if(_TcpClientSocketConnect(pSkt) >= 0)
+        if(F_TcpClientSocketConnect(pSkt) >= 0)
         {
-            _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_SYN_SENT);
+            F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_SYN_SENT);
             return true;
         }
     }
@@ -2260,17 +2409,17 @@ bool TCPIP_TCP_Connect(TCP_SOCKET hTCP)
 // including server mode socket handles.
 bool TCPIP_TCP_Close(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt)
+    if(pSkt != NULL)
     {
         bool needAbort = false;
 
-        if(pSkt->flags.nonGraceful == 0)
+        if(pSkt->flags.nonGraceful == 0U)
         {   // end gracefully but close anyway
             pSkt->flags.forceKill = 1;
-            _TCP_SEND_RES sRes = _TcpDisconnect(pSkt, true);
-            if(sRes != _TCP_SEND_OK)
+            TCP_SEND_RES sRes = F_TcpDisconnect(pSkt, true);
+            if(sRes != TCP_SEND_OK)
             {   // either failed or socket is not connected
                 needAbort = true;
             }
@@ -2282,7 +2431,7 @@ bool TCPIP_TCP_Close(TCP_SOCKET hTCP)
 
         if(needAbort)
         {
-            _TcpAbort(pSkt, _TCP_ABORT_FLAG_FORCE_CLOSE, 0);
+            F_TcpAbort(pSkt, TCP_ABORT_FLAG_FORCE_CLOSE, (TCPIP_TCP_SIGNAL_TYPE)0);
         }
         return true;
     }
@@ -2293,7 +2442,7 @@ bool TCPIP_TCP_Close(TCP_SOCKET hTCP)
 
 /*****************************************************************************
   Function:
-    bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
+    bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* pInfo)
 
   Summary:
     Obtains information about a currently open socket.
@@ -2311,49 +2460,54 @@ bool TCPIP_TCP_Close(TCP_SOCKET hTCP)
     true if the call succeeded
     false if no such socket or the socket is not opened
   ***************************************************************************/
-bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
+bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* pInfo)
 {
 
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt == 0)
+    if(pSkt == NULL)
     {
         return false;
     }
 
+    if(pInfo == NULL)
+    {
+        return true;
+    }
+
     while(true)
     {
-        memset(remoteInfo, 0, sizeof(*remoteInfo));
+        (void) memset(pInfo, 0, sizeof(*pInfo));
 #if defined (TCPIP_STACK_USE_IPV6)
-        if (pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {
-            memcpy((void*)&remoteInfo->remoteIPaddress.v6Add.v, (void*)TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
-            memcpy((void*)&remoteInfo->localIPaddress.v6Add.v, (void*)TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
-            remoteInfo->addressType = IP_ADDRESS_TYPE_IPV6;
+            (void) memcpy((void*)&pInfo->remoteIPaddress.v6Add.v, (void*)TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
+            (void) memcpy((void*)&pInfo->localIPaddress.v6Add.v, (void*)TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
+            pInfo->addressType = IP_ADDRESS_TYPE_IPV6;
             break;
         }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        if (pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+        if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
         {
-            remoteInfo->remoteIPaddress.v4Add = pSkt->destAddress;
-            remoteInfo->localIPaddress.v4Add = pSkt->srcAddress;
-            remoteInfo->addressType = IP_ADDRESS_TYPE_IPV4;
+            pInfo->remoteIPaddress.v4Add = pSkt->destAddress;
+            pInfo->localIPaddress.v4Add = pSkt->srcAddress;
+            pInfo->addressType = IP_ADDRESS_TYPE_IPV4;
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
         break;
     }
 
-    remoteInfo->remotePort = pSkt->remotePort;
-    remoteInfo->localPort = pSkt->localPort;
-    remoteInfo->hNet = pSkt->pSktNet;
-    remoteInfo->state = (TCPIP_TCP_STATE)pSkt->smState;
-    remoteInfo->rxSize = pSkt->rxEnd - pSkt->rxStart;
-    remoteInfo->txSize = pSkt->txEnd - pSkt->txStart;
-    remoteInfo->rxPending = _TCPIsGetReady(pSkt);
-    remoteInfo->txPending = TCPIP_TCP_FifoTxFullGet(hTCP);
-    remoteInfo->flags = _TCP_SktFlagsGet(pSkt);
+    pInfo->remotePort = pSkt->remotePort;
+    pInfo->localPort = pSkt->localPort;
+    pInfo->hNet = pSkt->pSktNet;
+    pInfo->state = (TCPIP_TCP_STATE)pSkt->smState;
+    pInfo->rxSize = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart);
+    pInfo->txSize = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
+    pInfo->rxPending = F_TCPIsGetReady(pSkt);
+    pInfo->txPending = TCPIP_TCP_FifoTxFullGet(hTCP);
+    pInfo->flags = F_TCP_SktFlagsGet(pSkt);
 
     return true;
 }
@@ -2362,49 +2516,49 @@ TCP_SOCKET_FLAGS TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP)
 {
     TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_NONE;
 
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt != 0)
+    if(pSkt != NULL)
     {
-        flags = _TCP_SktFlagsGet(pSkt);
+        flags = F_TCP_SktFlagsGet(pSkt);
     }
 
     return flags;
 }
 
-static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt)
+static TCP_SOCKET_FLAGS F_TCP_SktFlagsGet(TCB_STUB* pSkt)
 {
-    TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_VALID;
+    uint16_t sktFlags = (uint16_t)TCP_SOCKET_FLAG_VALID;
 
-    if(_TCP_IsConnected(pSkt))
+    if(F_TCP_IsConnected(pSkt))
     {
-        flags |= TCP_SOCKET_FLAG_CONNECTED;
+        sktFlags |= (uint16_t)TCP_SOCKET_FLAG_CONNECTED;
     }
 
-    if(pSkt->Flags.bSocketReset)
+    if(pSkt->flags.bSocketReset != 0U)
     {
-        flags |= TCP_SOCKET_FLAG_RST;
+        sktFlags |= (uint16_t)TCP_SOCKET_FLAG_RST;
     }
 
-    if(pSkt->Flags.bRxFin)
+    if(pSkt->flags.bRxFin != 0U)
     {
-        flags |= TCP_SOCKET_FLAG_FIN;
+        sktFlags |= (uint16_t)TCP_SOCKET_FLAG_FIN;
     }
 
-    return flags;
+    return (TCP_SOCKET_FLAGS)sktFlags;
 }
 
 
-int TCPIP_TCP_SocketsNumberGet(void)
+unsigned int TCPIP_TCP_SocketsNumberGet(void)
 {
     return TcpSockets;
 }
 
 #if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
 // sets the TCP sequence number using a pseudo random number
-static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
+static uint32_t F_TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 {
-    uint32_t m = (SYS_TIME_Counter64Get() * 1000000 / 64 ) / SYS_TIME_FrequencyGet();   // 274 seconds period > MSL = 120 seconds
+    uint32_t m = (uint32_t)((SYS_TIME_Counter64Get() * 1000000U / 64U ) / SYS_TIME_FrequencyGet());   // 274 seconds period > MSL = 120 seconds
     uint32_t seq = (SYS_RANDOM_PseudoGet() << 16) | (uint16_t)SYS_RANDOM_PseudoGet();
     return seq + m;
 }
@@ -2413,7 +2567,7 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 #include "crypto/crypto.h"
 // sets the TCP sequence number based on RFC 6528
 // The socket identity: local and remote IP addresses + ports should be known
-static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
+static uint32_t F_TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 {
     CRYPT_MD5_CTX md5Ctx;
     uint32_t secretKey[16 / 4] = {0};   // 128 bits secret key
@@ -2432,39 +2586,49 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
         uint32_t    ipv4HashData[28 / 4];   // 4B srcAdd, 4B destAdd, 4B ports, 16B secret key
 #endif    
     }hashData = {0};
+
+#if defined (TCPIP_STACK_USE_IPV6)
+    const IPV6_ADDR* pDstAdd, *pSrcAdd;
+#endif // defined (TCPIP_STACK_USE_IPV6)
         
+    (void)memset(hashData.data8, 0, sizeof(hashData));
+    (void)memset(secretKey, 0, sizeof(secretKey));
+
     // get secret key
-    SYS_RANDOM_CryptoBlockGet(secretKey, sizeof(secretKey));
+    (void) SYS_RANDOM_CryptoBlockGet(secretKey, sizeof(secretKey));
 
     // calculate the hash
-    CRYPT_MD5_Initialize(&md5Ctx);
+    (void) CRYPT_MD5_Initialize(&md5Ctx);
 
 #if defined (TCPIP_STACK_USE_IPV4)
-    if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+    if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
     {
         // start adding the socket local and remote connection identity
         hashData.ipv4HashData[0] = pSkt->srcAddress.Val;
         hashData.ipv4HashData[1] = pSkt->destAddress.Val;
         hashData.ipv4HashData[2] = ((uint32_t)pSkt->localPort << 16) + (uint32_t)pSkt->remotePort;
-        memcpy(hashData.ipv4HashData + 3, secretKey, sizeof(secretKey));
+        (void) memcpy(hashData.ipv4HashData + 3, secretKey, sizeof(secretKey));
         dataSize = sizeof(hashData.ipv4HashData);
     }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
-    if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+    if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
     {
-        memcpy(hashData.ipv6HashData + 0, TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
-        memcpy(hashData.ipv6HashData + 4, TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
+        pSrcAdd = TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt); 
+        pDstAdd = TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt); 
+
+        (void) memcpy((uint8_t*)hashData.ipv6HashData + 0, pSrcAdd->v, sizeof(IPV6_ADDR));
+        (void) memcpy((uint8_t*)hashData.ipv6HashData + 4, pDstAdd->v, sizeof(IPV6_ADDR));
         hashData.ipv6HashData[8] = ((uint32_t)pSkt->localPort << 16) + (uint32_t)pSkt->remotePort;
-        memcpy(hashData.ipv6HashData + 9, secretKey, sizeof(secretKey));
+        (void) memcpy(hashData.ipv6HashData + 9, secretKey, sizeof(secretKey));
         dataSize = sizeof(hashData.ipv6HashData);
     }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
-    CRYPT_MD5_DataAdd(&md5Ctx, hashData.data8, dataSize);
-    CRYPT_MD5_Finalize(&md5Ctx, hashData.data8);
-    uint32_t m = (SYS_TIME_Counter64Get() * 1000000 / 64 ) / SYS_TIME_FrequencyGet();   // 274 seconds period > MSL = 120 seconds
+    (void) CRYPT_MD5_DataAdd(&md5Ctx, hashData.data8, dataSize);
+    (void) CRYPT_MD5_Finalize(&md5Ctx, hashData.data8);
+    uint32_t m = (uint32_t)((SYS_TIME_Counter64Get() * 1000000U / 64U ) / SYS_TIME_FrequencyGet());   // 274 seconds period > MSL = 120 seconds
     uint32_t seq = hashData.data32[0] + m;
 
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SEQ) != 0)
@@ -2530,29 +2694,29 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
   ***************************************************************************/
 bool TCPIP_TCP_Flush(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt && _TCP_TxPktValid(pSkt))
+    if((pSkt != NULL) && F_TCP_TxPktValid(pSkt))
     {
-        return _TcpFlush(pSkt);
+        return F_TcpFlush(pSkt);
     }
     return false;
 }
 
-static bool _TcpFlush(TCB_STUB* pSkt)
+static bool F_TcpFlush(TCB_STUB* pSkt)
 {
-    if(pSkt->txHead != pSkt->txUnackedTail && pSkt->remoteWindow != 0)
+    if(pSkt->txHead != pSkt->txUnackedTail && pSkt->remoteWindow != 0U)
     {   // The check remoteWindow != 0 stops us sending lots of
         // ACKs with len == 0, when the other host is slow
         // Send the TCP segment with all unacked bytes
-        return _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS) == 0;
+        return (int32_t)(F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS)) == 0;
     }
 
     return false;
 }
 
 
-static void _TcpDiscardTx(TCB_STUB* pSkt)
+static void F_TcpDiscardTx(TCB_STUB* pSkt)
 {
     // Empty the TX buffer
     pSkt->txHead = pSkt->txTail = pSkt->txUnackedTail = pSkt->txStart;
@@ -2582,27 +2746,27 @@ static void _TcpDiscardTx(TCB_STUB* pSkt)
   ***************************************************************************/
 uint16_t TCPIP_TCP_PutIsReady(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    return pSkt ? _TCPIsPutReady(pSkt) : 0;
+    return (pSkt != NULL)? F_TCPIsPutReady(pSkt) : 0U;
 }
 
 
-static uint16_t _TCPIsPutReady(TCB_STUB* pSkt)
+static uint16_t F_TCPIsPutReady(TCB_STUB* pSkt)
 {
-    if(pSkt->pTxPkt == 0)
+    if(pSkt->pTxPkt == NULL)
     {   // can happen if it is a server socket and opened with IP_ADDRESS_TYPE_ANY
         // and no client connected to it
         return 0;
     }
 
-    return _TCPSocketTxFreeSize(pSkt);
+    return F_TCPSocketTxFreeSize(pSkt);
 }
 
-static uint16_t _TCPSocketTxFreeSize(TCB_STUB* pSkt)
+static uint16_t F_TCPSocketTxFreeSize(TCB_STUB* pSkt)
 {
     // Unconnected sockets shouldn't be transmitting anything.
-    if(!( (pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED) || (pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT) ))
+    if(!( (pSkt->smState == (uint8_t)TCPIP_TCP_STATE_ESTABLISHED) || (pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT) ))
     {
         return 0;
     }
@@ -2611,15 +2775,15 @@ static uint16_t _TCPSocketTxFreeSize(TCB_STUB* pSkt)
     
     if(pSkt->txHead >= pSkt->txTail)
     {
-        return (pSkt->txEnd - pSkt->txStart - 1) - (pSkt->txHead - pSkt->txTail);
+        return (uint16_t)(((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart - 1U) - ((uintptr_t)pSkt->txHead - (uintptr_t)pSkt->txTail));
     }
 
-    return pSkt->txTail - pSkt->txHead - 1;
+    return (uint16_t)((uintptr_t)pSkt->txTail - (uintptr_t)pSkt->txHead - 1U);
 }
 
-uint16_t TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t byte)
+uint16_t TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t data)
 {
-    return TCPIP_TCP_ArrayPut(hTCP, &byte, 1);
+    return TCPIP_TCP_ArrayPut(hTCP, &data, 1);
 }
 
 /*****************************************************************************
@@ -2648,17 +2812,21 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
     uint16_t wRightLen = 0;
     TCB_STUB* pSkt; 
     
-    if(len == 0 || data == 0 || (pSkt = _TcpSocketChk(hTCP)) == 0)
+    if(len == 0U || data == NULL)
+    {
+        return 0;
+    }
+    if((pSkt = F_TcpSocketChk(hTCP)) == NULL)
     {
         return 0;
     }
 
-    wFreeTxSpace = _TCPIsPutReady(pSkt);
-    if(wFreeTxSpace == 0)
+    wFreeTxSpace = F_TCPIsPutReady(pSkt);
+    if(wFreeTxSpace == 0U)
     {   // no room in the socket buffer
-        if(_TCP_TxPktValid(pSkt))
+        if(F_TCP_TxPktValid(pSkt))
         {
-            _TcpFlush(pSkt);
+            (void) F_TcpFlush(pSkt);
         }
         return 0;
     }
@@ -2669,14 +2837,14 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
     // See if we need a two part put
     if(pSkt->txHead + wActualLen >= pSkt->txEnd)
     {
-        wRightLen = pSkt->txEnd-pSkt->txHead;
-        TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (uint32_t)wRightLen);
+        wRightLen = (uint16_t)((uintptr_t)pSkt->txEnd-(uintptr_t)pSkt->txHead);
+        (void)TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (size_t)wRightLen);
         data += wRightLen;
         wActualLen -= wRightLen;
         pSkt->txHead = pSkt->txStart;
     }
 
-    TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (uint32_t)wActualLen);
+    (void)TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (size_t)wActualLen);
     pSkt->txHead += wActualLen;
 
     bool    toFlush = false;
@@ -2684,9 +2852,9 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
     if(pSkt->txHead != pSkt->txUnackedTail)
     {   // something to send
 
-        if(pSkt->flags.halfThresFlush != 0)
+        if(pSkt->flags.halfThresFlush != 0U)
         {
-            if(pSkt->Flags.bHalfFullFlush == 0 && wFreeTxSpace <=  ((pSkt->txEnd - pSkt->txStart) >> 1) )
+            if(pSkt->flags.bHalfFullFlush == 0U && wFreeTxSpace <=  (uint16_t)(((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart) >> 1U) )
             {   // Send current payload if crossing the half buffer threshold
                 // This improves performance with the delayed acknowledgement algorithm
                 toFlush = true;
@@ -2696,31 +2864,36 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
 
         if(toFlush == false)
         {
-            toFlush = _TCPNeedSend(pSkt);
+            toFlush = F_TCPNeedSend(pSkt);
         }
     }
 
     if(toFlush)
     {
-        _TcpFlush(pSkt);
+        (void) F_TcpFlush(pSkt);
         if(toSetFlag)
         {
-            pSkt->Flags.bHalfFullFlush = true;
+            pSkt->flags.bHalfFullFlush = 1U;
         }
     }
     // If not already enabled, start a timer so this data will 
     // eventually get sent even if the application doens't call
     // TCPIP_TCP_Flush()
-    else if(!pSkt->Flags.bTimer2Enabled)
+    else if(pSkt->flags.bTimer2Enabled == 0U)
     {
-        pSkt->Flags.bTimer2Enabled = true;
-        pSkt->eventTime2 = SYS_TMR_TickCountGet() + (TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL * sysTickFreq)/1000;
+        pSkt->flags.bTimer2Enabled = 1U;
+        uint32_t tmout = ((uint32_t)TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL * SYS_TMR_TickCounterFrequencyGet()) / 1000U;
+        pSkt->eventTime2 = SYS_TMR_TickCountGet() + tmout; 
+    }
+    else
+    {
+        /* Do Nothing */
     }
 
     return wActualLen + wRightLen;
 }
 
-static bool _TCPNeedSend(TCB_STUB* pSkt)
+static bool F_TCPNeedSend(TCB_STUB* pSkt)
 {
 
     if(pSkt->txHead != pSkt->txUnackedTail)
@@ -2730,11 +2903,11 @@ static bool _TCPNeedSend(TCB_STUB* pSkt)
         // check how much we can send
         if(pSkt->txHead > pSkt->txUnackedTail)
         {
-            toSendData = pSkt->txHead - pSkt->txUnackedTail;
+            toSendData = (uint16_t)((uintptr_t)pSkt->txHead - (uintptr_t)pSkt->txUnackedTail);
         }
         else
         {
-            toSendData = (pSkt->txEnd - pSkt->txUnackedTail) + (pSkt->txHead - pSkt->txStart);
+            toSendData = (uint16_t)(((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txUnackedTail) + ((uintptr_t)pSkt->txHead - (uintptr_t)pSkt->txStart));
         }
 
         if(toSendData > pSkt->remoteWindow)
@@ -2753,7 +2926,7 @@ static bool _TCPNeedSend(TCB_STUB* pSkt)
 
         if(canSend == toSendData)
         {   // can send all there is
-            if(pSkt->flags.forceFlush || (pSkt->Flags.delayAckSend == 0 && pSkt->txTail == pSkt->txUnackedTail))
+            if((pSkt->flags.forceFlush != 0U) || (pSkt->flags.delayAckSend == 0U && pSkt->txTail == pSkt->txUnackedTail))
             {   // either Nagle disabled or no unacknowledged data
                 return true;
             }
@@ -2794,7 +2967,7 @@ static bool _TCPNeedSend(TCB_STUB* pSkt)
   ***************************************************************************/
 const uint8_t* TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* data)
 {
-    return data + TCPIP_TCP_ArrayPut(hTCP, data, strlen((char*)data));
+    return data + TCPIP_TCP_ArrayPut(hTCP, data, (uint16_t)(strlen((const char*)data)));
 }
 
 /*****************************************************************************
@@ -2815,20 +2988,20 @@ const uint8_t* TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* data)
   ***************************************************************************/
 uint16_t TCPIP_TCP_FifoTxFullGet(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt != 0 && _TCP_TxPktValid(pSkt))
+    if(pSkt != NULL && F_TCP_TxPktValid(pSkt))
     {
-        if((pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED) || (pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT))
+        if((pSkt->smState == (uint8_t)TCPIP_TCP_STATE_ESTABLISHED) || (pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT))
         {   // check the socket is connected
             uint16_t wDataLen;
             uint16_t wFIFOSize;
 
             // Calculate total usable FIFO size
-            wFIFOSize = pSkt->txEnd - pSkt->txStart - 1;
+            wFIFOSize = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart - 1U);
 
             // Find out how many data bytes are free in the TX FIFO
-            wDataLen = _TCPSocketTxFreeSize(pSkt);
+            wDataLen = F_TCPSocketTxFreeSize(pSkt);
 
             return wFIFOSize - wDataLen;
         }
@@ -2839,11 +3012,11 @@ uint16_t TCPIP_TCP_FifoTxFullGet(TCP_SOCKET hTCP)
 
 uint16_t TCPIP_TCP_FifoTxFreeGet(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt != 0 && _TCP_TxPktValid(pSkt))
+    if(pSkt != NULL && F_TCP_TxPktValid(pSkt))
     {
-        return _TCPSocketTxFreeSize(pSkt);
+        return F_TCPSocketTxFreeSize(pSkt);
     }
 
     return 0;
@@ -2876,16 +3049,16 @@ uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP)
 {
     uint16_t nBytes = 0;
 
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        nBytes = _TCPIsGetReady(pSkt);
-        if(nBytes)
+        nBytes = F_TCPIsGetReady(pSkt);
+        if(nBytes != 0U)
         {
             // Delete all data in the RX buffer
             pSkt->rxTail = pSkt->rxHead;
-            _TCPSendWinIncUpdate(pSkt);
+            (void) F_TCPSendWinIncUpdate(pSkt);
         }
     }
 
@@ -2896,7 +3069,7 @@ uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP)
 // returns true if it was issued, false otherwise
 // tries to avoid the Silly Window Syndrome (SWS) on the RX side
 // it will send the Win update if all RX buffer is available
-static bool _TCPSendWinIncUpdate(TCB_STUB* pSkt)
+static bool F_TCPSendWinIncUpdate(TCB_STUB* pSkt)
 {
     uint16_t    oldWin, newWin, minWinInc, rxBuffSz;
     bool    toAdvertise = false;
@@ -2905,8 +3078,8 @@ static bool _TCPSendWinIncUpdate(TCB_STUB* pSkt)
     oldWin = pSkt->localWindow;
 
     // new window is all the available RX buffer
-    newWin = _TCPGetRxFIFOFree(pSkt);
-    rxBuffSz = pSkt->rxEnd - pSkt->rxStart;
+    newWin = F_TCPGetRxFIFOFree(pSkt);
+    rxBuffSz = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart);
 
     if(newWin == rxBuffSz)
     {   // whole RX buffer available, advertise
@@ -2925,10 +3098,14 @@ static bool _TCPSendWinIncUpdate(TCB_STUB* pSkt)
             toAdvertise = true;
         }
     }
+    else
+    {
+        /* Do Nothing */
+    }
 
     if(toAdvertise)
     {
-        _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+        (void) F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
         return true;
     }
 
@@ -2959,40 +3136,48 @@ static bool _TCPSendWinIncUpdate(TCB_STUB* pSkt)
   ***************************************************************************/
 uint16_t TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        return _TCPIsGetReady(pSkt);
+        return F_TCPIsGetReady(pSkt);
     }
 
     return 0;
 }
 
-static uint16_t _TCPIsGetReady(TCB_STUB* pSkt)
+static uint16_t F_TCPIsGetReady(TCB_STUB* pSkt)
 {   
     if(pSkt->rxHead >= pSkt->rxTail)
     {
-        return pSkt->rxHead - pSkt->rxTail;
+        return (uint16_t)((uintptr_t)pSkt->rxHead - (uintptr_t)pSkt->rxTail);
     }
 
-    return (pSkt->rxEnd - pSkt->rxTail + 1) + (pSkt->rxHead - pSkt->rxStart);
+    return (uint16_t)(((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxTail + 1U) + ((uintptr_t)pSkt->rxHead - (uintptr_t)pSkt->rxStart));
 }
 
-uint16_t TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* byte)
+uint16_t TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* data)
 {
-    return TCPIP_TCP_ArrayGet(hTCP, byte, 1);
+    return TCPIP_TCP_ArrayGet(hTCP, data, 1);
 }
 
 
-uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
+uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* dataBuff, uint16_t len)
 {
     uint16_t wGetReadyCount;
     uint16_t RightLen = 0;
     TCB_STUB* pSkt; 
     
     // See if there is any data which can be read
-    if(len == 0 || (pSkt= _TcpSocketChk(hTCP)) == 0 || (wGetReadyCount = _TCPIsGetReady(pSkt)) == 0)
+    if(len == 0U)
+    {
+        return 0;
+    }
+    if((pSkt= F_TcpSocketChk(hTCP)) == NULL)
+    {
+        return 0;
+    }
+    if((wGetReadyCount = F_TCPIsGetReady(pSkt)) == 0U)
     {
         return 0;
     }
@@ -3006,35 +3191,39 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
     // See if we need a two part get
     if(pSkt->rxTail + len > pSkt->rxEnd)
     {
-        RightLen = pSkt->rxEnd - pSkt->rxTail + 1;
-        if(buffer)
+        RightLen = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxTail + 1U);
+        if(dataBuff != NULL)
         {
-            TCPIP_Helper_Memcpy(buffer, (uint8_t*)pSkt->rxTail, RightLen);
-            buffer += RightLen;
+            (void) TCPIP_Helper_Memcpy(dataBuff, (uint8_t*)pSkt->rxTail, (size_t)RightLen);
+            dataBuff += RightLen;
         }
         len -= RightLen;
         pSkt->rxTail = pSkt->rxStart;
     }
 
-    if(buffer)
+    if(dataBuff != NULL)
     {
-        TCPIP_Helper_Memcpy(buffer, (uint8_t*)pSkt->rxTail, len);
+        (void) TCPIP_Helper_Memcpy(dataBuff, (uint8_t*)pSkt->rxTail, (size_t)len);
     }
     pSkt->rxTail += len;
     len += RightLen;
 
-    if(!_TCPSendWinIncUpdate(pSkt))
+    if(!F_TCPSendWinIncUpdate(pSkt))
     {   // not enough data freed to generate a window update
         if(wGetReadyCount - len <= len)
         {   // Send a window update if we've run low on data
-            pSkt->Flags.bTXASAPWithoutTimerReset = 1;
+            pSkt->flags.bTXASAPWithoutTimerReset = 1;
         }
-        else if(!pSkt->Flags.bTimer2Enabled)
+        else if(pSkt->flags.bTimer2Enabled == 0U)
             // If not already enabled, start a timer so a window 
             // update will get sent to the remote node at some point
         {
-            pSkt->Flags.bTimer2Enabled = true;
-            pSkt->eventTime2 = SYS_TMR_TickCountGet() + (TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL * sysTickFreq)/1000;
+            pSkt->flags.bTimer2Enabled = 1U;
+            pSkt->eventTime2 = SYS_TMR_TickCountGet() + ((uint32_t)TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL * sysTickFreq)/1000U;
+        }
+        else
+        {
+            /* Do Nothing */
         }
     }
 
@@ -3062,28 +3251,28 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
   ***************************************************************************/
 uint16_t TCPIP_TCP_FifoRxFreeGet(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt != 0)
+    if(pSkt != NULL)
     {
-        return _TCPGetRxFIFOFree(pSkt);
+        return F_TCPGetRxFIFOFree(pSkt);
     }
 
     return 0;
 }
 
 
-static uint16_t _TCPGetRxFIFOFree(TCB_STUB* pSkt)
+static uint16_t F_TCPGetRxFIFOFree(TCB_STUB* pSkt)
 {
 
     uint16_t wDataLen;
     uint16_t wFIFOSize;
 
     // Calculate total usable FIFO size
-    wFIFOSize = pSkt->rxEnd - pSkt->rxStart;
+    wFIFOSize = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart);
 
     // Find out how many data bytes are actually in the RX FIFO
-    wDataLen = _TCPIsGetReady(pSkt);
+    wDataLen = F_TCPIsGetReady(pSkt);
 
     // Perform the calculation  
     return wFIFOSize - wDataLen;
@@ -3125,16 +3314,16 @@ uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, u
     uint8_t* ptrRead;
     uint16_t w;
     uint16_t wBytesUntilWrap;
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt == 0 || wLen == 0)
+    if(pSkt == NULL || wLen == 0U)
     {
         return 0;
     }
 
     // Find out how many bytes are in the RX FIFO and decrease read length 
     // if the start offset + read length is beyond the end of the FIFO
-    w = _TCPIsGetReady(pSkt);
+    w = F_TCPIsGetReady(pSkt);
     if(wStart + wLen > w)
     {
         wLen = w - wStart;
@@ -3148,18 +3337,18 @@ uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, u
     }
 
     // Calculate how many bytes can be read in a single go
-    wBytesUntilWrap = pSkt->rxEnd - ptrRead + 1;
+    wBytesUntilWrap = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)ptrRead + 1U);
     if(wLen <= wBytesUntilWrap)
     {
         // Read all at once
-        TCPIP_Helper_Memcpy(vBuffer, ptrRead, wLen);
+        (void) TCPIP_Helper_Memcpy(vBuffer, ptrRead, (size_t)wLen);
     }
     else
     {
         // Read all bytes up to the wrap position and then read remaining bytes 
         // at the start of the buffer
-        TCPIP_Helper_Memcpy(vBuffer, ptrRead, wBytesUntilWrap);
-        TCPIP_Helper_Memcpy(vBuffer + wBytesUntilWrap, (uint8_t*)pSkt->rxStart, wLen - wBytesUntilWrap);
+        (void) TCPIP_Helper_Memcpy(vBuffer, ptrRead, (size_t)wBytesUntilWrap);
+        (void)TCPIP_Helper_Memcpy(vBuffer + wBytesUntilWrap, (uint8_t*)pSkt->rxStart, (size_t)((uint32_t)wLen - (uint32_t)wBytesUntilWrap));
     }
 
     return wLen;
@@ -3197,7 +3386,7 @@ uint8_t TCPIP_TCP_Peek(TCP_SOCKET hTCP, uint16_t wStart)
 {
     uint8_t i = 0;
     
-    TCPIP_TCP_ArrayPeek(hTCP, &i, 1, wStart);
+    (void) TCPIP_TCP_ArrayPeek(hTCP, &i, 1, wStart);
     return i;
 }
 
@@ -3261,25 +3450,25 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
     const uint8_t *cFindArrayStart;
     uint8_t i, j, k;
     bool isFinding;
-    uint8_t buffer[32] = {0};
+    uint8_t dataBuff[32] = {0};
 
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt == 0 || wLen == 0)
+    if(pSkt == NULL || wLen == 0U)
     {
         return 0xFFFF;
     }
 
     // Find out how many bytes are in the RX FIFO and return
     // immediately if we won't possibly find a match
-    wDataLen = _TCPIsGetReady(pSkt) - wStart;
+    wDataLen = F_TCPIsGetReady(pSkt) - wStart;
 
     if(wDataLen < wLen)
     {
         return 0xFFFFu;
     }
 
-    if(wSearchLen && (wDataLen > wSearchLen))
+    if((wSearchLen != 0U) && (wDataLen > wSearchLen))
     {
         wDataLen = wSearchLen;
     }
@@ -3289,7 +3478,7 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
     {
         ptrLocation -= pSkt->rxEnd - pSkt->rxStart + 1;
     }
-    wBytesUntilWrap = pSkt->rxEnd - ptrLocation + 1;
+    wBytesUntilWrap = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)ptrLocation + 1U);
 
     ptrRead = ptrLocation;
     wLenStart = wLen;
@@ -3298,28 +3487,28 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
     isFinding = false;
     if (bTextCompare)
     {
-        if (j >= 'a' && j <= 'z')
+        if (j >= (uint8_t)'a' && j <= (uint8_t)'z')
         {
-            j += 'A' - 'a';
+            j += (uint8_t)'A' - (uint8_t)'a';
         }
     }
 
     // Search for the array
-    while (1)
+    while (true)
     {
         // Figure out how big of a chunk to read
-        k = sizeof (buffer);
+        k = (uint8_t)(sizeof (dataBuff));
         if (k > wBytesUntilWrap)
         {
-            k = wBytesUntilWrap;
+            k = (uint8_t)(wBytesUntilWrap);
         }
         if ((uint16_t) k > wDataLen)
         {
-            k = wDataLen;
+            k = (uint8_t)wDataLen;
         }
 
         // Read a chunk of data into the buffer
-        TCPIP_Helper_Memcpy(buffer, ptrRead, k);
+        (void)TCPIP_Helper_Memcpy(dataBuff, ptrRead, (size_t)k);
         ptrRead += k;
         wBytesUntilWrap -= k;
 
@@ -3334,22 +3523,22 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
         {
             for (i = 0; i < k; i++)
             {
-                if (buffer[i] >= 'a' && buffer[i] <= 'z')
+                if (dataBuff[i] >= (uint8_t)'a' && dataBuff[i] <= (uint8_t)'z')
                 {
-                    buffer[i] += 'A' - 'a';
+                    dataBuff[i] += (uint8_t)'A' - (uint8_t)'a';
                 }
 
-                if (j == buffer[i])
+                if (j == dataBuff[i])
                 {
                     if (--wLen == 0u)
                     {
-                        return wStart - wLenStart + i + 1;
+                        return (uint16_t)(wStart - wLenStart + i + 1U);
                     }
                     j = *cFindArray++;
                     isFinding = true;
-                    if (j >= 'a' && j <= 'z')
+                    if (j >= (uint8_t)'a' && j <= (uint8_t)'z')
                     {
-                        j += 'A' - 'a';
+                        j += (uint8_t)'A' - (uint8_t)'a';
                     }
                 }
                 else
@@ -3359,9 +3548,9 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
                     {
                         cFindArray = cFindArrayStart;
                         j = *cFindArray++;
-                        if (j >= 'a' && j <= 'z') 
+                        if (j >= (uint8_t)'a' && j <= (uint8_t)'z') 
                         {
-                            j += 'A' - 'a';
+                            j += (uint8_t)'A' - (uint8_t)'a';
                         }
                         isFinding = false;
                     }
@@ -3372,11 +3561,11 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
         {
             for (i = 0; i < k; i++)
             {
-                if (j == buffer[i])
+                if (j == dataBuff[i])
                 {
                     if (--wLen == 0u)
                     {
-                        return wStart - wLenStart + i + 1;
+                        return (uint16_t)(wStart - wLenStart + i + 1U);
                     }
                     j = *cFindArray++;
                     isFinding = true;
@@ -3448,7 +3637,7 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
   ***************************************************************************/
 uint16_t TCPIP_TCP_Find(TCP_SOCKET hTCP, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
 {
-    return TCPIP_TCP_ArrayFind(hTCP, &cFind, sizeof(cFind), wStart, wSearchLen, bTextCompare);
+    return TCPIP_TCP_ArrayFind(hTCP, &cFind, (uint16_t)(sizeof(cFind)), wStart, wSearchLen, bTextCompare);
 }
 
 
@@ -3469,37 +3658,37 @@ static void TCPIP_TCP_Tick(void)
     TCB_STUB* pSkt; 
 
     // Periodically all "not closed" sockets must perform timed operations
-    for(hTCP = 0; hTCP < TcpSockets; hTCP++)
+    for(hTCP = 0; (uint32_t)hTCP < TcpSockets; hTCP++)
     {
         pSkt = TCBStubs[hTCP];
-        if(pSkt != 0 && pSkt->smState != TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
+        if(pSkt != NULL && pSkt->smState != (uint8_t)TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
         {   // existing socket
             vFlags = 0x00;
             bRetransmit = false;
             bCloseSocket = false;
 
             // Transmit ASAP data 
-            if(pSkt->Flags.bTXASAP || pSkt->Flags.bTXASAPWithoutTimerReset)
+            if((pSkt->flags.bTXASAP != 0U) || (pSkt->flags.bTXASAPWithoutTimerReset != 0U))
             {
                 vFlags = ACK;
-                bRetransmit = pSkt->Flags.bTXASAPWithoutTimerReset;
+                bRetransmit = (pSkt->flags.bTXASAPWithoutTimerReset != 0U);
             }
 
             // Perform any needed window updates and data transmissions
-            if(pSkt->Flags.bTimer2Enabled)
+            if(pSkt->flags.bTimer2Enabled != 0U)
             {
                 // See if the timeout has occured, and we need to send a new window update and pending data
-                if((int32_t)(SYS_TMR_TickCountGet() - pSkt->eventTime2) >= 0)
+                if(((int32_t)SYS_TMR_TickCountGet() - (int32_t)pSkt->eventTime2) >= 0)
                 {
                     vFlags = ACK;
                 }
             }
 
             // Process Delayed ACKnowledgement timer
-            if(pSkt->Flags.bDelayedACKTimerEnabled)
+            if(pSkt->flags.bDelayedACKTimerEnabled != 0U)
             {
                 // See if the timeout has occured and delayed ACK needs to be sent
-                if((int32_t)(SYS_TMR_TickCountGet() - pSkt->delayedACKTime) >= 0)
+                if(((int32_t)SYS_TMR_TickCountGet() - (int32_t)pSkt->delayedACKTime) >= 0)
                 {
                     vFlags = ACK;
                 }
@@ -3514,22 +3703,22 @@ static void TCPIP_TCP_Tick(void)
                 if((int32_t)(SYS_TMR_TickCountGet() - pSkt->closeWaitTime) >= 0)
                 {
                     vFlags = FIN | ACK;
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LAST_ACK);
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LAST_ACK);
                 }
             }
 #endif  // (TCPIP_TCP_CLOSE_WAIT_TIMEOUT != 0)
 
             // Process FIN_WAIT2 timer
-            if(pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_2)
+            if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2)
             {
-                if((int32_t)(SYS_TMR_TickCountGet() - pSkt->closeWaitTime) >= 0)
+                if(((int32_t)SYS_TMR_TickCountGet() - (int32_t)pSkt->closeWaitTime) >= 0)
                 {   // the other side failed to close its connection within the TCPIP_TCP_FIN_WAIT_2_TIMEOUT
-                    _TcpSend(pSkt, RST | ACK, SENDTCP_RESET_TIMERS);
+                    (void) F_TcpSend(pSkt, RST | ACK, SENDTCP_RESET_TIMERS);
 #if (TCPIP_TCP_MSL_TIMEOUT != 0)
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
-                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + ((TCPIP_TCP_MSL_TIMEOUT * 2) * sysTickFreq);
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
+                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (((uint32_t)TCPIP_TCP_MSL_TIMEOUT * 2U) * sysTickFreq);
 #else
-                    _TcpCloseSocket(pSkt, 0);
+                    F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
                     continue;
                 }
@@ -3541,28 +3730,28 @@ static void TCPIP_TCP_Tick(void)
             {
                 if((int32_t)(SYS_TMR_TickCountGet() - pSkt->closeWaitTime) >= 0)
                 {   // timeout expired, close the socket
-                    _TcpCloseSocket(pSkt, 0);
+                    F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
                     continue;
                 }
             }
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
 
-            if(vFlags)
+            if(vFlags != 0U)
             {
-                _TcpSend(pSkt, vFlags, bRetransmit ? 0 : SENDTCP_RESET_TIMERS);
+                (void) F_TcpSend(pSkt, vFlags, bRetransmit ? 0U : SENDTCP_RESET_TIMERS);
             }
 
             // The TCPIP_TCP_STATE_LISTEN, and sometimes the TCPIP_TCP_STATE_ESTABLISHED 
             // state don't need any timeout events, so see if the timer is enabled
-            if(!pSkt->Flags.bTimerEnabled)
+            if(pSkt->flags.bTimerEnabled == 0U)
             {
-                if(pSkt->Flags.keepAlive)
+                if(pSkt->flags.keepAlive != 0U)
                 {
                     // Only the established state has any use for keep-alives
-                    if(pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED)
+                    if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_ESTABLISHED)
                     {
                         // If timeout has not occured, do not do anything.
-                        if((int32_t)(SYS_TMR_TickCountGet() - pSkt->eventTime) < 0)
+                        if(((int32_t)SYS_TMR_TickCountGet() - (int32_t)pSkt->eventTime) < 0)
                         {
                             continue;
                         }
@@ -3573,36 +3762,36 @@ static void TCPIP_TCP_Tick(void)
                         // that it thinks is still open
                         if(pSkt->keepAliveCount == pSkt->keepAliveLim)
                         {
-                            vFlags = pSkt->Flags.bServer;
+                            vFlags = (uint8_t)pSkt->flags.bServer;
 
                             // Force an immediate FIN and RST transmission
                             // Also back in the listening state immediately if a server socket.
-                            _TcpDisconnect(pSkt, true);
-                            pSkt->Flags.bServer = 1;    // force client socket non-closing
-                            _TcpAbort(pSkt, _TCP_ABORT_FLAG_REGULAR, TCPIP_TCP_SIGNAL_KEEP_ALIVE_TMO);
+                            (void) F_TcpDisconnect(pSkt, true);
+                            pSkt->flags.bServer = 1U;    // force client socket non-closing
+                            F_TcpAbort(pSkt, TCP_ABORT_FLAG_REGULAR, TCPIP_TCP_SIGNAL_KEEP_ALIVE_TMO);
 
                             // Prevent client mode sockets from getting reused by other applications.  
                             // The application must call TCPIP_TCP_Disconnect()/TCPIP_TCP_Abort() with the handle to free this 
                             // socket (and the handle associated with it)
-                            if(!vFlags)
+                            if(vFlags == 0U)
                             {
-                                pSkt->Flags.bServer = 0;    // restore the client socket
-                                _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT);
+                                pSkt->flags.bServer = 0U;    // restore the client socket
+                                F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT);
                             }
 
                             continue;
                         }
 
                         // Otherwise, if a timeout occured, simply send a keep-alive packet
-                        _TcpSend(pSkt, ACK, SENDTCP_KEEP_ALIVE);
-                        pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq)/1000;
+                        (void) F_TcpSend(pSkt, ACK, SENDTCP_KEEP_ALIVE);
+                        pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq) / 1000U;
                     }
                 }
                 continue;
             }
 
             // If timeout has not occured, do not do anything.
-            if((int32_t)(SYS_TMR_TickCountGet() - pSkt->eventTime) < 0 )
+            if(((int32_t)SYS_TMR_TickCountGet() - (int32_t)pSkt->eventTime) < 0 )
             {
                 continue;
             }
@@ -3611,7 +3800,7 @@ static void TCPIP_TCP_Tick(void)
             // depending on what state this socket is in.
             switch(pSkt->smState)
             {
-                case TCPIP_TCP_STATE_SYN_SENT:
+                case (uint8_t)TCPIP_TCP_STATE_SYN_SENT:
                     // Keep sending SYN until we hear from remote node.
                     // This may be for infinite time, in that case
                     // caller must detect it and do something.
@@ -3619,25 +3808,25 @@ static void TCPIP_TCP_Tick(void)
                     bRetransmit = true;
 
                     // Exponentially increase timeout until we reach TCPIP_TCP_MAX_RETRIES attempts then stay constant
-                    if(pSkt->retryCount >= (TCPIP_TCP_MAX_RETRIES - 1))
+                    if(pSkt->retryCount >= ((uint8_t)TCPIP_TCP_MAX_RETRIES - 1U))
                     {
-                        pSkt->retryCount = TCPIP_TCP_MAX_RETRIES - 1;
-                        pSkt->retryInterval = ((TCPIP_TCP_START_TIMEOUT_VAL * sysTickFreq)/1000) << (TCPIP_TCP_MAX_RETRIES-1);
+                        pSkt->retryCount = (uint8_t)TCPIP_TCP_MAX_RETRIES - 1U;
+                        pSkt->retryInterval = (((uint32_t)TCPIP_TCP_START_TIMEOUT_VAL * sysTickFreq) / 1000U) << ((uint8_t)TCPIP_TCP_MAX_RETRIES - 1U);
                     }
                     break;
 
-                case TCPIP_TCP_STATE_SYN_RECEIVED:
+                case (uint8_t)TCPIP_TCP_STATE_SYN_RECEIVED:
                     // We must receive ACK before timeout expires.
                     // If not, resend SYN+ACK.
                     // Abort, if maximum attempts counts are reached.
-                    if(pSkt->retryCount < TCPIP_TCP_MAX_SYN_RETRIES)
+                    if(pSkt->retryCount < (uint8_t)TCPIP_TCP_MAX_SYN_RETRIES)
                     {
                         vFlags = SYN | ACK;
                         bRetransmit = true;
                     }
                     else
                     {
-                        if(pSkt->Flags.bServer)
+                        if(pSkt->flags.bServer != 0U)
                         {
                             vFlags = RST | ACK;
                             bCloseSocket = true;
@@ -3649,9 +3838,9 @@ static void TCPIP_TCP_Tick(void)
                     }
                     break;
 
-                case TCPIP_TCP_STATE_ESTABLISHED:
+                case (uint8_t)TCPIP_TCP_STATE_ESTABLISHED:
                     // Retransmit any unacknowledged data
-                    if(pSkt->retryCount < TCPIP_TCP_MAX_RETRIES)
+                    if(pSkt->retryCount < (uint8_t)TCPIP_TCP_MAX_RETRIES)
                     {
                         vFlags = ACK;
                         bRetransmit = true;
@@ -3660,13 +3849,13 @@ static void TCPIP_TCP_Tick(void)
                     {   // No response back for too long, close connection
                         // This could happen, for instance, if the communication 
                         // medium was lost
-                        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_FIN_WAIT_1);
+                        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_FIN_WAIT_1);
                         vFlags = FIN | ACK;
                     }
                     break;
 
-                case TCPIP_TCP_STATE_FIN_WAIT_1:
-                    if(pSkt->retryCount < TCPIP_TCP_MAX_RETRIES)
+                case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1:
+                    if(pSkt->retryCount < (uint8_t)TCPIP_TCP_MAX_RETRIES)
                     {
                         // Send another FIN
                         vFlags = FIN | ACK;
@@ -3677,15 +3866,15 @@ static void TCPIP_TCP_Tick(void)
                         // with the remote node anymore
                         vFlags = RST | ACK;
 #if (TCPIP_TCP_MSL_TIMEOUT != 0)
-                        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
+                        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
 #else
                         bCloseSocket = true;
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
                     }
                     break;
 
-                case TCPIP_TCP_STATE_CLOSING:
-                    if(pSkt->retryCount < TCPIP_TCP_MAX_RETRIES)
+                case (uint8_t)TCPIP_TCP_STATE_CLOSING:
+                    if(pSkt->retryCount < (uint8_t)TCPIP_TCP_MAX_RETRIES)
                     {
                         // Send another ACK+FIN (the FIN is retransmitted 
                         // automatically since it hasn't been acknowledged by 
@@ -3698,7 +3887,7 @@ static void TCPIP_TCP_Tick(void)
                         // with the remote node anymore
                         vFlags = RST | ACK;
 #if (TCPIP_TCP_MSL_TIMEOUT != 0)
-                        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
+                        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
 #else
                         bCloseSocket = true;
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
@@ -3706,9 +3895,9 @@ static void TCPIP_TCP_Tick(void)
                     break;
 
 
-                case TCPIP_TCP_STATE_LAST_ACK:
+                case (uint8_t)TCPIP_TCP_STATE_LAST_ACK:
                     // Send some more FINs or close anyway
-                    if(pSkt->retryCount < TCPIP_TCP_MAX_RETRIES)
+                    if(pSkt->retryCount < (uint8_t)TCPIP_TCP_MAX_RETRIES)
                     {
                         vFlags = FIN | ACK;
                         bRetransmit = true;
@@ -3721,10 +3910,11 @@ static void TCPIP_TCP_Tick(void)
                     break;
 
                 default:    // case TCPIP_TCP_STATE_TIME_WAIT:
+                    /* Do Nothing */
                     break;
             }
 
-            if(vFlags)
+            if(vFlags != 0U)
             {
                 // Transmit all unacknowledged data over again
                 if(bRetransmit)
@@ -3734,9 +3924,11 @@ static void TCPIP_TCP_Tick(void)
                     pSkt->retryInterval <<= 1;
 
                     // Calculate how many bytes we have to roll back and retransmit
-                    w = pSkt->txUnackedTail - pSkt->txTail;
+                    w = (uint16_t)((uintptr_t)pSkt->txUnackedTail - (uintptr_t)pSkt->txTail);
                     if(pSkt->txUnackedTail < pSkt->txTail)
-                        w += pSkt->txEnd - pSkt->txStart;
+                    {
+                        w += (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
+                    }
 
                     // Perform roll back of local SEQuence counter, remote window 
                     // adjustment, and cause all unacknowledged data to be 
@@ -3744,18 +3936,18 @@ static void TCPIP_TCP_Tick(void)
                     pSkt->MySEQ -= w;
                     pSkt->remoteWindow += w;
                     pSkt->txUnackedTail = pSkt->txTail;     
-                    _TcpSend(pSkt, vFlags, 0);
+                    (void) F_TcpSend(pSkt, vFlags, 0U);
                 }
                 else
                 {
-                    _TcpSend(pSkt, vFlags, SENDTCP_RESET_TIMERS);
+                    (void) F_TcpSend(pSkt, vFlags, SENDTCP_RESET_TIMERS);
                 }
 
             }
 
             if(bCloseSocket)
             {
-                _TcpCloseSocket(pSkt, 0);
+                F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
             }
         }
     }
@@ -3772,12 +3964,11 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     const IPV6_ADDR*    localIP;
     const IPV6_ADDR*    remoteIP;
     TCB_STUB*       pSkt; 
-    TCPIP_NET_IF*       pPktIf;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
     const void*         sigParam;
     uint16_t            sigMask;
     TCPIP_MAC_PKT_ACK_RES ackRes;
-    TCPIP_TCP_SIGNAL_TYPE sktEvent = 0;
+    uint32_t            sktEvent = 0;
 
     if(!TCPIP_IPV6_AddressesGet(pRxPkt, &localIP, &remoteIP))
     {
@@ -3786,62 +3977,62 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 
     dataLen = pRxPkt->totTransportLen;
 
-    pTCPHdr = (TCP_HEADER*)pRxPkt->pTransportLayer;
+    pTCPHdr = FC_U8Ptr2TcpHdr(pRxPkt->pTransportLayer);
 
-    pPktIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
-    if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP) == 0)
+    if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP) == 0U)
     {
         // Calculate IP pseudoheader checksum.
         uint16_t        calcChkSum;
         IPV6_PSEUDO_HEADER   pseudoHeader;
 
-        memcpy (&pseudoHeader.SourceAddress, remoteIP, sizeof (IPV6_ADDR));
-        memcpy (&pseudoHeader.DestAddress, localIP, sizeof (IPV6_ADDR));
+        (void)memcpy (&pseudoHeader.SourceAddress, remoteIP, sizeof (IPV6_ADDR));
+        (void)memcpy (&pseudoHeader.DestAddress, localIP, sizeof (IPV6_ADDR));
         // Total payload length is the length of data + extension headers
         pseudoHeader.PacketLength = TCPIP_Helper_htons(dataLen);
         pseudoHeader.zero1 = 0;
         pseudoHeader.zero2 = 0;
-        pseudoHeader.NextHeader = IP_PROT_TCP;
+        pseudoHeader.NextHeader = (uint8_t)IP_PROT_TCP;
 
-        // Note: if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_SPLIT) != 0) not supported for now!
+        // Note: if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_SPLIT) != 0) not supported for now!
 
 
-        calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader, sizeof(pseudoHeader), 0);
+        calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader, (uint16_t)(sizeof(pseudoHeader)), 0);
         calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, dataLen, calcChkSum);
-        if(calcChkSum != 0)
+        if(calcChkSum != 0U)
         {   // discard packet
             return TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
         }
     }
 
-    _TcpSwapHeader(pTCPHdr);
+    F_TcpSwapHeader(pTCPHdr);
 
     // Skip over options to retrieve data bytes
-    optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
+    optionsSize = ((pTCPHdr->DataOffset.Val << 2) - (uint8_t)sizeof(*pTCPHdr));
 
     while(true)
     {
         // Find matching socket.
-        pSkt = _TcpFindMatchingSocket(pRxPkt, remoteIP, localIP, IP_ADDRESS_TYPE_IPV6);
-        if(pSkt == 0)
+        pSkt = F_TcpFindMatchingSocket(pRxPkt, remoteIP, localIP, IP_ADDRESS_TYPE_IPV6);
+        if(pSkt == NULL)
         {   // Send ICMP Destination Unreachable Code 4 (Port unreachable) and discard packet
             uint16_t headerLen = pRxPkt->ipv6PktData;
-            TCPIP_IPV6_ErrorSend ((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, localIP, remoteIP, ICMPV6_ERR_DU_PORT_UNREACHABLE, ICMPV6_ERROR_DEST_UNREACHABLE, 0x00000000, dataLen + headerLen + sizeof (IPV6_HEADER));
+            TCPIP_IPV6_ErrorSend ((const TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, localIP, remoteIP, (uint8_t)ICMPV6_ERR_DU_PORT_UNREACHABLE, (uint8_t)ICMPV6_ERROR_DEST_UNREACHABLE, 0x00000000, (dataLen + headerLen + (uint16_t)sizeof (IPV6_HEADER)));
             ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
             break;
         }
 
 
         // extract header
-        pRxPkt->pDSeg->segLen -=  optionsSize + sizeof(*pTCPHdr);    
-        _TcpHandleSeg(pSkt, pTCPHdr, dataLen - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
+        pRxPkt->pDSeg->segLen -=  (uint16_t)(optionsSize + sizeof(*pTCPHdr));    
+        F_TcpHandleSeg(pSkt, pTCPHdr, (dataLen - optionsSize - (uint16_t)sizeof(*pTCPHdr)), pRxPkt, &sktEvent);
 
-        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
-        if((sktEvent &= sigMask) != 0)
+        sigMask = F_TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        sktEvent &= (uint32_t)sigMask;
+        if(sktEvent != 0U)
         {
-            if(sigHandler != 0)
+            if(sigHandler != NULL)
             {
-                (*sigHandler)(pSkt->sktIx, pPktIf, sktEvent, sigParam);
+                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, (TCPIP_TCP_SIGNAL_TYPE)sktEvent, sigParam);
             }
         }
 
@@ -3852,8 +4043,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 
     // log 
 #if (TCPIP_PACKET_LOG_ENABLE)
-    uint32_t logPort = (pSkt != 0) ? ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort : ((uint32_t)pTCPHdr->DestPort << 16) | pTCPHdr->SourcePort;
-    TCPIP_PKT_FlightLogRxSkt(pRxPkt, TCPIP_MODULE_LAYER3, logPort, pSkt != 0 ? pSkt->sktIx: 0xffff);
+    uint32_t logPort = (pSkt != NULL) ? ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort : ((uint32_t)pTCPHdr->DestPort << 16) | pTCPHdr->SourcePort;
+    TCPIP_PKT_FlightLogRxSkt(pRxPkt, TCPIP_MODULE_LAYER3, logPort, pSkt != NULL ? (uint16_t)pSkt->sktIx: (uint16_t)0xffffU);
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
     return ackRes;
@@ -3862,7 +4053,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 
 /*****************************************************************************
   Function:
-    static bool _TcpSend(pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
+    static bool F_TcpSend(pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
 
   Summary:
     Transmits a TPC segment.
@@ -3881,24 +4072,25 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
                  transmit behavior or contents.
 
   Returns:
-    _TCP_SEND_OK for success, a _TCP_SEND_RES code  < 0 otherwise
+    TCP_SEND_OK for success, a TCP_SEND_RES code  < 0 otherwise
   ***************************************************************************/
-static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
+static TCP_SEND_RES F_TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
 {
     TCP_OPTIONS     options;
     uint32_t        len, lenStart, lenEnd;
     uint16_t        loadLen, hdrLen, maxPayload;
     void*           pSendPkt;
     uint16_t        mss = 0;
-    TCP_HEADER *    header = 0;
+    TCP_HEADER *    header = NULL;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
     const void*         sigParam;
     uint16_t            sigMask;
+    TCP_SEND_RES sendRes;
 
 #if (TCPIP_TCP_QUIET_TIME != 0)
     if(!tcpQuietDone)
     {
-        return _TCP_SEND_QUIET;
+        return TCP_SEND_QUIET;
     }
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 
@@ -3906,131 +4098,142 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
     switch(pSkt->addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
-        case IP_ADDRESS_TYPE_IPV6:
-            pSendPkt = _Tcpv6AllocateTxPacketIfQueued(pSkt, true);
+        case (uint8_t)IP_ADDRESS_TYPE_IPV6:
+            pSendPkt = F_Tcpv6AllocateTxPacketIfQueued(pSkt, true);
+            if(pSendPkt == NULL)
+            {   // cannot allocate packet
+                sendRes = TCP_SEND_NO_MEMORY;
+            }
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        case IP_ADDRESS_TYPE_IPV4:
-            pSendPkt = _Tcpv4AllocateTxPacketIfQueued(pSkt, true);
+        case (uint8_t)IP_ADDRESS_TYPE_IPV4:
+            pSendPkt = F_Tcpv4AllocateTxPacketIfQueued(pSkt, true);
+            if(pSendPkt == NULL)
+            {   // cannot allocate packet
+                sendRes = TCP_SEND_NO_MEMORY;
+            }
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
         default:
             // cannot send with no address specified
-            return _TCP_SEND_NO_PKT; 
+            pSendPkt = NULL;
+            sendRes = TCP_SEND_NO_PKT; 
+            break;
     }
 
-    if(pSendPkt == 0)
+    if(pSendPkt == NULL)
     {   // cannot allocate packet
-        return _TCP_SEND_NO_MEMORY;
+        return sendRes;
     }
 
     // packet was allocated/marked for TX; try to send it
-    _TCP_SEND_RES sendRes;
     while(true)
     {
         // FINs must be handled specially
-        if(vTCPFlags & FIN)
+        if((vTCPFlags & FIN) != 0U)
         {
-            pSkt->Flags.bTXFIN = 1;
-            vTCPFlags &= ~FIN;
+            pSkt->flags.bTXFIN = 1;
+            vTCPFlags &= ~(uint8_t)FIN;
         }
 
         // Status will now be synched, disable automatic future 
         // status transmissions
-        pSkt->Flags.bTimer2Enabled = 0;
-        pSkt->Flags.bDelayedACKTimerEnabled = 0;
-        pSkt->Flags.bOneSegmentReceived = 0;
-        pSkt->Flags.bTXASAP = 0;
-        pSkt->Flags.bTXASAPWithoutTimerReset = 0;
-        pSkt->Flags.bHalfFullFlush = 0;
+        pSkt->flags.bTimer2Enabled = 0;
+        pSkt->flags.bDelayedACKTimerEnabled = 0;
+        pSkt->flags.bOneSegmentReceived = 0;
+        pSkt->flags.bTXASAP = 0;
+        pSkt->flags.bTXASAPWithoutTimerReset = 0;
+        pSkt->flags.bHalfFullFlush = 0;
 
 #if defined (TCPIP_STACK_USE_IPV6)
-        if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {
             header = TCPIP_IPV6_UpperLayerHeaderPtrGet((IPV6_PACKET*)pSendPkt);
-            if(header == 0)
+            if(header == NULL)
             {   // something was wrong
-                sendRes = _TCP_SEND_NO_PKT;
+                sendRes = TCP_SEND_NO_PKT;
                 break;
             }
         }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
         {
-            header = (TCP_HEADER*)((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pTransportLayer;
+            header = FC_U8Ptr2TcpHdr(((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pTransportLayer);
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
         header->DataOffset.Val = 0;
 
         // Put all socket application data in the TX space
-        if(vTCPFlags & (SYN | RST))
+        if((vTCPFlags & (SYN | RST)) != 0U)
         {
             // Don't put any data in SYN and RST messages
             len = 0;
 
             // Insert the MSS (Maximum Segment Size) TCP option if this is SYN packet
-            if(vTCPFlags & SYN)
+            if((vTCPFlags & SYN) != 0U)
             {
                 options.Kind = TCP_OPTIONS_MAX_SEG_SIZE;
                 options.Length = 0x04;
 
                 // Load MSS and swap to big endian
 #if defined (TCPIP_STACK_USE_IPV6)
-                if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
                 {
-                    mss = TCPIP_IPV6_MaxDatagramDataSizeGet(pSkt->pSktNet) - sizeof(TCP_HEADER); 
+                    mss = ((uint16_t)TCPIP_IPV6_MaxDatagramDataSizeGet(pSkt->pSktNet) - (uint16_t)sizeof(TCP_HEADER)); 
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-                if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
                 {
-                    if(pSkt->pSktNet == 0)
+                    if(pSkt->pSktNet == NULL)
                     {   // client socket at 1st connect
-                        if(!_TcpSocketSetSourceInterface(pSkt))
+                        if(!F_TcpSocketSetSourceInterface(pSkt))
                         {   // cannot find an route?
-                            sendRes = _TCP_SEND_NO_IF;
+                            sendRes = TCP_SEND_NO_IF;
                             break;
                         }
                     }
 
-                    mss = TCPIP_IPV4_MaxDatagramDataSizeGet(pSkt->pSktNet) - sizeof(TCP_HEADER);
+                    mss = ((uint16_t)TCPIP_IPV4_MaxDatagramDataSizeGet(pSkt->pSktNet) - (uint16_t)sizeof(TCP_HEADER));
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-                options.MaxSegSize.Val = (((mss)&0x00FF)<<8) | (((mss)&0xFF00)>>8);
+                options.MaxSegSize.Val = (((mss)&0x00FFU)<<8U) | (((mss)&0xFF00U)>>8U);
                 pSkt->localMSS = mss;
 
-                header->DataOffset.Val   += sizeof(options) >> 2;
+                uint8_t optVal =  (uint8_t)sizeof(options) >> 2;
+                optVal += header->DataOffset.Val;
+                header->DataOffset.Val = optVal;
 
 #if defined (TCPIP_STACK_USE_IPV6)
-                if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
                 {
-                    if (TCPIP_IPV6_TxIsPutReady((IPV6_PACKET*)pSendPkt, sizeof (options)) < sizeof (options))
+                    if (TCPIP_IPV6_TxIsPutReady((IPV6_PACKET*)pSendPkt, (uint16_t)sizeof (options)) < sizeof (options))
                     {
-                        sendRes = _TCP_SEND_NO_MEMORY;
+                        sendRes = TCP_SEND_NO_MEMORY;
                         break;
                     }
-                    TCPIP_IPV6_PutArray((IPV6_PACKET*)pSendPkt, (uint8_t*)&options, sizeof(options));
+                    (void)TCPIP_IPV6_PutArray((IPV6_PACKET*)pSendPkt, (uint8_t*)&options, (uint16_t)sizeof(options));
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-                if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
                 {
-                    memcpy(header + 1, &options, sizeof(options));
+                    (void) memcpy((uint8_t*)(header + 1), (uint8_t*)&options, sizeof(options));
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-                if(pSkt->MySEQ == 0)
+                if(pSkt->MySEQ == 0U)
                 {   // Set Initial Sequence Number (ISN)
-                    pSkt->MySEQ = _TCP_SktSetSequenceNo(pSkt);
+                    pSkt->MySEQ = F_TCP_SktSetSequenceNo(pSkt);
                 }
             }
         }
@@ -4038,7 +4241,7 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
         {
             // Begin copying any application data over to the TX space
             maxPayload = pSkt->wRemoteMSS;
-            if(pSkt->txHead == pSkt->txUnackedTail || pSkt->remoteWindow == 0)
+            if(pSkt->txHead == pSkt->txUnackedTail || pSkt->remoteWindow == 0U)
             {   // either all caught up on data TX or cannot send anything
                 len = 0;
             }
@@ -4047,13 +4250,13 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
                 bool isFragmSupported = false;
 
 #if defined (TCPIP_STACK_USE_IPV4)
-                if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
                 {
                     isFragmSupported = TCPIP_IPV4_IsFragmentationEnabled();
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 #if defined (TCPIP_STACK_USE_IPV6)
-                if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
                 {
                     isFragmSupported = TCPIP_IPV6_IsFragmentationEnabled();
                 }
@@ -4069,7 +4272,7 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 
                 if(pSkt->txHead > pSkt->txUnackedTail)
                 {
-                    len = pSkt->txHead - pSkt->txUnackedTail;
+                    len = (uint32_t)((uintptr_t)pSkt->txHead - (uintptr_t)pSkt->txUnackedTail);
                     if(len > pSkt->remoteWindow)
                     {
                         len = pSkt->remoteWindow;
@@ -4078,25 +4281,27 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
                     if(len > maxPayload)
                     {
                         len = maxPayload;
-                        pSkt->Flags.bTXASAPWithoutTimerReset = 1;
+                        pSkt->flags.bTXASAPWithoutTimerReset = 1;
                     }
 
                     // link application data into the TX packet
-                    _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, len, 0, 0);
+                    F_TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, (uint16_t)len, NULL, 0);
                     pSkt->txUnackedTail += len;
                 }
                 else
                 {
-                    lenEnd = pSkt->txEnd - pSkt->txUnackedTail;
-                    len = lenEnd + pSkt->txHead - pSkt->txStart;
+                    lenEnd = (uint32_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txUnackedTail);
+                    len = lenEnd + (uint32_t)((uintptr_t)pSkt->txHead - (uintptr_t)pSkt->txStart);
 
                     if(len > pSkt->remoteWindow)
+                    {
                         len = pSkt->remoteWindow;
+                    }
 
                     if(len > maxPayload)
                     {
                         len = maxPayload;
-                        pSkt->Flags.bTXASAPWithoutTimerReset = 1;
+                        pSkt->flags.bTXASAPWithoutTimerReset = 1;
                     }
 
                     if (lenEnd > len)
@@ -4106,13 +4311,13 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
                     lenStart = len - lenEnd;
 
                     // link application data into the TX packet
-                    if(lenStart)
+                    if(lenStart != 0U)
                     {
-                        _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, lenEnd, pSkt->txStart, lenStart);
+                        F_TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, (uint16_t)lenEnd, pSkt->txStart, (uint16_t)lenStart);
                     }
                     else
                     {
-                        _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, lenEnd, 0, 0);
+                        F_TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, (uint16_t)lenEnd, NULL, 0);
                     }
 
                     pSkt->txUnackedTail += len;
@@ -4124,7 +4329,7 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
             }
 
             // If we are to transmit a FIN, make sure we can put one in this packet
-            if(pSkt->Flags.bTXFIN)
+            if(pSkt->flags.bTXFIN != 0U)
             {
                 if((len != pSkt->remoteWindow) && (len != maxPayload))
                 {
@@ -4138,48 +4343,48 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
         // Ensure that all packets with data of some kind are 
         // retransmitted by TCPIP_TCP_Tick() until acknowledged
         // Pure ACK packets with no data are not ACKed back in TCP
-        if(len || (vTCPFlags & (SYN | FIN)))
+        if((len != 0U) || ((vTCPFlags & (SYN | FIN)) != 0U))
         {
             // Transmitting data, update remote window variable to reflect smaller 
             // window.
-            pSkt->remoteWindow -= len;
+            pSkt->remoteWindow -= (uint16_t)len;
 
             // Push (PSH) all data for enhanced responsiveness on 
             // the remote end, especially with GUIs
-            if(len)
+            if(len != 0U)
             {
                 vTCPFlags |= PSH;
             }
 
-            if(vSendFlags & SENDTCP_RESET_TIMERS)
+            if((vSendFlags & SENDTCP_RESET_TIMERS) != 0U)
             {
                 pSkt->retryCount = 0;
-                pSkt->retryInterval = (TCPIP_TCP_START_TIMEOUT_VAL * sysTickFreq)/1000;
+                pSkt->retryInterval = ((uint32_t)TCPIP_TCP_START_TIMEOUT_VAL * sysTickFreq) / 1000U;
             }   
 
             pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
-            pSkt->Flags.bTimerEnabled = 1;
+            pSkt->flags.bTimerEnabled = 1;
         }
-        else if(vSendFlags & SENDTCP_KEEP_ALIVE)
+        else if((vSendFlags & SENDTCP_KEEP_ALIVE) != 0U)
         {
             // Increment Keep Alive TX counter to handle disconnection if not response is returned
             pSkt->keepAliveCount++;
 
             // Generate a dummy byte
-            pSkt->MySEQ -= 1;
+            pSkt->MySEQ -= 1U;
             len = 1;
         }
-        else if(pSkt->Flags.bTimerEnabled) 
+        else if(pSkt->flags.bTimerEnabled != 0U) 
         {
             // If we have data to transmit, but the remote RX window is zero, 
             // so we aren't transmitting any right now then make sure to not 
             // extend the retry counter or timer.  This will stall our TX 
             // with a periodic ACK sent to the remote node.
-            if(!(vSendFlags & SENDTCP_RESET_TIMERS))
+            if((vSendFlags & SENDTCP_RESET_TIMERS) == 0U)
             {
                 // Roll back retry counters since we can't send anything, 
                 // but only if we incremented it in the first place
-                if(pSkt->retryCount)
+                if(pSkt->retryCount != 0U)
                 {
                     pSkt->retryCount--;
                     pSkt->retryInterval >>= 1;
@@ -4188,6 +4393,10 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 
             pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
         }
+        else
+        {
+            /* Do Nothing */
+        }
 
         header->SourcePort          = pSkt->localPort;
         header->DestPort            = pSkt->remotePort;
@@ -4195,26 +4404,26 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
         header->AckNumber           = pSkt->RemoteSEQ;
         header->Flags.bits.Reserved2    = 0;
         header->DataOffset.Reserved3    = 0;
-        header->Flags.byte          = vTCPFlags;
+        header->Flags.byteVal       = vTCPFlags;
         header->UrgentPointer       = 0;
         header->Checksum            = 0;
 
         // Update our send sequence number and ensure retransmissions 
         // of SYNs and FINs use the right sequence number
         pSkt->MySEQ += (uint32_t)len;
-        if(vTCPFlags & SYN)
+        if((vTCPFlags & SYN) != 0U)
         {
-            hdrLen = sizeof(options);
+            hdrLen = (uint16_t)(sizeof(options));
 
             // SEG.ACK needs to be zero for the first SYN packet for compatibility 
             // with certain paranoid TCP/IP stacks, even though the ACK flag isn't 
             // set (indicating that the AckNumber field is unused).
-            if(!(vTCPFlags & ACK))
+            if((vTCPFlags & ACK) == 0U)
             {
                 header->AckNumber = 0;
             }
 
-            if(pSkt->flags.bSYNSent)
+            if(pSkt->flags.bSYNSent != 0U)
             {
                 header->SeqNumber--;
             }
@@ -4229,12 +4438,12 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
             hdrLen = 0;
         }
 
-        if(vTCPFlags & FIN)
+        if((vTCPFlags & FIN) != 0U)
         {
             pSkt->flags.bFINSent = 1;   // do not advance the seq no for FIN!
         }
 
-        if(vTCPFlags & ACK)
+        if((vTCPFlags & ACK) != 0U)
         {
             pSkt->flags.ackSent = 1;   // store the ACK already sent
         }
@@ -4242,47 +4451,49 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
         // Calculate the amount of free space in the RX buffer area of this socket
         if(pSkt->rxHead >= pSkt->rxTail)
         {
-            header->Window = (pSkt->rxEnd - pSkt->rxStart) - (pSkt->rxHead - pSkt->rxTail);
+            header->Window = (uint16_t)(((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart) - ((uintptr_t)pSkt->rxHead - (uintptr_t)pSkt->rxTail));
         }
         else
         {
-            header->Window = pSkt->rxTail - pSkt->rxHead - 1;
+            header->Window = (uint16_t)((uintptr_t)pSkt->rxTail - (uintptr_t)pSkt->rxHead - 1U);
         }
         pSkt->localWindow = header->Window; // store the last advertised window
 
-        _TcpSwapHeader(header);
+        F_TcpSwapHeader(header);
 
 
-        hdrLen += sizeof(TCP_HEADER);
-        header->DataOffset.Val   += sizeof(TCP_HEADER) >> 2;
+        hdrLen += (uint16_t)(sizeof(TCP_HEADER));
+        uint8_t optVal =  (uint8_t)sizeof(TCP_HEADER) >> 2;
+        optVal += header->DataOffset.Val;
+        header->DataOffset.Val = optVal;
 
 #if defined (TCPIP_STACK_USE_IPV6)
-        if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {   // Write IP header
-            TCPIP_IPV6_HeaderPut((IPV6_PACKET*)pSendPkt, IP_PROT_TCP);
+            TCPIP_IPV6_HeaderPut((IPV6_PACKET*)pSendPkt, (uint8_t)IP_PROT_TCP);
         }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
         // transmit the packet over the network
-        sendRes = _TCP_Flush (pSkt, pSendPkt, hdrLen, loadLen) ? _TCP_SEND_OK : _TCP_SEND_IP_FAIL;
-        if(loadLen && pSkt->retxTime == 0)
+        sendRes = F_TCP_Flush (pSkt, pSendPkt, hdrLen, loadLen) ? TCP_SEND_OK : TCP_SEND_IP_FAIL;
+        if(loadLen != 0U && pSkt->retxTime == 0U)
         {   // sending some payload
-            _TCP_LoadRetxTmo(pSkt, true);
+            F_TCP_LoadRetxTmo(pSkt, true);
         }
         break;
     }
 
 #if defined (TCPIP_STACK_USE_IPV4)
-    if(sendRes != _TCP_SEND_OK && pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+    if(sendRes != TCP_SEND_OK && pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
     {   // release the packet marked for TX
-        ((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED ;
+        ((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pktFlags &= ~((uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED) ;
     }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-    if(sendRes == _TCP_SEND_OK && (vTCPFlags & RST) != 0 )
+    if(sendRes == TCP_SEND_OK && (vTCPFlags & RST) != 0U )
     {   // signal that we reset the connection
-        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
-        if(sigHandler != 0 && (sigMask & TCPIP_TCP_SIGNAL_TX_RST) != 0)
+        sigMask = F_TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if(sigHandler != NULL && (sigMask & (uint16_t)TCPIP_TCP_SIGNAL_TX_RST) != 0U)
         {
             (*sigHandler)(pSkt->sktIx, pSkt->pSktNet, TCPIP_TCP_SIGNAL_TX_RST, sigParam);
         } 
@@ -4293,7 +4504,7 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 
 /*****************************************************************************
   Function:
-    static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, void * remoteIP, void * localIP, IP_ADDRESS_TYPE addressType)
+    static TCB_STUB* F_TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, void * remoteIP, void * localIP, IP_ADDRESS_TYPE addressType)
 
   Summary:
     Finds a suitable socket for a TCP segment.
@@ -4317,63 +4528,67 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
     a socket pointer - A match was found 
     0 - No suitable socket was found 
   ***************************************************************************/
-static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * remoteIP, const void * localIP, IP_ADDRESS_TYPE addressType)
+static TCB_STUB* F_TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * remoteIP, const void * localIP, IP_ADDRESS_TYPE addressType)
 {
     TCP_SOCKET hTCP;
     uint16_t hash;
     TCB_STUB* pSkt, *partialSkt;
-    TCPIP_NET_IF* pPktIf;
+    const TCPIP_NET_IF* pPktIf;
 
-    TCP_HEADER* h = (TCP_HEADER*)pRxPkt->pTransportLayer;
-    pPktIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
+    TCP_HEADER* h = FC_U8Ptr2TcpHdr(pRxPkt->pTransportLayer);
+    pPktIf = (const TCPIP_NET_IF*)pRxPkt->pktIf;
 
     // Prevent connections on invalid port 0
-    if(h->DestPort == 0)
+    if(h->DestPort == 0U)
     {
-        return 0;
+        return NULL;
     }
 
-    partialSkt = 0;
+    partialSkt = NULL;
 
-    switch(addressType)
-    {
+    bool addrMatch = false;
 #if defined TCPIP_STACK_USE_IPV6
-        case IP_ADDRESS_TYPE_IPV6:
-            hash = TCPIP_IPV6_GetHash(remoteIP, h->SourcePort, h->DestPort);
-            break;  // OK
+    if(addressType == IP_ADDRESS_TYPE_IPV6)
+    {
+        hash = TCPIP_IPV6_GetHash(remoteIP, h->SourcePort, h->DestPort);
+        addrMatch = true;
+    }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        case IP_ADDRESS_TYPE_IPV4:
-            hash = (((IPV4_ADDR *)remoteIP)->w[1] + ((IPV4_ADDR *)remoteIP)->w[0] + h->SourcePort) ^ h->DestPort;
-            break;  // OK
+    if(addressType == IP_ADDRESS_TYPE_IPV4)
+    {
+        hash = (((const IPV4_ADDR *)remoteIP)->w[1] + ((const IPV4_ADDR *)remoteIP)->w[0] + h->SourcePort) ^ h->DestPort;
+        addrMatch = true;
+    }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-        default:
-            return 0;  // shouldn't happen
+    if(addrMatch == false)
+    {   // should not happen
+        return NULL;
     }
 
     // Loop through all sockets looking for a socket that is expecting this 
     // packet or can handle it.
-    for(hTCP = 0; hTCP < TcpSockets; hTCP++)
+    for(hTCP = 0; (uint32_t)hTCP < TcpSockets; hTCP++)
     {
         pSkt = TCBStubs[hTCP];
 
-        if(pSkt == 0 || pSkt->smState == TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
+        if(pSkt == NULL || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
         {
             continue;
         }
 
-        if( (pSkt->addType == IP_ADDRESS_TYPE_ANY || pSkt->addType == addressType) &&
-                (pSkt->pSktNet == 0 || pSkt->pSktNet == pPktIf) )
+        if( (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_ANY || pSkt->addType == (uint8_t)addressType) &&
+                (pSkt->pSktNet == NULL || pSkt->pSktNet == pPktIf) )
         {   // both network interface and address type match
 
             bool found = false;
 
-            if(pSkt->smState == TCPIP_TCP_STATE_LISTEN)
+            if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_LISTEN)
             {
                 // For listening ports, check if this is the correct port
-                if(pSkt->remoteHash == h->DestPort && partialSkt == 0)
+                if(pSkt->remoteHash == h->DestPort && partialSkt == NULL)
                 {
                     partialSkt = pSkt;
                 }
@@ -4383,6 +4598,10 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
             {// Ignore if the hash doesn't match
                 continue;
             }
+            else
+            {
+                /* Possible match */
+            }
 
             while(  h->DestPort == pSkt->localPort && h->SourcePort == pSkt->remotePort )  
             {
@@ -4390,22 +4609,24 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
 #if defined (TCPIP_STACK_USE_IPV6)
                 if (addressType == IP_ADDRESS_TYPE_IPV6)
                 {
-                    if (!memcmp (TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), remoteIP, sizeof (IPV6_ADDR)))
+                    const IPV6_ADDR* pDstAddr = TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt);
+                    if (memcmp (pDstAddr->v, FC_Cvptr2Uptr(remoteIP), sizeof (IPV6_ADDR)) == 0)
                     {
                         found = true;
                     }
                     break;
                 }
+#if defined (TCPIP_STACK_USE_IPV4)
+                else
+#endif  // defined (TCPIP_STACK_USE_IPV4)
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-                if (addressType == IP_ADDRESS_TYPE_IPV4)
                 {
-                    if (pSkt->destAddress.Val == ((IPV4_ADDR *)remoteIP)->Val)
+                    if (pSkt->destAddress.Val == ((const IPV4_ADDR *)remoteIP)->Val)
                     {
                         found = true;
                     }
-                    break;
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
@@ -4414,8 +4635,8 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
 
             if(found)
             { 
-                pSkt->addType = addressType;
-                _TcpSocketBind(pSkt, pPktIf, (IP_MULTI_ADDRESS*)localIP);
+                pSkt->addType = (uint8_t)addressType;
+                F_TcpSocketBind(pSkt, pPktIf, (const IP_MULTI_ADDRESS*)localIP);
                 return pSkt;    // bind to the correct interface
             }
         }
@@ -4426,7 +4647,7 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
     // available.  Set up the extended TCB with the info needed 
     // to establish a connection and return this socket to the 
     // caller.
-    while(partialSkt != 0)
+    while(partialSkt != NULL)
     {
         pSkt = partialSkt;
 
@@ -4434,27 +4655,27 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
         {
 #if defined (TCPIP_STACK_USE_IPV6)
             case IP_ADDRESS_TYPE_IPV6:
-                if(pSkt->pV6Pkt == 0)
+                if(pSkt->pV6Pkt == NULL)
                 {   // could be a server socket opened with IP_ADDRESS_TYPE_ANY
-                    if((pSkt->pV6Pkt = _TCPv6AllocateTxPacketStruct (pSkt)) != 0)
+                    if((pSkt->pV6Pkt = F_TCPv6AllocateTxPacketStruct (pSkt)) != NULL)
                     {
                         TCPIP_IPV6_PacketIPProtocolSet (pSkt->pV6Pkt);
                     }
                 }
 
-                if(pSkt->pV6Pkt == 0)
+                if(pSkt->pV6Pkt == NULL)
                 {   // failed to allocate memory   
-                    return 0;
+                    return NULL;
                 }
 
-                TCPIP_IPV6_DestAddressSet (pSkt->pV6Pkt, (IPV6_ADDR*)remoteIP);
+                TCPIP_IPV6_DestAddressSet (pSkt->pV6Pkt, (const IPV6_ADDR*)remoteIP);
                 break;
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
             case IP_ADDRESS_TYPE_IPV4:
                 // IPv4 lazy allocation
-                pSkt->destAddress.Val = ((IPV4_ADDR *)remoteIP)->Val;
+                pSkt->destAddress.Val = ((const IPV4_ADDR *)remoteIP)->Val;
                 break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
@@ -4463,8 +4684,8 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
         }
 
         // success; bind it
-        pSkt->addType = addressType;
-        _TcpSocketBind(pSkt, pPktIf, (IP_MULTI_ADDRESS*)localIP);
+        pSkt->addType = (uint8_t)addressType;
+        F_TcpSocketBind(pSkt, pPktIf, (const IP_MULTI_ADDRESS*)localIP);
         pSkt->remoteHash = hash;
         pSkt->remotePort = h->SourcePort;
         pSkt->localPort = h->DestPort;
@@ -4474,7 +4695,7 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
         return pSkt;
     }
         
-    return 0;
+    return NULL;
 
 }
 
@@ -4482,7 +4703,7 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
 
 /*****************************************************************************
   Function:
-    static void _TcpSwapHeader(TCP_HEADER* header)
+    static void F_TcpSwapHeader(TCP_HEADER* header)
 
   Summary:
     Swaps endian-ness of a TCP header.
@@ -4499,7 +4720,7 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
   Returns:
     None
   ***************************************************************************/
-static void _TcpSwapHeader(TCP_HEADER* header)
+static void F_TcpSwapHeader(TCP_HEADER* header)
 {
     header->SourcePort      = TCPIP_Helper_ntohs(header->SourcePort);
     header->DestPort        = TCPIP_Helper_ntohs(header->DestPort);
@@ -4513,7 +4734,7 @@ static void _TcpSwapHeader(TCP_HEADER* header)
 
 // initialize a socket
 // the socket index and the sizes of its TX/RX buffers are passed as parameters
-static void _TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuff, uint16_t txBuffSize, uint8_t* rxBuff, uint16_t rxBuffSize)
+static void F_TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuff, uint16_t txBuffSize, uint8_t* rxBuff, uint16_t rxBuffSize)
 {
     pSkt->sktIx = hTCP;     // hTCP is the index of this socket!
 
@@ -4533,7 +4754,7 @@ static void _TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuf
 
 // set the default socket state
 // socket should have been initialized
-static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
+static void F_TcpSocketSetIdleState(TCB_STUB* pSkt)
 {
 
     pSkt->remoteHash = pSkt->localPort;
@@ -4542,23 +4763,23 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
     pSkt->txUnackedTail = pSkt->txStart;
     pSkt->rxHead = pSkt->rxStart;
     pSkt->rxTail = pSkt->rxStart;
-    pSkt->Flags.bTimerEnabled = 0;
-    pSkt->Flags.bTimer2Enabled = 0;
-    pSkt->Flags.bDelayedACKTimerEnabled = 0;
-    pSkt->Flags.bOneSegmentReceived = 0;
-    pSkt->Flags.bHalfFullFlush = 0;
-    pSkt->Flags.bTXASAP = 0;
-    pSkt->Flags.bTXASAPWithoutTimerReset = 0;
-    pSkt->Flags.bTXFIN = 0;
-    pSkt->Flags.bSocketReset = 1;
-    pSkt->Flags.bRxFin = 0;
+    pSkt->flags.bTimerEnabled = 0;
+    pSkt->flags.bTimer2Enabled = 0;
+    pSkt->flags.bDelayedACKTimerEnabled = 0;
+    pSkt->flags.bOneSegmentReceived = 0;
+    pSkt->flags.bHalfFullFlush = 0;
+    pSkt->flags.bTXASAP = 0;
+    pSkt->flags.bTXASAPWithoutTimerReset = 0;
+    pSkt->flags.bTXFIN = 0;
+    pSkt->flags.bSocketReset = 1;
+    pSkt->flags.bRxFin = 0;
 
 
     pSkt->flags.bFINSent = 0;
     pSkt->flags.seqInc = 0;
     pSkt->flags.bSYNSent = 0;
     pSkt->retxTmo = pSkt->retxTime = 0;
-    pSkt->dupAckCnt = 0;    
+    pSkt->dupAckCnt = 0;
     pSkt->MySEQ = 0;
     pSkt->sHoleSize = -1;
     pSkt->remoteWindow = 1;
@@ -4570,13 +4791,13 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
     pSkt->destAddress.Val = 0;
     pSkt->keepAliveCount = 0;
     // restore initial settings
-    pSkt->addType = (IP_ADDRESS_TYPE)pSkt->flags.openAddType;
-    if(pSkt->flags.openBindIf == 0)
+    pSkt->addType = (uint8_t)((IP_ADDRESS_TYPE)pSkt->flags.openAddType);
+    if(pSkt->flags.openBindIf == 0U)
     {
-        pSkt->pSktNet = 0;
+        pSkt->pSktNet = NULL;
     }
 
-    if(pSkt->flags.openBindAdd == 0)
+    if(pSkt->flags.openBindAdd == 0U)
     {
         pSkt->srcAddress.Val = 0;
     }
@@ -4584,7 +4805,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
     pSkt->dbgFlags.val = 0;
     pSkt->dbgFlags.tracePrevState = 0xf;
-    if((_tcpTraceMask & (1 << pSkt->sktIx)) != 0)
+    if((tcpTraceMask & (1 << pSkt->sktIx)) != 0)
     {
         pSkt->dbgFlags.traceStateFlag = 1;
     }
@@ -4594,7 +4815,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 
 /*****************************************************************************
   Function:
-    static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
+    static void F_TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 
   Summary:
     Closes a TCP socket.
@@ -4614,7 +4835,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
   Returns:
     None
   ***************************************************************************/
-static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
+static void F_TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 {
     // a socket server will listen after this Close operation
     bool    sktIsKilled;
@@ -4622,14 +4843,15 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
     const void* sigParam;
     uint16_t    sigMask;
-    TCPIP_NET_HANDLE pSktNet = 0;
+    TCPIP_NET_HANDLE pSktNet = NULL;
     TCP_SOCKET   sktIx = 0; 
+    uint32_t    uEvent = (uint32_t)tcpEvent;
 
-    if(pSkt->Flags.bServer !=  0 && pSkt->flags.forceKill == 0)
+    if(pSkt->flags.bServer !=  0U && pSkt->flags.forceKill == 0U)
     {   // server socket won't be killed
         sktIsKilled = false;
         // for unspecified address type the buffer gets de-allocated; next time it could be different
-        freePkt = (pSkt->flags.openAddType == IP_ADDRESS_TYPE_ANY) ? true : false;
+        freePkt = (pSkt->flags.openAddType == (uint16_t)IP_ADDRESS_TYPE_ANY) ? true : false;
     }
     else
     {
@@ -4639,20 +4861,20 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
     while(pSkt->pTxPkt != NULL)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
-        if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {
             if(freePkt)
             {
-                IPV6_PACKET* pFreePkt = _TxSktFreeLockedV6Pkt(pSkt);
-                if(pFreePkt)
+                IPV6_PACKET* pFreePkt = F_TxSktFreeLockedV6Pkt(pSkt);
+                if(pFreePkt != NULL)
                 {
                     TCPIP_IPV6_PacketFree (pFreePkt);
                 }
             }
             else
             {
-                IPV6_PACKET* reusePkt = _TxSktGetLockedV6Pkt(pSkt, 0, false); 
-                if( reusePkt != 0)
+                IPV6_PACKET* reusePkt = F_TxSktGetLockedV6Pkt(pSkt, NULL, false); 
+                if( reusePkt != NULL)
                 {   // packet in place; reused
                     TCPIP_IPV6_TransmitPacketStateReset (pSkt->pV6Pkt);
                 }
@@ -4663,12 +4885,12 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
         {
             if(freePkt)
             {
-                TCPIP_MAC_PACKET* pFreePkt = _TxSktFreeLockedV4Pkt(pSkt);
-                if(pFreePkt)
+                TCPIP_MAC_PACKET* pFreePkt = F_TxSktFreeLockedV4Pkt(pSkt);
+                if(pFreePkt != NULL)
                 {
                     TCPIP_PKT_PacketFree(pFreePkt);
                 }
@@ -4678,40 +4900,41 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
         break;
     }
 
-    sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
-    if((tcpEvent &= sigMask))
+    sigMask = F_TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+    uEvent &= (uint32_t)sigMask;
+    if(uEvent != 0U)
     {
-        if(sigHandler != 0)
+        if(sigHandler != NULL)
         {
             sktIx = pSkt->sktIx;
             pSktNet = pSkt->pSktNet;
         }
         else
         {
-            tcpEvent = 0;
+            uEvent = 0U;
         }
     }
 
     if(sktIsKilled)
     {
-        _TcpSocketKill(pSkt);
+        F_TcpSocketKill(pSkt);
     }
     else
     {
-        _TcpSocketSetIdleState(pSkt);
-        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LISTEN);
+        F_TcpSocketSetIdleState(pSkt);
+        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LISTEN);
     }
 
-    if(tcpEvent)
+    if(uEvent != 0U)
     {   // notify socket user
-        (*sigHandler)(sktIx, pSktNet, tcpEvent, sigParam);
+        (*sigHandler)(sktIx, pSktNet, (TCPIP_TCP_SIGNAL_TYPE)uEvent, sigParam);
     }
 }
 
 
 /*****************************************************************************
   Function:
-    static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
+    static uint16_t F_GetMaxSegSizeOption(TCP_HEADER* h)
 
   Summary:
     Obtains the Maximum Segment Size (MSS) TCP Option out of the TCP header 
@@ -4723,7 +4946,7 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 
   Precondition:
     Must be called while a TCP packet is present and being processed via 
-    _TcpHandleSeg() and only if the the TCP SYN flag is set.
+    F_TcpHandleSeg() and only if the the TCP SYN flag is set.
 
   Parameters:
     h - pointer to the TCP header
@@ -4736,38 +4959,47 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
   Remarks:
     The internal MAC Read Pointer is moved but not restored.
   ***************************************************************************/
-static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
+static uint16_t F_GetMaxSegSizeOption(TCP_HEADER* h)
 {
     uint8_t vOptionsBytes;
     uint8_t vOption;
     uint16_t wMSS;
     uint8_t* pOption, *pEnd;
+    TCPIP_UINT16_VAL u16Val;
 
 
-    vOptionsBytes = (h->DataOffset.Val << 2) - sizeof(*h);
+    vOptionsBytes = ((h->DataOffset.Val << 2) - (uint8_t)sizeof(*h));
     // Return minimum default Maximum Segment Size value if no options present
     if(vOptionsBytes == 0u)
+    {
         return TCP_MIN_DEFAULT_MTU;
+    }
 
     // Seek to beginning of options
     pOption = (uint8_t*)(h + 1);
     pEnd = pOption + vOptionsBytes;
 
     // Search for the Maximum Segment Size option   
-    while(vOptionsBytes-- && pOption < pEnd)
+    while((vOptionsBytes-- != 0U) && (pOption < pEnd))
     {
         vOption = *pOption++;
 
         if(vOption == 0u)   // End of Options list
+        {
             break;
+        }
 
         if(vOption == 1u)   // NOP option
+        {
             continue;
+        }
 
         if(vOption == 2u)   // Maximum Segment Size option
         {
             if(vOptionsBytes < 3u)
+            {
                 break;
+            }
 
             wMSS = 0;
 
@@ -4775,24 +5007,35 @@ static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
             vOption = *pOption++;
             if(vOption == 4u)
             {// Retrieve MSS and swap value to little endian
-                ((uint8_t*)&wMSS)[1] = *pOption++;
-                ((uint8_t*)&wMSS)[0] = *pOption++;
+                u16Val.v[1] =  *pOption++;
+                u16Val.v[0] =  *pOption++;
+                wMSS =  u16Val.Val;
             }
 
-            if(wMSS < TCP_MIN_DEFAULT_MTU)
+            if(wMSS < (uint16_t)TCP_MIN_DEFAULT_MTU)
+            {
                 break;
-            if(wMSS > TCPIP_TCP_MAX_SEG_SIZE_TX)
+            }
+            if(wMSS > (uint16_t)TCPIP_TCP_MAX_SEG_SIZE_TX)
+            {
                 return TCPIP_TCP_MAX_SEG_SIZE_TX;
+            }
             else 
+            {
                 return wMSS;
+            }
         }
         else
         { // Assume this is a multi byte option and throw it way
             if(vOptionsBytes < 2u)
+            {
                 break;
+            }
             vOption = *pOption++;
             if(vOptionsBytes < vOption)
+            {
                 break;
+            }
             pOption += vOption;
             vOptionsBytes -= vOption;
         }
@@ -4803,15 +5046,15 @@ static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
     return TCP_MIN_DEFAULT_MTU;
 }
 
-static void _TCPSetHalfFlushFlag(TCB_STUB* pSkt)
+static void F_TCPSetHalfFlushFlag(TCB_STUB* pSkt)
 {
     bool    clrFlushFlag = false;
-    TCP_OPTION_THRES_FLUSH_TYPE flushType = (TCP_OPTION_THRES_FLUSH_TYPE)pSkt->Flags.halfThresType;
+    TCP_OPTION_THRES_FLUSH_TYPE flushType = (TCP_OPTION_THRES_FLUSH_TYPE)pSkt->flags.halfThresType;
 
     switch(flushType)
     {
         case TCP_OPTION_THRES_FLUSH_AUTO:
-            if((pSkt->txEnd - pSkt->txStart) >= (pSkt->wRemoteMSS * 3) / 2 )
+            if((uint32_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart) >= ((uint32_t)pSkt->wRemoteMSS * 3U) / 2U )
             {
                 clrFlushFlag = true;
             }
@@ -4822,16 +5065,17 @@ static void _TCPSetHalfFlushFlag(TCB_STUB* pSkt)
             break;
 
         default:
+            /* Do Nothing */
             break;
     }
 
-    pSkt->flags.halfThresFlush = clrFlushFlag ? 0 : 1;
+    pSkt->flags.halfThresFlush = clrFlushFlag ? 0U : 1U;
 }
 
 
 /*****************************************************************************
   Function:
-    static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t len, TCPIP_MAC_PACKET* pRxPkt, TCPIP_TCP_SIGNAL_TYPE* pSktEvent)
+    static void F_TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t len, TCPIP_MAC_PACKET* pRxPkt, uint32_t* pSktEvent)
 
   Summary:
     Processes an incoming TCP segment.
@@ -4857,7 +5101,7 @@ static void _TCPSetHalfFlushFlag(TCB_STUB* pSkt)
   Returns:
     None
   ***************************************************************************/
-static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_MAC_PACKET* pRxPkt, TCPIP_TCP_SIGNAL_TYPE* pSktEvent)
+static void F_TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_MAC_PACKET* pRxPkt, uint32_t* pSktEvent)
 {
     uint32_t dwTemp;
     uint8_t* ptrTemp;
@@ -4874,154 +5118,160 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     uint8_t* pSegSrc;
     uint16_t nCopiedBytes;
     uint8_t* newRxHead;
+    bool doReturn;
 
 
+    F_TcpHandleSegEnter(pSkt);
      
-    localHeaderFlags = h->Flags.byte;
+    localHeaderFlags = h->Flags.byteVal;
     localAckNumber = h->AckNumber;
     localSeqNumber = h->SeqNumber;
 
     // We received a packet, reset the keep alive timer and count
-    if(pSkt->Flags.keepAlive)
+    if(pSkt->flags.keepAlive != 0U)
     {
         pSkt->keepAliveCount = 0;
-        if(!pSkt->Flags.bTimerEnabled)
+        if(pSkt->flags.bTimerEnabled == 0U)
         {
-            pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq)/1000;
+            pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq) / 1000U;
         }
     }
 
     pSkt->flags.ackSent = 0;   // clear the ACK already sent
 
-    // Handle TCPIP_TCP_STATE_LISTEN and TCPIP_TCP_STATE_SYN_SENT states
-    // Both of these states will return, so code following this 
-    // state machine need not check explicitly for these two 
-    // states.
-    switch(pSkt->smState)
+    // Handle TCPIP_TCP_STATE_LISTEN state - will return
+    if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_LISTEN)
     {
-        case TCPIP_TCP_STATE_LISTEN:
-            // First: check RST flag
-            if(localHeaderFlags & RST)
+        // First: check RST flag
+        if((localHeaderFlags & RST) != 0U)
+        {
+            F_TcpHandleSegDbg(pSkt, "close-RST", 1);
+            F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);   // Unbind remote IP address/port info
+            return;
+        }
+
+        // Second: check ACK flag, which would be invalid
+        if((localHeaderFlags & ACK) != 0U)
+        {
+            // Use a believable sequence number and reset the remote node
+            F_TcpHandleSegDbg(pSkt, "close-ACK", 2);
+            pSkt->MySEQ = localAckNumber;
+            (void) F_TcpSend(pSkt, RST, 0);
+            F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);   // Unbind remote IP address/port info
+            return;
+        }
+
+        // Third: check for SYN flag, which is what we're looking for
+        if((localHeaderFlags & SYN) != 0U)
+        {
+            F_TcpHandleSegDbg(pSkt, "SYN-RCVD", 3);            
+            // We now have a sequence number for the remote node
+            pSkt->RemoteSEQ = localSeqNumber + 1U;
+
+            // Set MSS option
+            pSkt->wRemoteMSS = F_GetMaxSegSizeOption(h);
+            F_TCPSetHalfFlushFlag(pSkt);
+
+            // Respond with SYN + ACK
+            (void) F_TcpSend(pSkt, SYN | ACK, SENDTCP_RESET_TIMERS);
+            F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_SYN_RECEIVED);
+        }
+        else
+        {
+            F_TcpHandleSegDbg(pSkt, "close-unk", 4);                        
+            F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);   // Unbind remote IP address/port info
+        }
+
+        // Fourth: check for other text and control
+        // Nothing to do since we don't support this
+        return;
+    }
+
+    // Handle TCPIP_TCP_STATE_SYN_SENT state - will return
+    if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_SYN_SENT)
+    {
+        // Second: check the RST bit
+        // This is out of order because this stack has no API for 
+        // notifying the application that the connection seems to 
+        // be failing.  Instead, the application must time out and 
+        // the stack will just keep trying in the mean time.
+        if((localHeaderFlags & RST) != 0U)
+        {
+            F_TcpHandleSegDbg(pSkt, "got-RST", 5);                        
+            return;
+        }
+
+        // First: check ACK bit
+        if((localHeaderFlags & ACK) != 0U)
+        {
+            if(localAckNumber != pSkt->MySEQ)
             {
-                _TcpCloseSocket(pSkt, 0);   // Unbind remote IP address/port info
+                F_TcpHandleSegDbg(pSkt, "wrong-SEQ", 6);
+                // Send a RST packet with SEQ = SEG.ACK, but retain our SEQ 
+                // number for arivial of any other SYN+ACK packets
+                localSeqNumber = pSkt->MySEQ;   // Save our original SEQ number
+                pSkt->MySEQ = localAckNumber;   // Set SEQ = SEG.ACK
+                (void) F_TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);      // Send the RST
+                pSkt->MySEQ = localSeqNumber;   // Restore original SEQ number
                 return;
             }
+        }
 
-            // Second: check ACK flag, which would be invalid
-            if(localHeaderFlags & ACK)
+#if defined (TCPIP_STACK_USE_IPV6)
+        if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
+        {
+            TCPIP_NDP_NborReachConfirm (pSkt->pSktNet, TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt));
+        }
+#endif  // defined (TCPIP_STACK_USE_IPV6)
+
+        // Third: check the security and precedence
+        // No such feature in this stack.  We want to accept all connections.
+
+        // Fourth: check the SYN bit
+        if((localHeaderFlags & SYN) != 0U)
+        {
+            // We now have an initial sequence number and window size
+            pSkt->RemoteSEQ = localSeqNumber + 1U;
+            pSkt->remoteWindow = pSkt->maxRemoteWindow = h->Window;
+
+            // Set MSS option
+            pSkt->wRemoteMSS = F_GetMaxSegSizeOption(h);
+            F_TCPSetHalfFlushFlag(pSkt);
+
+            if((localHeaderFlags & ACK) != 0U)
             {
-                // Use a believable sequence number and reset the remote node
-                pSkt->MySEQ = localAckNumber;
-                _TcpSend(pSkt, RST, 0);
-                _TcpCloseSocket(pSkt, 0);   // Unbind remote IP address/port info
-                return;
-            }
-
-            // Third: check for SYN flag, which is what we're looking for
-            if(localHeaderFlags & SYN)
-            {
-                // We now have a sequence number for the remote node
-                pSkt->RemoteSEQ = localSeqNumber + 1;
-
-                // Set MSS option
-                pSkt->wRemoteMSS = _GetMaxSegSizeOption(h);
-                _TCPSetHalfFlushFlag(pSkt);
-
-                // Respond with SYN + ACK
-                _TcpSend(pSkt, SYN | ACK, SENDTCP_RESET_TIMERS);
-                _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_SYN_RECEIVED);
+                F_TcpHandleSegDbg(pSkt, "got-ACK", 7);                
+                (void) F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+                F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_ESTABLISHED);
+                *pSktEvent |= (uint32_t)TCPIP_TCP_SIGNAL_ESTABLISHED;
+                // Set up keep-alive timer
+                if(pSkt->flags.keepAlive != 0U)
+                {
+                    pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq) / 1000U;
+                }
+                pSkt->flags.bTimerEnabled = 0;
             }
             else
             {
-                _TcpCloseSocket(pSkt, 0);   // Unbind remote IP address/port info
+                F_TcpHandleSegDbg(pSkt, "miss-ACK", 8);                
+                (void) F_TcpSend(pSkt, SYN | ACK, SENDTCP_RESET_TIMERS);
+                F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_SYN_RECEIVED);
             }
+        }
 
-            // Fourth: check for other text and control
-            // Nothing to do since we don't support this
-            return;
-
-        case TCPIP_TCP_STATE_SYN_SENT:
-            // Second: check the RST bit
-            // This is out of order because this stack has no API for 
-            // notifying the application that the connection seems to 
-            // be failing.  Instead, the application must time out and 
-            // the stack will just keep trying in the mean time.
-            if(localHeaderFlags & RST)
-            {
-                return;
-            }
-
-            // First: check ACK bit
-            if(localHeaderFlags & ACK)
-            {
-                if(localAckNumber != pSkt->MySEQ)
-                {
-                    // Send a RST packet with SEQ = SEG.ACK, but retain our SEQ 
-                    // number for arivial of any other SYN+ACK packets
-                    localSeqNumber = pSkt->MySEQ;   // Save our original SEQ number
-                    pSkt->MySEQ = localAckNumber;   // Set SEQ = SEG.ACK
-                    _TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);      // Send the RST
-                    pSkt->MySEQ = localSeqNumber;   // Restore original SEQ number
-                    return;
-                }
-            }
-
-#if defined (TCPIP_STACK_USE_IPV6)
-            if (pSkt->addType == IP_ADDRESS_TYPE_IPV6)
-            {
-                TCPIP_NDP_NborReachConfirm (pSkt->pSktNet, TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt));
-            }
-#endif  // defined (TCPIP_STACK_USE_IPV6)
-
-            // Third: check the security and precedence
-            // No such feature in this stack.  We want to accept all connections.
-
-            // Fourth: check the SYN bit
-            if(localHeaderFlags & SYN)
-            {
-                // We now have an initial sequence number and window size
-                pSkt->RemoteSEQ = localSeqNumber + 1;
-                pSkt->remoteWindow = pSkt->maxRemoteWindow = h->Window;
-
-                // Set MSS option
-                pSkt->wRemoteMSS = _GetMaxSegSizeOption(h);
-                _TCPSetHalfFlushFlag(pSkt);
-
-                if(localHeaderFlags & ACK)
-                {
-                    _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_ESTABLISHED);
-                    *pSktEvent |= TCPIP_TCP_SIGNAL_ESTABLISHED;
-                    // Set up keep-alive timer
-                    if(pSkt->Flags.keepAlive)
-                    {
-                        pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq)/1000;
-                    }
-                    pSkt->Flags.bTimerEnabled = 0;
-                }
-                else
-                {
-                    _TcpSend(pSkt, SYN | ACK, SENDTCP_RESET_TIMERS);
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_SYN_RECEIVED);
-                }
-            }
-
-            // Fifth: drop the segment if neither SYN or RST is set
-            return;
-
-        default:
-            break;
+        // Fifth: drop the segment if neither SYN or RST is set
+        return;
     }
 
     //
     // First: check the sequence number
     //
     wSegmentLength = len = tcpLen;
-    if(localHeaderFlags & FIN)
+    if((localHeaderFlags & FIN) != 0U)
     {
         wSegmentLength++;
     }
-    if(localHeaderFlags & SYN)
+    if((localHeaderFlags & SYN) != 0U)
     {
         wSegmentLength++;
     }
@@ -5029,23 +5279,23 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     // Calculate the RX FIFO space
     if(pSkt->rxHead >= pSkt->rxTail)
     {
-        wFreeSpace = (pSkt->rxEnd - pSkt->rxStart) - (pSkt->rxHead - pSkt->rxTail);
+        wFreeSpace = (uint16_t)(((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart) - ((uintptr_t)pSkt->rxHead - (uintptr_t)pSkt->rxTail));
     }
     else
     {
-        wFreeSpace = pSkt->rxTail - pSkt->rxHead - 1;
+        wFreeSpace = (uint16_t)((uintptr_t)pSkt->rxTail - (uintptr_t)pSkt->rxHead - 1U);
     }
 
     // Calculate the number of bytes ahead of our head pointer this segment skips
-    lMissingBytes = localSeqNumber - pSkt->RemoteSEQ;
+    lMissingBytes = (int32_t)localSeqNumber - (int32_t)pSkt->RemoteSEQ;
     wMissingBytes = lMissingBytes; 
 
     // Run TCP acceptability tests to verify that this packet has a valid sequence number
     bSegmentAcceptable = false;
-    if(wSegmentLength)
+    if(wSegmentLength != 0U)
     {
         // Check to see if we have free space, and if so, if any of the data falls within the freespace
-        if(wFreeSpace)
+        if(wFreeSpace != 0U)
         {
             // RCV.NXT =< SEG.SEQ < RCV.NXT+RCV.WND
             if((lMissingBytes >= 0) && (wFreeSpace > (uint32_t)lMissingBytes))
@@ -5055,7 +5305,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             else
             {
                 // RCV.NXT =< SEG.SEQ+SEG.LEN-1 < RCV.NXT+RCV.WND
-                if((lMissingBytes + (int32_t)wSegmentLength > 0) && (lMissingBytes <= (int32_t)(wFreeSpace - wSegmentLength)))
+                if((lMissingBytes + (int32_t)wSegmentLength) > 0 && (lMissingBytes <= ((int32_t)wFreeSpace - (int32_t)wSegmentLength)))
                 {
                     bSegmentAcceptable = true;
                 }
@@ -5089,9 +5339,14 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     if(!bSegmentAcceptable)
     {
         // Unacceptable segment, drop it and respond appropriately
-        if(!(localHeaderFlags & RST)) 
+        if((localHeaderFlags & RST) == 0U) 
         {
-            _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+            F_TcpHandleSegDbg(pSkt, "seg-NA RST", 9);
+            (void) F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+        }
+        else
+        {
+            F_TcpHandleSegDbg(pSkt, "seg-NA", 10);
         }
         return;
     }
@@ -5105,14 +5360,19 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     //
     // Note, that since the third step is not implemented, we can 
     // combine this second and fourth step into a single operation.
-    if(localHeaderFlags & (RST | SYN))
+    if((localHeaderFlags & (RST | SYN)) != 0U)
     {
-        if(localHeaderFlags & RST)
+        if((localHeaderFlags & RST) != 0U)
         {
-            *pSktEvent |= TCPIP_TCP_SIGNAL_RX_RST;
-            pSkt->Flags.bSocketReset = 1;
+            F_TcpHandleSegDbg(pSkt, "close-RST", 11);            
+            *pSktEvent |= (uint32_t)TCPIP_TCP_SIGNAL_RX_RST;
+            pSkt->flags.bSocketReset = 1;
         }
-        _TcpCloseSocket(pSkt, 0);
+        else
+        {
+            F_TcpHandleSegDbg(pSkt, "close-SYN", 12);            
+        }
+        F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
         return;
     }
 
@@ -5124,46 +5384,57 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     //
     // Fifth: check the ACK bit
     //
-    if(!(localHeaderFlags & ACK))
+    if((localHeaderFlags & ACK) == 0U)
     {
+        F_TcpHandleSegDbg(pSkt, "no-ACK", 13);            
         return;
     }
 
 #if defined (TCPIP_STACK_USE_IPV6)
     // If we've received an ACK, update neighbor reachability
-    if (pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+    if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
     {
         TCPIP_NDP_NborReachConfirm (pSkt->pSktNet, TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt));
     }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
+    doReturn = false;
     switch(pSkt->smState)
     {
-        case TCPIP_TCP_STATE_SYN_RECEIVED:
-            if(localAckNumber != pSkt->MySEQ)
-            {
-                // Send a RST packet with SEQ = SEG.ACK, but retain our SEQ 
-                // number for arival of any other correct packets
-                localSeqNumber = pSkt->MySEQ;   // Save our original SEQ number
-                pSkt->MySEQ = localAckNumber;   // Set SEQ = SEG.ACK
-                _TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);      // Send the RST
-                pSkt->MySEQ = localSeqNumber;   // Restore original SEQ number
-                return;
-            }
-            _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_ESTABLISHED);
-            *pSktEvent |= TCPIP_TCP_SIGNAL_ESTABLISHED;
-            // No break
+        case (uint8_t)TCPIP_TCP_STATE_SYN_RECEIVED:
+        case (uint8_t)TCPIP_TCP_STATE_ESTABLISHED:
+        case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1:
+        case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2:
+        case (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT:
+        case (uint8_t)TCPIP_TCP_STATE_CLOSING:
 
-        case TCPIP_TCP_STATE_ESTABLISHED:
-        case TCPIP_TCP_STATE_FIN_WAIT_1:
-        case TCPIP_TCP_STATE_FIN_WAIT_2:
-        case TCPIP_TCP_STATE_CLOSE_WAIT:
-        case TCPIP_TCP_STATE_CLOSING:
+            if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_SYN_RECEIVED)
+            {
+                if(localAckNumber != pSkt->MySEQ)
+                {
+                    F_TcpHandleSegDbg(pSkt, "no-SEQ", 14);            
+                    // Send a RST packet with SEQ = SEG.ACK, but retain our SEQ 
+                    // number for arival of any other correct packets
+                    localSeqNumber = pSkt->MySEQ;   // Save our original SEQ number
+                    pSkt->MySEQ = localAckNumber;   // Set SEQ = SEG.ACK
+                    (void) F_TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);      // Send the RST
+                    pSkt->MySEQ = localSeqNumber;   // Restore original SEQ number
+                    doReturn = true;
+                    break;
+                }
+                else
+                {
+                    F_TcpHandleSegDbg(pSkt, "good-SEQ", 15);            
+                }
+                F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_ESTABLISHED);
+                *pSktEvent |= (uint32_t)TCPIP_TCP_SIGNAL_ESTABLISHED;
+            }
+
             // Calculate what the highest possible SEQ number in our TX FIFO is
-            wTemp = pSkt->txHead - pSkt->txUnackedTail;
+            wTemp = (uint32_t)((uintptr_t)pSkt->txHead - (uintptr_t)pSkt->txUnackedTail);
             if((int32_t)wTemp < 0)
             {
-                wTemp += pSkt->txEnd - pSkt->txStart;
+                wTemp += (uint32_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
             }
             dwTemp = pSkt->MySEQ + wTemp;
 
@@ -5171,13 +5442,16 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             dwTemp = localAckNumber - dwTemp;
             if((int32_t)dwTemp > 0)
             {   // acknowledged more than we've sent??
-                if(!pSkt->flags.bFINSent || pSkt->flags.seqInc || dwTemp != 1)
+                if((pSkt->flags.bFINSent == 0U) || pSkt->flags.seqInc != 0U || dwTemp != 1U)
                 {
-                    _TcpSend(pSkt, ACK, 0);
-                    return;
+                    F_TcpHandleSegDbg(pSkt, "bad-ACK", 16);                                
+                   (void) F_TcpSend(pSkt, ACK, 0);
+                    doReturn = true;
+                    break;
                 }
                 else
                 {
+                    F_TcpHandleSegDbg(pSkt, "inc-SEQ", 17);                                
                     pSkt->MySEQ++;      // since we didn't count the FIN
                     pSkt->flags.seqInc = 1;
                 }
@@ -5185,19 +5459,20 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
 
             // Throw away all ACKnowledged TX data:
             // Calculate what the last acknowledged sequence number was (ignoring any FINs we sent)
-            dwTemp = pSkt->MySEQ - (uint32_t)(pSkt->txUnackedTail - pSkt->txTail);
+            dwTemp = pSkt->MySEQ - (uint32_t)((uintptr_t)pSkt->txUnackedTail - (uintptr_t)pSkt->txTail);
             if(pSkt->txUnackedTail < pSkt->txTail)
             {
-                dwTemp -= pSkt->txEnd - pSkt->txStart;
+                dwTemp -= (uint32_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
             }
 
             // Calculate how many bytes were ACKed with this packet
             dwTemp = localAckNumber - dwTemp;
-            if(((int32_t)(dwTemp) > 0) && (dwTemp <= pSkt->txEnd - pSkt->txStart))
+            if(((int32_t)(dwTemp) > 0) && (dwTemp <= (uint32_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart)))
             {   // ACK-ed some data
-                _TCP_LoadRetxTmo(pSkt, true);
-                pSkt->dupAckCnt = 0;    
-                pSkt->Flags.bHalfFullFlush = false;
+                F_TcpHandleSegDbg(pSkt, "data-ACK", 18);                                
+                F_TCP_LoadRetxTmo(pSkt, true);
+                pSkt->dupAckCnt = 0;
+                pSkt->flags.bHalfFullFlush = 0U;
 
                 // Bytes ACKed, free up the TX FIFO space
                 ptrTemp = pSkt->txTail;
@@ -5206,16 +5481,16 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 {
                     if(pSkt->txUnackedTail < pSkt->txTail)
                     {
-                        pSkt->MySEQ += pSkt->txTail - pSkt->txUnackedTail;
+                        pSkt->MySEQ += (uint32_t)((uintptr_t)pSkt->txTail - (uintptr_t)pSkt->txUnackedTail);
                         pSkt->txUnackedTail = pSkt->txTail;
                     }
                 }
                 else
                 {
-                    ptrTemp = pSkt->txUnackedTail + (pSkt->txEnd - pSkt->txStart);
+                    ptrTemp = pSkt->txUnackedTail + ((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
                     if(ptrTemp < pSkt->txTail)
                     {
-                        pSkt->MySEQ += pSkt->txTail - ptrTemp;
+                        pSkt->MySEQ += (uint32_t)((uintptr_t)pSkt->txTail - (uintptr_t)ptrTemp);
                         pSkt->txUnackedTail = pSkt->txTail;
                     }
                 }
@@ -5228,39 +5503,47 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                     pSkt->txUnackedTail -= pSkt->txEnd - pSkt->txStart;
                 }
 
-                if(pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT)
+                if(pSkt->smState == (uint32_t)TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == (uint32_t)TCPIP_TCP_STATE_CLOSE_WAIT)
                 {
-                    *pSktEvent |= TCPIP_TCP_SIGNAL_TX_SPACE; 
+                    *pSktEvent |= (uint32_t)TCPIP_TCP_SIGNAL_TX_SPACE;
                 }
             }
             else
             {   // no acknowledge
+                F_TcpHandleSegDbg(pSkt, "no data-ACK", 19);                                                
                 // See if we have outstanding TX data that is waiting for an ACK
                 if(pSkt->txTail != pSkt->txUnackedTail)
                 {
                     bool fastRetransmit = false;
-                    if(++pSkt->dupAckCnt >= 3)
+                    if(++pSkt->dupAckCnt >= 3U)
                     {
                         fastRetransmit = true; 
                     }
-                    else if (pSkt->retxTime != 0 && (int32_t)(SYS_TMR_TickCountGet() - pSkt->retxTime) >= 0)
-                    {   // ack timeout
-                        _TCP_LoadRetxTmo(pSkt, false);
-                        fastRetransmit = true;
+                    else if(pSkt->retxTime != 0U)
+                    {
+                        if(((int32_t)SYS_TMR_TickCountGet() - (int32_t)pSkt->retxTime) >= 0)
+                        {   // ack timeout
+                            F_TCP_LoadRetxTmo(pSkt, false);
+                            fastRetransmit = true;
+                        }
+                    }
+                    else
+                    {
+                        // do nothing
                     }
 
-                    if(fastRetransmit)
+                    if(fastRetransmit != false)
                     {
                         // Set up to perform a fast retransmission
                         // Roll back unacknowledged TX tail pointer to cause retransmit to occur
-                        pSkt->MySEQ -= (pSkt->txUnackedTail - pSkt->txTail);
+                        pSkt->MySEQ -= (uint32_t)((uintptr_t)pSkt->txUnackedTail - (uintptr_t)pSkt->txTail);
 
                         if(pSkt->txUnackedTail < pSkt->txTail)
                         {
-                            pSkt->MySEQ -= (pSkt->txEnd - pSkt->txStart);
+                            pSkt->MySEQ -= (uint32_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
                         }
                         pSkt->txUnackedTail = pSkt->txTail;
-                        pSkt->Flags.bTXASAPWithoutTimerReset = 1;
+                        pSkt->flags.bTXASAPWithoutTimerReset = 1;
                     }
                 }
             }
@@ -5269,22 +5552,22 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             if(pSkt->txTail == pSkt->txHead)
             {
                 // Make sure there isn't a "FIN byte in our TX FIFO"
-                if(pSkt->Flags.bTXFIN == 0u)
+                if(pSkt->flags.bTXFIN == 0u)
                 {
                     // Convert retransmission timer to keep-alive timer
-                    if(pSkt->Flags.keepAlive)
+                    if(pSkt->flags.keepAlive != 0U)
                     {
-                        pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq)/1000;
+                        pSkt->eventTime = SYS_TMR_TickCountGet() + (pSkt->keepAliveTmo * sysTickFreq) / 1000U;
                     }
-                    pSkt->Flags.bTimerEnabled = 0;
+                    pSkt->flags.bTimerEnabled = 0;
                 }
                 else
                 {
                     // "Throw away" FIN byte from our TX FIFO if it has been ACKed
-                    if((pSkt->MySEQ == localAckNumber) && pSkt->flags.bFINSent)
+                    if((pSkt->MySEQ == localAckNumber) && (pSkt->flags.bFINSent != 0U))
                     {
-                        pSkt->Flags.bTimerEnabled = 0;
-                        pSkt->Flags.bTXFIN = 0;
+                        pSkt->flags.bTimerEnabled = 0;
+                        pSkt->flags.bTXFIN = 0;
                     }
                 }
             }
@@ -5302,51 +5585,66 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             // Update the local stored copy of the RemoteWindow.
             // If previously we had a zero window, and now we don't, then 
             // immediately send whatever was pending.
-            if((pSkt->remoteWindow == 0u) && wNewWindow)
+            if((pSkt->remoteWindow == 0u) && (wNewWindow != 0U))
             {
-                pSkt->Flags.bTXASAP = 1;
+                pSkt->flags.bTXASAP = 1;
             }
             pSkt->remoteWindow = wNewWindow;
 
             // A couple of states must do all of the TCPIP_TCP_STATE_ESTABLISHED stuff, but also a little more
-            if(pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_1)
+            if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1)
             {
                 // Check to see if our FIN has been ACKnowledged
-                if((pSkt->MySEQ == localAckNumber) && pSkt->flags.bFINSent)
+                if((pSkt->MySEQ == localAckNumber) && (pSkt->flags.bFINSent != 0U))
                 {
                     // Reset our timer for forced closure if the remote node 
                     // doesn't send us a FIN in a timely manner.
-                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (TCPIP_TCP_FIN_WAIT_2_TIMEOUT * sysTickFreq)/1000;
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_FIN_WAIT_2);
+                    F_TcpHandleSegDbg(pSkt, "tmr reset", 20);                                                
+                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + ((uint32_t)TCPIP_TCP_FIN_WAIT_2_TIMEOUT * sysTickFreq) / 1000U;
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_FIN_WAIT_2);
                 }
             }
-            else if(pSkt->smState == TCPIP_TCP_STATE_CLOSING)
+            else if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSING)
             {
                 // Check to see if our FIN has been ACKnowledged
                 if(pSkt->MySEQ == localAckNumber)
                 {
+                    F_TcpHandleSegDbg(pSkt, "FIN_ACK", 21);                                                                    
 #if (TCPIP_TCP_MSL_TIMEOUT != 0)
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
-                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + ((TCPIP_TCP_MSL_TIMEOUT * 2) * sysTickFreq);
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
+                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (((uint32_t)TCPIP_TCP_MSL_TIMEOUT * 2U) * sysTickFreq);
 #else
-                    _TcpCloseSocket(pSkt, 0);
+                    F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
                 }
-                return;
+                doReturn = true;
+            }
+            else
+            {
+                F_TcpHandleSegDbg(pSkt, "do-nothing", 22);                                                                                    
+                /* Do Nothing */
             }
 
             break;
 
-        case TCPIP_TCP_STATE_LAST_ACK:
+        case (uint8_t)TCPIP_TCP_STATE_LAST_ACK:
             // Check to see if our FIN has been ACKnowledged
-            if(pSkt->MySEQ + 1 == localAckNumber)
+            if(pSkt->MySEQ + 1U == localAckNumber)
             {
-                _TcpCloseSocket(pSkt, 0);
+                F_TcpHandleSegDbg(pSkt, "close-LAST_ACK", 23);                                                                                                    
+                F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
             }
-            return;
+            doReturn = true;
+            break;
 
         default:    // case TCPIP_TCP_STATE_TIME_WAIT:
+            /* Do Nothing */
             break;
+    }
+
+    if(doReturn)
+    {
+        return;
     }
 
     //
@@ -5354,7 +5652,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     //
     // Urgent packets are not supported in this stack, so we
     // will throw them away instead
-    if(localHeaderFlags & URG)
+    if((localHeaderFlags & URG) != 0U)
     {
         return;
     }
@@ -5363,23 +5661,25 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     // Seventh: Process the segment text
     //
     // Throw data away if in a state that doesn't accept data
-    if(pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT || pSkt->smState == TCPIP_TCP_STATE_CLOSING || pSkt->smState == TCPIP_TCP_STATE_LAST_ACK)
+    if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSE_WAIT || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_CLOSING || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_LAST_ACK)
     {
+        F_TcpHandleSegDbg(pSkt, "data-throw", 24);                                                                                                            
         return;
     }
 
     // Copy any valid segment data into our RX FIFO, if any
-    if(len)
+    if(len != 0U)
     {
         // See if there are bytes we must skip
         // wMissingBytes == 0: this new data is in sync with what we expect
         // wMissingBytes  < 0: this packet contains old data that needs to be skipped
         if(wMissingBytes <= 0)
         {
+            F_TcpHandleSegDbg(pSkt, "data-skip", 25);
             // Position packet read pointer to start of useful data area.
             // Protect against too old data is done by checking the actual number of copied bytes from the packet
-            pSegSrc = (uint8_t*)h + ((h->DataOffset.Val << 2) - wMissingBytes);
-            len += wMissingBytes;       
+            pSegSrc = ((uint8_t*)h + (h->DataOffset.Val << 2)) - wMissingBytes;
+            len = (uint16_t)((uint32_t)len + (uint32_t)wMissingBytes);      
 
             // Truncate packets that would overflow our TCP RX FIFO
             // and request a retransmit by sending a duplicate ACK
@@ -5392,9 +5692,9 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             // See if we need a two part copy (spans rxEnd->rxStart)
             if(pSkt->rxHead + len > pSkt->rxEnd)
             {
-                wTemp = pSkt->rxEnd - pSkt->rxHead + 1;
-                nCopiedBytes = TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxHead, &pSegSrc, wTemp, true);
-                nCopiedBytes += TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxStart, &pSegSrc, len - wTemp, true);
+                wTemp = (uint32_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxHead + 1U);
+                nCopiedBytes = TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxHead, &pSegSrc, (uint16_t)wTemp, true);
+                nCopiedBytes += TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxStart, &pSegSrc, (uint16_t)(len - wTemp), true);
                 newRxHead = pSkt->rxStart + (len - wTemp);
             }
             else
@@ -5409,16 +5709,16 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 pSkt->rxHead = newRxHead;
 
                 // we have some new data in the socket
-                if(pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_1 || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_2)
+                if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1 || pSkt->smState == (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2)
                 {   // valid RX state
-                    *pSktEvent |= TCPIP_TCP_SIGNAL_RX_DATA;
+                    *pSktEvent |= (uint32_t)TCPIP_TCP_SIGNAL_RX_DATA;
                 }
 
                 // See if we have a hole and other data waiting already in the RX FIFO
                 if(pSkt->sHoleSize != -1)
                 {
-                    pSkt->sHoleSize -= len;
-                    wTemp = pSkt->wFutureDataSize + pSkt->sHoleSize;
+                    pSkt->sHoleSize -= (int32_t)len;
+                    wTemp = (uint32_t)pSkt->wFutureDataSize + (uint32_t)pSkt->sHoleSize;
 
                     // See if we just closed up a hole, and if so, advance head pointer
                     if((int32_t)wTemp < 0)
@@ -5435,16 +5735,21 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                         }
                         pSkt->sHoleSize = -1;
                     }
+                    else
+                    {
+                        /* Do Nothing */
+                    }
                 }
             }
         } 
-        else if(wMissingBytes > 0)
+        else 
         {   // wMissingBytes  > 0: this packet contains ahead data
             // This packet is out of order or we lost a packet, see if we can generate a hole to accomodate it
             // Truncate packets that would overflow our TCP RX FIFO
-            if(len + wMissingBytes > wFreeSpace)
+            F_TcpHandleSegDbg(pSkt, "data-ahead", 26);
+            if((int32_t)len + wMissingBytes > (int32_t)wFreeSpace)
             {
-                len = wFreeSpace - wMissingBytes;
+                len = (uint16_t)((uint32_t)wFreeSpace - (uint32_t)wMissingBytes);
             }
 
             // Position packet read pointer to start of useful data area.
@@ -5454,11 +5759,11 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             if(pSkt->rxHead + wMissingBytes + len > pSkt->rxEnd)
             {
                 // Calculate number of data bytes to copy before wraparound
-                wTemp = pSkt->rxEnd - pSkt->rxHead + 1 - wMissingBytes;
+                wTemp = (uint32_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxHead + 1U) - (uint32_t)wMissingBytes;
                 if((int32_t)wTemp >= 0)
                 {
-                    nCopiedBytes = TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxHead + wMissingBytes, &pSegSrc, wTemp, true);
-                    nCopiedBytes += TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxStart, &pSegSrc, len - wTemp, true);
+                    nCopiedBytes = TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxHead + wMissingBytes, &pSegSrc, (uint16_t)wTemp, true);
+                    nCopiedBytes += TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxStart, &pSegSrc, len - (uint16_t)wTemp, true);
                 }
                 else
                 {
@@ -5470,6 +5775,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 nCopiedBytes = TCPIP_Helper_PacketCopy(pRxPkt, pSkt->rxHead + wMissingBytes, &pSegSrc, len, true);
             }
 
+            F_TcpHandleSegDbgData(pSkt, "data-ahead", nCopiedBytes, 27);
             if(nCopiedBytes == len)
             {
                 // Record the hole is here
@@ -5482,26 +5788,30 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 {
                     // We already have a hole, see if we can shrink the hole 
                     // or extend the future data size
-                    if(wMissingBytes < (uint32_t)pSkt->sHoleSize)
+                    if((uint32_t)wMissingBytes < (uint32_t)pSkt->sHoleSize)
                     {
-                        if((wMissingBytes + len > (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize) || (wMissingBytes + len < (uint32_t)pSkt->sHoleSize))
+                        if(((uint32_t)wMissingBytes + (uint32_t)len > (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize) || ((uint32_t)wMissingBytes + (uint32_t)len < (uint32_t)pSkt->sHoleSize))
                         {
                             pSkt->wFutureDataSize = len;
                         }
                         else
                         {
-                            pSkt->wFutureDataSize = (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize - wMissingBytes;
+                            pSkt->wFutureDataSize = (uint16_t)((uint32_t)pSkt->sHoleSize + (uint32_t)pSkt->wFutureDataSize - (uint32_t)wMissingBytes);
                         }
                         pSkt->sHoleSize = wMissingBytes;
                     }
-                    else if(wMissingBytes + len > (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize)
+                    else if((uint32_t)wMissingBytes + (uint32_t)len > (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize)
                     {
                         // Make sure that there isn't a second hole between 
                         // our future data and this TCP segment's future data
-                        if(wMissingBytes <= (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize)
+                        if((uint32_t)wMissingBytes <= (uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize)
                         {
-                            pSkt->wFutureDataSize += wMissingBytes + len - (uint32_t)pSkt->sHoleSize - pSkt->wFutureDataSize;
+                            pSkt->wFutureDataSize += (uint16_t)(((uint32_t)wMissingBytes + len) - ((uint32_t)pSkt->sHoleSize + pSkt->wFutureDataSize));
                         }
+                    }
+                    else
+                    {
+                        /* Do Nothing */
                     }
 
                 }
@@ -5514,34 +5824,36 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     // the delayed acknowledgement algorithm here, only sending 
     // back an immediate ACK if this is the second segment received.  
     // Otherwise, a 200ms timer will cause the ACK to be transmitted.
-    if(wSegmentLength)
+    if(wSegmentLength != 0U)
     {
         // For non-established sockets, delete all data in 
         // the RX buffer immediately after receiving it.
         // That'll ensure that the RX window is nonzero and 
         // the remote node will be able to send a FIN response, 
         // which needs an RX window of at least 1.
-        if(pSkt->smState != TCPIP_TCP_STATE_ESTABLISHED && pSkt->smState != TCPIP_TCP_STATE_FIN_WAIT_1 && pSkt->smState != TCPIP_TCP_STATE_FIN_WAIT_2)
+        if(pSkt->smState != (uint8_t)TCPIP_TCP_STATE_ESTABLISHED && pSkt->smState != (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1 && pSkt->smState != (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2)
         {
             pSkt->rxTail = pSkt->rxHead;
         }
 
-        if(pSkt->Flags.bOneSegmentReceived)
+        if(pSkt->flags.bOneSegmentReceived != 0U)
         {
-            _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
-            // bOneSegmentReceived is cleared in _TcpSend(pSkt, ), so no need here
+            F_TcpHandleSegDbg(pSkt, "send-ACK", 28);
+            (void) F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+            // bOneSegmentReceived is cleared in F_TcpSend(pSkt, ), so no need here
         }
         else
         {
-            pSkt->Flags.bOneSegmentReceived = true; 
+            F_TcpHandleSegDbg(pSkt, "delay-ACK", 29);
+            pSkt->flags.bOneSegmentReceived = 1U;   
 
             // Do not send an ACK immediately back.  Instead, we will 
             // perform delayed acknowledgements.  To do this, we will 
             // just start a timer
-            if(!pSkt->Flags.bDelayedACKTimerEnabled)
+            if(pSkt->flags.bDelayedACKTimerEnabled == 0U)
             {
-                pSkt->Flags.bDelayedACKTimerEnabled = 1;
-                pSkt->delayedACKTime = SYS_TMR_TickCountGet() + (TCPIP_TCP_DELAYED_ACK_TIMEOUT * sysTickFreq)/1000;
+                pSkt->flags.bDelayedACKTimerEnabled = 1;
+                pSkt->delayedACKTime = SYS_TMR_TickCountGet() + ((uint32_t)TCPIP_TCP_DELAYED_ACK_TIMEOUT * sysTickFreq) / 1000U;
 
             }
         }
@@ -5550,33 +5862,37 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     //
     // Eighth: check the FIN bit
     //
-    if(localHeaderFlags & FIN)
+    if((localHeaderFlags & FIN) != 0U)
     {
         // Note: Since we don't have a good means of storing "FIN bytes" 
         // in our TCP RX FIFO, we must ensure that FINs are processed 
         // in-order.
-        if(pSkt->RemoteSEQ + 1 == localSeqNumber + (uint32_t)wSegmentLength)
+        if(pSkt->RemoteSEQ + 1U == localSeqNumber + (uint32_t)wSegmentLength)
         {
             // FINs are treated as one byte of data for ACK sequencing
             pSkt->RemoteSEQ++;
 
-            *pSktEvent |= TCPIP_TCP_SIGNAL_RX_FIN;
-            pSkt->Flags.bRxFin = 1;
+            *pSktEvent |= (uint32_t)TCPIP_TCP_SIGNAL_RX_FIN;
+            pSkt->flags.bRxFin = 1;
+            doReturn = false;
             switch(pSkt->smState)
             {
-                case TCPIP_TCP_STATE_SYN_RECEIVED:
+                case (uint8_t)TCPIP_TCP_STATE_SYN_RECEIVED:
                     // RFC in exact: Our API has no need for the user 
                     // to explicitly close a socket that never really 
                     // got opened fully in the first place, so just 
                     // transmit a FIN automatically and jump to 
                     // TCPIP_TCP_STATE_LAST_ACK
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LAST_ACK);
-                    _TcpSend(pSkt, FIN | ACK, SENDTCP_RESET_TIMERS);
-                    return;
+                    F_TcpHandleSegDbg(pSkt, "last-ACK", 30);
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_LAST_ACK);
+                    (void) F_TcpSend(pSkt, FIN | ACK, SENDTCP_RESET_TIMERS);
+                    doReturn = true;
+                    break;
 
-                case TCPIP_TCP_STATE_ESTABLISHED:
+                case (uint8_t)TCPIP_TCP_STATE_ESTABLISHED:
                     // Go to TCPIP_TCP_STATE_CLOSE_WAIT state
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLOSE_WAIT);
+                    F_TcpHandleSegDbg(pSkt, "close-WAIT", 31);
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLOSE_WAIT);
 
 #if (TCPIP_TCP_CLOSE_WAIT_TIMEOUT != 0)
                     // If the application doesn't call 
@@ -5584,51 +5900,61 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                     // stack to automatically close sockets when the 
                     // remote node sends a FIN, a timer is started so 
                     // that the socket will eventually be closed automatically
-                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (TCPIP_TCP_CLOSE_WAIT_TIMEOUT * sysTickFreq)/1000;
+                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (TCPIP_TCP_CLOSE_WAIT_TIMEOUT * sysTickFreq) / 1000U;
 #endif  // (TCPIP_TCP_CLOSE_WAIT_TIMEOUT != 0)
 
-                    if(pSkt->flags.ackSent)
+                    if(pSkt->flags.ackSent != 0U)
                     {   // don't send another ack to the FIN if we already did that
-                        return;
+                        doReturn = true;
                     }
 
                     break;
 
-                case TCPIP_TCP_STATE_FIN_WAIT_1:
+                case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_1:
                     if(pSkt->MySEQ == localAckNumber)
                     {
+                        F_TcpHandleSegDbg(pSkt, "close-WAIT", 32);
 #if (TCPIP_TCP_MSL_TIMEOUT != 0)
-                        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
-                        pSkt->closeWaitTime = SYS_TMR_TickCountGet() + ((TCPIP_TCP_MSL_TIMEOUT * 2) * sysTickFreq);
+                        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
+                        pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (((uint32_t)TCPIP_TCP_MSL_TIMEOUT * 2U) * sysTickFreq);
 #else
-                        _TcpSend(pSkt, ACK, 0);
-                        _TcpCloseSocket(pSkt, 0);
-                        return;
+                        (void) F_TcpSend(pSkt, ACK, 0);
+                        F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
+                        doReturn = true;
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
                     }
                     else
                     {
-                        _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLOSING);
+                        F_TcpHandleSegDbg(pSkt, "closing", 33);
+                        F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLOSING);
                     }
                     break;
 
-                case TCPIP_TCP_STATE_FIN_WAIT_2:
+                case (uint8_t)TCPIP_TCP_STATE_FIN_WAIT_2:
+                    F_TcpHandleSegDbg(pSkt, "fin-wait2", 34);
 #if (TCPIP_TCP_MSL_TIMEOUT != 0)
-                    _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
-                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + ((TCPIP_TCP_MSL_TIMEOUT * 2) * sysTickFreq);
-                    break;
+                    F_TcpSocketSetState(pSkt, TCPIP_TCP_STATE_TIME_WAIT);
+                    pSkt->closeWaitTime = SYS_TMR_TickCountGet() + (((uint32_t)TCPIP_TCP_MSL_TIMEOUT * 2U) * sysTickFreq);
 #else
-                    _TcpSend(pSkt, ACK, 0);
-                    _TcpCloseSocket(pSkt, 0);
-                    return;
+                    (void) F_TcpSend(pSkt, ACK, 0);
+                    F_TcpCloseSocket(pSkt, (TCPIP_TCP_SIGNAL_TYPE)0);
+                    doReturn = true;
 #endif  // (TCPIP_TCP_MSL_TIMEOUT != 0)
+                    break;
 
                 default:    // case TCPIP_TCP_STATE_TIME_WAIT: reacknowledge
+                    /* Do Nothing */
                     break;
             }
 
+            if(doReturn)
+            {
+                return;
+            }
+
             // Acknowledge receipt of FIN
-            _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+            F_TcpHandleSegDbg(pSkt, "fin-ack", 35);
+            (void) F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
         }
     }
 }
@@ -5732,14 +6058,15 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     uint8_t     *newTxBuff, *newRxBuff;
     bool        adjustFail;
     
-    if((vFlags & (TCP_ADJUST_TX_ONLY | TCP_ADJUST_RX_ONLY)) == (TCP_ADJUST_TX_ONLY | TCP_ADJUST_RX_ONLY))
+    uint32_t uvFlags = (uint32_t)vFlags;
+    if((uvFlags & ((uint32_t)TCP_ADJUST_TX_ONLY | (uint32_t)TCP_ADJUST_RX_ONLY)) == ((uint32_t)TCP_ADJUST_TX_ONLY | (uint32_t)TCP_ADJUST_RX_ONLY))
     {   // invalid option
         return false;
     }
 
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt == 0)
+    if(pSkt == NULL)
     {
         return false;
     }
@@ -5755,15 +6082,15 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     }
     
 
-    oldTxSize = pSkt->txEnd - pSkt->txStart -1;
-    oldRxSize = pSkt->rxEnd - pSkt->rxStart;
+    oldTxSize = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart - 1U);
+    oldRxSize = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart);
 
 
-    if((vFlags & TCP_ADJUST_TX_ONLY) != 0)
+    if((uvFlags & (uint32_t)TCP_ADJUST_TX_ONLY) != 0U)
     {   // preserve RX buffer
         wMinRXSize = oldRxSize;
     }
-    else if((vFlags & TCP_ADJUST_RX_ONLY) != 0)
+    else if((uvFlags & (uint32_t)TCP_ADJUST_RX_ONLY) != 0U)
     {   // preserve TX buffer
         wMinTXSize = oldTxSize;
     }
@@ -5773,14 +6100,14 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
         uint16_t leftSpace = (oldTxSize + oldRxSize) - (wMinRXSize + wMinTXSize);
 
         // Set both allocation flags if none set
-        TCP_ADJUST_FLAGS equalMask = (TCP_ADJUST_GIVE_REST_TO_TX | TCP_ADJUST_GIVE_REST_TO_RX);
+        uint32_t equalMask = ((uint32_t)TCP_ADJUST_GIVE_REST_TO_TX | (uint32_t)TCP_ADJUST_GIVE_REST_TO_RX);
 
-        if((vFlags & equalMask) == 0 || (vFlags & equalMask) == equalMask)
+        if((uvFlags & equalMask) == 0U || (uvFlags & equalMask) == equalMask)
         {   // distribute what's left equally
-            wMinRXSize += (leftSpace + 1) >> 1;
-            wMinTXSize += (leftSpace +1) >> 1;
+            wMinRXSize += (leftSpace + 1U) >> 1U;
+            wMinTXSize += (leftSpace +1U) >> 1U;
         }
-        else if((vFlags & equalMask) == TCP_ADJUST_GIVE_REST_TO_TX)
+        else if((uvFlags & equalMask) == (uint32_t)TCP_ADJUST_GIVE_REST_TO_TX)
         {
             wMinTXSize += leftSpace;
         }
@@ -5788,6 +6115,10 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
         {
             wMinRXSize += leftSpace;
         }
+    }
+    else
+    {
+        /* Do Nothing */
     }
 
     if(wMinTXSize >= oldTxSize)
@@ -5801,15 +6132,15 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 
     if(diffChange >= TCP_MIN_BUFF_CHANGE)
     {
-        newTxBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, wMinTXSize + 1);
-        if(newTxBuff == 0)
+        newTxBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, (size_t)((uint32_t)wMinTXSize + 1U));
+        if(newTxBuff == NULL)
         {    // fail, out of memory
             return false;
         }
     }
     else
     {   // same TX size, no change needed
-        newTxBuff = 0;
+        newTxBuff = NULL;
     }
 
     if(wMinRXSize >= oldRxSize)
@@ -5824,16 +6155,16 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     if(diffChange >= TCP_MIN_BUFF_CHANGE)
     {
 
-        newRxBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, wMinRXSize + 1);
-        if(newRxBuff == 0)
+        newRxBuff = (uint8_t*)TCPIP_HEAP_Malloc(tcpHeapH, (size_t)((uint32_t)wMinRXSize + 1U));
+        if(newRxBuff == NULL)
         {    // fail, out of memory
-            TCPIP_HEAP_Free(tcpHeapH, newTxBuff);
+            (void) TCPIP_HEAP_Free(tcpHeapH, newTxBuff);
             return false;
         }
     }
     else
     {   // same RX size, no change needed
-        newRxBuff = 0;
+        newRxBuff = NULL;
     }
 
 
@@ -5842,30 +6173,34 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     // process TX data; assume no copy, discard 
     pendTxEnd = pendTxBeg = 0;
     txUnackOffs = 0;
-    while(newTxBuff != 0)
+    while(newTxBuff != NULL)
     {
-        if((vFlags & TCP_ADJUST_PRESERVE_TX) != 0)
+        if((uvFlags & (uint32_t)TCP_ADJUST_PRESERVE_TX) != 0U)
         {
             // calculate the pending data in the TX buffer 
             uint8_t*    txHead;
-            uint8_t*    srcOffs = 0;
+            uint8_t*    srcOffs = NULL;
 
             txHead = pSkt->txHead;
             
             if(txHead < pSkt->txTail)
             {
-                pendTxEnd = pSkt->txEnd - pSkt->txTail;
-                pendTxBeg = txHead - pSkt->txStart;
+                pendTxEnd = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txTail);
+                pendTxBeg = (uint16_t)((uintptr_t)txHead - (uintptr_t)pSkt->txStart);
                 srcOffs = pSkt->txStart;
             }
             else if(txHead > pSkt->txTail)
             {
                 pendTxEnd = 0;
-                pendTxBeg = txHead - pSkt->txTail;
+                pendTxBeg = (uint16_t)((uintptr_t)txHead - (uintptr_t)pSkt->txTail);
                 srcOffs = pSkt->txTail;
             }
+            else
+            {
+                /* Do Nothing */
+            }
 
-            if((pendTxEnd + pendTxBeg) != 0)
+            if((pendTxEnd + pendTxBeg) != 0U)
             {   // need data copying
                 if(pendTxEnd + pendTxBeg > wMinTXSize)
                 {   // fail, not enough room
@@ -5873,20 +6208,20 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
                     break;
                 }
 
-                if(pendTxEnd)
+                if(pendTxEnd != 0U)
                 {
-                    TCPIP_Helper_Memcpy(newTxBuff, pSkt->txTail, pendTxEnd);
+                    (void)TCPIP_Helper_Memcpy(newTxBuff, pSkt->txTail, (size_t)pendTxEnd);
                 }
-                if(pendTxBeg)
+                if(pendTxBeg != 0U)
                 {
-                    TCPIP_Helper_Memcpy(newTxBuff + pendTxEnd,  srcOffs, pendTxBeg);
+                    (void)TCPIP_Helper_Memcpy(newTxBuff + pendTxEnd,  srcOffs, (size_t)pendTxBeg);
                 }
 
 
-                txUnackOffs = pSkt->txUnackedTail - pSkt->txTail;
+                txUnackOffs = (uint16_t)((uintptr_t)pSkt->txUnackedTail - (uintptr_t)pSkt->txTail);
                 if(pSkt->txUnackedTail < pSkt->txTail)
                 {
-                    txUnackOffs += pSkt->txEnd - pSkt->txStart;
+                    txUnackOffs += (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart);
                 }
             }
         }
@@ -5896,19 +6231,19 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     // process the RX data
     // assume no copy, discard 
     avlblRxEnd = avlblRxBeg = 0;
-    while(adjustFail != true && newRxBuff != 0)
+    while(adjustFail != true && newRxBuff != NULL)
     {
-        if((vFlags & TCP_ADJUST_PRESERVE_RX) != 0)
+        if((uvFlags & (uint32_t)TCP_ADJUST_PRESERVE_RX) != 0U)
         {   // calculate alavilable data in the RX buffer
             uint8_t*    rxHead;
-            uint8_t*    srcOffs = 0;
+            uint8_t*    srcOffs = NULL;
 
             rxHead = pSkt->rxHead;
 
             // preserve out-of-order pending data
             if(pSkt->sHoleSize != -1)
             {
-                rxHead += pSkt->sHoleSize + pSkt->wFutureDataSize;
+                rxHead += pSkt->sHoleSize + (int32_t)pSkt->wFutureDataSize;
                 if(rxHead > pSkt->rxEnd)
                 {
                     rxHead -= pSkt->rxEnd - pSkt->rxStart + 1;
@@ -5918,17 +6253,21 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
             if(rxHead > pSkt->rxTail)
             {
                 avlblRxEnd = 0;
-                avlblRxBeg = rxHead - pSkt->rxTail;
+                avlblRxBeg = (uint16_t)((uintptr_t)rxHead - (uintptr_t)pSkt->rxTail);
                 srcOffs = pSkt->rxTail;
             }
             else if(rxHead < pSkt->rxTail)
             {
-                avlblRxEnd = pSkt->rxEnd + 1 - pSkt->rxTail;
-                avlblRxBeg = rxHead - pSkt->rxStart;
+                avlblRxEnd = (uint16_t)((uintptr_t)pSkt->rxEnd + 1U - (uintptr_t)pSkt->rxTail);
+                avlblRxBeg = (uint16_t)((uintptr_t)rxHead - (uintptr_t)pSkt->rxStart);
                 srcOffs = pSkt->rxStart;
             }
+            else
+            {
+                /* Do Nothing */
+            }
 
-            if((avlblRxEnd + avlblRxBeg) != 0)
+            if((avlblRxEnd + avlblRxBeg) != 0U)
             {   // need data copying
 
                 if(avlblRxEnd + avlblRxBeg > wMinRXSize)
@@ -5937,13 +6276,13 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
                     break;
                 }
 
-                if(avlblRxEnd)
+                if(avlblRxEnd != 0U)
                 {
-                    TCPIP_Helper_Memcpy(newRxBuff, pSkt->rxTail, avlblRxEnd);
+                    (void)TCPIP_Helper_Memcpy(newRxBuff, pSkt->rxTail, (size_t)avlblRxEnd);
                 }
-                if(avlblRxBeg)
+                if(avlblRxBeg != 0U)
                 {
-                    TCPIP_Helper_Memcpy(newRxBuff + avlblRxEnd, srcOffs, avlblRxBeg);
+                    (void)TCPIP_Helper_Memcpy(newRxBuff + avlblRxEnd, srcOffs, (size_t)avlblRxBeg);
                 }
             }
         }
@@ -5953,29 +6292,29 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 
     if(adjustFail == true)
     {
-        TCPIP_HEAP_Free(tcpHeapH, newRxBuff);
-        TCPIP_HEAP_Free(tcpHeapH, newTxBuff);
+        (void) TCPIP_HEAP_Free(tcpHeapH, newRxBuff);
+        (void) TCPIP_HEAP_Free(tcpHeapH, newTxBuff);
         return false;
     }
 
     // success
 
     // adjust new TX pointers
-    if(newTxBuff)
+    if(newTxBuff != NULL)
     {
-        TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->txStart);
+        (void) TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->txStart);
         pSkt->txStart =  newTxBuff;
         pSkt->txEnd = newTxBuff + wMinTXSize + 1;
         pSkt->txTail = pSkt->txStart;
         pSkt->txHead = pSkt->txStart + (pendTxEnd + pendTxBeg);
         pSkt->txUnackedTail = pSkt->txTail + txUnackOffs;
-        _TCPSetHalfFlushFlag(pSkt);
+        F_TCPSetHalfFlushFlag(pSkt);
     }
 
     // adjust new RX pointers
-    if(newRxBuff)
+    if(newRxBuff != NULL)
     {
-        TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->rxStart);
+        (void) TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->rxStart);
         pSkt->rxStart = newRxBuff;
         pSkt->rxEnd = newRxBuff + wMinRXSize;
         pSkt->rxTail = pSkt->rxStart;
@@ -5983,11 +6322,11 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     }
 
     // Send a window update to notify remote node of change
-    if(newTxBuff || newRxBuff)
+    if((newTxBuff != NULL) || (newRxBuff != NULL))
     {
-        if(pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED)
+        if(pSkt->smState == (uint8_t)TCPIP_TCP_STATE_ESTABLISHED)
         {
-            _TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
+            (void) F_TcpSend(pSkt, ACK, SENDTCP_RESET_TIMERS);
         }
     }
     
@@ -6036,21 +6375,21 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persistent)
 {
     TCPIP_NET_IF* pNetIf;
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt)
+    if(pSkt != NULL)
     {
-        if(hNet != 0)
+        if(hNet != NULL)
         {
-            pNetIf = _TCPIPStackHandleToNet(hNet);
-            if(pNetIf == 0)
+            pNetIf = TCPIPStackHandleToNet(hNet);
+            if(pNetIf == NULL)
             {   // wrong interface
                 return false;
             }
         }
         else
         {
-            pNetIf = 0;
+            pNetIf = NULL;
         }
 
         pSkt->pSktNet = pNetIf;
@@ -6060,9 +6399,9 @@ bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persist
         }
 
 #if defined (TCPIP_STACK_USE_IPV6)
-        if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {
-            if(pSkt->pV6Pkt == 0)
+            if(pSkt->pV6Pkt == NULL)
             {
                 return false;
             }
@@ -6088,7 +6427,7 @@ bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persist
     This function returns the MAC interface id of an TCP socket
 
   Precondition:
-    TCP socket should have been opened with _TCP_Open().
+    TCP socket should have been opened with F_TCP_Open().
     hTCP - valid socket
 
   Parameters:
@@ -6099,11 +6438,11 @@ bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persist
   ***************************************************************************/
 TCPIP_NET_HANDLE  TCPIP_TCP_SocketNetGet(TCP_SOCKET hTCP)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
     
-    if(pSkt == 0)
+    if(pSkt == NULL)
     {
-        return 0;
+        return NULL;
     }
 
     return pSkt->pSktNet;
@@ -6111,31 +6450,31 @@ TCPIP_NET_HANDLE  TCPIP_TCP_SocketNetGet(TCP_SOCKET hTCP)
 
 // allocates a new ephemeral port number
 // returns 0 on error
-static TCP_PORT _TCP_EphemeralPortAllocate(void)
+static TCP_PORT F_TCP_EphemeralPortAllocate(void)
 {
     uint32_t    num_ephemeral;
     uint32_t    count;
     TCP_PORT    next_ephemeral;
 
 
-    count = num_ephemeral = TCPIP_TCP_LOCAL_PORT_END_NUMBER - TCPIP_TCP_LOCAL_PORT_START_NUMBER + 1;
+    count = num_ephemeral = (uint32_t)TCPIP_TCP_LOCAL_PORT_END_NUMBER - (uint32_t)TCPIP_TCP_LOCAL_PORT_START_NUMBER + 1U;
 
 #if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
-    next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_PseudoGet() % num_ephemeral);
+    next_ephemeral = (uint16_t)((uint32_t)TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_PseudoGet() % num_ephemeral));
 #else
-    next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_CryptoGet() % num_ephemeral);
+    next_ephemeral = (uint16_t)((uint32_t)TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_CryptoGet() % num_ephemeral));
 #endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
 
-    while(count--)
+    while(count-- != 0U)
     {
-        if(_TCP_PortIsAvailable(next_ephemeral))
+        if(F_TCP_PortIsAvailable(next_ephemeral))
         {
             return (TCP_PORT)next_ephemeral;
         }
 
-        if (next_ephemeral == TCPIP_TCP_LOCAL_PORT_END_NUMBER)
+        if (next_ephemeral == (uint16_t)TCPIP_TCP_LOCAL_PORT_END_NUMBER)
         {
-            next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER;
+            next_ephemeral = (uint16_t)TCPIP_TCP_LOCAL_PORT_START_NUMBER;
         }
         else
         {
@@ -6147,9 +6486,9 @@ static TCP_PORT _TCP_EphemeralPortAllocate(void)
 
 }
 
-static bool _TCP_PortIsAvailable(TCP_PORT port)
+static bool F_TCP_PortIsAvailable(TCP_PORT port)
 {
-    int sktIx;
+    unsigned int sktIx;
     TCB_STUB* pSkt; 
 
     // Find an available socket that matches the specified socket type
@@ -6157,7 +6496,7 @@ static bool _TCP_PortIsAvailable(TCP_PORT port)
     {
         pSkt = TCBStubs[sktIx];
         // Sockets that are in use will be in a non-closed state
-        if(pSkt && pSkt->localPort == port)
+        if((pSkt != NULL) && pSkt->localPort == port)
         {
             return false;
         }
@@ -6184,25 +6523,25 @@ static bool _TCP_PortIsAvailable(TCP_PORT port)
   ***************************************************************************/
 bool TCPIP_TCP_Bind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP_MULTI_ADDRESS* localAddress)
 {
-    TCPIP_NET_IF* pSktIf;
+    const TCPIP_NET_IF* pSktIf;
     TCB_STUB* pSkt; 
 
-    pSkt = _TcpSocketChk(hTCP); 
-    if(pSkt == 0 || _TCP_IsConnected(pSkt))
+    pSkt = F_TcpSocketChk(hTCP); 
+    if(pSkt == NULL || F_TCP_IsConnected(pSkt))
     {
         return false;
     }
 
-    if(pSkt->addType != IP_ADDRESS_TYPE_ANY && pSkt->addType != addType)
+    if(pSkt->addType != (uint8_t)IP_ADDRESS_TYPE_ANY && pSkt->addType != (uint8_t)addType)
     {   // address type mismatch
         return false;
     }
 
     // check for valid address
 
-    if(localAddress != 0)
+    if(localAddress != NULL)
     {
-        pSktIf = 0;
+        pSktIf = NULL;
 #if defined (TCPIP_STACK_USE_IPV4)
         if (addType == IP_ADDRESS_TYPE_IPV4)
         {
@@ -6211,11 +6550,11 @@ bool TCPIP_TCP_Bind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT localPort
 #else
         if (addType == IP_ADDRESS_TYPE_IPV6)
         {
-            pSktIf = _TCPIPStackIPv6AddToNet(&localAddress->v6Add, IPV6_ADDR_TYPE_UNICAST, false);
+            pSktIf = TCPIPStackIPv6AddToNet(&localAddress->v6Add, IPV6_ADDR_TYPE_UNICAST, false);
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-        if(pSktIf == 0)
+        if(pSktIf == NULL)
         {    // no such interface
             return false;
         }
@@ -6225,32 +6564,36 @@ bool TCPIP_TCP_Bind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT localPort
         pSktIf = pSkt->pSktNet;
     }
 
-    if(localPort == 0)
+    if(localPort == 0U)
     {
-        localPort = _TCP_EphemeralPortAllocate();
-        if(localPort == 0)
+        localPort = F_TCP_EphemeralPortAllocate();
+        if(localPort == 0U)
         {
             return false;
         }
     }
-    else if(localPort != pSkt->localPort && !_TCP_PortIsAvailable(localPort))
+    else if(localPort != pSkt->localPort && !F_TCP_PortIsAvailable(localPort))
     {
         return false;
     }
+    else
+    {
+        /* Do Nothing */
+    }
 
     // success; bind
-    pSkt->addType = addType;
-    _TcpSocketBind(pSkt, pSktIf, localAddress);
+    pSkt->addType = (uint8_t)addType;
+    F_TcpSocketBind(pSkt, pSktIf, localAddress);
     pSkt->localPort = localPort;
 
     // recalculate the MYTCBStub remote hash value
-    if(pSkt->Flags.bServer)
+    if(pSkt->flags.bServer != 0U)
     {   // server socket
         pSkt->remoteHash = localPort;
     }
     else
     {   // client socket
-        pSkt->remoteHash = _TCP_ClientIPV4RemoteHash(&pSkt->destAddress, pSkt);
+        pSkt->remoteHash = F_TCP_ClientIPV4RemoteHash(&pSkt->destAddress, pSkt);
     }
 
     return true;
@@ -6274,14 +6617,14 @@ bool TCPIP_TCP_Bind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT localPort
   ***************************************************************************/
 bool TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT remotePort,  IP_MULTI_ADDRESS* remoteAddress)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt != 0 && !_TCP_IsConnected(pSkt))
+    if(pSkt != NULL && !F_TCP_IsConnected(pSkt))
     {
 
-        if(remoteAddress == 0 || TCPIP_TCP_DestinationIPAddressSet(hTCP, addType, remoteAddress) == true)
+        if(remoteAddress == NULL || TCPIP_TCP_DestinationIPAddressSet(hTCP, addType, remoteAddress) == true)
         {
-            if(remotePort != 0)
+            if(remotePort != 0U)
             {
                 pSkt->remotePort = remotePort;
             }
@@ -6296,159 +6639,193 @@ bool TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT rem
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
 bool TCPIP_TCP_OptionsSet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optParam)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    bool res;
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt)
+    if(pSkt != NULL)
     {
+        union
+        {
+            void*   optParam;
+            uintptr_t   paramPtr;
+            unsigned int uparam;
+            uint32_t    param32;
+            uint16_t    param16;
+            uint8_t     param8;
+        }U_OPT_PARAM;
+
+        U_OPT_PARAM.optParam = optParam;
+        res = true;
         switch(option)
         {
             case TCP_OPTION_LINGER:
-                if(optParam)
+                if(optParam != NULL)
                 {
                     TCP_OPTION_LINGER_DATA* pLData = (TCP_OPTION_LINGER_DATA*)optParam;
-                    pSkt->flags.nonLinger = pLData->lingerEnable == 0;
-                    pSkt->flags.nonGraceful = pLData->gracefulEnable == 0;
-                    return true;
+                    pSkt->flags.nonLinger = pLData->lingerEnable != false ? 0U : 1U;
+                    pSkt->flags.nonGraceful = pLData->gracefulEnable != false ? 0U : 1U;
                 }
-                return false;
+                else
+                {
+                    res = false;
+                }
+                break;
                 
             case TCP_OPTION_KEEP_ALIVE:
-                if(optParam)
+                if(optParam != NULL)
                 {
                     TCP_OPTION_KEEP_ALIVE_DATA* pKData = (TCP_OPTION_KEEP_ALIVE_DATA*)optParam;
-                    if((pSkt->Flags.keepAlive = pKData->keepAliveEnable))
+                    pSkt->flags.keepAlive = pKData->keepAliveEnable != false ? 1U : 0U;
+                    if(pSkt->flags.keepAlive != 0U)
                     {
                         pSkt->keepAliveCount = 0;
-                        pSkt->keepAliveTmo = pKData->keepAliveTmo ? pKData->keepAliveTmo : TCPIP_TCP_KEEP_ALIVE_TIMEOUT;
-                        pSkt->keepAliveLim = pKData->keepAliveUnackLim ? pKData->keepAliveUnackLim : TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES;
+                        pSkt->keepAliveTmo = (pKData->keepAliveTmo != 0U) ? pKData->keepAliveTmo : (uint16_t)TCPIP_TCP_KEEP_ALIVE_TIMEOUT;
+                        pSkt->keepAliveLim = (pKData->keepAliveUnackLim != 0U) ? pKData->keepAliveUnackLim : (uint8_t)TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES;
                     }
-                    return true;
                 }
-                return false;
+                else
+                {
+                    res = false;
+                }
+                break;
 
             case TCP_OPTION_RX_BUFF:
-                if((size_t)optParam > TCP_MAX_RX_BUFF_SIZE)
+                if(U_OPT_PARAM.param32 > (uint32_t)TCP_MAX_RX_BUFF_SIZE)
                 {
                    return false;
                 } 
-                return TCPIP_TCP_FifoSizeAdjust(hTCP, (uint16_t)((unsigned int)optParam), 0, TCP_ADJUST_RX_ONLY | TCP_ADJUST_PRESERVE_RX);
+                res = TCPIP_TCP_FifoSizeAdjust(hTCP, U_OPT_PARAM.param16, 0, (TCP_ADJUST_FLAGS)((uint32_t)TCP_ADJUST_RX_ONLY | (uint32_t)TCP_ADJUST_PRESERVE_RX));
+                break;
 
             case TCP_OPTION_TX_BUFF:
-                if((size_t)optParam > TCP_MAX_TX_BUFF_SIZE)
+                if(U_OPT_PARAM.param32 > (uint32_t)TCP_MAX_RX_BUFF_SIZE)
                 {
                    return false;
                 } 
-                return TCPIP_TCP_FifoSizeAdjust(hTCP, 0, (uint16_t)((unsigned int)optParam), TCP_ADJUST_TX_ONLY | TCP_ADJUST_PRESERVE_TX);
+                res = TCPIP_TCP_FifoSizeAdjust(hTCP, 0, U_OPT_PARAM.param16, (TCP_ADJUST_FLAGS)((uint32_t)TCP_ADJUST_TX_ONLY | (uint32_t)TCP_ADJUST_PRESERVE_TX));
+                break;
 
             case TCP_OPTION_NODELAY:
-                pSkt->flags.forceFlush = (int)optParam != 0;
-                return true;
+                pSkt->flags.forceFlush = (U_OPT_PARAM.paramPtr != 0U) ? 1U : 0U;
+                break;
 
             case TCP_OPTION_THRES_FLUSH:
-                pSkt->Flags.halfThresType = (TCP_OPTION_THRES_FLUSH_TYPE)(uint32_t)optParam;
-                return true;
+                pSkt->flags.halfThresType = U_OPT_PARAM.param8;
+                break;
 
             case TCP_OPTION_DELAY_SEND_ALL_ACK:
-                pSkt->Flags.delayAckSend = (int)optParam != 0;
-                return true;
+                pSkt->flags.delayAckSend = (U_OPT_PARAM.param16 != 0U) ? 1U : 0U;
+                break;
                 
             case TCP_OPTION_TX_TTL:
-                pSkt->ttl = (uint8_t)(unsigned int)optParam;
-                return true;
+                pSkt->ttl = U_OPT_PARAM.param8;
+                break;
                 
             case TCP_OPTION_TOS:
-                pSkt->tos = (uint8_t)(unsigned int)optParam;
-                return true;
+                pSkt->tos = U_OPT_PARAM.param8;
+                break;
                 
             default:
-                return false;   // not supported option
+                res = false;   // not supported option
+                break;
         }
     }
+    else
+    {
+        res = false;
+    }
 
-    return false;
+    return res;
 }
 
 bool TCPIP_TCP_OptionsGet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optParam)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+    bool res;
+    TCB_STUB* pSkt = F_TcpSocketChk(hTCP); 
 
-    if(pSkt && optParam)
+    if((pSkt != NULL) && (optParam != NULL))
     {
+        res = true;
         switch(option)
         {
             case TCP_OPTION_LINGER:
                 {
                     TCP_OPTION_LINGER_DATA* pLData = (TCP_OPTION_LINGER_DATA*)optParam;
-                    pLData->lingerEnable = pSkt->flags.nonLinger == 0;
-                    pLData->gracefulEnable = pSkt->flags.nonGraceful == 0;
+                    pLData->lingerEnable = pSkt->flags.nonLinger == 0U;
+                    pLData->gracefulEnable = pSkt->flags.nonGraceful == 0U;
                     pLData->lingerTmo = 0;  // not supported
                 }
-                return true;
+                break;
 
             case TCP_OPTION_KEEP_ALIVE:
                 {
                     TCP_OPTION_KEEP_ALIVE_DATA* pKData = (TCP_OPTION_KEEP_ALIVE_DATA*)optParam;
-                    pKData->keepAliveEnable = pSkt->Flags.keepAlive != 0;
+                    pKData->keepAliveEnable = pSkt->flags.keepAlive != 0U;
                     pKData->keepAliveTmo = pSkt->keepAliveTmo;
                     pKData->keepAliveUnackLim = pSkt->keepAliveLim;
                 }
-                return true;
+                break;
                 
             case TCP_OPTION_RX_BUFF:
-                *(uint16_t*)optParam = pSkt->rxEnd - pSkt->rxStart;
-                return true;
+                *(uint16_t*)optParam = (uint16_t)((uintptr_t)pSkt->rxEnd - (uintptr_t)pSkt->rxStart);
+                break;
 
             case TCP_OPTION_TX_BUFF:
-                *(uint16_t*)optParam = pSkt->txEnd - pSkt->txStart + 1;
-                return true;
+                *(uint16_t*)optParam = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txStart + 1U);
+                break;
 
             case TCP_OPTION_NODELAY:
-                *(bool*)optParam = pSkt->flags.forceFlush != 0;
-                return true;
+                *(bool*)optParam = pSkt->flags.forceFlush != 0U;
+                break;
 
             case TCP_OPTION_THRES_FLUSH:
-                *(TCP_OPTION_THRES_FLUSH_TYPE*)optParam = (TCP_OPTION_THRES_FLUSH_TYPE)pSkt->Flags.halfThresType;
-                return true;
+                *(TCP_OPTION_THRES_FLUSH_TYPE*)optParam = (TCP_OPTION_THRES_FLUSH_TYPE)pSkt->flags.halfThresType;
+                break;
 
             case TCP_OPTION_DELAY_SEND_ALL_ACK:
-                *(bool*)optParam = pSkt->Flags.delayAckSend != 0;
-                return true;
+                *(bool*)optParam = pSkt->flags.delayAckSend != 0U;
+                break;
 
             case TCP_OPTION_TX_TTL:
                 *(uint8_t*)optParam = pSkt->ttl;
-                return true;
+                break;
 
              case TCP_OPTION_TOS:
                 *(uint8_t*)optParam = pSkt->tos;
-                return true;
+                break;
                 
             default:
-                return false;   // not supported option
+                res = false;   // not supported option
+                break;
         }
     }
+    else
+    {
+        res = false;
+    }
 
-    return false;
+    return res;
 }
 #endif  // (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
 
 
-bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* remoteAddress)
+bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* remoteAddress)
 {
     TCB_STUB* pSkt; 
 
-    if(remoteAddress == 0)
+    if(remoteAddress == NULL)
     {
         return false;
     }
 
-    pSkt = _TcpSocketChk(hTCP); 
+    pSkt = F_TcpSocketChk(s); 
 
-    while(pSkt != 0 && pSkt->addType == addType && !_TCP_IsConnected(pSkt))
+    while(pSkt != NULL && pSkt->addType == (uint8_t)addType && !F_TCP_IsConnected(pSkt))
     {
 #if defined (TCPIP_STACK_USE_IPV6)
-        if (pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {
-            if(pSkt->pV6Pkt != 0)
+            if(pSkt->pV6Pkt != NULL)
             {
                 TCPIP_IPV6_DestAddressSet (pSkt->pV6Pkt, &remoteAddress->v6Add);
                 return true;
@@ -6458,7 +6835,7 @@ bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType,
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        if (pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+        if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
         {
             pSkt->destAddress.Val = remoteAddress->v4Add.Val;
             return true;
@@ -6472,94 +6849,102 @@ bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType,
 
 
 // sets the source IP address of a packet
-bool TCPIP_TCP_SourceIPAddressSet(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* localAddress)
+bool TCPIP_TCP_SourceIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* localAddress)
 {
-    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-    if(pSkt == 0 || _TCP_IsConnected(pSkt))
+    TCB_STUB* pSkt = F_TcpSocketChk(s); 
+    if(pSkt == NULL || F_TCP_IsConnected(pSkt))
     {
         return false;
     }
 
-    return _TCPSetSourceAddress(pSkt, addType, localAddress);
+    return F_TCPSetSourceAddress(pSkt, addType, localAddress);
 }
 
 
 // calculates a client socket remote hash value
-static uint16_t _TCP_ClientIPV4RemoteHash(const IPV4_ADDR* pAdd, TCB_STUB* pSkt)
+static uint16_t F_TCP_ClientIPV4RemoteHash(const IPV4_ADDR* pAdd, TCB_STUB* pSkt)
 {
     return (pAdd->w[1] + pAdd->w[0] + pSkt->remotePort) ^ pSkt->localPort;
 }
 
 
-static void _TCP_PayloadSet(TCB_STUB * pSkt, void* pPkt, uint8_t* payload1, uint16_t len1, uint8_t* payload2, uint16_t len2)
+static void F_TCP_PayloadSet(TCB_STUB * pSkt, void* pPkt, uint8_t* payload1, uint16_t len1, uint8_t* payload2, uint16_t len2)
 {
     switch(pSkt->addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
-        case IP_ADDRESS_TYPE_IPV6:
-            if(payload1)
+        case (uint8_t)IP_ADDRESS_TYPE_IPV6:
+            if(payload1 != NULL)
             {
-                TCPIP_IPV6_PayloadSet((IPV6_PACKET*)pPkt, payload1, len1);
+                (void) TCPIP_IPV6_PayloadSet((IPV6_PACKET*)pPkt, payload1, len1);
             }
-            if(payload2)
+            if(payload2 != NULL)
             {
-                TCPIP_IPV6_PayloadSet((IPV6_PACKET*)pPkt, payload2, len2);
+                (void) TCPIP_IPV6_PayloadSet((IPV6_PACKET*)pPkt, payload2, len2);
             }
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        case IP_ADDRESS_TYPE_IPV4:
-            _Tcpv4LinkDataSeg((TCP_V4_PACKET*)pPkt, payload1, len1, payload2, len2);
+        case (uint8_t)IP_ADDRESS_TYPE_IPV4:
+            F_Tcpv4LinkDataSeg((TCP_V4_PACKET*)pPkt, payload1, len1, payload2, len2);
             break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
         default:
+            /* Do Nothing */
             break;
     }
 }
 
 
-static bool _TCP_Flush(TCB_STUB * pSkt, void* pPkt, uint16_t hdrLen, uint16_t loadLen)
+static bool F_TCP_Flush(TCB_STUB * pSkt, void* pPkt, uint16_t hdrLen, uint16_t loadLen)
 {
+    bool res;
+
     switch(pSkt->addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
-        case IP_ADDRESS_TYPE_IPV6:
-            return TCPIP_IPV6_Flush((IPV6_PACKET*)pPkt) >= 0; // sent or queued
+        case (uint8_t)IP_ADDRESS_TYPE_IPV6:
+            res = TCPIP_IPV6_Flush((IPV6_PACKET*)pPkt) >= 0; // sent or queued
+            break;                                                             
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        case IP_ADDRESS_TYPE_IPV4:
-            return _TCPv4Flush(pSkt, (IPV4_PACKET*)pPkt, hdrLen, loadLen);
+        case (uint8_t)IP_ADDRESS_TYPE_IPV4:
+            res = F_TCPv4Flush(pSkt, (IPV4_PACKET*)pPkt, hdrLen, loadLen);
+            break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
         default:
-            return false;
+            res = false;
+            break;
     }
+
+    return res;
 }
 
 
 TCPIP_TCP_SIGNAL_HANDLE TCPIP_TCP_SignalHandlerRegister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_TYPE sigMask, TCPIP_TCP_SIGNAL_FUNCTION handler, const void* hParam)
 {
-    TCPIP_TCP_SIGNAL_HANDLE sHandle = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sHandler = NULL;
 
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-    if(handler != 0)
+    if(handler != NULL)
     {
-        TCB_STUB* pSkt = _TcpSocketChk(s);
-        if(pSkt != 0 && pSkt->sigHandler == 0)
+        TCB_STUB* pSkt = F_TcpSocketChk(s);
+        if(pSkt != NULL && pSkt->sigHandler == NULL)
         {
             pSkt->sigHandler = handler;
             pSkt->sigMask = (uint16_t)sigMask;
             pSkt->sigParam = hParam;
-            sHandle = (TCPIP_TCP_SIGNAL_HANDLE)handler;
+            sHandler = handler;
             // Note: this may change if multiple notfication handlers required 
         }
     }
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
 
-    return sHandle;
+    return FC_SigFunc2SigHndl(sHandler);
 }
 
 bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSig)
@@ -6567,13 +6952,13 @@ bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSi
     bool res = false;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    TCB_STUB* pSkt = _TcpSocketChk(s);
+    TCB_STUB* pSkt = F_TcpSocketChk(s);
 
-    if(pSkt != 0)
+    if(pSkt != NULL)
     {  
-        if(pSkt->sigHandler == (TCPIP_TCP_SIGNAL_FUNCTION)hSig)
+        if(pSkt->sigHandler == FC_SigHndl2SigFunc(hSig))
         {
-            pSkt->sigHandler = 0;
+            pSkt->sigHandler = NULL;
             pSkt->sigMask = 0;
             res = true;
         }
@@ -6596,35 +6981,44 @@ bool TCPIP_TCP_IsReady(void)
 #if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
 TCPIP_TCP_PROCESS_HANDLE TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HANDLER pktHandler, const void* handlerParam)
 {
-    TCPIP_TCP_PROCESS_HANDLE pHandle = 0;
+    TCPIP_TCP_PACKET_HANDLER userHandler = NULL;
+
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(tcpPktHandler == 0)
+    if(tcpPktHandler == NULL)
     {
         tcpPktHandlerParam = handlerParam;
         tcpPktHandler = pktHandler;
-        pHandle = pktHandler;
+        userHandler = pktHandler;
     }
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
-    return pHandle;
+    return FC_PktHndl2ProcHndl(userHandler);
 }
 
-bool TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE pktHandle)
+bool TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE procHandle)
 {
     bool res = false;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(tcpPktHandler == pktHandle)
+    if(tcpPktHandler == FC_ProcHndl2PktHndl(procHandle))
     {
-        tcpPktHandler = 0;
+        tcpPktHandler = NULL;
         res = true;
     } 
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
     return res;
 }
-
+#else
+TCPIP_TCP_PROCESS_HANDLE TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    return NULL;
+}
+bool TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE procHandle)
+{
+    return false;
+}
 #endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
 
 

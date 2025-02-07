@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCP_MANAGER_H_
-#define __TCP_MANAGER_H_
+#ifndef H__TCP_MANAGER_H_
+#define H__TCP_MANAGER_H_
 
 
 /****************************************************************************
@@ -60,25 +60,25 @@ typedef struct
     uint32_t    SeqNumber;      // Local sequence number
     uint32_t    AckNumber;      // Acknowledging remote sequence number
 
-    struct
+    struct __attribute__((packed))
     {
-        unsigned char Reserved3      : 4;
-        unsigned char Val            : 4;
+        unsigned Reserved3      : 4;
+        unsigned Val            : 4;
     } DataOffset;           // Data offset flags nibble
 
     union
     {
-        struct
+        struct __attribute__((packed))
         {
-            unsigned char flagFIN    : 1;
-            unsigned char flagSYN    : 1;
-            unsigned char flagRST    : 1;
-            unsigned char flagPSH    : 1;
-            unsigned char flagACK    : 1;
-            unsigned char flagURG    : 1;
-            unsigned char Reserved2  : 2;
+            unsigned flagFIN    : 1;
+            unsigned flagSYN    : 1;
+            unsigned flagRST    : 1;
+            unsigned flagPSH    : 1;
+            unsigned flagACK    : 1;
+            unsigned flagURG    : 1;
+            unsigned Reserved2  : 2;
         } bits;
-        uint8_t byte;
+        uint8_t byteVal;
     } Flags;                // TCP Flags as defined in RFC
 
     uint16_t    Window;         // Local free RX buffer window
@@ -123,7 +123,7 @@ typedef struct
    from other threads is supported.
 
  */
-bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_TCP_MODULE_CONFIG* pTcpInit);
+bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const void* initData);
 
 
 /*****************************************************************************
@@ -159,5 +159,19 @@ bool TCPIP_TCP_SourceIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP_MULT
 
 bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* remoteAddress);
 
+// conversion functions/helpers
+//
+static __inline__ TCP_HEADER* __attribute__((always_inline)) FC_U8Ptr2TcpHdr(uint8_t* u8Ptr)
+{
+    union
+    {
+        uint8_t* u8Ptr;
+        TCP_HEADER* pHdr;
+    }U_U8_PTR_TCP_HDR;
 
-#endif  // __TCP_MANAGER_H_
+    U_U8_PTR_TCP_HDR.u8Ptr = u8Ptr;
+    return U_U8_PTR_TCP_HDR.pHdr;
+}
+
+
+#endif  // H__TCP_MANAGER_H_

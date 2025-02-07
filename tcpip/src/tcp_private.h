@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _TCP_PRIVATE_H_
-#define _TCP_PRIVATE_H_
+#ifndef H_TCP_PRIVATE_H_
+#define H_TCP_PRIVATE_H_
 
 /****************************************************************************
   Section:
@@ -54,11 +54,12 @@ Microchip or any third party.
 #define TCPIP_TCP_DEBUG_MASK_BASIC          (0x0001)
 #define TCPIP_TCP_DEBUG_MASK_TRACE_STATE    (0x0002)
 #define TCPIP_TCP_DEBUG_MASK_SEQ            (0x0004)
+#define TCPIP_TCP_DEBUG_MASK_HANDLE_SEG     (0x0008)
 
 #define TCPIP_TCP_DEBUG_MASK_RX_CHECK       (0x0100)
 
 // enable TCP debugging levels
-#define TCPIP_TCP_DEBUG_LEVEL               (0)
+#define TCPIP_TCP_DEBUG_LEVEL               (0x01)
 
 
 
@@ -83,22 +84,22 @@ Microchip or any third party.
 // any request to change a TX/RX buffer size
 // that results in a difference less than this limit
 // will be ignored
-#define TCP_MIN_BUFF_CHANGE     (32)
+#define TCP_MIN_BUFF_CHANGE     (32U)
 
 // the minimum MTU value that needs to be supported
-#define TCP_MIN_DEFAULT_MTU     (536)
+#define TCP_MIN_DEFAULT_MTU     (536U)
 
 // the min value of the data offset field, in 32 bit words
-#define TCP_DATA_OFFSET_VAL_MIN    5       // 20 bytes
+#define TCP_DATA_OFFSET_VAL_MIN    5U      // 20 bytes
 
 
 // maximum retransmission time for exp backoff - 64 seconds
-#define _TCP_SOCKET_MAX_RETX_TIME       64000
+#define TCP_SOCKET_MAX_RETX_TIME       64000U
 
 #if defined(TCP_RETRANSMISSION_TMO) && (TCP_RETRANSMISSION_TMO != 0)
-#define _TCP_SOCKET_RETX_TMO    TCP_RETRANSMISSION_TMO
+#define TCP_SOCKET_RETX_TMO    TCP_RETRANSMISSION_TMO
 #else
-#define _TCP_SOCKET_RETX_TMO    1500        // default value, 1.5 sec
+#define TCP_SOCKET_RETX_TMO    1500U       // default value, 1.5 sec
 #endif
 
 
@@ -156,32 +157,13 @@ typedef struct
     uint32_t            retxTmo;                    // current retransmission timeout, ms
     uint32_t            retxTime;                   // current retransmission time, ticks
 
-    TCP_SOCKET   sktIx;                             // socket number
-    struct
-    {
-        uint16_t bServer : 1;                       // Socket should return to listening state when closed
-        uint16_t bTimerEnabled  : 1;                // Timer is enabled
-        uint16_t bTimer2Enabled : 1;                // Second timer is enabled
-        uint16_t bDelayedACKTimerEnabled : 1;       // DelayedACK timer is enabled
-        uint16_t bOneSegmentReceived : 1;           // A segment has been received
-        uint16_t bHalfFullFlush : 1;                // Flush is for being half full
-        uint16_t bTXASAP : 1;                       // Transmit as soon as possible (for Flush)
-        uint16_t bTXASAPWithoutTimerReset : 1;      // Transmit as soon as possible (for Flush), but do not reset retransmission timers
-        uint16_t bTXFIN : 1;                        // FIN needs to be transmitted
-        uint16_t bSocketReset : 1;                  // Socket has been reset (self-clearing semaphore)
-        uint16_t bRxFin  : 1;                       // FIN received
-        uint16_t failedDisconnect : 1;              // Failed to send a FIN
-        uint16_t halfThresType : 2;                 // a TCP_OPTION_THRES_FLUSH_TYPE value
-        uint16_t keepAlive : 1;                     // keep alive option enabled
-        uint16_t delayAckSend : 1;                  // delay sending all acknowledged data
-    } Flags;
-
     IPV4_ADDR           destAddress;                // socket destination address
     IPV4_ADDR           srcAddress;                 // socket source address
-    TCPIP_NET_IF*       pSktNet;                    // which interface this socket is bound to
+    const TCPIP_NET_IF* pSktNet;                    // which interface this socket is bound to
     union
     {
         IPV4_PACKET*  pV4Pkt;                       // IPv4 use; TCP_V4_PACKET type
+        TCP_V4_PACKET*  pTcpV4Pkt;                  // IPv4 use; TCP_V4_PACKET type
         IPV6_PACKET*  pV6Pkt;                       // IPv6 use;
         void*         pTxPkt;                       // generic
     };
@@ -200,50 +182,70 @@ typedef struct
     uint16_t            maxRemoteWindow;            // max advertised remote window size
     uint16_t            keepAliveTmo;               // timeout, ms
     uint16_t            remoteHash;                 // Consists of remoteIP, remotePort, localPort for connected sockets.
-    struct
-    {
-        uint16_t openAddType    : 2;                // the address type used at open
-        uint16_t bFINSent       : 1;                // A FIN has been sent
-        uint16_t bSYNSent       : 1;                // A SYN has been sent
-        uint16_t res1           : 1;                // not used
-        uint16_t res2           : 1;                // not used
-        uint16_t nonLinger      : 1;                // linger option
-        uint16_t nonGraceful    : 1;                // graceful close
-        uint16_t ackSent        : 1;                // acknowledge sent in this pass
-        uint16_t seqInc         : 1;                // sequence number incremented after FIN ack 
-        uint16_t forceKill      : 1;                // socket should be killed, even if it's server socket 
-        uint16_t forceFlush     : 1;                // flush data any time caller writes to the socket
-                                                    // i.e., disable Nagle
-        uint16_t srcSet         : 1;                // source address is set 
-        uint16_t openBindIf     : 1;                // socket is bound to interface when opened 
-        uint16_t openBindAdd    : 1;                // socket is bound to address when opened 
-        uint16_t halfThresFlush : 1;                // when set, socket will flush at half TX buffer threshold
-    } flags;
     uint8_t             smState;                    // TCPIP_TCP_STATE: State of this socket
     uint8_t             addType;                    // IPV4/6 socket type; IP_ADDRESS_TYPE enum type
     uint8_t             retryCount;                 // Counter for transmission retries
     uint8_t             keepAliveCount;             // current counter
+    TCP_SOCKET          sktIx;                      // socket number
     uint16_t            sigMask;                    // TCPIP_TCP_SIGNAL_TYPE: mask of active events
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;           // socket signal handler
     const void*         sigParam;                   // socket signal parameter
     uint8_t             keepAliveLim;               // current limit
-    uint8_t             ttl;                        // socket TTL value
-    uint8_t             tos;                        // socket TOS value
-    uint8_t             dupAckCnt;                  // duplicate ack count for fast retransmission    
+    uint8_t ttl;                                    // socket TTL value
+    uint8_t tos;                                    // socket TOS value
+    uint8_t             dupAckCnt;                  // duplicate ack count for fast retransmission
+    union
+    {
+        uint32_t    val;
+        struct
+        {
+            unsigned int bServer : 1;                       // Socket should return to listening state when closed
+            unsigned int bTimerEnabled  : 1;                // Timer is enabled
+            unsigned int bTimer2Enabled : 1;                // Second timer is enabled
+            unsigned int bDelayedACKTimerEnabled : 1;       // DelayedACK timer is enabled
+            unsigned int bOneSegmentReceived : 1;           // A segment has been received
+            unsigned int bHalfFullFlush : 1;                // Flush is for being half full
+            unsigned int bTXASAP : 1;                       // Transmit as soon as possible (for Flush)
+            unsigned int bTXASAPWithoutTimerReset : 1;      // Transmit as soon as possible (for Flush), but do not reset retransmission timers
+            unsigned int bTXFIN : 1;                        // FIN needs to be transmitted
+            unsigned int bSocketReset : 1;                  // Socket has been reset (self-clearing semaphore)
+            unsigned int bRxFin  : 1;                       // FIN received
+            unsigned int failedDisconnect : 1;              // Failed to send a FIN
+            unsigned int halfThresType : 2;                 // a TCP_OPTION_THRES_FLUSH_TYPE value
+            unsigned int keepAlive : 1;                     // keep alive option enabled
+            unsigned int delayAckSend : 1;                  // delay sending all acknowledged data
+            unsigned int openAddType    : 2;                // the address type used at open
+            unsigned int bFINSent       : 1;                // A FIN has been sent
+            unsigned int bSYNSent       : 1;                // A SYN has been sent
+            unsigned int nonLinger      : 1;                // linger option
+            unsigned int nonGraceful    : 1;                // graceful close
+            unsigned int ackSent        : 1;                // acknowledge sent in this pass
+            unsigned int seqInc         : 1;                // sequence number incremented after FIN ack 
+            unsigned int forceKill      : 1;                // socket should be killed, even if it's server socket 
+            unsigned int forceFlush     : 1;                // flush data any time caller writes to the socket
+                                                            // i.e., disable Nagle
+            unsigned int srcSet         : 1;                // source address is set 
+            unsigned int openBindIf     : 1;                // socket is bound to interface when opened 
+            unsigned int openBindAdd    : 1;                // socket is bound to address when opened 
+            unsigned int halfThresFlush : 1;                // when set, socket will flush at half TX buffer threshold
+            unsigned int res1           : 1;                // not used
+            unsigned int res2           : 1;                // not used
+        } flags;
+    };
+
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
     union
     {
         uint8_t         val;
         struct
         {
-            uint8_t tracePrevState  : 4;            // socket previous traced state
-            uint8_t traceStateFlag  : 1;            // socket state is traced
-            uint8_t reserved        : 3;            // padding; not used
+            unsigned int tracePrevState  : 4;            // socket previous traced state
+            unsigned int traceStateFlag  : 1;            // socket state is traced
+            unsigned int reserved        : 3;            // padding; not used
         };
     }dbgFlags;
-#endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
 
-    uint8_t pad[];                  // padding; not used
+#endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
 } TCB_STUB;
 
-#endif  // _TCP_PRIVATE_H_
+#endif  // H_TCP_PRIVATE_H_
