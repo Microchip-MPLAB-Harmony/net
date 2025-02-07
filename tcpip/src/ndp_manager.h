@@ -14,7 +14,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,8 +45,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _NDP_MANAGER_H
-#define _NDP_MANAGER_H
+#ifndef H_NDP_MANAGER_H_
+#define H_NDP_MANAGER_H_
 
 //************
 // Stack types
@@ -93,9 +93,9 @@ typedef struct __attribute__((aligned(2), __packed__)) NDP_OPTION_PREFIX_INFO
     uint8_t vPrefixLen;
     struct __attribute__((__packed__))
     {
-        uint8_t bReserved1     :6;
-        uint8_t bA             :1;
-        uint8_t bL             :1;
+        unsigned bReserved1 :6;
+        unsigned bA         :1;
+        unsigned bL         :1;
     } flags;
     uint32_t dValidLifetime;
     uint32_t dPreferredLifetime;
@@ -126,18 +126,18 @@ typedef struct __attribute__((aligned(2), __packed__)) NDP_OPTION_6LoWPAN_CONTEX
     uint8_t vContextLen;
     struct __attribute__((__packed__))
     {
-        uint8_t bRes            :3;
-        uint8_t bC              :1;
-        uint8_t bCID            :4;
+        unsigned bRes       :3;
+        unsigned bC         :1;
+        unsigned bCID       :4;
     } flags;
     uint16_t dReserved;
     uint16_t dValidLifetime;
     uint8_t  dContextPrefix[64 / 8];    // G3-PLC context is 64 bits
 } NDP_OPTION_6LoWPAN_CONTEXT;
 
-typedef struct _IPV6_HEAP_NDP_NC_ENTRY
+typedef struct S_IPV6_HEAP_NDP_NC_ENTRY
 {
-    struct _IPV6_HEAP_NDP_NC_ENTRY * next;
+    struct S_IPV6_HEAP_NDP_NC_ENTRY * next;
     IPV6_ADDR remoteIPAddress;
     TCPIP_MAC_ADDR remoteMACAddr;
     uint8_t reachabilityState;      // a NEIGHBOR_UNREACHABILITY_DETECT_STATE value
@@ -149,37 +149,37 @@ typedef struct _IPV6_HEAP_NDP_NC_ENTRY
     union
     {
         uint8_t val;
-        struct
+        struct __attribute__((__packed__))
         {
-            uint8_t bIsRouter       : 1;
-            uint8_t bResolvingAddress : 1;
-            uint8_t bIsPerm         : 1;    // permanent entry
-            uint8_t reserved        : 5;
+            unsigned bIsRouter       : 1;
+            unsigned bResolvingAddress : 1;
+            unsigned bIsPerm         : 1;    // permanent entry
+            unsigned reserved        : 5;
         };
     }flags;
     IPV6_ADDR_STRUCT * preferredSource;
 } IPV6_HEAP_NDP_NC_ENTRY;
 
-typedef struct _IPV6_HEAP_NDP_DR_ENTRY
+typedef struct S_IPV6_HEAP_NDP_DR_ENTRY
 {
-    struct _IPV6_HEAP_NDP_DR_ENTRY * next;
+    struct S_IPV6_HEAP_NDP_DR_ENTRY * next;
     IPV6_HEAP_NDP_NC_ENTRY * neighborInfo;
     uint32_t invalidationTimer;
     uint32_t tickTimer;
 } IPV6_HEAP_NDP_DR_ENTRY;
 
-typedef struct _IPV6_HEAP_NDP_DC_ENTRY
+typedef struct S_IPV6_HEAP_NDP_DC_ENTRY
 {
-    struct _IPV6_HEAP_NDP_DC_ENTRY * next;
+    struct S_IPV6_HEAP_NDP_DC_ENTRY * next;
     IPV6_ADDR remoteIPAddress;
     uint32_t pathMTUIncreaseTimer;
     uint16_t pathMTU;
     IPV6_HEAP_NDP_NC_ENTRY * nextHopNeighbor;
 } IPV6_HEAP_NDP_DC_ENTRY;
 
-typedef struct _IPV6_HEAP_NDP_PL_ENTRY
+typedef struct S_IPV6_HEAP_NDP_PL_ENTRY
 {
-    struct _IPV6_HEAP_NDP_PL_ENTRY * next;
+    struct S_IPV6_HEAP_NDP_PL_ENTRY * next;
     IPV6_ADDR prefix;
     uint32_t validLifetime;
     uint32_t lastTickTime;
@@ -202,48 +202,47 @@ typedef enum
 // Stack APIs
 //************
 
-bool TCPIP_NDP_Initialize (const TCPIP_STACK_MODULE_CTRL* const stackInit,
-                    const void* ndpData);
-void TCPIP_NDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit);
+bool TCPIP_NDP_Initialize (const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
+void TCPIP_NDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
-IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddr, const TCPIP_MAC_ADDR * remoteMACAddr, uint8_t initialState, uint8_t routerFlag, IPV6_ADDR_STRUCT * preferredSource);
-IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighbor, uint32_t invalidationTime);
-IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddress, uint32_t linkMTU, IPV6_HEAP_NDP_NC_ENTRY * neighbor);
-IPV6_HEAP_NDP_PL_ENTRY * TCPIP_NDP_PrefixListEntryCreate (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, uint8_t prefixLength, uint32_t validLifetime);
+IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddr, const TCPIP_MAC_ADDR * remoteMACAddr, uint8_t initialState, uint8_t routerFlag, IPV6_ADDR_STRUCT * preferredSource);
+IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (const TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighbor, uint32_t invalidationTime);
+IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddress, uint16_t linkMTU, IPV6_HEAP_NDP_NC_ENTRY * neighbor);
+IPV6_HEAP_NDP_PL_ENTRY * TCPIP_NDP_PrefixListEntryCreate (const TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, uint8_t prefixLength, uint32_t validLifetime);
 
-IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryDelete (TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * entry);
+IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryDelete (const TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * entry);
 
-void * TCPIP_NDP_RemoteNodeFind (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * source, uint8_t type);
+void * TCPIP_NDP_RemoteNodeFind (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * source, uint8_t type);
 
-char TCPIP_NDP_DupAddrDiscoveryDetect (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * localAddressPointer);
+bool TCPIP_NDP_DupAddrDiscoveryDetect (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * localAddressPointer);
 void TCPIP_NDP_DupAddrDiscoveryProcess (IPV6_ADDR_STRUCT * localAddressPointer, uint8_t type);
 
-void TCPIP_NDP_RouterSolicitStart (TCPIP_NET_IF * pNetIf);
-void TCPIP_NDP_RouterSolicitStop (TCPIP_NET_IF * pNetIf);
+void TCPIP_NDP_RouterSolicitStart (const TCPIP_NET_IF * pNetIf);
+void TCPIP_NDP_RouterSolicitStop (const TCPIP_NET_IF * pNetIf);
 
 void TCPIP_NDP_AddressResolve (IPV6_HEAP_NDP_NC_ENTRY * entry);
-IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NextHopGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
-void TCPIP_NDP_ReachabilitySet (TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighborPointer, NEIGHBOR_UNREACHABILITY_DETECT_STATE newState);
+IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NextHopGet (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
+void TCPIP_NDP_ReachabilitySet (const TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighborPointer, uint8_t newState);
 
-void TCPIP_NDP_PrefixInfoProcessForOnLinkStatus (TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_INFO * prefixInfo);
-void TCPIP_NDP_SAAPrefixInfoProcess (TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_INFO * prefixInfo);
-uint8_t TCPIP_NDP_PrefixOnLinkStatusGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
+void TCPIP_NDP_PrefixInfoProcessForOnLinkStatus (const TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_INFO * prefixInfo);
+void TCPIP_NDP_SAAPrefixInfoProcess (const TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_INFO * prefixInfo);
+bool TCPIP_NDP_PrefixOnLinkStatusGet (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
 
 
 void TCPIP_NDP_Task (void);
 
-void TCPIP_NDP_LinkedListEntryInsert (TCPIP_NET_IF * pNetIf, void * entry, uint8_t type);
-void * TCPIP_NDP_LinkedListEntryRemove (TCPIP_NET_IF * pNetIf, void * entry, uint8_t type);
+void TCPIP_NDP_LinkedListEntryInsert (const TCPIP_NET_IF * pNetIf, void * entry, uint8_t type);
+void * TCPIP_NDP_LinkedListEntryRemove (const TCPIP_NET_IF * pNetIf, void * entry, uint8_t type);
 
 IPV6_ADDR_STRUCT * TCPIP_NDP_UnicastAddressMove (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * entryLocation, IPV6_ADDR_STRUCT * previousEntryLocation);
 
-void TCPIP_NDP_NborCacheLinkLayerAddressUpdate (TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighborPointer, TCPIP_MAC_ADDR * linkLayerAddr, uint8_t reachability);
+void TCPIP_NDP_NborCacheLinkLayerAddressUpdate (const TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighborPointer, TCPIP_MAC_ADDR * linkLayerAddr, uint8_t reachability);
 
-IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterGet (TCPIP_NET_IF * pNetIf);
+IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterGet (const TCPIP_NET_IF * pNetIf);
 
 #if defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
 bool TCPIP_NDP_IsG3PLC_Neighbor(const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address, TCPIP_MAC_ADDR* pMacAdd);
 #endif  // defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
 
-#endif // _NDP_MANAGER_H
+#endif // H_NDP_MANAGER_H_
 
