@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -29,21 +29,21 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 
-#ifndef __TFTPC_PRIVATE_H_
-#define __TFTPC_PRIVATE_H_
+#ifndef H_TFTPC_PRIVATE_H_
+#define H_TFTPC_PRIVATE_H_
 
-#define TCPIP_TFTP_CLIENT_MAX_HOSTNAME_LEN  32
-#define TCPIP_TFTP_CLIENT_FILE_NAME_LEN     32
-#define TCPIP_TFTP_BLOCK_SIZE_SUPPORTED     512
-#define TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE   (TCPIP_TFTP_BLOCK_SIZE_SUPPORTED+5)
-#define TCPIP_TFTP_CLIENT_OPCODE            2
-#define TCPIP_TFTP_CLIENT_OCTET             6
+#define TCPIP_TFTP_CLIENT_MAX_HOSTNAME_LEN  32U
+#define TCPIP_TFTP_CLIENT_FILE_NAME_LEN     32U
+#define TCPIP_TFTP_BLOCK_SIZE_SUPPORTED     512U
+#define TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE   (TCPIP_TFTP_BLOCK_SIZE_SUPPORTED + 5U)
+#define TCPIP_TFTP_CLIENT_OPCODE            2U
+#define TCPIP_TFTP_CLIENT_OCTET             6U
 
 /* This can be enabled to get TFTPC debugging messages */
 // #define TCPIP_TFTPC_DEBUG
 
 // Enum. of results returned by most of the TFTP functions.
-typedef enum _TFTP_RESULT
+typedef enum 
 {
     TFTP_OK = 0,
     TFTP_NOT_READY,
@@ -118,16 +118,16 @@ typedef struct
 
 // TFTP client event registration
 
-typedef struct  _TAG_TFTPC_LIST_NODE
+typedef struct  S_TAG_TFTPC_LIST_NODE
 {
-    struct _TAG_TFTPC_LIST_NODE*        next;       // next node in list
+    struct S_TAG_TFTPC_LIST_NODE*   next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
-    TCPIP_TFTPC_EVENT_HANDLER        handler;    // handler to be called for event
+    TCPIP_TFTPC_EVENT_HANDLER       handler;    // handler to be called for event
     const void*                     hParam;     // handler parameter
     TCPIP_NET_HANDLE                hNet;       // interface that's registered for
                                                 // 0 if all    
 }TCPIP_TFTPC_LIST_NODE;
 
-#endif  // __TFTPC_PRIVATE_H_
+#endif  // H_TFTPC_PRIVATE_H_
 
 

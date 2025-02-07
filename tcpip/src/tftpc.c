@@ -12,7 +12,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,28 +43,24 @@ Microchip or any third party.
 #include "tftpc_private.h"
 
 #if defined(TCPIP_TFTPC_DEBUG)
-#define TFTPC_DEBUG_PRINT(fmt, ...) do { SYS_CONSOLE_PRINT(fmt, ##__VA_ARGS__); } while (0)
-#define TFTPC_DEBUG_MESSAGE(message)   do { SYS_CONSOLE_MESSAGE(message); } while (0)
+#define TFTPC_DEBUG_PRINT   SYS_CONSOLE_PRINT  
 #else
 #define TFTPC_DEBUG_PRINT(fmt, ...)
-#define TFTPC_DEBUG_MESSAGE(message)
 #endif
 
-#define mMIN(a, b)  ((a<b)?a:b)
-
 static const void* volatile         tftpcMemH = NULL;           // memory handle
-static TFTP_COMM_STATE              _tftpGetCmdState = SM_TFTP_COMM_END;
-static TFTP_COMM_STATE              _tftpPutCmdState = SM_TFTP_COMM_END;
-static tcpipSignalHandle            tftpcSignalHandle = 0;
-static uint8_t                      tftpcInitCount=0;
+static TFTP_COMM_STATE              tftpGetCmdState = SM_TFTP_COMM_END;
+static TFTP_COMM_STATE              tftpPutCmdState = SM_TFTP_COMM_END;
+static TCPIP_SIGNAL_HANDLE          tftpcSignalHandle = NULL;
+static int                          tftpcInitCount=0;
 static TFTP_CLIENT_VARS             gTFTPClientDcpt;
-static TCPIP_NET_IF *               pTftpcIf = 0;               // we use only one interface for tftp (for now at least)
-static TCPIP_NET_IF *               pTftpDefIf = 0;             // default TFTPC interface
+static const TCPIP_NET_IF *         pTftpcIf = NULL;               // we use only one interface for tftp (for now at least)
+static const TCPIP_NET_IF *         pTftpDefIf = NULL;             // default TFTPC interface
 static uint32_t                     tftpcTimer;
 // Tracker variable for the number of TFTP retries
-static uint8_t                      _tftpRetries;
+static uint8_t                      tftpRetries;
 
-static volatile uint16_t            _tftpError;                 // Variable to preserve error condition causes for later transmission
+static volatile uint16_t            tftpError;                 // Variable to preserve error condition causes for later transmission
 
 // TFTP Static functions
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -73,25 +69,26 @@ static void TCPIP_TFTPC_Cleanup(void);
 #define TCPIP_TFTPC_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-static void _TFTPSendFileName(TFTP_OPCODE opcode, uint8_t *fileName);
+static void F_TFTPSendFileName(TFTP_FILE_MODE mode, const uint8_t *fileName);
 static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode);
-static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int32_t *len);
-static void _TFTPSendAck(TCPIP_UINT16_VAL blockNumber);
+static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, uint16_t *len);
+static void F_TFTPSendAck(TCPIP_UINT16_VAL blockNumber);
 static TFTP_RESULT TFTPIsPutReady(void);
-#if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
-static void _TFTPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_TFTPC_EVENT_TYPE evType,void* buff,uint32_t bufSize);
+#if defined(TCPIP_TFTPC_USER_NOTIFICATION) && (TCPIP_TFTPC_USER_NOTIFICATION != 0)
+static void F_TFTPNotifyClients(const TCPIP_NET_IF* pNetIf, TCPIP_TFTPC_EVENT_TYPE evType, void* dBuff, uint32_t buffSize);
 #else
-#define _TFTPNotifyClients(pNetIf, evType, buff, bufSize)
+#define F_TFTPNotifyClients(pNetIf, evType, buff, bufSize)
 #endif  // (TCPIP_TFTPC_USER_NOTIFICATION != 0)
 
 static void TCPIP_TFTPC_Process(void);
 
-static void _TFTPSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
+static void F_TFTPSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
 
 // TFTP status flags
+
 static union
 {
-    struct
+    struct __attribute__((packed))
     {
         unsigned int bIsFlushed : 1; // The one part of the data is flushed if it is true.
         unsigned int bIsAcked : 1;   // the client will enable Ack for data receive acknowledge or data sent acknowledge
@@ -100,31 +97,82 @@ static union
         unsigned int bIsReading : 1; // The file is in read mode.       
     } bits;
     uint8_t Val;
-} _tftpFlags;
+} tftpFlags;
 
 static union
 {
     struct
     {
-        TCPIP_UINT16_VAL _tftpBlockNumber;
-        TCPIP_UINT16_VAL _tftpDuplicateBlock;
-        TCPIP_UINT16_VAL _tftpBlockLength;
+        TCPIP_UINT16_VAL tftpBlockNumber;
+        TCPIP_UINT16_VAL tftpDuplicateBlock;
+        TCPIP_UINT16_VAL tftpBlockLength;
     } group2;
 } MutExVar;     // Mutually Exclusive variable groups to conserve RAM.
 
-#if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
+#if defined(TCPIP_TFTPC_USER_NOTIFICATION) && (TCPIP_TFTPC_USER_NOTIFICATION != 0)
 static PROTECTED_SINGLE_LIST      tftpcRegisteredUsers = { {0} };
 #endif  // (TCPIP_TFTPC_USER_NOTIFICATION != 0)
 
+// conversion functions/helpers
+//
+static __inline__ TFTP_STATE __attribute__((always_inline)) FC_TftpStateInc(TFTP_STATE tState, int inc)
+{
+    union
+    {
+        TFTP_STATE tState;
+        int        iState;
+    }U_T_STATE_INT;
 
-bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
-                       const TCPIP_TFTPC_MODULE_CONFIG* pTftpcConfig)
+    U_T_STATE_INT.tState = tState;
+    U_T_STATE_INT.iState += inc;
+    return U_T_STATE_INT.tState;
+}
+
+static __inline__ TCPIP_TFTPC_LIST_NODE* __attribute__((always_inline)) FC_SglNode2TftpNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        TCPIP_TFTPC_LIST_NODE* tftpcNode;
+    }U_SGL_NODE_TFTPC_NODE;
+
+    U_SGL_NODE_TFTPC_NODE.node = node;
+    return U_SGL_NODE_TFTPC_NODE.tftpcNode;
+}
+
+static __inline__ TCPIP_TFTPC_HANDLE __attribute__((always_inline)) FC_SglNode2TftpHndl(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        TCPIP_TFTPC_HANDLE tftpHndl;
+    }U_SGL_NODE_TFTPC_HNDL;
+
+    U_SGL_NODE_TFTPC_HNDL.node = node;
+    return U_SGL_NODE_TFTPC_HNDL.tftpHndl;
+}
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_TftpHndl2SglNode(TCPIP_TFTPC_HANDLE tftpHndl)
+{
+    union
+    {
+        TCPIP_TFTPC_HANDLE tftpHndl;
+        SGL_LIST_NODE*  node;
+    }U_TFTPC_HNDL_SGL_NODE;
+
+    U_TFTPC_HNDL_SGL_NODE.tftpHndl = tftpHndl;
+    return U_TFTPC_HNDL_SGL_NODE.node;
+}
+
+
+
+bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData)
 {
     TFTP_CLIENT_VARS*   pClient;
     uint16_t            bufferSize;
     uint16_t            totalBufferSize;
 
-    if(stackData->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackData->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
     }
@@ -133,32 +181,33 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
     if(tftpcInitCount == 0)
     {   // once per service
 
-        if(pTftpcConfig == 0)
+        if(initData == NULL)
         {
             return false;
         }
-        pTftpDefIf = (TCPIP_NET_IF*)TCPIP_STACK_NetHandleGet(pTftpcConfig->tftpc_interface);
+        const TCPIP_TFTPC_MODULE_CONFIG* pTftpcConfig = (const TCPIP_TFTPC_MODULE_CONFIG*)initData;
+        pTftpDefIf = (const TCPIP_NET_IF*)TCPIP_STACK_NetHandleGet(pTftpcConfig->tftpc_interface);
 
         pClient = &gTFTPClientDcpt;
         
-        pClient->hSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_ANY, TCPIP_TFTP_SERVER_PORT, 0);
+        pClient->hSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_ANY, TCPIP_TFTP_SERVER_PORT, NULL);
         if(pClient->hSocket == INVALID_UDP_SOCKET)
         {
             return false;
         }
        
-        totalBufferSize = TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE+TCPIP_TFTPC_FILENAME_LEN+TCPIP_TFTP_CLIENT_OPCODE+TCPIP_TFTP_CLIENT_OCTET+1;
-        bufferSize = TCPIP_UDP_TxPutIsReady(pClient->hSocket, totalBufferSize); //
+        totalBufferSize = TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE + (uint16_t)TCPIP_TFTPC_FILENAME_LEN + TCPIP_TFTP_CLIENT_OPCODE + TCPIP_TFTP_CLIENT_OCTET + 1U;
+        bufferSize = TCPIP_UDP_TxPutIsReady(pClient->hSocket, totalBufferSize);
         if(bufferSize < totalBufferSize)
         {
-            TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_TX_BUFF, (void*)(unsigned int)totalBufferSize);
+            (void)TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_TX_BUFF, FC_Uint2VPtr((uint32_t)totalBufferSize));
         }
 
-        TCPIP_UDP_SignalHandlerRegister(pClient->hSocket, TCPIP_UDP_SIGNAL_RX_DATA, _TFTPSocketRxSignalHandler, 0);
+        (void)TCPIP_UDP_SignalHandlerRegister(pClient->hSocket, TCPIP_UDP_SIGNAL_RX_DATA, &F_TFTPSocketRxSignalHandler, NULL);
 
         // create the TFTPC timer
-        tftpcSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_TFTPC_Task, TCPIP_TFTPC_TASK_TICK_RATE);
-        if(tftpcSignalHandle == 0)
+        tftpcSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_TFTPC_Task, TCPIP_TFTPC_TASK_TICK_RATE);
+        if(tftpcSignalHandle == NULL)
         {   // cannot create the SNTP timer
             TCPIP_TFTPC_Cleanup();
             return false;
@@ -166,12 +215,12 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         gTFTPClientDcpt.hSocket = pClient->hSocket;
         gTFTPClientDcpt.netH =  NULL;
         gTFTPClientDcpt.smState = SM_TFTP_END;
-        gTFTPClientDcpt.callbackPos = 0;
+        gTFTPClientDcpt.callbackPos = 0U;
         gTFTPClientDcpt.fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
         gTFTPClientDcpt.tftpServerAddr.v4Add.Val = 0;
-        memset(gTFTPClientDcpt.fileName,0,sizeof(gTFTPClientDcpt.fileName));
+        (void)memset(gTFTPClientDcpt.fileName,0,sizeof(gTFTPClientDcpt.fileName));
 
-#if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
+#if defined(TCPIP_TFTPC_USER_NOTIFICATION) && (TCPIP_TFTPC_USER_NOTIFICATION != 0)
         if(!TCPIP_Notification_Initialize(&tftpcRegisteredUsers))
         {   
             TCPIP_TFTPC_Cleanup();
@@ -187,11 +236,11 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
     return true;
 }
 
-static  void _TFTPCReleaseSocket(TFTP_CLIENT_VARS* pClient)
+static  void F_TFTPCReleaseSocket(TFTP_CLIENT_VARS* pClient)
 {
     if(pClient->hSocket != INVALID_UDP_SOCKET)
     {
-        TCPIP_UDP_Close(pClient->hSocket);
+        (void)TCPIP_UDP_Close(pClient->hSocket);
         pClient->hSocket = INVALID_UDP_SOCKET;
     }
 }
@@ -200,17 +249,17 @@ static void TCPIP_TFTPC_Cleanup(void)
 {
     TFTP_CLIENT_VARS    *pClient=NULL;
     pClient = &gTFTPClientDcpt;
-    if(tftpcSignalHandle)
+    if(tftpcSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(tftpcSignalHandle);
-        tftpcSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(tftpcSignalHandle);
+        tftpcSignalHandle = NULL;
     }
     tftpcInitCount = 0;
 
     // close the socket -
-    _TFTPCReleaseSocket(pClient);
+    F_TFTPCReleaseSocket(pClient);
     
-#if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
+#if defined(TCPIP_TFTPC_USER_NOTIFICATION) && (TCPIP_TFTPC_USER_NOTIFICATION != 0)
     // remove notification registered user details.
     TCPIP_Notification_Deinitialize(&tftpcRegisteredUsers, tftpcMemH);
 #endif  // (TCPIP_TFTPC_USER_NOTIFICATION != 0)
@@ -222,7 +271,7 @@ static void TCPIP_TFTPC_Cleanup(void)
 
 void TCPIP_TFTPC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
 {        
-    if(stackData->stackAction == TCPIP_STACK_ACTION_DEINIT)
+    if(stackData->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
     {   // stack shut down
         if(tftpcInitCount > 0)
         {   // we're up and running
@@ -248,7 +297,11 @@ void TCPIP_TFTPC_SetServerAddress(IP_MULTI_ADDRESS* ipAddr,IP_ADDRESS_TYPE ipTyp
     }
     else if(ipType == IP_ADDRESS_TYPE_IPV6)
     {
-        memcpy(pClient->tftpServerAddr.v6Add.v,ipAddr->v6Add.v,sizeof(IPV6_ADDR));
+        (void)memcpy(pClient->tftpServerAddr.v6Add.v,ipAddr->v6Add.v,sizeof(IPV6_ADDR));
+    }
+    else
+    {
+        // do nothing
     }
 }
 
@@ -262,7 +315,7 @@ TCPIP_TFTPC_OPERATION_RESULT TCPIP_TFTPC_SetCommand(IP_MULTI_ADDRESS* mAddr,IP_A
     {
         return TFTPC_ERROR_BUSY;
     }
-    if(strlen(fileName)> (sizeof(pClient->fileName)-1))
+    if(strlen(fileName)> (sizeof(pClient->fileName)-1U))
     {
         return TFTPC_ERROR_INVALID_FILE_LENGTH;
     }
@@ -279,8 +332,8 @@ TCPIP_TFTPC_OPERATION_RESULT TCPIP_TFTPC_SetCommand(IP_MULTI_ADDRESS* mAddr,IP_A
     {
         pClient->modeType = TFTP_FILE_MODE_READ;
     }
-    memset(pClient->fileName,0,sizeof(pClient->fileName));
-    strcpy(pClient->fileName,fileName);
+    (void)memset(pClient->fileName,0,sizeof(pClient->fileName));
+    (void)strcpy(pClient->fileName,fileName);
     
     pClient->ipAddrType = ipType;
     pClient->smState = SM_TFTP_PROCESS_COMMAND;   
@@ -292,21 +345,22 @@ static TFTP_RESULT TFTPIsPutReady(void)
 {
     TCPIP_UINT16_VAL opCode;
     TCPIP_UINT16_VAL blockNumber;
-    bool bTimeOut;
     TFTP_CLIENT_VARS*   pClient;
-    int replyPktSize=0;
+    uint16_t replyPktSize = 0U;
 
     pClient = &gTFTPClientDcpt;
     // Check to see if timeout has occurred.
-    bTimeOut = false;   
+    bool bTimeOut = false;   
 
-    switch(_tftpPutCmdState)
+    TFTP_RESULT tRes = TFTP_NOT_READY; 
+    switch(tftpPutCmdState)
     {
         case SM_TFTP_COMM_WAIT_FOR_ACK:
             replyPktSize = TCPIP_UDP_GetIsReady(pClient->hSocket);
-            if(!replyPktSize)
+            if(replyPktSize == 0U)
             {
-                if (SYS_TMR_TickCountGet() - tftpcTimer >= (TCPIP_TFTPC_CMD_PROCESS_TIMEOUT * SYS_TMR_TickCounterFrequencyGet()))
+                uint32_t sysTickFreq = SYS_TMR_TickCounterFrequencyGet();
+                if (SYS_TMR_TickCountGet() - tftpcTimer >= ((uint32_t)TCPIP_TFTPC_CMD_PROCESS_TIMEOUT * sysTickFreq))
                 {
                     bTimeOut = true;
                     tftpcTimer = SYS_TMR_TickCountGet();
@@ -314,123 +368,131 @@ static TFTP_RESULT TFTPIsPutReady(void)
                  // When timeout occurs in this state, application must retry.
                 if(bTimeOut)
                 {
-                    if (_tftpRetries++ > (TCPIP_TFTPC_MAX_RETRIES-1))
+                    if (tftpRetries++ > ((uint8_t)TCPIP_TFTPC_MAX_RETRIES - 1U))
                     { // Forget about all previous attempts.
-                        _tftpRetries = 1;
+                        tftpRetries = 1U;
                         pClient->smState = SM_TFTP_END;
-                        _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_TIMEOUT,0,0);
-                        return TFTP_TIMEOUT;
+                        F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_TIMEOUT, NULL, 0);
+                        tRes = TFTP_TIMEOUT;
+                        break;
                     }
                     else
                     {
                         pClient->smState = SM_TFTP_WAIT;
-                        MutExVar.group2._tftpBlockNumber.Val--; // Roll back by one so proper block number ID is sent for the next packet
+                        MutExVar.group2.tftpBlockNumber.Val--; // Roll back by one so proper block number ID is sent for the next packet
                         pClient->smState = SM_TFTP_FILE_OPEN_AND_SEND_REQUEST;
-                        return TFTP_RETRY;
+                        tRes = TFTP_RETRY;
+                        break;
                     }
                 }
-                return TFTP_PKT_NOT_RECEIVED;
+                tRes = TFTP_PKT_NOT_RECEIVED;
+                break;
             }
             // ACK is received.
-            _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_ACKED,0,0);
+            F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_ACKED, NULL, 0);
             
             tftpcTimer = SYS_TMR_TickCountGet();
             // Get opCode.
-            TCPIP_UDP_Get(pClient->hSocket,&opCode.v[1]);
-            TCPIP_UDP_Get(pClient->hSocket,&opCode.v[0]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&opCode.v[1]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&opCode.v[0]);
 
             // Get block number.
-            TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[1]);
-            TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[0]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[1]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[0]);
 
             // Discard everything else.
-            TCPIP_UDP_Discard(pClient->hSocket);
+            (void)TCPIP_UDP_Discard(pClient->hSocket);
 
             // This must be ACK or else there is a problem.
             if (opCode.Val == (uint16_t)TFTP_OPCODE_ACK)
             {
                 // Also the block number must match with what we are expecting.
-                if (MutExVar.group2._tftpBlockNumber.Val == blockNumber.Val)
+                if (MutExVar.group2.tftpBlockNumber.Val == blockNumber.Val)
                 {
                     // Mark that block we sent previously has been ack'ed.
-                    _tftpFlags.bits.bIsAcked = true;
+                    tftpFlags.bits.bIsAcked = 1U;
 
                     // Since we have ack, forget about previous retry count.
-                    _tftpRetries = 1;
+                    tftpRetries = 1;
 
 // If this file is being closed, this must be last ack. Declare it as closed.
-                    if (_tftpFlags.bits.bIsClosing)
+                    if (tftpFlags.bits.bIsClosing != 0U)
                     {
-                        _tftpFlags.bits.bIsClosed = true;                        
-                        return TFTP_END_OF_FILE;
+                        tftpFlags.bits.bIsClosed = 1U;                        
+                        tRes = TFTP_END_OF_FILE;
+                        break;
                     }
                     // Or else, wait for put to become ready so that caller
                     // can transfer more data blocks.
-                    _tftpPutCmdState = SM_TFTP_COMM_SEND_NEXT_DATA_PKT;
+                    tftpPutCmdState = SM_TFTP_COMM_SEND_NEXT_DATA_PKT;
                     tftpcTimer = SYS_TMR_TickCountGet();
                     TFTPC_DEBUG_PRINT("Received Block Number : %d \r\n",blockNumber.Val);
                 }
                 else
                 {
                     TFTPC_DEBUG_PRINT("TFTP: IsPutReady(): Unexpected block %d received - dropping it...\n",blockNumber.Val);
-                    return TFTP_NOT_READY;
+                    tRes = TFTP_NOT_READY;
+                    break;
                 }
             }
             else if (opCode.Val == (uint16_t)TFTP_OPCODE_ERROR)
             {
                 // For error opCode, remember error code so that application
                 // can read it later.
-                _tftpError = blockNumber.Val;
+                tftpError = blockNumber.Val;
 
                 // Declare error.
-                return TFTP_ERROR;
+                tRes = TFTP_ERROR;
+                break;
             }
             else
-                break;
-
+            {
+                // do nothing
+            }
+            break;
 
         case SM_TFTP_COMM_SEND_NEXT_DATA_PKT:
             // Wait for UDP is to be ready to transmit.
-            if(TCPIP_UDP_PutIsReady(pClient->hSocket) < TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE)
+            if(TCPIP_UDP_PutIsReady(pClient->hSocket) < (uint16_t)TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE)
             {
-                TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_TX_BUFF, (void*)(unsigned int)TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE);
+                (void)TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_TX_BUFF, FC_Uint162VPtr(TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE));
                 break;
             }
 
          // Put next block of data.
-            MutExVar.group2._tftpBlockNumber.Val++;
-            TCPIP_UDP_Put(pClient->hSocket,0);
-            TCPIP_UDP_Put(pClient->hSocket,TFTP_OPCODE_DATA);
+            MutExVar.group2.tftpBlockNumber.Val++;
+            (void)TCPIP_UDP_Put(pClient->hSocket, 0U);
+            (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)TFTP_OPCODE_DATA);
 
-            TCPIP_UDP_Put(pClient->hSocket,MutExVar.group2._tftpBlockNumber.v[1]);
-            TCPIP_UDP_Put(pClient->hSocket,MutExVar.group2._tftpBlockNumber.v[0]);
+            (void)TCPIP_UDP_Put(pClient->hSocket, MutExVar.group2.tftpBlockNumber.v[1]);
+            (void)TCPIP_UDP_Put(pClient->hSocket, MutExVar.group2.tftpBlockNumber.v[0]);
 
             // Remember that this block is not yet flushed.
-            _tftpFlags.bits.bIsFlushed = false;
+            tftpFlags.bits.bIsFlushed = 0U;
 
             // Remember that this block is not acknowledged.
-            _tftpFlags.bits.bIsAcked = false;
+            tftpFlags.bits.bIsAcked = 0U;
             
-            _tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
-            TFTPC_DEBUG_PRINT("Transmitted Block Number : %d \r\n",MutExVar.group2._tftpBlockNumber.Val);
-            return TFTP_OK;
-    // Suppress compiler warnings on unhandled SM_TFTP_COMM_WAIT_FOR_DATA,
-    // SM_TFTP_COMM_DUPLICATE_ACK, SM_TFTP_COMM_SEND_ACK, SM_TFTP_COMM_SEND_LAST_ACK enum
-    // states.
+            tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
+            TFTPC_DEBUG_PRINT("Transmitted Block Number : %d \r\n",MutExVar.group2.tftpBlockNumber.Val);
+            tRes = TFTP_OK;
+            break;
+
         default:
+            // do nothing
             break;
     }
 
-    return TFTP_NOT_READY;
+    return tRes;
 }
 
 void TCPIP_TFTPC_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if(sigPend != 0)
+    if(sigPend != TCPIP_MODULE_SIGNAL_NONE)
     { // regular TMO or RX signal occurred
         TCPIP_TFTPC_Process();
     }
@@ -439,11 +501,11 @@ void TCPIP_TFTPC_Task(void)
 
 // send a signal to the TFTP module that data is available
 // no manager alert needed since this normally results as a higher layer (UDP) signal
-static void _TFTPSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
+static void F_TFTPSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
 {
     if(sigType == TCPIP_UDP_SIGNAL_RX_DATA)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
 }
 
@@ -452,16 +514,18 @@ static void TCPIP_TFTPC_Process(void)
 {
     TCPIP_NET_IF* pNetIf=NULL;
     TFTP_CLIENT_VARS*   pClient;
-    int32_t wCount=0, wLen=0,status=0;
+    uint16_t wCount = 0;
+    size_t wLen;
+    int32_t fsStat;
     uint8_t data[700];
     bool res=true;
     bool bTimeout=false;
-    uint32_t    replyPktSize=0;
+    uint16_t  replyPktSize = 0U;
     bool bindRes = false;
     
     pClient = &gTFTPClientDcpt;
-    pNetIf = _TCPIPStackAnyNetLinked(false);
-    if(pNetIf == 0 || _TCPIPStackIsConfig(pNetIf) != 0)
+    pNetIf = TCPIPStackAnyNetLinked(false);
+    if(pNetIf == NULL || TCPIPStackIsConfig(pNetIf))
     {   // not yet up and running
         return;
     }
@@ -473,9 +537,9 @@ static void TCPIP_TFTPC_Process(void)
             pTftpcIf = pTftpDefIf;
             if(!TCPIP_STACK_NetworkIsLinked(pTftpcIf))
             {
-                pTftpcIf = _TCPIPStackAnyNetLinked(true);
+                pTftpcIf = TCPIPStackAnyNetLinked(true);
             }
-            if(pTftpcIf == 0)
+            if(pTftpcIf == NULL)
             {   // wait some more
                 break;
             }
@@ -484,42 +548,45 @@ static void TCPIP_TFTPC_Process(void)
             if (bindRes)
             {
                  // receiving from multiple TFTP servers
-                TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_STRICT_PORT, (void*)false);
+                (void)TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_STRICT_PORT, FC_Uint2VPtr(0UL));
                 //TCPIP_UDP_DestinationIPAddressSet(pClient->hSocket, IP_ADDRESS_TYPE_IPV4, &pClient->tftpServerAddr);
-                TCPIP_UDP_SocketNetSet(pClient->hSocket, pTftpcIf);
+                (void)TCPIP_UDP_SocketNetSet(pClient->hSocket, pTftpcIf);
             }
             else
             {
                 break;
             }
-            pClient->smState++;
+            pClient->smState = FC_TftpStateInc(pClient->smState, 1);
             tftpcTimer = SYS_TMR_TickCountGet();
             // connection established
-            _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_CONN_ESTABLISHED,0,0);
-            //break;
+            F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_CONN_ESTABLISHED, NULL, 0);
+            break;
+
         case SM_TFTP_UDP_IS_OPENED:
-             if(!TCPIP_UDP_TxPutIsReady(pClient->hSocket,(TCPIP_TFTPC_FILENAME_LEN+TCPIP_TFTP_CLIENT_OPCODE+TCPIP_TFTP_CLIENT_OCTET+1)))
-             {
-                if((SYS_TMR_TickCountGet() - tftpcTimer > TCPIP_TFTPC_ARP_TIMEOUT*SYS_TMR_TickCounterFrequencyGet()))
+            if(TCPIP_UDP_TxPutIsReady(pClient->hSocket, ((uint16_t)TCPIP_TFTPC_FILENAME_LEN + TCPIP_TFTP_CLIENT_OPCODE + TCPIP_TFTP_CLIENT_OCTET + 1U)) == 0U)
+            {
+                uint32_t sysTickFreq = SYS_TMR_TickCounterFrequencyGet();
+                if((SYS_TMR_TickCountGet() - tftpcTimer > (uint32_t)TCPIP_TFTPC_ARP_TIMEOUT * sysTickFreq))
                 {
                     bTimeout = true;
                 }
                 if(bTimeout)
                 {
-                    if ( _tftpRetries++ > (TCPIP_TFTPC_MAX_RETRIES-1) )
+                    if ( tftpRetries++ > ((uint8_t)TCPIP_TFTPC_MAX_RETRIES - 1U) )
                     {
                         // Forget about all previous attempts.
-                        _tftpRetries = 1;
+                        tftpRetries = 1U;
                         pClient->smState = SM_TFTP_END;
                         // connection Timed out
-                        _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_TIMEOUT,0,0);
-                        return;
+                        F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_TIMEOUT, NULL, 0);
                     }
                 }
                 break;
-             }
-            _tftpRetries = 1;
-            pClient->smState++;
+            }
+            tftpRetries = 1U;
+            pClient->smState = FC_TftpStateInc(pClient->smState, 1);
+            break;
+
         case SM_TFTP_FILE_OPEN_AND_SEND_REQUEST:
             res = TFTPOpenFile(pClient->fileName, pClient->modeType);
             if(res==false)
@@ -531,200 +598,222 @@ static void TCPIP_TFTPC_Process(void)
                 if(pClient->modeType == TFTP_FILE_MODE_WRITE)
                 {
                     pClient->smState = SM_TFTP_PUT_COMMAND;
-                    _tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
+                    tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
                 }
                 else
                 {
                     pClient->smState = SM_TFTP_GET_COMMAND;
-                    _tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
+                    tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
                 }
             }
             // Now TFTP client is busy.
-            _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_BUSY,0,0);
+            F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_BUSY, NULL, 0);
             break;
+
         case SM_TFTP_PUT_COMMAND:        
             switch(TFTPIsPutReady())
             {
                 case TFTP_OK:
-                    if(pClient->callbackPos != 0x00u)
-                    {// The file was already opened, so load up its ID and seek
-                        if(pClient->fileDescr == SYS_FS_HANDLE_INVALID)
+                    if(pClient->callbackPos != 0U)
+                    {   // The file was already opened, so load up its ID and seek
+                        if(pClient->fileDescr == (int32_t)SYS_FS_HANDLE_INVALID)
                         {// No file handles available, so wait for now
                             pClient->smState = SM_TFTP_END;
-                            return;
+                            break;
                         }                        
-                        SYS_FS_FileSeek(pClient->fileDescr,(int32_t)pClient->callbackPos,SYS_FS_SEEK_SET);                    
+                        (void)SYS_FS_FileSeek((SYS_FS_HANDLE)pClient->fileDescr,(int32_t)pClient->callbackPos, SYS_FS_SEEK_SET);
                     }
                                       
                     // Put as many bytes as possible
                     wCount = TCPIP_UDP_PutIsReady(pClient->hSocket);
-                    wLen = 0;
-                    if(wCount >= TCPIP_TFTP_BLOCK_SIZE_SUPPORTED)
+                    if(wCount >= (uint16_t)TCPIP_TFTP_BLOCK_SIZE_SUPPORTED)
                     {
-                        wLen = SYS_FS_FileRead(pClient->fileDescr,data,TCPIP_TFTP_BLOCK_SIZE_SUPPORTED);
-                        if((wLen == 0)||(wLen < TCPIP_TFTP_BLOCK_SIZE_SUPPORTED))
-                        {// If no bytes were read, an EOF was reached
-                            if((wLen != 0)||(wLen < TCPIP_TFTP_BLOCK_SIZE_SUPPORTED))
+                        wLen = SYS_FS_FileRead((SYS_FS_HANDLE)pClient->fileDescr, data, (size_t)TCPIP_TFTP_BLOCK_SIZE_SUPPORTED);
+                        if(wLen < TCPIP_TFTP_BLOCK_SIZE_SUPPORTED)
+                        {   // If no bytes were read, an EOF was reached
+                            if(wLen != 0U)
                             {
-                                TCPIP_UDP_ArrayPut(pClient->hSocket, data, wLen);
+                                (void)TCPIP_UDP_ArrayPut(pClient->hSocket, data, (uint16_t)wLen);
                                 // flush last chunk of less than 512 bytes
-                                TCPIP_UDP_Flush(pClient->hSocket);
+                                (void)TCPIP_UDP_Flush(pClient->hSocket);
                             }
-                            SYS_FS_FileClose(pClient->fileDescr);
-                            SYS_CONSOLE_PRINT("\r\nNumber of bytes transmitted : %d bytes \r\n",pClient->callbackPos);
+                            (void)SYS_FS_FileClose((SYS_FS_HANDLE)pClient->fileDescr);
+                            SYS_CONSOLE_PRINT("\r\nNumber of bytes transmitted : %d bytes \r\n", pClient->callbackPos);
                             pClient->fileDescr = -1;
-                            pClient->callbackPos = 0;
+                            pClient->callbackPos = 0U;
                             pClient->smState = SM_TFTP_END;
-                            TCPIP_UDP_Disconnect(pClient->hSocket,false);
+                            (void)TCPIP_UDP_Disconnect(pClient->hSocket,false);
                             // TFTP Communication completed , that is File is uploaded properly.
-                            _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_COMPLETED,0,0);
-                            _tftpFlags.bits.bIsClosing =  true;
-                            return ;
+                            F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_COMPLETED, NULL, 0);
+                            tftpFlags.bits.bIsClosing =  1U;
+                            break;
                         }
                         else
-                        {// Write the bytes to the socket
-                            TCPIP_UDP_ArrayPut(pClient->hSocket, data, wLen);
+                        {   // Write the bytes to the socket
+                            (void)TCPIP_UDP_ArrayPut(pClient->hSocket, data, (uint16_t)wLen);
                             // flush these 512 bytes
-                            TCPIP_UDP_Flush(pClient->hSocket);
+                            (void)TCPIP_UDP_Flush(pClient->hSocket);
 
-                            _tftpFlags.bits.bIsFlushed = true;
+                            tftpFlags.bits.bIsFlushed = 1U;
                             // Save the new address and close the file
-                            status = SYS_FS_FileTell(pClient->fileDescr);
-                            if(status == -1)
-                               pClient->callbackPos = 0;
+                            fsStat = SYS_FS_FileTell((SYS_FS_HANDLE)pClient->fileDescr);
+                            if(fsStat == -1)
+                            {
+                                pClient->callbackPos = 0U;
+                            }
                             else
-                               pClient->callbackPos = (uint32_t)status;
+                            {
+                                pClient->callbackPos = (uint32_t)fsStat;
+                            }
                             SYS_CONSOLE_MESSAGE("#");
                         }
                     }
-                    
                     pClient->smState = SM_TFTP_PUT_COMMAND;
-                break;
-                case TFTP_PKT_NOT_RECEIVED:
                     break;
+
+                case TFTP_PKT_NOT_RECEIVED:
+                    // do nothing
+                    break;
+
                 case TFTP_RETRY:
                     pClient->smState = SM_TFTP_FILE_OPEN_AND_SEND_REQUEST;
                     break;
+
                 case TFTP_NOT_READY:
                     if(pClient->fileDescr != -1)
                     {
-                        SYS_FS_FileClose(pClient->fileDescr);
+                        (void)SYS_FS_FileClose((SYS_FS_HANDLE)pClient->fileDescr);
                         pClient->fileDescr = -1;
                     }
-                    pClient->callbackPos = 0;
+                    pClient->callbackPos = 0U;
                     pClient->smState = SM_TFTP_END;
                     // Declined due to Bad PDU
-                    _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_DECLINE,0,0);
+                    F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_DECLINE, NULL, 0);
                     break;
+
                 case  TFTP_END_OF_FILE:
-                    SYS_FS_FileClose(pClient->fileDescr);
+                    (void)SYS_FS_FileClose((SYS_FS_HANDLE)pClient->fileDescr);
                     pClient->fileDescr = -1;
-                    pClient->callbackPos = 0;
+                    pClient->callbackPos = 0U;
                     pClient->smState = SM_TFTP_END;
-                    TCPIP_UDP_Disconnect(pClient->hSocket,false);
+                    (void)TCPIP_UDP_Disconnect(pClient->hSocket,false);
                     // TFTP Communication completed , that is File is uploaded properly.
-                    _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_COMPLETED,0,0);
+                    F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_COMPLETED, NULL, 0);
                     break;
+
                 default:
+                    // do nothing
                     break;
             }        
             break;
+
         case SM_TFTP_GET_COMMAND:
-            switch(TFTPIsGetReady(data,&wCount))
+            switch(TFTPIsGetReady(data, &wCount))
             {
                 case TFTP_OK:
                     // Check if their is any byte need to be written to the FS or Buffer-
-                    if(wCount == 0)
+                    if(wCount == 0U)
                     {
                         break;
                     }
-                    if(pClient->callbackPos != 0x00u)
-                    {// The file was already opened, so load up its ID and seek
-                        if(pClient->fileDescr == SYS_FS_HANDLE_INVALID)
-                        {// No file handles available, so wait for now
+                    if(pClient->callbackPos != 0U)
+                    {   // The file was already opened, so load up its ID and seek
+                        if(pClient->fileDescr == (int32_t)SYS_FS_HANDLE_INVALID)
+                        {   // No file handles available, so wait for now
                             pClient->smState = SM_TFTP_END;
-                            return;
+                            break;
                         }                   
-                        SYS_FS_FileSeek(pClient->fileDescr,(int32_t)pClient->callbackPos,SYS_FS_SEEK_SET);                     
+                        (void)SYS_FS_FileSeek((SYS_FS_HANDLE)pClient->fileDescr, (int32_t)pClient->callbackPos, SYS_FS_SEEK_SET);                     
                     }              
                     // first 512 bytes
-                    wLen = SYS_FS_FileWrite(pClient->fileDescr,data,wCount);
-                    if(wLen == -1)
-                    {// If no bytes were read, an EOF was reached
-                        SYS_FS_FileClose(pClient->fileDescr);
+                    wLen = SYS_FS_FileWrite((SYS_FS_HANDLE)pClient->fileDescr, data, (size_t)wCount);
+                    if((ssize_t)wLen == -1)
+                    {   // If no bytes were read, an EOF was reached
+                        (void)SYS_FS_FileClose((SYS_FS_HANDLE)pClient->fileDescr);
                         pClient->fileDescr = -1;
-                        pClient->callbackPos = 0;
+                        pClient->callbackPos = 0U;
                         pClient->smState = SM_TFTP_END;
-                        TCPIP_UDP_Disconnect(pClient->hSocket,false);
+                        (void)TCPIP_UDP_Disconnect(pClient->hSocket, false);
                         // TFTP Communication completed , that is File is uploaded properly.
-                        _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_COMPLETED,0,0);
-                        return ;
+                        F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_COMPLETED, NULL, 0);
                     }                   
                     else
                     {   
                         // Save the new address
-                        status = SYS_FS_FileTell(pClient->fileDescr);
-                        if(status == -1)
-                            pClient->callbackPos = 0;
+                        fsStat = SYS_FS_FileTell((SYS_FS_HANDLE)pClient->fileDescr);
+                        if(fsStat == -1)
+                        {
+                            pClient->callbackPos = 0U;
+                        }
                         else
-                            pClient->callbackPos = (uint32_t)status;                        
+                        {
+                            pClient->callbackPos = (uint32_t)fsStat;                        
+                        }
                         // Data receive started.
-                        _TFTPNotifyClients(pTftpcIf,TFTP_EVENT_DATA_RECEIVED,(void*)(pClient->callbackPos-wCount),wCount);
+                        F_TFTPNotifyClients(pTftpcIf, TFTP_EVENT_DATA_RECEIVED, FC_Uint2VPtr(pClient->callbackPos - (uint32_t)wCount), wCount);
                     }
                     break;
+
                 case TFTP_ACK_SEND:
                      pClient->smState = SM_TFTP_GET_COMMAND;
                      break;
+
                 case TFTP_RETRY:
                      pClient->smState = SM_TFTP_FILE_OPEN_AND_SEND_REQUEST;
                     break;
+
                 case TFTP_NOT_READY:                
                     if(pClient->fileDescr != -1)
                     {
-                        SYS_FS_FileClose(pClient->fileDescr);
+                        (void)SYS_FS_FileClose((SYS_FS_HANDLE)pClient->fileDescr);
                         pClient->fileDescr = -1;
                     }                
                     pClient->callbackPos = 0;
                     pClient->smState = SM_TFTP_END;
                     // Declined due to Bad PDU
-                    _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_DECLINE,0,0);
+                    F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_DECLINE, NULL, 0);
                     break;
+
                 case  TFTP_END_OF_FILE:                   
-                    SYS_FS_FileClose(pClient->fileDescr);
+                    (void)SYS_FS_FileClose((SYS_FS_HANDLE)pClient->fileDescr);
                     pClient->fileDescr = -1;
                     pClient->callbackPos = 0;
                     pClient->smState = SM_TFTP_END;
-                    TCPIP_UDP_Disconnect(pClient->hSocket,false);
+                    (void)TCPIP_UDP_Disconnect(pClient->hSocket,false);
                     // TFTP Communication completed , that is File is uploaded properly.
-                    _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_COMPLETED,0,0);
+                    F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_COMPLETED, NULL, 0);
                     break;
+
                 default:
+                    // do nothing
                     break;
             }
             break;
+
         case SM_TFTP_END:
             // remove all other UDP packets from the socket buffer
             // This also removes the last ack from the Socket buffer
-            while(1)
+            while(true)
             {
                 replyPktSize = TCPIP_UDP_GetIsReady(pClient->hSocket);
-                if(replyPktSize == 0)
+                if(replyPktSize == 0U)
                 {
                     break;
                 }
                 else
                 {
-                    TCPIP_UDP_Discard(pClient->hSocket);
+                    (void)TCPIP_UDP_Discard(pClient->hSocket);
                 }
             }
             break;
+
         default:
+            // do nothing
             break;
-            
     }
 }
 
-static void _TFTPSendFileName(TFTP_OPCODE opcode, uint8_t *fileName)
+static void F_TFTPSendFileName(TFTP_FILE_MODE mode, const uint8_t *fileName)
 {
     uint8_t c;
     TFTP_CLIENT_VARS*   pClient;
@@ -732,62 +821,60 @@ static void _TFTPSendFileName(TFTP_OPCODE opcode, uint8_t *fileName)
 
     
     // Write opCode
-    TCPIP_UDP_Put(pClient->hSocket,0);
-    TCPIP_UDP_Put(pClient->hSocket,opcode);
+    (void)TCPIP_UDP_Put(pClient->hSocket, 0U);
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)mode);
 
     // write file name, including NULL.
     do
     {
         c = *fileName++;
-        TCPIP_UDP_Put(pClient->hSocket,c);
-    } while ( c != '\0' );
+        (void)TCPIP_UDP_Put(pClient->hSocket,c);
+    } while ( c != 0U );
 
     // Write mode - always use octet or binay mode to transmit files.
-    TCPIP_UDP_Put(pClient->hSocket,'o');
-    TCPIP_UDP_Put(pClient->hSocket,'c');
-    TCPIP_UDP_Put(pClient->hSocket,'t');
-    TCPIP_UDP_Put(pClient->hSocket,'e');
-    TCPIP_UDP_Put(pClient->hSocket,'t');
-    TCPIP_UDP_Put(pClient->hSocket,0);
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)'o');
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)'c');
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)'t');
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)'e');
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)'t');
+    (void)TCPIP_UDP_Put(pClient->hSocket, 0U);
 
     // Transmit it.
-    TCPIP_UDP_Flush(pClient->hSocket);
+    (void)TCPIP_UDP_Flush(pClient->hSocket);
     
 }
 
 static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode)
 {
-    int32_t fp;
+    SYS_FS_HANDLE fp;
     TFTP_CLIENT_VARS*   pClient;
     
     pClient = &gTFTPClientDcpt; 
     
-    fp = pClient->fileDescr;
-
     if(mode == TFTP_FILE_MODE_WRITE)
     {
-        fp = SYS_FS_FileOpen((const char*)fileName,SYS_FS_FILE_OPEN_READ);
+        fp = SYS_FS_FileOpen(fileName, SYS_FS_FILE_OPEN_READ);
     }
     else
     {
-        fp = SYS_FS_FileOpen((const char*)fileName,SYS_FS_FILE_OPEN_WRITE);
+        fp = SYS_FS_FileOpen(fileName, SYS_FS_FILE_OPEN_WRITE);
     }
 
     if(fp == SYS_FS_HANDLE_INVALID)
     {// File not found, so abort
         return false;
     }
-    pClient->fileDescr = fp;
+    pClient->fileDescr = (int32_t)fp;
  
-    pClient->callbackPos = 0;
-    _tftpFlags.bits.bIsClosing = false;
-    _tftpFlags.bits.bIsClosed = false;
+    pClient->callbackPos = 0U;
+    tftpFlags.bits.bIsClosing = 0U;
+    tftpFlags.bits.bIsClosed = 0U;
 
     // Tell remote server about our intention.
-    _TFTPSendFileName(mode, (uint8_t *)fileName);
+    F_TFTPSendFileName(mode, (const uint8_t *)fileName);
 
     // Clear all flags.
-    _tftpFlags.Val = 0;
+    tftpFlags.Val = 0;
 
     // Remember start tick for this operation.
     tftpcTimer = SYS_TMR_TickCountGet();
@@ -797,202 +884,213 @@ static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode)
     if ( mode == TFTP_FILE_MODE_READ )
     {
         // Remember that we are reading a file.
-        _tftpFlags.bits.bIsReading = true;
+        tftpFlags.bits.bIsReading = 1U;
 
         // For read operation, server would respond with data block of 1.
-        MutExVar.group2._tftpBlockNumber.Val = 1;
+        MutExVar.group2.tftpBlockNumber.Val = 1;
 
         // Next packet would be the data packet.
-        _tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
+        tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
         // Request is sent to the Server  either to Get a file
-        _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_GET_REQUEST,0,0);
+        F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_GET_REQUEST, NULL, 0);
     }
 
     else
     {
         // Remember that we are writing a file.
-        _tftpFlags.bits.bIsReading = false;
+        tftpFlags.bits.bIsReading = 0U;
 
         // For write operation, server would respond with data block of 0.
-        MutExVar.group2._tftpBlockNumber.Val = 0;
+        MutExVar.group2.tftpBlockNumber.Val = 0;
 
         // Next packet would be the ACK packet.
-        _tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
+        tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
         
         // Request is sent to the Server  either to Put a file
-        _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_PUT_REQUEST,0,0);
+        F_TFTPNotifyClients(pTftpcIf, TFTPC_EVENT_PUT_REQUEST, NULL, 0);
     }
     
     return true;
 }
 
 
-static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int32_t *len)
+static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, uint16_t* len)
 {
     TCPIP_UINT16_VAL opCode;
     TCPIP_UINT16_VAL blockNumber;
-    bool bTimeOut;
     TFTP_CLIENT_VARS*   pClient;
-    uint32_t    replyPktSize=0;
+    uint16_t replyPktSize = 0U;
 
     pClient = &gTFTPClientDcpt;
     // Check to see if timeout has occurred.
-    bTimeOut = false;
-    if ( SYS_TMR_TickCountGet() - tftpcTimer >= (TCPIP_TFTPC_CMD_PROCESS_TIMEOUT * SYS_TMR_TickCounterFrequencyGet()) )
+    bool bTimeOut = false;
+    uint32_t sysTickFreq = SYS_TMR_TickCounterFrequencyGet();
+    if ( SYS_TMR_TickCountGet() - tftpcTimer >= ((uint32_t)TCPIP_TFTPC_CMD_PROCESS_TIMEOUT * sysTickFreq) )
     {
         bTimeOut = true;
         tftpcTimer = SYS_TMR_TickCountGet();
     }
 
-    switch(_tftpGetCmdState)
+    TFTP_RESULT tRes = TFTP_NOT_READY; 
+    switch(tftpGetCmdState)
     {
         case SM_TFTP_COMM_WAIT_FOR_DATA:
             // If timeout occurs in this state, it may be because, we have not
             // even received very first data block or some in between block.
             if ( bTimeOut == true )
             {
-                bTimeOut = false;
-                if ( _tftpRetries++ > (TCPIP_TFTPC_MAX_RETRIES-1) )
+                if ( tftpRetries++ > ((uint8_t)TCPIP_TFTPC_MAX_RETRIES - 1U) )
                 {   // Forget about all previous attempts.
-                    _tftpRetries = 1;
-                    return TFTP_TIMEOUT;
+                    tftpRetries = 1U;
+                    tRes = TFTP_TIMEOUT;
+                    break;
                 }
 
                 // If we have not even received first block, ask application
                 // retry.
-                if ( MutExVar.group2._tftpBlockNumber.Val == 1u )
+                if ( MutExVar.group2.tftpBlockNumber.Val == 1u )
                 {
-                    return TFTP_RETRY;
+                    tRes = TFTP_RETRY;
+                    break;
                 }
                 else
                 {
                     // Block number was already incremented in last ACK attempt,
                     // so decrement it.
-                    MutExVar.group2._tftpBlockNumber.Val--;
+                    MutExVar.group2.tftpBlockNumber.Val--;
 
                     // Do it.
-                    _tftpGetCmdState = SM_TFTP_COMM_SEND_ACK;
+                    tftpGetCmdState = SM_TFTP_COMM_SEND_ACK;
                     break;
                 }
             }
             tftpcTimer = SYS_TMR_TickCountGet();
             replyPktSize = TCPIP_UDP_GetIsReady(pClient->hSocket);
             // For Read operation, server will respond with data block.
-            if ( !replyPktSize)
+            if (replyPktSize == 0U)
             {
                 break;
             }
-            
+
             // Get opCode
-            TCPIP_UDP_Get(pClient->hSocket,&opCode.v[1]);
-            TCPIP_UDP_Get(pClient->hSocket,&opCode.v[0]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&opCode.v[1]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&opCode.v[0]);
 
             // Get block number.
-            TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[1]);
-            TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[0]);
-            
+            (void)TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[1]);
+            (void)TCPIP_UDP_Get(pClient->hSocket,&blockNumber.v[0]);
+
             // get the data array from the socket  
-            *len = TCPIP_UDP_ArrayGet(pClient->hSocket,getData,replyPktSize-4);
-            
+            *len = TCPIP_UDP_ArrayGet(pClient->hSocket, getData, replyPktSize - 4U);
+
             // In order to read file, this must be data with block number of 0.
             if ( opCode.Val == (uint16_t)TFTP_OPCODE_DATA )
             {
                 // Make sure that this is not a duplicate block.
-                if ( MutExVar.group2._tftpBlockNumber.Val == blockNumber.Val )
+                if ( MutExVar.group2.tftpBlockNumber.Val == blockNumber.Val )
                 {
                     // Mark that we have not acked this block.
-                    _tftpFlags.bits.bIsAcked = false;
+                    tftpFlags.bits.bIsAcked = 0U;
 
                     // Since we have a packet, forget about previous retry count.
-                    _tftpRetries = 1;
+                    tftpRetries = 1;
 
-                   _tftpGetCmdState = SM_TFTP_COMM_SEND_ACK;
-                    if(replyPktSize < (TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE-1))
+                    tftpGetCmdState = SM_TFTP_COMM_SEND_ACK;
+                    if(replyPktSize < (TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE - 1U))
                     {
-                        _tftpFlags.bits.bIsClosing =  true;
-                        _tftpGetCmdState = SM_TFTP_COMM_SEND_LAST_ACK;
+                        tftpFlags.bits.bIsClosing =  1U;
+                        tftpGetCmdState = SM_TFTP_COMM_SEND_LAST_ACK;
                     }
-                    return TFTP_OK;
+                    tRes = TFTP_OK;
+                    break;
                 }
-
                 // If received block has already been received, simply ack it
                 // so that Server can "get over" it and send next block.
-                else if ( MutExVar.group2._tftpBlockNumber.Val > blockNumber.Val )
+                else if ( MutExVar.group2.tftpBlockNumber.Val > blockNumber.Val )
                 {
                     TFTPC_DEBUG_PRINT("TFTP: IsGetReady(): Duplicate block %d received - dropping it...\n",blockNumber.Val);
-                    MutExVar.group2._tftpDuplicateBlock.Val = blockNumber.Val;
-                    _tftpGetCmdState = SM_TFTP_COMM_DUPLICATE_ACK;
+                    MutExVar.group2.tftpDuplicateBlock.Val = blockNumber.Val;
+                    tftpGetCmdState = SM_TFTP_COMM_DUPLICATE_ACK;
+                }
+                else
+                {
+                    // do nothing
                 }
             }
             // Discard all unexpected and error blocks.
-            TCPIP_UDP_Discard(pClient->hSocket);
+            (void)TCPIP_UDP_Discard(pClient->hSocket);
 
             // If this was an error, remember error code for later delivery.
             if ( opCode.Val == (uint16_t)TFTP_OPCODE_ERROR )
             {
-                _tftpError = blockNumber.Val;
-                return TFTP_ERROR;
+                tftpError = blockNumber.Val;
+                tRes = TFTP_ERROR;
             }
             break;
-            
-    case SM_TFTP_COMM_DUPLICATE_ACK:
-        if ( TCPIP_UDP_PutIsReady(pClient->hSocket))
-        {
-            _TFTPSendAck(MutExVar.group2._tftpDuplicateBlock);
-            _tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
-        }
-        break;
 
-    case SM_TFTP_COMM_SEND_LAST_ACK:
-        if(_tftpFlags.bits.bIsClosing)
-        {
-            _tftpFlags.bits.bIsClosed = true;
-        }
-        SYS_CONSOLE_PRINT("\r\nTFTP: Total Bytes received: %d bytes \r\n ",pClient->callbackPos);
-    case SM_TFTP_COMM_SEND_ACK:
-        if ( TCPIP_UDP_PutIsReady(pClient->hSocket) )
-        {
-            _TFTPSendAck(MutExVar.group2._tftpBlockNumber);
-
-            // This is the next block we are expecting.
-            MutExVar.group2._tftpBlockNumber.Val++;
-
-            // Remember that we have already acked current block.
-            _tftpFlags.bits.bIsAcked = true;
-
-            if ( _tftpGetCmdState == SM_TFTP_COMM_SEND_LAST_ACK )
+        case SM_TFTP_COMM_DUPLICATE_ACK:
+            if ( TCPIP_UDP_PutIsReady(pClient->hSocket) != 0U)
             {
-                return TFTP_END_OF_FILE;
+                F_TFTPSendAck(MutExVar.group2.tftpDuplicateBlock);
+                tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
+            }
+            break;
+
+        case SM_TFTP_COMM_SEND_LAST_ACK:
+        case SM_TFTP_COMM_SEND_ACK:
+            if(tftpGetCmdState == SM_TFTP_COMM_SEND_LAST_ACK)
+            { 
+                if(tftpFlags.bits.bIsClosing != 0U)
+                {
+                    tftpFlags.bits.bIsClosed = 1U;
+                }
+                SYS_CONSOLE_PRINT("\r\nTFTP: Total Bytes received: %d bytes \r\n ",pClient->callbackPos);
             }
 
-            _tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
-            SYS_CONSOLE_MESSAGE("#");
-            return TFTP_ACK_SEND;
-        }
-        break;
+            if ( TCPIP_UDP_PutIsReady(pClient->hSocket) != 0U )
+            {
+                F_TFTPSendAck(MutExVar.group2.tftpBlockNumber);
 
-    // Suppress compiler warnings on unhandled SM_TFTP_WAIT and
-    // SM_TFTP_WAIT_FOR_ACK states.
-    default:
-        break;
+                // This is the next block we are expecting.
+                MutExVar.group2.tftpBlockNumber.Val++;
+
+                // Remember that we have already acked current block.
+                tftpFlags.bits.bIsAcked = 1U;
+
+                if ( tftpGetCmdState == SM_TFTP_COMM_SEND_LAST_ACK )
+                {
+                    tRes = TFTP_END_OF_FILE;
+                }
+                else
+                {
+                    tftpGetCmdState = SM_TFTP_COMM_WAIT_FOR_DATA;
+                    SYS_CONSOLE_MESSAGE("#");
+                    tRes = TFTP_ACK_SEND;
+                }
+            }
+            break;
+
+        default:
+            // SM_TFTP_WAIT, SM_TFTP_WAIT_FOR_ACK states.
+            break;
     }
-    return TFTP_NOT_READY;
+    return tRes;
 }
 
-static void _TFTPSendAck(TCPIP_UINT16_VAL blockNumber)
+static void F_TFTPSendAck(TCPIP_UINT16_VAL blockNumber)
 {
     TFTP_CLIENT_VARS*   pClient;
     pClient = &gTFTPClientDcpt;
     // Write opCode.
-    TCPIP_UDP_Put(pClient->hSocket,0);
-    TCPIP_UDP_Put(pClient->hSocket,TFTP_OPCODE_ACK);
+    (void)TCPIP_UDP_Put(pClient->hSocket, 0U);
+    (void)TCPIP_UDP_Put(pClient->hSocket, (uint8_t)TFTP_OPCODE_ACK);
 
     // Write block number for this ack.
-    TCPIP_UDP_Put(pClient->hSocket,blockNumber.v[1]);
-    TCPIP_UDP_Put(pClient->hSocket,blockNumber.v[0]);
+    (void)TCPIP_UDP_Put(pClient->hSocket, blockNumber.v[1]);
+    (void)TCPIP_UDP_Put(pClient->hSocket, blockNumber.v[0]);
 
     // Transmit it.
-    TCPIP_UDP_Flush(pClient->hSocket);
+    (void)TCPIP_UDP_Flush(pClient->hSocket);
 }
 
 // Register an TFTP event handler
@@ -1003,95 +1101,111 @@ static void _TFTPSendAck(TCPIP_UINT16_VAL blockNumber)
 // The hParam is passed by the client and will be used by the TFTP when the notification is made.
 // It is used for per-thread content or if more modules, for example, share the same handler
 // and need a way to differentiate the callback.
-#if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
+#if defined(TCPIP_TFTPC_USER_NOTIFICATION) && (TCPIP_TFTPC_USER_NOTIFICATION != 0)
 TCPIP_TFTPC_HANDLE TCPIP_TFTPC_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_TFTPC_EVENT_HANDLER handler, const void* hParam)
 {
-    if(handler && tftpcMemH)
+    if(handler != NULL)
     {
-        TCPIP_TFTPC_LIST_NODE tftpNode;
-        tftpNode.handler = handler;
-        tftpNode.hParam = hParam;
-        tftpNode.hNet = hNet;
+        if(tftpcMemH != NULL)
+        {
+            TCPIP_TFTPC_LIST_NODE tftpNode;
+            tftpNode.handler = handler;
+            tftpNode.hParam = hParam;
+            tftpNode.hNet = hNet;
+            tftpNode.next = NULL;
 
-        return (TCPIP_TFTPC_LIST_NODE*)TCPIP_Notification_Add(&tftpcRegisteredUsers, tftpcMemH, &tftpNode, sizeof(tftpNode));
+            return FC_SglNode2TftpHndl(TCPIP_Notification_Add(&tftpcRegisteredUsers, tftpcMemH, &tftpNode, sizeof(tftpNode)));
+        }
     }
 
-    return 0;
+    return NULL;
 }
 
 
 // deregister the event handler
 bool TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE hTftpc)
 {
-    if(hTftpc && tftpcMemH)
+    if(hTftpc != NULL)
     {
-        if(TCPIP_Notification_Remove((SGL_LIST_NODE*)hTftpc, &tftpcRegisteredUsers, tftpcMemH))
+        if(tftpcMemH != NULL)
         {
-            return true;
+            if(TCPIP_Notification_Remove(FC_TftpHndl2SglNode(hTftpc), &tftpcRegisteredUsers, tftpcMemH))
+            {
+                return true;
+            }
         }
     }
     return false;
 }
 
-static void _TFTPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_TFTPC_EVENT_TYPE evType,void *buf,uint32_t buffSize)
+static void F_TFTPNotifyClients(const TCPIP_NET_IF* pNetIf, TCPIP_TFTPC_EVENT_TYPE evType, void* dBuff, uint32_t buffSize)
 {
     TCPIP_TFTPC_LIST_NODE* dNode;
 
     TCPIP_Notification_Lock(&tftpcRegisteredUsers);
-    for(dNode = (TCPIP_TFTPC_LIST_NODE*)tftpcRegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
+    for(dNode = FC_SglNode2TftpNode(tftpcRegisteredUsers.list.head); dNode != NULL; dNode = dNode->next)
     {
-        if(dNode->hNet == 0 || dNode->hNet == pNetIf)
+        if(dNode->hNet == NULL || dNode->hNet == pNetIf)
         {   // trigger event
-            (*dNode->handler)(pNetIf, evType,buf,buffSize,dNode->hParam);
+            (*dNode->handler)(pNetIf, evType, dBuff, buffSize, dNode->hParam);
         }
     }
     TCPIP_Notification_Unlock(&tftpcRegisteredUsers);
+}
+#else
+TCPIP_TFTPC_HANDLE TCPIP_TFTPC_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_TFTPC_EVENT_HANDLER handler, const void* hParam)
+{
+    return NULL;
+}
+bool TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE hTftpc)
+{
+    return false;
 }
 #endif  // (TCPIP_TFTPC_USER_NOTIFICATION != 0)
 
 TCPIP_TFTPC_EVENT_TYPE TCPIP_TFTPC_GetEventNotification(void)
 {
-    TCPIP_TFTPC_EVENT_TYPE eventType=TFTPC_EVENT_NONE;
+    uint16_t eventType = (uint16_t)TFTPC_EVENT_NONE;
     TFTP_CLIENT_VARS*   pClient;
     pClient = &gTFTPClientDcpt;
     
     if(pClient->smState != SM_TFTP_END)
     {
         // The TFTP Client is busy with processing the file communication.
-        eventType |=TFTPC_EVENT_BUSY;
+        eventType |= (uint16_t)TFTPC_EVENT_BUSY;
     }
     
-    if(_tftpFlags.bits.bIsReading==true)
+    if(tftpFlags.bits.bIsReading == 1U)
     {
-        eventType |= TFTPC_EVENT_GET_REQUEST;
-        if(_tftpFlags.bits.bIsAcked)
+        eventType |= (uint16_t)TFTPC_EVENT_GET_REQUEST;
+        if(tftpFlags.bits.bIsAcked != 0U)
         {
             // ACK is sent for the data received during the READ mode
-            eventType |=TFTPC_EVENT_ACKED;
+            eventType |= (uint16_t)TFTPC_EVENT_ACKED;
         }
-        if(_tftpFlags.bits.bIsClosed)
+        if(tftpFlags.bits.bIsClosed != 0U)
         {
             // Last ACK is sent for the last block it is received.
             // Socket is not closed. only the file descriptor is closed
-            eventType |=TFTPC_EVENT_COMPLETED;
+            eventType |= (uint16_t)TFTPC_EVENT_COMPLETED;
         }        
     }
     else
     {
-        eventType |= TFTPC_EVENT_PUT_REQUEST;
-        if(_tftpFlags.bits.bIsAcked)
+        eventType |= (uint16_t)TFTPC_EVENT_PUT_REQUEST;
+        if(tftpFlags.bits.bIsAcked != 0U)
         {
             // ACK is received for the data transmitted during the WRITE mode
-            eventType |=TFTPC_EVENT_ACKED;
+            eventType |= (uint16_t)TFTPC_EVENT_ACKED;
         }
-        if(_tftpFlags.bits.bIsClosed)
+        if(tftpFlags.bits.bIsClosed != 0U)
         {
             // The last ACK is received for the data transmitted during the WRITE mode.
             // Socket is not closed. only the file descriptor is closed
-            eventType |=TFTPC_EVENT_COMPLETED;
+            eventType |= (uint16_t)TFTPC_EVENT_COMPLETED;
         }        
     }
-    return eventType;
+    return (TCPIP_TFTPC_EVENT_TYPE)eventType;
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_TFTP_CLIENT)
 

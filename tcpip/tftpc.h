@@ -25,7 +25,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -56,8 +56,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TFTPC_H
-#define __TFTPC_H
+#ifndef H_TFTPC_H_
+#define H_TFTPC_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -79,7 +79,7 @@ Microchip or any third party.
   Description:
     These enum values are issued from the command line.
 */
-typedef enum _TFTP_CMD_TYPE
+typedef enum
 {
     TFTP_CMD_PUT_TYPE=0,   // TFTP client issues a PUT command to write a file 
                            // to the server
@@ -144,6 +144,9 @@ typedef const void* TCPIP_TFTPC_HANDLE;
 
   Description:
     None.
+
+  Remarks:
+    16 bit values.  
  */
 typedef enum
 {
@@ -259,12 +262,12 @@ void  TCPIP_TFTPC_Task(void);
     registered handler.
     The handler has to be short and fast. It is meant for
     setting an event flag, <i>not</i> for lengthy processing!
-    buf - Buffer is used to provide the memory Pointer .
-          buf type need to be typecasted to char* while processing
+    dBuff - pointer to additional event info
+            should be typecasted to char*
     bufLen - The number of bytes present in the buffer.    
  */
 
-typedef void    (*TCPIP_TFTPC_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_TFTPC_EVENT_TYPE evType,void *buf,uint32_t bufLen, const void* param);
+typedef void (*TCPIP_TFTPC_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_TFTPC_EVENT_TYPE evType, void* dBuff, uint32_t bufLen, const void* param);
 
 
 // *****************************************************************************
@@ -310,7 +313,7 @@ TCPIP_TFTPC_HANDLE  TCPIP_TFTPC_HandlerRegister(TCPIP_NET_HANDLE hNet,
 
 // *****************************************************************************
 /* Function:
-    bool TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE htftpc)
+    bool TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE hTftpc)
 
   Summary:
     Deregisters a previously registered TFTP Client handler.
@@ -322,13 +325,13 @@ TCPIP_TFTPC_HANDLE  TCPIP_TFTPC_HandlerRegister(TCPIP_NET_HANDLE hNet,
     The TFTP Client module must be initialized.
 
   Parameters:
-    htftpc   - A handle returned by a previous call to TCPIP_TFTPC_HandlerRegister.
+    hTftpc   - A handle returned by a previous call to TCPIP_TFTPC_HandlerRegister.
 
   Returns:
     - true  - if the call succeeds
     - false - if no such handler is registered
  */
-bool  TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE hDhcp);
+bool  TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE hTftpc);
 
 // *****************************************************************************
 /* Function:
@@ -383,4 +386,4 @@ void TCPIP_TFTPC_SetServerAddress(IP_MULTI_ADDRESS* ipAddr,IP_ADDRESS_TYPE ipTyp
 #endif
 //DOM-IGNORE-END
 
-#endif  // __TFTPC_H
+#endif  // H_TFTPC_H_
