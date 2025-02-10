@@ -18,7 +18,7 @@
 -->
 
 <#--
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,7 +44,7 @@ Microchip or any third party.
     <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
         <#lt><#list 0..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
         <#lt>   /* Initialize the MIIM Driver Instance ${i}*/
-        <#lt>   sysObj.drvMiim_${i} = ${DRV_MIIM_DRIVER_OBJECT}.DRV_MIIM_Initialize(DRV_MIIM_DRIVER_INDEX_${i}, (const SYS_MODULE_INIT *) &drvMiimInitData_${i}); 
+        <#lt>   sysObj.drvMiim_${i} = ${DRV_MIIM_DRIVER_OBJECT}.miim_Initialize(DRV_MIIM_DRIVER_INDEX_${i}, (const SYS_MODULE_INIT *) &drvMiimInitData_${i}); 
         <#lt></#list>
     </#if>
 </#if>

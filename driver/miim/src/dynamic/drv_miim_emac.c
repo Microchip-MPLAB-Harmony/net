@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2018-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2018-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -77,22 +77,23 @@ This enumeration is processor specific and is defined in the processor-
 specific header files (see processor.h).
 */
 
-static void _DRV_MIIM_SMIClockSet(uintptr_t miimId, uint32_t hostClock, uint32_t maxMIIMClock )
+static void F_DRV_MIIM_SMIClockSet(uintptr_t miimId, uint32_t hostClock, uint32_t maxMIIMClock )
 { 
     emac_registers_t *  macRegs = (emac_registers_t *) miimId; // EMAC0_REGS or EMAC1_REGS
     uint32_t            tenRenSettings = macRegs->EMAC_NCR & (EMAC_NCR_RE_Msk | EMAC_NCR_TE_Msk);
     uint32_t            clockDivider;
     uint32_t            mdcDiv;
+
     mdcDiv = hostClock / maxMIIMClock;
-    if( mdcDiv <= 8 )
+    if( mdcDiv <= 8U)
     {
         clockDivider = EMAC_NCFGR_CLK_MCK_8;
     }
-    else if( mdcDiv <= 16 )
+    else if( mdcDiv <= 16U)
     {
         clockDivider = EMAC_NCFGR_CLK_MCK_16;
     }
-    else if( mdcDiv <= 32 )
+    else if( mdcDiv <= 32U)
     {
         clockDivider = EMAC_NCFGR_CLK_MCK_32;
     }
@@ -100,7 +101,7 @@ static void _DRV_MIIM_SMIClockSet(uintptr_t miimId, uint32_t hostClock, uint32_t
     {
         clockDivider = EMAC_NCFGR_CLK_MCK_64;
     }
-    if( !tenRenSettings )
+    if( tenRenSettings == 0U )
     {   // REN and TEN are both disabled
         macRegs->EMAC_NCFGR |= clockDivider;
     }
@@ -118,7 +119,7 @@ static void _DRV_MIIM_SMIClockSet(uintptr_t miimId, uint32_t hostClock, uint32_t
 DRV_MIIM_RESULT DRV_MIIM_DeviceSetup(uintptr_t miimId, const DRV_MIIM_SETUP* pSetUp)
 {
     // setup the clock
-    _DRV_MIIM_SMIClockSet(miimId, pSetUp->hostClockFreq, pSetUp->maxBusFreq );
+    F_DRV_MIIM_SMIClockSet(miimId, pSetUp->hostClockFreq, pSetUp->maxBusFreq );
 
     // other settings if needed
     return DRV_MIIM_RES_OK;    
@@ -130,7 +131,7 @@ void DRV_MIIM_PortEnable(uintptr_t miimId)
     if( EMAC_NCR_MPE_Msk != (macRegs->EMAC_NCR & EMAC_NCR_MPE_Msk) )
     {   // once enabled should not toggle RE or TE 
         uint32_t tenRenSettings = macRegs->EMAC_NCR & (EMAC_NCR_RE_Msk | EMAC_NCR_TE_Msk);
-        if( !tenRenSettings )
+        if( tenRenSettings  == 0U)
         {   // REN and TEN are both disabled
             macRegs->EMAC_NCR |=  EMAC_NCR_MPE_Msk;
         }

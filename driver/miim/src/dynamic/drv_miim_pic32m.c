@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2018-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2018-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -63,7 +63,7 @@ Microchip or any third party.
 
 
 
-static const uint16_t _MIIMClockDivisorTable[]=
+static const uint16_t T_MIIMClockDivisorTable[]=
 {
     4, 6, 8, 10, 14, 20, 28, 40, 
 #if defined (__PIC32MZ__)
@@ -73,7 +73,7 @@ static const uint16_t _MIIMClockDivisorTable[]=
 
 
 
-static DRV_MIIM_RESULT _DRV_MIIM_Enable(uintptr_t miimId)
+static DRV_MIIM_RESULT F_DRV_MIIM_Enable(uintptr_t miimId)
 {        
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
     DRV_MIIM_RESULT res = DRV_MIIM_RES_OK;
@@ -87,7 +87,7 @@ static DRV_MIIM_RESULT _DRV_MIIM_Enable(uintptr_t miimId)
     return res;
 }
     
-static  void _DRV_MIIM_SetupPreamble(uintptr_t miimId, const DRV_MIIM_SETUP* pSetUp)
+static  void F_DRV_MIIM_SetupPreamble(uintptr_t miimId, const DRV_MIIM_SETUP* pSetUp)
 {
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
     if((pSetUp->setupFlags & DRV_MIIM_SETUP_FLAG_PREAMBLE_SUPPRESSED) != 0)
@@ -101,10 +101,10 @@ static  void _DRV_MIIM_SetupPreamble(uintptr_t miimId, const DRV_MIIM_SETUP* pSe
 
 }
     
-static  void _DRV_MIIM_ScanIncrement(uintptr_t miimId, const DRV_MIIM_SETUP* pSetUp)
+static  void F_DRV_MIIM_ScanIncrement(uintptr_t miimId, const DRV_MIIM_SETUP* pSetUp)
 {
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
-    if((pSetUp->setupFlags & DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_INCREMENT) != 0)
+    if((pSetUp->setupFlags & DRV_MIIM_SETUP_FLAG_SCAN_INCREMENT) != 0)
     {
         DRV_ETH_MIIMScanIncrEnable(ethId);
     }
@@ -115,28 +115,28 @@ static  void _DRV_MIIM_ScanIncrement(uintptr_t miimId, const DRV_MIIM_SETUP* pSe
 
 }
 
-static void _DRV_MIIM_SMIClockSet(uintptr_t miimId, uint32_t hostClock, uint32_t maxMIIMClock )
+static void F_DRV_MIIM_SMIClockSet(uintptr_t miimId, uint32_t hostClock, uint32_t maxMIIMClock )
 {
 
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
-    int  ix;
+    size_t  ix;
     DRV_ETH_MIIMResetEnable(ethId); // Issue MIIM reset
     DRV_ETH_MIIMResetDisable(ethId); // Clear MIIM reset
 
-    for(ix = 0; ix < sizeof(_MIIMClockDivisorTable) / sizeof(*_MIIMClockDivisorTable); ix++)
+    for(ix = 0; ix < sizeof(T_MIIMClockDivisorTable) / sizeof(*T_MIIMClockDivisorTable); ix++)
     {
-        if(hostClock / _MIIMClockDivisorTable[ix] <= maxMIIMClock)
+        if(hostClock / T_MIIMClockDivisorTable[ix] <= maxMIIMClock)
         {   // found it
             break;
         }
     }
 
-    if(ix == sizeof(_MIIMClockDivisorTable) / sizeof(*_MIIMClockDivisorTable))
+    if(ix == sizeof(T_MIIMClockDivisorTable) / sizeof(*T_MIIMClockDivisorTable))
     {
         ix--;   // max divider; best we can do
     }
 
-    DRV_ETH_MIIMClockSet(ethId, ix + 1);  // program the clock
+    DRV_ETH_MIIMClockSet(ethId, (uint8_t)(ix + 1));  // program the clock
 
 }
 
@@ -149,14 +149,14 @@ DRV_MIIM_RESULT DRV_MIIM_DeviceSetup(uintptr_t miimId, const DRV_MIIM_SETUP* pSe
     DRV_MIIM_RESULT res;
 
     // enable and make sure the MAC MII is not held in reset
-    res =  _DRV_MIIM_Enable(miimId);
+    res =  F_DRV_MIIM_Enable(miimId);
     
     // setup the clock
-    _DRV_MIIM_SMIClockSet(miimId, pSetUp->hostClockFreq, pSetUp->maxBusFreq );
+    F_DRV_MIIM_SMIClockSet(miimId, pSetUp->hostClockFreq, pSetUp->maxBusFreq );
 
     // other settings
-    _DRV_MIIM_SetupPreamble(miimId, pSetUp);
-    _DRV_MIIM_ScanIncrement(miimId, pSetUp);
+    F_DRV_MIIM_SetupPreamble(miimId, pSetUp);
+    F_DRV_MIIM_ScanIncrement(miimId, pSetUp);
 
     return res;    
 } 
@@ -179,16 +179,16 @@ bool DRV_MIIM_PortBusy(uintptr_t miimId)
 void DRV_MIIM_WriteData(uintptr_t miimId, uint16_t phyAdd, uint16_t regIx, uint16_t wData)
 {
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
-    DRV_ETH_PHYAddressSet(ethId, phyAdd);
-    DRV_ETH_RegisterAddressSet(ethId, regIx);
+    DRV_ETH_PHYAddressSet(ethId, (uint8_t)phyAdd);
+    DRV_ETH_RegisterAddressSet(ethId, (uint8_t)regIx);
     DRV_ETH_MIIMWriteDataSet(ethId, wData);
 }
 
 void DRV_MIIM_ReadStart(uintptr_t miimId, uint16_t phyAdd, uint16_t regIx)
 {
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
-    DRV_ETH_PHYAddressSet(ethId, phyAdd);
-    DRV_ETH_RegisterAddressSet(ethId, regIx);
+    DRV_ETH_PHYAddressSet(ethId, (uint8_t)phyAdd);
+    DRV_ETH_RegisterAddressSet(ethId, (uint8_t)regIx);
     DRV_ETH_MIIMReadStart(ethId);
 }
 
@@ -203,8 +203,8 @@ uint16_t DRV_MIIM_ReadDataGet(uintptr_t miimId)
 DRV_MIIM_TXFER_STAT DRV_MIIM_ScanEnable(uintptr_t miimId, uint16_t phyAdd, uint16_t regIx)
 {   
     DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)miimId;
-    DRV_ETH_PHYAddressSet(ethId, phyAdd);
-    DRV_ETH_RegisterAddressSet(ethId, regIx);
+    DRV_ETH_PHYAddressSet(ethId, (uint8_t)phyAdd);
+    DRV_ETH_RegisterAddressSet(ethId, (uint8_t)regIx);
     DRV_ETH_ClearDataValid(ethId);
     DRV_ETH_MIIMScanModeEnable(ethId);
     return DRV_MIIM_TXFER_SCAN_STALE;
@@ -221,7 +221,7 @@ bool DRV_MIIM_GetScanData(uintptr_t miimId, uint32_t* scanData)
 
     if(!DRV_ETH_DataNotValid(ethId))
     {   // there's data available
-        if(scanData)
+        if(scanData != NULL)
         {
             *scanData = DRV_MIIM_ReadDataGet(miimId);
         }

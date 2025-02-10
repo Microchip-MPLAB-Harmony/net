@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,8 +40,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_MIIM_LOCAL_H
-#define _DRV_MIIM_LOCAL_H
+#ifndef H_DRV_MIIM_LOCAL_H
+#define H_DRV_MIIM_LOCAL_H
 
 
 // *****************************************************************************
@@ -68,11 +68,11 @@ Microchip or any third party.
 
 // maximum register value that can be accessed.
 // This driver uses standard MMIM routines, and has 5 bits for register index
-#define DRV_MIIM_MAX_REG_INDEX_VALUE        0x1f
+#define DRV_MIIM_MAX_REG_INDEX_VALUE        0x1fU
 
 // maximum PHY address value that can be used.
 // This driver uses standard MMIM routines, and has 5 bits for PHY address
-#define DRV_MIIM_MAX_ADDRESS_VALUE        0x1f
+#define DRV_MIIM_MAX_ADDRESS_VALUE        0x1fU
 
 
 // debugging
@@ -89,29 +89,29 @@ Microchip or any third party.
 // private object definitions
 //
 
-typedef struct _TAG_SGL_LIST_NODE
+typedef struct S_MIIM_SGL_LIST_NODE
 {
-    struct _TAG_SGL_LIST_NODE*      next;       // next node in list
-    void*                           data[];     // generic payload    
-}SGL_LIST_NODE; // generic linked list node definition
+    struct S_MIIM_SGL_LIST_NODE*    next;       // next node in list
+    //void*                           data[];     // generic payload    
+}MIIM_SGL_LIST_NODE; // generic linked list node definition
 
 
 typedef struct
 {
-    SGL_LIST_NODE*  head;   // list head
-    SGL_LIST_NODE*  tail;
+    MIIM_SGL_LIST_NODE*  head;   // list head
+    MIIM_SGL_LIST_NODE*  tail;
     int             nNodes; // number of nodes in the list
 
-}SINGLE_LIST;   // single linked list
+}MIIM_SINGLE_LIST;   // single linked list
 
 
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)
 // client identification structure
-typedef struct _tag_DRV_MIIM_CLI_OP_STAMP
+typedef struct S_tag_DRV_MIIM_CLI_OP_STAMP
 {
-    struct _tag_DRV_MIIM_CLI_OP_STAMP* next;       // safe cast to single list node
-    struct _tag_DRV_MIIM_OP_DCPT*   pOpDcpt;    // descriptor describing the operation
-    struct _tag_DRV_MIIM_CLIENT_DCPT* pClientDcpt;   // owner client 
+    struct S_tag_DRV_MIIM_CLI_OP_STAMP* next;       // safe cast to single list node
+    struct S_tag_DRV_MIIM_OP_DCPT*   pOpDcpt;    // descriptor describing the operation
+    struct S_tag_DRV_MIIM_CLIENT_DCPT* pClientDcpt;   // owner client 
     uint32_t                        tStamp;     // time at which operation was started
 }DRV_MIIM_CLI_OP_STAMP;
 
@@ -137,11 +137,11 @@ typedef enum
     DRV_MIIM_TXFER_EXT_WAIT_PHASE1, // extended operation waiting to complete phase 1
     DRV_MIIM_TXFER_SCAN_STALE,    // scan operation ongoing, stale result
     DRV_MIIM_TXFER_REPORT_STATE,  // from this state on reports are needed
-    DRV_MIIM_TXFER_SCAN_VALID = DRV_MIIM_TXFER_REPORT_STATE,    // scan operation ongoing, fresh result available
     DRV_MIIM_TXFER_DONE,          // operation completed successfully
     DRV_MIIM_TXFER_ERROR,         // unexpected error has occurred
 
 } DRV_MIIM_TXFER_STAT;
+#define DRV_MIIM_TXFER_SCAN_VALID DRV_MIIM_TXFER_REPORT_STATE   // scan operation ongoing, fresh result available
 
 // MIIM operation report actions
 typedef enum
@@ -161,9 +161,9 @@ typedef enum
 }DRV_MIIM_QUEUE_TYPE;
 
 // MIIM operation descriptor
-typedef struct _tag_DRV_MIIM_OP_DCPT
+typedef struct S_tag_DRV_MIIM_OP_DCPT
 {
-    struct _tag_DRV_MIIM_OP_DCPT*   next;       // safe cast to a SGL_LIST_NODE
+    struct S_tag_DRV_MIIM_OP_DCPT*   next;       // safe cast to a MIIM_SGL_LIST_NODE
     uint16_t                        regIx;      // register for the operation
     uint16_t                        phyAdd;     // PHY address to use for the operation
     uint32_t                        opData;     // associated data
@@ -171,7 +171,7 @@ typedef struct _tag_DRV_MIIM_OP_DCPT
     uint8_t                         opFlags;    // DRV_MIIM_OPERATION_FLAGS: flags associated with the operation
     uint8_t                         txferStat;  // DRV_MIIM_TXFER_STAT value: current operation transfer status
     uint8_t                         qType;      // DRV_MIIM_QUEUE_TYPE value: current queue the operation is in
-    struct _tag_DRV_MIIM_CLIENT_DCPT* pOwner;    // owner of this operation 
+    struct S_tag_DRV_MIIM_CLIENT_DCPT* pOwner;    // owner of this operation 
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)
     DRV_MIIM_CLI_OP_STAMP*          pCliStamp;  // client stamp to match
     uint32_t                        tStamp;     // time at which operation was started
@@ -179,11 +179,11 @@ typedef struct _tag_DRV_MIIM_OP_DCPT
 }DRV_MIIM_OP_DCPT;
 
 
-typedef struct _tag_DRV_MIIM_CLIENT_DCPT
+typedef struct S_tag_DRV_MIIM_CLIENT_DCPT
 {
     uint16_t                            clientInUse;    // True if in use
     uint16_t                            clientIx;       // client number
-    struct _tag_DRV_MIIM_OBJ_STRUCT*    parentObj;      // parent object to which this client belongs
+    struct S_tag_DRV_MIIM_OBJ_STRUCT*   parentObj;      // parent object to which this client belongs
     DRV_MIIM_OPERATION_CALLBACK         cbackHandler;   // client notification when operation is done
     DRV_MIIM_CLIENT_STATUS              cliStatus;      // Client Status
 }DRV_MIIM_CLIENT_DCPT;
@@ -203,7 +203,7 @@ typedef enum
 }DRV_MIIM_OBJ_FLAGS;
 
 // MIIM Driver Hardware Instance Object
-typedef struct _tag_DRV_MIIM_OBJ_STRUCT
+typedef struct S_tag_DRV_MIIM_OBJ_STRUCT
 {
     OSAL_SEM_HANDLE_TYPE objSem;  // synchronization object: protection for access to the IGMP
                                           // lists between user threads and task thread
@@ -214,13 +214,13 @@ typedef struct _tag_DRV_MIIM_OBJ_STRUCT
     uintptr_t           miimId;       // The peripheral Id associated with the object
     DRV_MIIM_CLIENT_DCPT objClients[DRV_MIIM_INSTANCE_CLIENTS]; // array of clients
     DRV_MIIM_OP_DCPT    opPool[DRV_MIIM_INSTANCE_OPERATIONS];      // pool of operations
-    SINGLE_LIST         freeOpList;     // available operations
-    SINGLE_LIST         busyOpList;     // scheduled operations
-    SINGLE_LIST         completeOpList; // completed operations that need to be polled by the clients
+    MIIM_SINGLE_LIST         freeOpList;     // available operations
+    MIIM_SINGLE_LIST         busyOpList;     // scheduled operations
+    MIIM_SINGLE_LIST         completeOpList; // completed operations that need to be polled by the clients
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)
     DRV_MIIM_CLI_OP_STAMP stampPool[DRV_MIIM_INSTANCE_OPERATIONS];      // pool of stamps, matching operations
-    SINGLE_LIST         freeStampList;   // list with available client stamps
-    SINGLE_LIST         busyStampList;   // list with scheduled client stamps
+    MIIM_SINGLE_LIST         freeStampList;   // list with available client stamps
+    MIIM_SINGLE_LIST         busyStampList;   // list with scheduled client stamps
 
 #endif  // (DRV_MIIM_CLIENT_OP_PROTECTION)
 
@@ -233,22 +233,22 @@ typedef void (*DRV_MIIM_PROCESS_OP_FNC)(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCP
 
 // helpers
 //
-void  Helper_SingleListInitialize(SINGLE_LIST* pL);
+void  Helper_SingleListInitialize(MIIM_SINGLE_LIST* pL);
 
 
 
 // adds node to tail
-void  Helper_SingleListTailAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN);
+void  Helper_SingleListTailAdd(MIIM_SINGLE_LIST* pL, MIIM_SGL_LIST_NODE* pN);
 
 
 // removes the head node
-SGL_LIST_NODE*  Helper_SingleListHeadRemove(SINGLE_LIST* pL);
+MIIM_SGL_LIST_NODE*  Helper_SingleListHeadRemove(MIIM_SINGLE_LIST* pL);
 
 // removes a node anywhere in the list
 // Note: this is lengthy!
-SGL_LIST_NODE*  Helper_SingleListNodeRemove(SINGLE_LIST* pL, SGL_LIST_NODE* pN);
+MIIM_SGL_LIST_NODE*  Helper_SingleListNodeRemove(MIIM_SINGLE_LIST* pL, MIIM_SGL_LIST_NODE* pN);
 
-#endif //#ifndef _DRV_MIIM_LOCAL_H
+#endif //#ifndef H_DRV_MIIM_LOCAL_H
 
 /*******************************************************************************
  End of File

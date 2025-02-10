@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_MIIM_H
-#define _DRV_MIIM_H
+#ifndef H_DRV_MIIM_H
+#define H_DRV_MIIM_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -333,7 +333,7 @@ typedef void    (*DRV_MIIM_OPERATION_CALLBACK)(DRV_HANDLE cliHandle, DRV_MIIM_OP
     initialization data must be passed into the DRV_MIIM_Initialize routine.
 */
 
-typedef struct DRV_MIIM_INIT 
+typedef struct S_DRV_MIIM_INIT 
 {
     /* System module initialization */
     SYS_MODULE_INIT     moduleInit;
@@ -370,10 +370,10 @@ typedef enum
 
     /* Scan operation will read across a range of PHY addresses */
     /* Scan will start with address 1 through the address set in the scan operation */
-    DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_INCREMENT  /*DOM-IGNORE-BEGIN*/ = 0x0002 /*DOM-IGNORE-END*/,
+    DRV_MIIM_SETUP_FLAG_SCAN_INCREMENT  /*DOM-IGNORE-BEGIN*/ = 0x0002 /*DOM-IGNORE-END*/,
 
     /* Scan operation will read just one PHY address. Default operation. */
-    DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_DEFAULT    /*DOM-IGNORE-BEGIN*/ = 0x0000 /*DOM-IGNORE-END*/,
+    DRV_MIIM_SETUP_FLAG_SCAN_DEFAULT    /*DOM-IGNORE-BEGIN*/ = 0x0000 /*DOM-IGNORE-END*/,
 
 
     /* Other flags could be eventually added */
@@ -560,13 +560,13 @@ void DRV_MIIM_Deinitialize (SYS_MODULE_OBJ object );
 
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from DRV_MIIM_Initialize
+    SYS_MODULE_OBJ      object;     - Returned from DRV_MIIM_Initialize
     SYS_STATUS          status;
     
     status = DRV_MIIM_Status(object);
     if (SYS_STATUS_ERROR >= status)
     {
-        // Handle error
+        - Handle error
     }
     </code>
 
@@ -615,13 +615,13 @@ SYS_STATUS DRV_MIIM_Status (SYS_MODULE_OBJ object );
     None
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from DRV_MIIM_Initialize
+    SYS_MODULE_OBJ      object;     - Returned from DRV_MIIM_Initialize
     
     while (true)
     {
         DRV_MIIM_Tasks (object);
     
-        // Do other tasks
+        - Do other tasks
     }
     </code>
 
@@ -669,7 +669,7 @@ void DRV_MIIM_Tasks(SYS_MODULE_OBJ object );
     handle = DRV_MIIM_Open(DRV_MIIM_INDEX_0, 0);
     if (DRV_HANDLE_INVALID == handle)
     {
-        // Unable to open the driver
+        - Unable to open the driver
     }
     </code>
 
@@ -748,7 +748,7 @@ DRV_MIIM_RESULT DRV_MIIM_Setup(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp)
 
   Example:
     <code>
-    DRV_HANDLE handle;  // Returned from DRV_MIIM_Open
+    DRV_HANDLE handle;  - Returned from DRV_MIIM_Open
 
     DRV_MIIM_Close(handle);
     </code>
@@ -1310,43 +1310,43 @@ DRV_MIIM_OPERATION_HANDLE   DRV_MIIM_ReadExt(DRV_HANDLE handle, uint16_t rIx, ui
 */
 
 
-typedef struct DRV_MIIM_OBJECT_BASE 
+typedef struct S_DRV_MIIM_OBJECT_BASE 
 {
-    SYS_MODULE_OBJ              (*DRV_MIIM_Initialize)(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
+    SYS_MODULE_OBJ              (*miim_Initialize)(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
 
-    void                        (*DRV_MIIM_Reinitialize)(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);
+    void                        (*miim_Reinitialize)(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);
 
-    void                        (*DRV_MIIM_Deinitialize)(SYS_MODULE_OBJ object);
+    void                        (*miim_Deinitialize)(SYS_MODULE_OBJ object);
 
-    SYS_STATUS                  (*DRV_MIIM_Status)(SYS_MODULE_OBJ object);
+    SYS_STATUS                  (*miim_Status)(SYS_MODULE_OBJ object);
 
-    void                        (*DRV_MIIM_Tasks)(SYS_MODULE_OBJ object);
+    void                        (*miim_Tasks)(SYS_MODULE_OBJ object);
 
-    DRV_HANDLE                  (*DRV_MIIM_Open)(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT intent);
+    DRV_HANDLE                  (*miim_Open)(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT intent);
 
-    DRV_MIIM_RESULT             (*DRV_MIIM_Setup)(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp);
+    DRV_MIIM_RESULT             (*miim_Setup)(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp);
 
-    void                        (*DRV_MIIM_Close)(DRV_HANDLE handle);
+    void                        (*miim_Close)(DRV_HANDLE handle);
 
-    DRV_MIIM_CLIENT_STATUS      (*DRV_MIIM_ClientStatus)(DRV_HANDLE handle);
+    DRV_MIIM_CLIENT_STATUS      (*miim_ClientStatus)(DRV_HANDLE handle);
 
-    DRV_MIIM_CALLBACK_HANDLE    (*DRV_MIIM_RegisterCallback)(DRV_HANDLE handle, DRV_MIIM_OPERATION_CALLBACK cbFunction, DRV_MIIM_RESULT* pRegResult);
+    DRV_MIIM_CALLBACK_HANDLE    (*miim_RegisterCallback)(DRV_HANDLE handle, DRV_MIIM_OPERATION_CALLBACK cbFunction, DRV_MIIM_RESULT* pRegResult);
 
-    DRV_MIIM_RESULT             (*DRV_MIIM_DeregisterCallback)(DRV_HANDLE handle, DRV_MIIM_CALLBACK_HANDLE cbHandle);
+    DRV_MIIM_RESULT             (*miim_DeregisterCallback)(DRV_HANDLE handle, DRV_MIIM_CALLBACK_HANDLE cbHandle);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Read)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*miim_Read)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Write)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*miim_Write)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Scan)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*miim_Scan)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_RESULT             (*DRV_MIIM_OperationResult)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint32_t* pOpData);  
+    DRV_MIIM_RESULT             (*miim_OperationResult)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint32_t* pOpData);  
 
-    DRV_MIIM_RESULT             (*DRV_MIIM_OperationAbort)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle);  
+    DRV_MIIM_RESULT             (*miim_OperationAbort)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle);  
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_WriteExt)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint32_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*miim_WriteExt)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint32_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_ReadExt)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*miim_ReadExt)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
 }DRV_MIIM_OBJECT_BASE;
 
@@ -1366,7 +1366,7 @@ extern const DRV_MIIM_OBJECT_BASE  DRV_MIIM_OBJECT_BASE_Default;
 //DOM-IGNORE-END
 
 
-#endif // #ifndef _DRV_MIIM_H
+#endif // #ifndef H_DRV_MIIM_H
 
 /*******************************************************************************
  End of File
