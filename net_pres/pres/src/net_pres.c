@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -30,24 +30,24 @@ Microchip or any third party.
 
 
 // local data
-NET_PRES_InternalData sNetPresData;
-NET_PRES_SocketData sNetPresSockets[NET_PRES_NUM_SOCKETS];
+static NET_PRES_InternalData sNetPresData;
+static NET_PRES_SocketData sNetPresSockets[NET_PRES_NUM_SOCKETS];
 
 
 // basic level  debugging
 #if ((NET_PRES_DEBUG_LEVEL & NET_PRES_DEBUG_MASK_BASIC) != 0)
-static volatile int _NET_PRES_StayAssertLoop = 0;
-static void _NET_PRES_AssertCond(bool cond, const char* message, int lineNo)
+static volatile int NET_PRES_StayAssertLoop = 0;
+static void F_NET_PRES_AssertCond(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("NET_PRES Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(_NET_PRES_StayAssertLoop != 0);
+        while(NET_PRES_StayAssertLoop != 0);
     }
 }
 
 #else
-#define _NET_PRES_AssertCond(cond, message, lineNo)
+#define F_NET_PRES_AssertCond(cond, message, lineNo)
 #endif  // (NET_PRES_DEBUG_LEVEL)
 
 
@@ -55,62 +55,62 @@ static void _NET_PRES_AssertCond(bool cond, const char* message, int lineNo)
 static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
 
 
-SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init )
+SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index, const void* initData )
 {
-    if (sNetPresData.initialized || !init)
+    if (sNetPresData.initialized || initData == NULL)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
-    NET_PRES_INIT_DATA *pInitData = (NET_PRES_INIT_DATA*)init;
+    const NET_PRES_INIT_DATA *pInitData = (const NET_PRES_INIT_DATA*)initData;
     
-    if (pInitData->numLayers > NET_PRES_NUM_INSTANCE)
+    if (pInitData->numLayers > (uint8_t)NET_PRES_NUM_INSTANCE)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
     
 
-    memset(&sNetPresData, 0, sizeof(NET_PRES_InternalData));
-    if (OSAL_MUTEX_Create(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+    (void)memset(&sNetPresData, 0, sizeof(NET_PRES_InternalData));
+    if (OSAL_MUTEX_Create(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
-    memset(&sNetPresSockets, 0, sizeof(NET_PRES_SocketData) * NET_PRES_NUM_SOCKETS);
+    (void)memset(&sNetPresSockets, 0, sizeof(NET_PRES_SocketData) * (size_t)NET_PRES_NUM_SOCKETS);
     sNetPresData.initialized = true;
     sNetPresData.numLayers = pInitData->numLayers;
     uint8_t x;
     for (x = 0; x < sNetPresData.numLayers; x++)
     {
-        if (pInitData->pInitData[x].pTransObject_ss)
+        if (pInitData->pInitData[x].pTransObject_ss != NULL)
         {
-            memcpy(&sNetPresData.transObjectSS[x], pInitData->pInitData[x].pTransObject_ss, sizeof(NET_PRES_TransportObject));
+            (void)memcpy(&sNetPresData.transObjectSS[x], pInitData->pInitData[x].pTransObject_ss, sizeof(NET_PRES_TransportObject));
         }
-        if (pInitData->pInitData[x].pTransObject_sc)
+        if (pInitData->pInitData[x].pTransObject_sc != NULL)
         {
-            memcpy(&sNetPresData.transObjectSC[x], pInitData->pInitData[x].pTransObject_sc, sizeof(NET_PRES_TransportObject));
+            (void)memcpy(&sNetPresData.transObjectSC[x], pInitData->pInitData[x].pTransObject_sc, sizeof(NET_PRES_TransportObject));
         }
-        if (pInitData->pInitData[x].pTransObject_ds)
+        if (pInitData->pInitData[x].pTransObject_ds != NULL)
         {
-            memcpy(&sNetPresData.transObjectDS[x], pInitData->pInitData[x].pTransObject_ds, sizeof(NET_PRES_TransportObject));
+            (void)memcpy(&sNetPresData.transObjectDS[x], pInitData->pInitData[x].pTransObject_ds, sizeof(NET_PRES_TransportObject));
         }
-        if (pInitData->pInitData[x].pTransObject_dc)
+        if (pInitData->pInitData[x].pTransObject_dc != NULL)
         {
-            memcpy(&sNetPresData.transObjectDC[x], pInitData->pInitData[x].pTransObject_dc, sizeof(NET_PRES_TransportObject));
+            (void)memcpy(&sNetPresData.transObjectDC[x], pInitData->pInitData[x].pTransObject_dc, sizeof(NET_PRES_TransportObject));
         }
-        if (pInitData->pInitData[x].pProvObject_ss)
+        if (pInitData->pInitData[x].pProvObject_ss != NULL)
         {
-            memcpy(&sNetPresData.encProvObjectSS[x], pInitData->pInitData[x].pProvObject_ss, sizeof(NET_PRES_EncProviderObject));
+            (void)memcpy(&sNetPresData.encProvObjectSS[x], pInitData->pInitData[x].pProvObject_ss, sizeof(Net_ProvObject));
         }        
-        if (pInitData->pInitData[x].pProvObject_sc)
+        if (pInitData->pInitData[x].pProvObject_sc != NULL)
         {
-            memcpy(&sNetPresData.encProvObjectSC[x], pInitData->pInitData[x].pProvObject_sc, sizeof(NET_PRES_EncProviderObject));
+            (void)memcpy(&sNetPresData.encProvObjectSC[x], pInitData->pInitData[x].pProvObject_sc, sizeof(Net_ProvObject));
         }        
-        if (pInitData->pInitData[x].pProvObject_ds)
+        if (pInitData->pInitData[x].pProvObject_ds != NULL)
         {
-            memcpy(&sNetPresData.encProvObjectDS[x], pInitData->pInitData[x].pProvObject_ds, sizeof(NET_PRES_EncProviderObject));
+            (void)memcpy(&sNetPresData.encProvObjectDS[x], pInitData->pInitData[x].pProvObject_ds, sizeof(Net_ProvObject));
         }        
-        if (pInitData->pInitData[x].pProvObject_dc)
+        if (pInitData->pInitData[x].pProvObject_dc != NULL)
         {
-            memcpy(&sNetPresData.encProvObjectDC[x], pInitData->pInitData[x].pProvObject_dc, sizeof(NET_PRES_EncProviderObject));
+            (void)memcpy(&sNetPresData.encProvObjectDC[x], pInitData->pInitData[x].pProvObject_dc, sizeof(Net_ProvObject));
         }        
     }
     return (SYS_MODULE_OBJ)&sNetPresData;
@@ -134,81 +134,82 @@ void NET_PRES_Deinitialize(SYS_MODULE_OBJ obj)
     
     uint8_t x;
     // Make sure all the sockets are closed down
-    for (x = 0; x < NET_PRES_NUM_SOCKETS; x++)
+    for (x = 0; x < (uint8_t)NET_PRES_NUM_SOCKETS; x++)
     {
-        if (sNetPresSockets[x].inUse)
+        if (sNetPresSockets[x].inUse != 0U)
         {
-            if ((sNetPresSockets[x].socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+            if ((sNetPresSockets[x].socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
             {
-                NET_PRES_EncProviderConnectionClose fpClose = sNetPresSockets[x].provObject->fpClose;
+                Net_ProvConnectionClose fpClose = sNetPresSockets[x].provObject->fpClose;
                 NET_PRES_TransClose fpTransClose = sNetPresSockets[x].transObject->fpClose;
                 if (fpClose != NULL)
                 {
-                    (*fpClose)(sNetPresSockets[x].providerData);
+                    (void)(*fpClose)(sNetPresSockets[x].providerData);
                 }
-                if (fpTransClose)
+                if (fpTransClose != NULL)
                 {
                     (*fpTransClose)(sNetPresSockets[x].transHandle);
                 }
-                sNetPresSockets[x].inUse = false;
+                sNetPresSockets[x].inUse = 0U;
             }
         }
     }
     
     // Make sure all the encryption providers are down
-    for (x = 0; x < NET_PRES_NUM_INSTANCE; x++)
+    for (x = 0; x < (uint8_t)NET_PRES_NUM_INSTANCE; x++)
     {
         if (sNetPresData.encProvObjectSS[x].fpDeinit != NULL)
         {
-            (*sNetPresData.encProvObjectSS[x].fpDeinit)();
+            (void)(*sNetPresData.encProvObjectSS[x].fpDeinit)();
         }
         if (sNetPresData.encProvObjectSC[x].fpDeinit != NULL)
         {
-            (*sNetPresData.encProvObjectSC[x].fpDeinit)();
+            (void)(*sNetPresData.encProvObjectSC[x].fpDeinit)();
         }
         if (sNetPresData.encProvObjectDS[x].fpDeinit != NULL)
         {
-            (*sNetPresData.encProvObjectDS[x].fpDeinit)();
+            (void)(*sNetPresData.encProvObjectDS[x].fpDeinit)();
         }
         if (sNetPresData.encProvObjectDC[x].fpDeinit != NULL)
         {
-            (*sNetPresData.encProvObjectDC[x].fpDeinit)();
+            (void)(*sNetPresData.encProvObjectDC[x].fpDeinit)();
         }
     }
     
-    if (OSAL_MUTEX_Delete(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+    if (OSAL_MUTEX_Delete(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
     {
         
     }
-    memset(&sNetPresData, 0, sizeof(NET_PRES_InternalData));
-    memset(&sNetPresSockets, 0, sizeof(NET_PRES_SocketData) * NET_PRES_NUM_SOCKETS);
+    (void)memset(&sNetPresData, 0, sizeof(NET_PRES_InternalData));
+    (void)memset(&sNetPresSockets, 0, sizeof(NET_PRES_SocketData) * (size_t)NET_PRES_NUM_SOCKETS);
 }
 
-void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const SYS_MODULE_INIT * const init)
+void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const void* initData)
 {
     NET_PRES_Deinitialize(obj);
-    NET_PRES_Initialize(0, init);
+    (void)NET_PRES_Initialize(0, initData);
 }
 
 void NET_PRES_Tasks(SYS_MODULE_OBJ obj)
 {
-    uint8_t x;
-    for (x = 0; x < NET_PRES_NUM_SOCKETS; x++)
+    uint8_t x, status;
+    for (x = 0; x < (uint8_t)NET_PRES_NUM_SOCKETS; x++)
     {
-        if (sNetPresSockets[x].inUse && ((sNetPresSockets[x].socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED))
+        if (sNetPresSockets[x].inUse != 0U && ((sNetPresSockets[x].socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED))
         {
             // Check the state of the socket and then pump it if necessary.
-            switch (sNetPresSockets[x].status)
+            status = sNetPresSockets[x].status;
+            if (status == (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION || status == (uint8_t)NET_PRES_ENC_SS_CLIENT_NEGOTIATING || status == (uint8_t)NET_PRES_ENC_SS_SERVER_NEGOTIATING)
             {
-                case NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION:
+                if (status == (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION)
                 {
                     // First thing is to check if the connection is connected.
                     if (!sNetPresSockets[x].transObject->fpIsConnected(sNetPresSockets[x].transHandle))
                     {
-                        break;
+                        continue;
                     }
                     // Next check to see if the provider has been initialized
-                    if (OSAL_MUTEX_Lock(&sNetPresData.presMutex, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+                    if (OSAL_MUTEX_Lock(&sNetPresData.presMutex, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
                     {
                         continue;
                     }
@@ -216,31 +217,26 @@ void NET_PRES_Tasks(SYS_MODULE_OBJ obj)
                     {
                         if (!(*sNetPresSockets[x].provObject->fpInit)(sNetPresSockets[x].transObject))
                         {
-                            sNetPresSockets[x].status = NET_PRES_ENC_SS_FAILED;
-                            if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+                            sNetPresSockets[x].status = (uint8_t)NET_PRES_ENC_SS_FAILED;
+                            if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
                             {
                             }
                             continue;
                         }
                     }
-                    if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+                    if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
                     {
                         continue;
                     }
                     if (!(*sNetPresSockets[x].provObject->fpOpen)(obj, (uintptr_t)(x + 1), sNetPresSockets[x].transHandle, &sNetPresSockets[x].providerData))
                     {
-                        sNetPresSockets[x].status = NET_PRES_ENC_SS_FAILED;
+                        sNetPresSockets[x].status = (uint8_t)NET_PRES_ENC_SS_FAILED;
                         continue;                       
                     }
-                    //Intentional fall through to the next state
-                    sNetPresSockets[x].provOpen = true;
+                    sNetPresSockets[x].provOpen = 1U;
                 }
-                case NET_PRES_ENC_SS_CLIENT_NEGOTIATING:
-                case NET_PRES_ENC_SS_SERVER_NEGOTIATING:
-                    sNetPresSockets[x].status = (*sNetPresSockets[x].provObject->fpConnect)(sNetPresSockets[x].providerData);
-                    break;
-                default:
-                    break;
+
+                sNetPresSockets[x].status = (uint8_t)(*sNetPresSockets[x].provObject->fpConnect)(sNetPresSockets[x].providerData);
             }
         }
     }
@@ -249,7 +245,7 @@ void NET_PRES_Tasks(SYS_MODULE_OBJ obj)
 NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T socketType, NET_PRES_SKT_ADDR_T addrType, NET_PRES_SKT_PORT_T port, NET_PRES_ADDRESS * addr, NET_PRES_SKT_ERROR_T* error)
 {
     NET_PRES_TransportObject * transObject;
-    NET_PRES_EncProviderObject * provObject;
+    Net_ProvObject * provObject;
 
     // Check to see if we have a valid index
     if (index >= sNetPresData.numLayers)
@@ -262,22 +258,22 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
     }
 
     // Check to see if the operation is supported
-    if ((socketType & (NET_PRES_SKT_CLIENT | NET_PRES_SKT_STREAM)) ==  (NET_PRES_SKT_CLIENT | NET_PRES_SKT_STREAM))
+    if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_STREAM)) ==  ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_STREAM))
     {
         transObject = &(sNetPresData.transObjectSC[index]);
         provObject = &(sNetPresData.encProvObjectSC[index]);
     }
-    else if ((socketType & (NET_PRES_SKT_SERVER | NET_PRES_SKT_STREAM)) ==  (NET_PRES_SKT_SERVER | NET_PRES_SKT_STREAM))
+    else if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_STREAM)) ==  ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_STREAM))
     {
         transObject = &(sNetPresData.transObjectSS[index]);
         provObject = &(sNetPresData.encProvObjectSS[index]);
     }
-    else if ((socketType & (NET_PRES_SKT_CLIENT | NET_PRES_SKT_DATAGRAM)) ==  (NET_PRES_SKT_CLIENT | NET_PRES_SKT_DATAGRAM))
+    else if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_DATAGRAM)) ==  ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_DATAGRAM))
     {
         transObject = &(sNetPresData.transObjectDC[index]);
         provObject = &(sNetPresData.encProvObjectDC[index]);
     }
-    else if ((socketType & (NET_PRES_SKT_SERVER | NET_PRES_SKT_DATAGRAM)) ==  (NET_PRES_SKT_SERVER | NET_PRES_SKT_DATAGRAM))
+    else if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_DATAGRAM)) ==  ((uint16_t)NET_PRES_SKT_SERVER |(uint16_t) NET_PRES_SKT_DATAGRAM))
     {
         transObject = &(sNetPresData.transObjectDS[index]);
         provObject = &(sNetPresData.encProvObjectDS[index]);
@@ -298,14 +294,16 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
         }
         return NET_PRES_INVALID_SOCKET;        
     }
-    bool encrypted = (socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED;
-    if (!encrypted && !((socketType & NET_PRES_SKT_UNENCRYPTED) == NET_PRES_SKT_UNENCRYPTED))
+    bool encrypted = ((uint16_t)socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED;
+    if (!encrypted && !(((uint16_t)socketType & (uint16_t)NET_PRES_SKT_UNENCRYPTED) == (uint16_t)NET_PRES_SKT_UNENCRYPTED))
     {
         // We're default
         if ((transObject->fpIsPortDefaultSecure!= NULL) && transObject->fpIsPortDefaultSecure(port))
         {
             encrypted = true;
-            socketType |= NET_PRES_SKT_ENCRYPTED;
+            uint16_t type16 = (uint16_t)socketType;
+            type16 |= (uint16_t)NET_PRES_SKT_ENCRYPTED;
+            socketType = (NET_PRES_SKT_T)type16;
         }
     }
     
@@ -322,7 +320,7 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
     }
     
     // The inputs have been validated
-    if (OSAL_MUTEX_Lock(&sNetPresData.presMutex, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+    if (OSAL_MUTEX_Lock(&sNetPresData.presMutex, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
     {
         if (error != NULL)
         {
@@ -333,17 +331,17 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
     
     // Search for a free socket
     uint8_t sockIndex;
-    for (sockIndex = 0 ; sockIndex < NET_PRES_NUM_SOCKETS; sockIndex++)
+    for (sockIndex = 0 ; sockIndex < (uint8_t)NET_PRES_NUM_SOCKETS; sockIndex++)
     {
-        if (sNetPresSockets[sockIndex].inUse)
+        if (sNetPresSockets[sockIndex].inUse != 0U)
         {
             continue;
         }
-        sNetPresSockets[sockIndex].inUse = true;
+        sNetPresSockets[sockIndex].inUse = 1U;
         // the socket has been soft locked so no longer need the mutex.
-        if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+        if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
         {
-            sNetPresSockets[sockIndex].inUse = false;
+            sNetPresSockets[sockIndex].inUse = 0U;
             if (error != NULL)
             {
                 *error = NET_PRES_SKT_UNKNOWN_ERROR;
@@ -353,7 +351,7 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
         sNetPresSockets[sockIndex].transHandle = (*transObject->fpOpen)(addrType, port, addr);
         if (sNetPresSockets[sockIndex].transHandle == NET_PRES_INVALID_SOCKET)
         {
-            sNetPresSockets[sockIndex].inUse = false;
+            sNetPresSockets[sockIndex].inUse = 0U;
             if (error != NULL)
             {
                 *error = NET_PRES_SKT_UNKNOWN_ERROR;
@@ -362,19 +360,19 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
         }
         sNetPresSockets[sockIndex].transObject = transObject;
         sNetPresSockets[sockIndex].provObject = provObject;
-        sNetPresSockets[sockIndex].socketType = socketType;
-        sNetPresSockets[sockIndex].lastError = NET_PRES_SKT_OK;
+        sNetPresSockets[sockIndex].socketType = (uint16_t)socketType;
+        sNetPresSockets[sockIndex].lastError = (int8_t)NET_PRES_SKT_OK;
         if (error != NULL)
         {
             *error = NET_PRES_SKT_OK;
         }
         if (encrypted)
         {
-            sNetPresSockets[sockIndex].status = NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
+            sNetPresSockets[sockIndex].status = (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
         }
-        return sockIndex+1; // avoid returning 0 on success.        
+        return (NET_PRES_SKT_HANDLE_T)sockIndex + (NET_PRES_SKT_HANDLE_T)1U; // avoid returning 0 on success.        
     }
-    if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+    if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
     {
         if (error != NULL)
         {
@@ -389,14 +387,14 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T s
     return NET_PRES_INVALID_SOCKET;   
 }
 
-static inline NET_PRES_SocketData *  _NET_PRES_SocketValidate(NET_PRES_SKT_HANDLE_T handle)
+static inline NET_PRES_SocketData *  F_NET_PRES_SocketValidate(NET_PRES_SKT_HANDLE_T handle)
 {
-    if (handle <= 0 || handle > NET_PRES_NUM_SOCKETS)
+    if ((int8_t)handle <= 0 || (uint8_t)handle > (uint8_t)NET_PRES_NUM_SOCKETS)
     {
         return NULL;
     }
     handle--;
-    if (!sNetPresSockets[handle].inUse)
+    if (sNetPresSockets[handle].inUse == 0U)
     {
         return NULL;
     }
@@ -406,14 +404,14 @@ static inline NET_PRES_SocketData *  _NET_PRES_SocketValidate(NET_PRES_SKT_HANDL
 bool NET_PRES_SocketBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T addrType, NET_PRES_SKT_PORT_T port, NET_PRES_ADDRESS * addr)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
     NET_PRES_TransBind fp = pSkt->transObject->fpLocalBind;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
 
@@ -424,7 +422,7 @@ bool NET_PRES_SocketBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T addrT
 bool NET_PRES_SocketRemoteBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T addrType, NET_PRES_SKT_PORT_T port, NET_PRES_ADDRESS * addr)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -432,7 +430,7 @@ bool NET_PRES_SocketRemoteBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T
     NET_PRES_TransBind fp =  pSkt->transObject->fpRemoteBind;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle, addrType, port, addr);
@@ -441,7 +439,7 @@ bool NET_PRES_SocketRemoteBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T
 bool NET_PRES_SocketOptionsSet(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_OPTION_TYPE option, void* optParam)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -449,7 +447,7 @@ bool NET_PRES_SocketOptionsSet(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_OPTION
     NET_PRES_TransOption fp = pSkt->transObject->fpOptionSet;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle, option, optParam);
@@ -459,7 +457,7 @@ bool NET_PRES_SocketOptionsSet(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_OPTION
 bool NET_PRES_SocketOptionsGet(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_OPTION_TYPE option, void* optParam)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -467,7 +465,7 @@ bool NET_PRES_SocketOptionsGet(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_OPTION
     NET_PRES_TransOption fp = pSkt->transObject->fpOptionGet;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle, option, optParam);    
@@ -476,7 +474,7 @@ bool NET_PRES_SocketOptionsGet(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_OPTION
 bool NET_PRES_SocketIsConnected(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -484,7 +482,7 @@ bool NET_PRES_SocketIsConnected(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransBool fp = pSkt->transObject->fpIsConnected;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle);    
@@ -493,7 +491,7 @@ bool NET_PRES_SocketIsConnected(NET_PRES_SKT_HANDLE_T handle)
 bool NET_PRES_SocketWasReset(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -501,7 +499,7 @@ bool NET_PRES_SocketWasReset(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransBool fp = pSkt->transObject->fpWasReset;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle);    
@@ -510,7 +508,7 @@ bool NET_PRES_SocketWasReset(NET_PRES_SKT_HANDLE_T handle)
 bool NET_PRES_SocketWasDisconnected(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -518,7 +516,7 @@ bool NET_PRES_SocketWasDisconnected(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransBool fp = pSkt->transObject->fpWasDisconnected;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle);    
@@ -528,7 +526,7 @@ bool NET_PRES_SocketWasDisconnected(NET_PRES_SKT_HANDLE_T handle)
 bool NET_PRES_SocketDisconnect(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -536,26 +534,26 @@ bool NET_PRES_SocketDisconnect(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransBool fpDiscon = pSkt->transObject->fpDisconnect;
     if (fpDiscon == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     bool res = (*fpDiscon)(pSkt->transHandle);    
 
 
-    if(res && (pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if(res && (pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {   // let the provide know that we start over
-        if(pSkt->status > NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION)
+        if(pSkt->status > (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION)
         {
-            if(pSkt->provOpen)
+            if(pSkt->provOpen != 0U)
             {
-                NET_PRES_EncProviderConnectionClose fpClose = pSkt->provObject->fpClose;
+                Net_ProvConnectionClose fpClose = pSkt->provObject->fpClose;
                 if (fpClose != NULL)
                 {
-                    (*fpClose)(pSkt->providerData);
-                    pSkt->provOpen = 0;
+                    (void)(*fpClose)(pSkt->providerData);
+                    pSkt->provOpen = 0U;
                 }
             }
-            pSkt->status = NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
+            pSkt->status = (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
         }
     }
 
@@ -565,7 +563,7 @@ bool NET_PRES_SocketDisconnect(NET_PRES_SKT_HANDLE_T handle)
 bool NET_PRES_SocketConnect(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -573,7 +571,7 @@ bool NET_PRES_SocketConnect(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransBool fp = pSkt->transObject->fpConnect;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle);    
@@ -582,36 +580,36 @@ bool NET_PRES_SocketConnect(NET_PRES_SKT_HANDLE_T handle)
 void NET_PRES_SocketClose(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return ;
     }
 
     
-    if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if ((pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {
-        NET_PRES_EncProviderConnectionClose fp = pSkt->provObject->fpClose;
+        Net_ProvConnectionClose fp = pSkt->provObject->fpClose;
         if (fp != NULL)
         {
-            (*fp)(pSkt->providerData);
+            (void)(*fp)(pSkt->providerData);
         }
     }
     NET_PRES_TransClose fpc = pSkt->transObject->fpClose;
     if (fpc == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return;
     }
     (*fpc)(pSkt->transHandle);
-    if (OSAL_MUTEX_Lock(&sNetPresData.presMutex, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+    if (OSAL_MUTEX_Lock(&sNetPresData.presMutex, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
     {
-        pSkt->lastError = NET_PRES_SKT_UNKNOWN_ERROR;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_UNKNOWN_ERROR;
         return;
     }
-    memset(pSkt, 0, sizeof(NET_PRES_SocketData));
-    if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_TRUE)
+    (void)memset(pSkt, 0, sizeof(NET_PRES_SocketData));
+    if (OSAL_MUTEX_Unlock(&sNetPresData.presMutex) != OSAL_RESULT_SUCCESS)
     {
-        pSkt->lastError = NET_PRES_SKT_UNKNOWN_ERROR;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_UNKNOWN_ERROR;
         return;
     }
 }
@@ -619,7 +617,7 @@ void NET_PRES_SocketClose(NET_PRES_SKT_HANDLE_T handle)
 bool NET_PRES_SocketInfoGet(NET_PRES_SKT_HANDLE_T handle, void * info)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -627,7 +625,7 @@ bool NET_PRES_SocketInfoGet(NET_PRES_SKT_HANDLE_T handle, void * info)
     NET_PRES_TransSocketInfoGet fp = pSkt->transObject->fpSocketInfoGet;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
     return (*fp)(pSkt->transHandle, info);    
@@ -640,7 +638,7 @@ uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqS
     uint16_t encAvlblSize, encOutSize; 
     NET_PRES_SocketData * pSkt;
 
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
@@ -648,39 +646,39 @@ uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqS
     NET_PRES_TransReady fpTrans = pSkt->transObject->fpReadyToWrite;
     if (fpTrans == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
 
-    if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if ((pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {   // encrypted socket
 
-        NET_PRES_EncProviderWriteReady fpWriteReady = pSkt->provObject->fpWriteReady;
-        NET_PRES_EncProviderOutputSize fpOutputSize = pSkt->provObject->fpOutputSize;
+        Net_ProvWriteReady fpWriteReady = pSkt->provObject->fpWriteReady;
+        Net_ProvOutputSize fpOutputSize = pSkt->provObject->fpOutputSize;
 
-        if(pSkt->status != NET_PRES_ENC_SS_OPEN || fpWriteReady == NULL || fpOutputSize == NULL)
+        if(pSkt->status != (uint8_t)NET_PRES_ENC_SS_OPEN || fpWriteReady == NULL || fpOutputSize == NULL)
         {   // data cannot be sent/received
-            pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+            pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
             return 0;
         }
 
         transpSpace = (*fpTrans)(pSkt->transHandle);
         encAvlblSize = (*fpWriteReady)(pSkt->providerData, reqSize, 0);
-        if(encAvlblSize != 0)
+        if(encAvlblSize != 0U)
         {   // check that transport also available
-            encOutSize = (*fpOutputSize)(pSkt->providerData, reqSize); 
+            encOutSize = (uint16_t)(*fpOutputSize)(pSkt->providerData, (int32_t)reqSize); 
             if(transpSpace >= encOutSize)
             {
                 return reqSize;
             }
         }
         // failed; check for min space
-        if(minSize != 0)
+        if(minSize != 0U)
         {
             encAvlblSize = (*fpWriteReady)(pSkt->providerData, minSize, 0);
-            if(encAvlblSize != 0)
+            if(encAvlblSize != 0U)
             {   // check that transport also available
-                encOutSize = (*fpOutputSize)(pSkt->providerData, minSize); 
+                encOutSize = (uint16_t)(*fpOutputSize)(pSkt->providerData, (int32_t)minSize); 
                 if(transpSpace >= encOutSize)
                 {
                     return minSize;
@@ -695,34 +693,34 @@ uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqS
 
     // non secured socket
     transpSpace = (*fpTrans)(pSkt->transHandle);
-    if(transpSpace >= reqSize || (minSize != 0 && transpSpace >= minSize))
+    if(transpSpace >= reqSize || (minSize != 0U && transpSpace >= minSize))
     {
         return transpSpace;
     }
 
-    return 0;
+    return 0U;
 }
 
 uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
 
-    if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if ((pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {   // encrypted socket
 
-        if(pSkt->status == NET_PRES_ENC_SS_OPEN)
+        if(pSkt->status == (uint8_t)NET_PRES_ENC_SS_OPEN)
         {   // IsSecure!
-            NET_PRES_EncProviderReadReady fprov = pSkt->provObject->fpReadReady;
+            Net_ProvReadReady fprov = pSkt->provObject->fpReadReady;
             if (fprov == NULL)
             {
-                pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+                pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
                 return 0;
             }
-            return (*fprov)(pSkt->providerData);
+            return (uint16_t)(*fprov)(pSkt->providerData);
         }
         // not secure yet
         return 0;
@@ -731,43 +729,43 @@ uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransReady ftrans = pSkt->transObject->fpReadyToRead;
     if (ftrans == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
     return (*ftrans)(pSkt->transHandle);    
 }
 
-uint16_t NET_PRES_SocketWrite(NET_PRES_SKT_HANDLE_T handle, const void * buffer, uint16_t size)
+uint16_t NET_PRES_SocketWrite(NET_PRES_SKT_HANDLE_T handle, const void * dataBuffer, uint16_t size)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
 
-    if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if ((pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {
-        NET_PRES_EncProviderWrite fp = pSkt->provObject->fpWrite;
+        Net_ProvWrite fp = pSkt->provObject->fpWrite;
         if (fp == NULL)
         {
-            pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+            pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
             return 0;
         }
-        return (*fp)(pSkt->providerData, buffer, size);    
+        return (uint16_t)(*fp)(pSkt->providerData, dataBuffer, size);    
     }
     NET_PRES_TransWrite fpc = pSkt->transObject->fpWrite;
     if (fpc == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
-    return (*fpc)(pSkt->transHandle, buffer, size);  
+    return (*fpc)(pSkt->transHandle, dataBuffer, size);  
 }
 
 uint16_t NET_PRES_SocketFlush(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
@@ -775,92 +773,92 @@ uint16_t NET_PRES_SocketFlush(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransBool fp = pSkt->transObject->fpFlush;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
-    return (*fp)(pSkt->transHandle);        
+    return (uint16_t)(*fp)(pSkt->transHandle);        
 }
 
-uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * buffer, uint16_t size)
+uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * dataBuffer, uint16_t size)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
 
-    if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if ((pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {
-        NET_PRES_EncProviderRead fp = pSkt->provObject->fpRead;
+        Net_ProvRead fp = pSkt->provObject->fpRead;
         if (fp == NULL)
         {
-            pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+            pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
             return 0;
         }
 
-        if(buffer == 0)
+        if(dataBuffer == NULL)
         {   // this means discard for the TCP/IP
             // but the provider might not support it
-            int ix;
+            uint16_t ix;
             uint8_t discard_buff[100];
 
-            uint16_t nDiscards = size / sizeof(discard_buff);
-            uint16_t nLeft = size % sizeof(discard_buff);
-            uint16_t discardBytes = 0;
+            uint16_t nDiscards = size / (uint16_t)sizeof(discard_buff);
+            uint16_t nLeft = size % (uint16_t)sizeof(discard_buff);
+            uint16_t discardBytes = 0U;
 
             for(ix = 0; ix < nDiscards; ix++)
             {
-                discardBytes += (*fp)(pSkt->providerData, discard_buff, sizeof(discard_buff));    
+                discardBytes += (uint16_t)(*fp)(pSkt->providerData, discard_buff, sizeof(discard_buff));    
             }
 
-            if(nLeft)
+            if(nLeft != 0U)
             {
-                discardBytes += (*fp)(pSkt->providerData, discard_buff, nLeft);    
+                discardBytes += (uint16_t)(*fp)(pSkt->providerData, discard_buff, nLeft);    
             }
             return discardBytes;
         }
-        return (*fp)(pSkt->providerData, buffer, size);    
+        return (uint16_t)(*fp)(pSkt->providerData, dataBuffer, size);    
     }
     NET_PRES_TransRead fpc = pSkt->transObject->fpRead;
     if (fpc == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
-    return (*fpc)(pSkt->transHandle, buffer, size);  
+    return (*fpc)(pSkt->transHandle, dataBuffer, size);  
 }
 
-uint16_t NET_PRES_SocketPeek(NET_PRES_SKT_HANDLE_T handle, void * buffer, uint16_t size)
+uint16_t NET_PRES_SocketPeek(NET_PRES_SKT_HANDLE_T handle, void * dataBuffer, uint16_t size)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
 
-    if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
+    if ((pSkt->socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED)
     {
-        NET_PRES_EncProviderRead fp = pSkt->provObject->fpPeek;
+        Net_ProvRead fp = pSkt->provObject->fpPeek;
         if (fp == NULL)
         {
-            pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+            pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
             return 0;
         }
-        return (*fp)(pSkt->providerData, buffer, size);    
+        return (uint16_t)(*fp)(pSkt->providerData, dataBuffer, size);    
     }
     NET_PRES_TransPeek fpc = pSkt->transObject->fpPeek;
     if (fpc == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
-    return (*fpc)(pSkt->transHandle, buffer, size, 0);  
+    return (uint16_t)(*fpc)(pSkt->transHandle, dataBuffer, size, 0);  
 }
 
 uint16_t NET_PRES_SocketDiscard(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return 0;
     }
@@ -868,7 +866,7 @@ uint16_t NET_PRES_SocketDiscard(NET_PRES_SKT_HANDLE_T handle)
     NET_PRES_TransDiscard fp = pSkt->transObject->fpDiscard;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return 0;
     }
     return (*fp)(pSkt->transHandle);    
@@ -878,15 +876,16 @@ uint16_t NET_PRES_SocketDiscard(NET_PRES_SKT_HANDLE_T handle)
 // socket handle it's a transport handle, actually
 static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param)
 {
-    NET_PRES_SocketData * pSkt = (NET_PRES_SocketData*)param;
-    _NET_PRES_AssertCond(pSkt->transHandle == handle,  __func__, __LINE__);
-    _NET_PRES_AssertCond(pSkt->sigHandle != 0,  __func__, __LINE__);
-    _NET_PRES_AssertCond(pSkt->usrSigFnc != 0,  __func__, __LINE__);
+    const NET_PRES_SocketData * pSkt = (const NET_PRES_SocketData*)param;
+    F_NET_PRES_AssertCond(pSkt->transHandle == handle,  __func__, __LINE__);
+    F_NET_PRES_AssertCond(pSkt->sigHandle != 0,  __func__, __LINE__);
+    F_NET_PRES_AssertCond(pSkt->usrSigFnc != 0,  __func__, __LINE__);
 
     // call the user handler
-    if(pSkt->usrSigFnc != 0)
+    if(pSkt->usrSigFnc != NULL)
     {
-        uint16_t sktIx = (pSkt - sNetPresSockets) + 1; 
+        ptrdiff_t sktDiff = pSkt - sNetPresSockets;
+        uint16_t sktIx = (uint16_t)sktDiff + 1U;
         (*pSkt->usrSigFnc)(sktIx, hNet, sigType, pSkt->usrSigParam);
     }
 
@@ -896,37 +895,37 @@ static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL
 NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_T handle, uint16_t sigMask, NET_PRES_SIGNAL_FUNCTION handler, const void* hParam)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
-        return 0;
+        return NULL;
     }
 
-    if (handler == 0)
+    if (handler == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_HANDLER_ERROR;
-        return 0;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_HANDLER_ERROR;
+        return NULL;
     }
 
     NET_PRES_TransHandlerRegister fp = pSkt->transObject->fpHandlerRegister;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
-        return 0;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
+        return NULL;
     }
 
-    if(pSkt->sigHandle != 0)
+    if(pSkt->sigHandle != NULL)
     {   // one socket has just one signal handler
-        pSkt->lastError = NET_PRES_SKT_HANDLER_BUSY;
-        return 0;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_HANDLER_BUSY;
+        return NULL;
     }
 
     pSkt->usrSigFnc = handler;
     pSkt->usrSigParam = hParam;
-    pSkt->sigHandle = (*fp)(pSkt->transHandle, sigMask, NET_PRES_SignalHandler, pSkt);    
+    pSkt->sigHandle = (*fp)(pSkt->transHandle, sigMask, &NET_PRES_SignalHandler, pSkt);    
 
-    if(pSkt->sigHandle == 0)
+    if(pSkt->sigHandle == NULL)
     {   // failed
-        pSkt->lastError = NET_PRES_SKT_HANDLER_TRANSP_ERROR;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_HANDLER_TRANSP_ERROR;
     }
 
 
@@ -937,7 +936,7 @@ NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_
 bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hSig)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
@@ -945,24 +944,24 @@ bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle, NET_PR
     NET_PRES_TransSignalHandlerDeregister fp = pSkt->transObject->fpHandlerDeregister;
     if (fp == NULL)
     {
-        pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
 
-    if(pSkt->sigHandle == 0 || pSkt->sigHandle != hSig)
+    if(pSkt->sigHandle == NULL || pSkt->sigHandle != hSig)
     {   // no such signal handler
-        pSkt->lastError = NET_PRES_SKT_HANDLER_ERROR;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_HANDLER_ERROR;
         return false;
     }
 
     bool res = (*fp)(pSkt->transHandle, pSkt->sigHandle);
     if(res)
     {   // done
-        pSkt->sigHandle = 0;
+        pSkt->sigHandle = NULL;
     }
     else
     {
-        pSkt->lastError = NET_PRES_SKT_HANDLER_TRANSP_ERROR;
+        pSkt->lastError = (int8_t)NET_PRES_SKT_HANDLER_TRANSP_ERROR;
     }
 
     return res;
@@ -971,50 +970,50 @@ bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle, NET_PR
 bool NET_PRES_SocketIsNegotiatingEncryption(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
-    return ((pSkt->status == NET_PRES_ENC_SS_CLIENT_NEGOTIATING) ||  
-            (pSkt->status == NET_PRES_ENC_SS_SERVER_NEGOTIATING) || 
-            (pSkt->status == NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION));
+    return ((pSkt->status == (uint8_t)NET_PRES_ENC_SS_CLIENT_NEGOTIATING) ||  
+            (pSkt->status == (uint8_t)NET_PRES_ENC_SS_SERVER_NEGOTIATING) || 
+            (pSkt->status == (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION));
 }
 bool NET_PRES_SocketIsSecure(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
 
-    return pSkt->status == NET_PRES_ENC_SS_OPEN;
+    return pSkt->status == (uint8_t)NET_PRES_ENC_SS_OPEN;
 }
 bool NET_PRES_SocketEncryptSocket(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return false;
     }
 
-    if ((pSkt->socketType & (NET_PRES_SKT_UNENCRYPTED | NET_PRES_SKT_ENCRYPTED)) != NET_PRES_SKT_UNENCRYPTED)
+    if ((pSkt->socketType & ((uint16_t)NET_PRES_SKT_UNENCRYPTED | (uint16_t)NET_PRES_SKT_ENCRYPTED)) != (uint16_t)NET_PRES_SKT_UNENCRYPTED)
     {
         return false;
     }
-    if(pSkt->provObject->fpInit == 0 || pSkt->provObject->fpOpen == 0 || pSkt->provObject->fpIsInited == 0)
+    if(pSkt->provObject->fpInit == NULL || pSkt->provObject->fpOpen == NULL || pSkt->provObject->fpIsInited == NULL)
     {   // cannot start negotiation
         return false;
     }
 
-    pSkt->socketType ^= NET_PRES_SKT_UNENCRYPTED | NET_PRES_SKT_ENCRYPTED;
-    pSkt->status = NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
+    pSkt->socketType ^= (uint16_t)NET_PRES_SKT_UNENCRYPTED | (uint16_t)NET_PRES_SKT_ENCRYPTED;
+    pSkt->status = (uint8_t)NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
     return true;
 }
 
 bool NET_PRES_SocketIsOpenModeSupported(NET_PRES_INDEX index, NET_PRES_SKT_T socketType)
 {
     NET_PRES_TransOpen fpTransOpen = NULL;
-    NET_PRES_EncProviderOpen fpProvOpen= NULL;
+    Net_ProvOpen fpProvOpen= NULL;
 
     // Check to see if we have a valid index
     if (index >= sNetPresData.numLayers)
@@ -1023,31 +1022,36 @@ bool NET_PRES_SocketIsOpenModeSupported(NET_PRES_INDEX index, NET_PRES_SKT_T soc
     }
 
     // Check to see if the operation is supported
-    if ((socketType & (NET_PRES_SKT_CLIENT | NET_PRES_SKT_STREAM)) ==  (NET_PRES_SKT_CLIENT | NET_PRES_SKT_STREAM))
+    if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_STREAM)) ==  ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_STREAM))
     {
         fpProvOpen = sNetPresData.encProvObjectSC[index].fpOpen;
         fpTransOpen = sNetPresData.transObjectSC[index].fpOpen;
     }
-    else if ((socketType & (NET_PRES_SKT_SERVER | NET_PRES_SKT_STREAM)) ==  (NET_PRES_SKT_SERVER | NET_PRES_SKT_STREAM))
+    else if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_STREAM)) ==  ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_STREAM))
     {
         fpProvOpen = sNetPresData.encProvObjectSS[index].fpOpen;
         fpTransOpen = sNetPresData.transObjectSS[index].fpOpen;
     }
-    else if ((socketType & (NET_PRES_SKT_CLIENT | NET_PRES_SKT_DATAGRAM)) ==  (NET_PRES_SKT_CLIENT | NET_PRES_SKT_DATAGRAM))
+    else if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_DATAGRAM)) ==  ((uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_DATAGRAM))
     {
         fpProvOpen = sNetPresData.encProvObjectDC[index].fpOpen;
         fpTransOpen = sNetPresData.transObjectDC[index].fpOpen;
     }
-    else if ((socketType & (NET_PRES_SKT_SERVER | NET_PRES_SKT_DATAGRAM)) ==  (NET_PRES_SKT_SERVER | NET_PRES_SKT_DATAGRAM))
+    else if (((uint16_t)socketType & ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_DATAGRAM)) ==  ((uint16_t)NET_PRES_SKT_SERVER | (uint16_t)NET_PRES_SKT_DATAGRAM))
     {
         fpProvOpen = sNetPresData.encProvObjectDS[index].fpOpen;
         fpTransOpen = sNetPresData.transObjectDS[index].fpOpen;
     }
+    else
+    {
+        // do nothing
+    }
+
     if (fpTransOpen == NULL)
     {
         return false;        
     }
-    bool encrypted = (socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED;
+    bool encrypted = ((uint16_t)socketType & (uint16_t)NET_PRES_SKT_ENCRYPTED) == (uint16_t)NET_PRES_SKT_ENCRYPTED;
     
     if (encrypted)
     {
@@ -1079,13 +1083,13 @@ SYS_STATUS NET_PRES_Status ( SYS_MODULE_OBJ object )
 NET_PRES_SKT_ERROR_T NET_PRES_SocketLastError(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
         return NET_PRES_SKT_INVALID_SOCKET;
     }
 
-    NET_PRES_SKT_ERROR_T lastError = pSkt->lastError;
-    pSkt->lastError = NET_PRES_SKT_OK;
+    NET_PRES_SKT_ERROR_T lastError = (NET_PRES_SKT_ERROR_T)pSkt->lastError;
+    pSkt->lastError = (int8_t)NET_PRES_SKT_OK;
 
     return lastError;
 }
@@ -1093,16 +1097,15 @@ NET_PRES_SKT_ERROR_T NET_PRES_SocketLastError(NET_PRES_SKT_HANDLE_T handle)
 NET_PRES_SKT_HANDLE_T NET_PRES_SocketGetTransportHandle(NET_PRES_SKT_HANDLE_T handle)
 {
     NET_PRES_SocketData * pSkt;
-    if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
+    if ((pSkt = F_NET_PRES_SocketValidate(handle)) == NULL)
     {
-        return NET_PRES_SKT_INVALID_SOCKET;
+        return (NET_PRES_SKT_HANDLE_T)NET_PRES_SKT_INVALID_SOCKET;
     }
 
-    pSkt->lastError = NET_PRES_SKT_OK;
+    pSkt->lastError = (int8_t)NET_PRES_SKT_OK;
     return pSkt->transHandle;
     
 }
-
 NET_PRES_CBACK_HANDLE NET_PRES_SniCallbackRegister(SYS_MODULE_OBJ obj, NET_PRES_SNI_CALLBACK cBack)
 {
     if(cBack == NULL)
@@ -1160,4 +1163,3 @@ NET_PRES_SNI_CALLBACK NET_PRES_SniCallbackGet(SYS_MODULE_OBJ obj)
 
     return pData->sniCback;
 }
-

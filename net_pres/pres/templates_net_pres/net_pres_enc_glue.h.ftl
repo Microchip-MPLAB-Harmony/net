@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -33,8 +33,8 @@ Microchip or any third party.
 */
 
 
-#ifndef _NET_TLS_WOLFSSL_GLUE_H_
-#define _NET_TLS_WOLFSSL_GLUE_H_
+#ifndef H_NET_TLS_WOLFSSL_GLUE_H_
+#define H_NET_TLS_WOLFSSL_GLUE_H_
 
 #include "configuration.h"
 #include "net_pres/pres/net_pres.h"
@@ -50,39 +50,39 @@ extern "C" {
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
 			<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>           
-extern NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER};
+extern Net_ProvObject net_ProvStreamServer${INST_NUMBER};
             </#if>
 			<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>            
-extern NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER};
+extern Net_ProvObject net_ProvStreamClient${INST_NUMBER};
             </#if>
         </#if>
 		<#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
             <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>          
-extern NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER};
+extern Net_ProvObject net_ProvDataGramServer${INST_NUMBER};
             </#if>
             <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>            
-extern NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER};
+extern Net_ProvObject net_ProvDataGramClient${INST_NUMBER};
             </#if>
         </#if>
         <#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
             <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>            
-bool NET_PRES_EncProviderStreamServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderStreamServerDeinit${INST_NUMBER}(void);
-bool NET_PRES_EncProviderStreamServerOpen${INST_NUMBER}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER}(void);
+bool Net_ProvStreamServerInit${INST_NUMBER}(struct S_NET_PRES_TransportObject * transObject);
+bool Net_ProvStreamServerDeinit${INST_NUMBER}(void);
+bool Net_ProvStreamServerOpen${INST_NUMBER}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
+bool Net_ProvStreamServerIsInited${INST_NUMBER}(void);
             </#if>
             <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
-bool NET_PRES_EncProviderStreamClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderStreamClientDeinit${INST_NUMBER}(void);
-bool NET_PRES_EncProviderStreamClientOpen${INST_NUMBER}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER}(void);
+bool Net_ProvStreamClientInit${INST_NUMBER}(struct S_NET_PRES_TransportObject * transObject);
+bool Net_ProvStreamClientDeinit${INST_NUMBER}(void);
+bool Net_ProvStreamClientOpen${INST_NUMBER}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
+bool Net_ProvStreamClientIsInited${INST_NUMBER}(void);
 				<#if NET_PRES_BLOB_RUNTIME_CERT_SUPPORT == true>
 bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format);
 				</#if>
@@ -92,36 +92,35 @@ bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format);
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
             <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>           
-bool NET_PRES_EncProviderDataGramServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderDataGramServerDeinit${INST_NUMBER}(void);
-bool NET_PRES_EncProviderDataGramServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER}(void);
+bool Net_ProvDataGramServerInit${INST_NUMBER}(struct S_NET_PRES_TransportObject * transObject);
+bool Net_ProvDataGramServerDeinit${INST_NUMBER}(void);
+bool Net_ProvDataGramServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
+bool Net_ProvDataGramServerIsInited${INST_NUMBER}(void);
             </#if>
             <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
-bool NET_PRES_EncProviderDataGramClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderDataGramClientDeinit${INST_NUMBER}(void);
-bool NET_PRES_EncProviderDataGramClientOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER}(void);
+bool Net_ProvDataGramClientInit${INST_NUMBER}(struct S_NET_PRES_TransportObject * transObject);
+bool Net_ProvDataGramClientDeinit${INST_NUMBER}(void);
+bool Net_ProvDataGramClientOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
+bool Net_ProvDataGramClientIsInited${INST_NUMBER}(void);
             </#if>
         </#if>
         <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 		<#if netPresSuppServer?has_content && netPresSuppServer == true>            
-NET_PRES_EncSessionStatus NET_PRES_EncProviderServerAccept${INST_NUMBER}(void * providerData);
+NET_PRES_EncSessionStatus Net_ProvServerAccept${INST_NUMBER}(void * providerData);
         </#if>
         <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 		<#if netPresSuppClient?has_content && netPresSuppClient == true>          
-NET_PRES_EncSessionStatus NET_PRES_EncProviderClientConnect${INST_NUMBER}(void * providerData);
+NET_PRES_EncSessionStatus Net_ProvClientConnect${INST_NUMBER}(void * providerData);
         </#if>
-NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST_NUMBER}(void * providerData);
-int32_t NET_PRES_EncProviderWrite${INST_NUMBER}(void * providerData, const uint8_t * buffer, uint16_t size);
-uint16_t  NET_PRES_EncProviderWriteReady${INST_NUMBER}(void * providerData, uint16_t reqSize, uint16_t minSize);
-int32_t NET_PRES_EncProviderRead${INST_NUMBER}(void * providerData, uint8_t * buffer, uint16_t size);
-int32_t NET_PRES_EncProviderReadReady${INST_NUMBER}(void * providerData);
-int32_t NET_PRES_EncProviderPeek${INST_NUMBER}(void * providerData, uint8_t * buffer, uint16_t size);
-int32_t NET_PRES_EncProviderOutputSize${INST_NUMBER}(void * providerData, int32_t inSize);
-int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
-    
+NET_PRES_EncSessionStatus Net_ProvConnectionClose${INST_NUMBER}(void * providerData);
+int32_t Net_ProvWrite${INST_NUMBER}(void * providerData, const uint8_t * dataBuff, uint16_t size);
+uint16_t  Net_ProvWriteReady${INST_NUMBER}(void * providerData, uint16_t reqSize, uint16_t minSize);
+int32_t Net_ProvRead${INST_NUMBER}(void * providerData, uint8_t * dataBuff, uint16_t size);
+int32_t Net_ProvReadReady${INST_NUMBER}(void * providerData);
+int32_t Net_ProvPeek${INST_NUMBER}(void * providerData, uint8_t * dataBuff, uint16_t size);
+int32_t Net_ProvOutputSize${INST_NUMBER}(void * providerData, int32_t inSize);
+int32_t Net_ProvMaxOutputSize${INST_NUMBER}(void * providerData);
 	<#if ((lib_wolfssl.wolfsslTlsSni?has_content) && (lib_wolfssl.wolfsslTlsSni) == true)>
         <#assign netPresSNICbackEn= "NET_PRES_SNI_CALLBACK_ENABLE"?eval>
         <#if (netPresSNICbackEn?has_content) && (netPresSNICbackEn == true)>
@@ -143,4 +142,4 @@ int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
 #ifdef __CPLUSPLUS
 }
 #endif
-#endif //_NET_TLS_WOLFSSL_GLUE_H_
+#endif //H_NET_TLS_WOLFSSL_GLUE_H_

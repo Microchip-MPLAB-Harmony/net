@@ -17,7 +17,7 @@ MPLAB Harmony Networking Presentation socket conversion API header file
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _NET_PRES_SOCKET_CONV_API_
-#define _NET_PRES_SOCKET_CONV_API_
+#ifndef H_NET_PRES_SOCKET_CONV_API_
+#define H_NET_PRES_SOCKET_CONV_API_
 
 #ifdef __cplusplus
 extern "C" {
@@ -651,4 +651,5 @@ Check to see if a mode is supported by open.
 #endif
 
 
-#endif //_NET_PRES_SOCKET_API_
+#endif //H_NET_PRES_SOCKET_CONV_API_
+

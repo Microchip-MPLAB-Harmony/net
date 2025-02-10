@@ -17,7 +17,7 @@ MPLAB Harmony Networking Presentation socket API header file
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _NET_PRES_SOCKET_API_
-#define _NET_PRES_SOCKET_API_
+#ifndef H_NET_PRES_SOCKET_API_
+#define H_NET_PRES_SOCKET_API_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -55,6 +55,10 @@ Microchip or any third party.
 extern "C" {
 #endif
 
+/* MISRA C-2012 Rule 5.2 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_5_2_NET_DR_6 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_NET_DR_6" 
 // *****************************************************************************
 /*
   Enumeration:
@@ -67,9 +71,10 @@ extern "C" {
     Enumeration describing all the possible NET_PRES socket types
 
   Remarks:
-    None
+    16 bit values only
 */    
-typedef enum {
+typedef enum
+{
 
     NET_PRES_SKT_CLIENT = 0x0001,
     NET_PRES_SKT_SERVER = 0x0002,
@@ -111,6 +116,9 @@ typedef enum {
     NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER = (NET_PRES_SKT_DATAGRAM | 
                                               NET_PRES_SKT_SERVER)
 } NET_PRES_SKT_T;
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 // *****************************************************************************
 /*
@@ -126,7 +134,8 @@ typedef enum {
   Remarks:
     None
 */    
-typedef enum {
+typedef enum
+{
     NET_PRES_SKT_ADDR_UNKNOWN,
 } NET_PRES_SKT_ADDR_T;
 
@@ -146,7 +155,8 @@ typedef enum {
   Remarks:
     None
 */    
-typedef enum {
+typedef enum
+{
     NET_PRES_SKT_OPT_UNKNOWN,
 } NET_PRES_SKT_OPTION_TYPE;
 
@@ -165,7 +175,8 @@ typedef enum {
   Remarks:
     None
 */    
-typedef struct {
+typedef struct
+{
     uint8_t addr[16];
 } NET_PRES_ADDRESS;
 
@@ -185,7 +196,8 @@ typedef struct {
   Remarks:
     None
 */    
-typedef enum {
+typedef enum
+{
     NET_PRES_SKT_OK = 0,
     NET_PRES_SKT_OP_NOT_SUPPORTED = -1,  // Most likely the function is not 
                                          // supported by the socket type
@@ -567,7 +579,7 @@ uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqS
 
   Parameters:
     handle    - The presentation layer socket handle.
-    buffer    - The pointer to the array to be written.
+    dataBuffer- The pointer to the array to be written.
     size      - The number of bytes to be written.
 
   Returns:
@@ -576,7 +588,7 @@ uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqS
 
  */
 
-uint16_t NET_PRES_SocketWrite(NET_PRES_SKT_HANDLE_T handle, const void * buffer, uint16_t size);
+uint16_t NET_PRES_SocketWrite(NET_PRES_SKT_HANDLE_T handle, const void * dataBuffer, uint16_t size);
 
 //*****************************************************************************
 /*
@@ -641,7 +653,7 @@ uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle);
 
   Parameters:
     handle - The presentation layer socket handle.
-    buffer - The pointer to the array to store data that was read.
+    dataBuffer - The pointer to the array to store data that was read.
     size   - The number of bytes to be read.
 
   Returns:
@@ -654,7 +666,7 @@ uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle);
     the data is simply discarded.
 
  */
-uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * buffer, uint16_t size);
+uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * dataBuffer, uint16_t size);
 
 //*****************************************************************************
 /*
@@ -673,7 +685,7 @@ uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * buffer, uint16
 
   Parameters:
     handle - The presentation layer socket handle.
-    buffer - Destination to write the peeked data bytes.
+    dataBuffer - Destination to write the peeked data bytes.
     size   - Length of bytes to peek from the RX FIFO and copy to the buffer.
   
 
@@ -684,7 +696,7 @@ uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * buffer, uint16
     None
  */
 
-uint16_t NET_PRES_SocketPeek(NET_PRES_SKT_HANDLE_T handle,  void * buffer, uint16_t size);
+uint16_t NET_PRES_SocketPeek(NET_PRES_SKT_HANDLE_T handle,  void * dataBuffer, uint16_t size);
 
 //*****************************************************************************
 /*
@@ -882,4 +894,4 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketGetTransportHandle(NET_PRES_SKT_HANDLE_T ha
 
 #include "net_pres_socketapiconversion.h"
 
-#endif //_NET_PRES_SOCKET_API_
+#endif //H_NET_PRES_SOCKET_API_

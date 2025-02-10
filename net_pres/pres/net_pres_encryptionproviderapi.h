@@ -18,7 +18,7 @@ MPLAB Harmony Networking Presentation Layer Encryption Provider Header File
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,8 +43,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _NET_PRES_ENCRYPTION_PROVIDER_API_H_
-#define _NET_PRES_ENCRYPTION_PROVIDER_API_H_
+#ifndef H_NET_PRES_ENCRYPTION_PROVIDER_API_H_
+#define H_NET_PRES_ENCRYPTION_PROVIDER_API_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -57,7 +57,7 @@ Microchip or any third party.
 extern "C" {
 #endif
 
-struct _NET_PRES_TransportObject;
+struct S_NET_PRES_TransportObject;
 //DOM-IGNORE-END
 // *****************************************************************************
 /* MPLAB Harmony Networking Presentation Layer Encryption status type
@@ -117,7 +117,7 @@ typedef enum
     - false - Initialization did not succeed
 
  */
-typedef bool (*NET_PRES_EncProviderInit)(struct _NET_PRES_TransportObject * transObject);
+typedef bool (*Net_ProvInit)(struct S_NET_PRES_TransportObject * transObject);
 
 // *****************************************************************************
 /* Presentation Encryption Provider Close Function Pointer Prototype
@@ -141,7 +141,7 @@ typedef bool (*NET_PRES_EncProviderInit)(struct _NET_PRES_TransportObject * tran
     - false - Deinitialization did not succeed
 
  */
-typedef bool (*NET_PRES_EncProviderDeinit)( void );
+typedef bool (*Net_ProvDeinit)( void );
 
 
 // *****************************************************************************
@@ -170,7 +170,7 @@ typedef bool (*NET_PRES_EncProviderDeinit)( void );
     - false - Create did not succeed
 
  */
-typedef bool (*NET_PRES_EncProviderOpen)(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
+typedef bool (*Net_ProvOpen)(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
 
 // *****************************************************************************
 /* Presentation Encryption Provider Connect Prototype
@@ -199,7 +199,7 @@ typedef bool (*NET_PRES_EncProviderOpen)(SYS_MODULE_OBJ obj, uintptr_t presHandl
     - NET_PRES_ENC_SS_FAILED             - Negotiation failed
 
  */
-typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnect)(void * providerData); 
+typedef NET_PRES_EncSessionStatus (*Net_ProvConnect)(void * providerData); 
         // called to pump the negotiation
 
 // *****************************************************************************
@@ -227,7 +227,7 @@ typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnect)(void * provider
     - NET_PRES_ENC_SS_CLOSED  - The connection is closed and can be cleaned up
 
  */
-typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnectionClose)(void * providerData); 
+typedef NET_PRES_EncSessionStatus (*Net_ProvConnectionClose)(void * providerData); 
 
 // *****************************************************************************
 /* Presentation Encryption Provider Write Function Pointer Prototype
@@ -254,8 +254,7 @@ typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnectionClose)(void * 
     The number of bytes transferred.
 
  */
-typedef int32_t (*NET_PRES_EncProviderWrite)(void * providerData, const uint8_t * buffer, 
-                  uint16_t size);   
+typedef int32_t (*Net_ProvWrite)(void * providerData, const uint8_t * buffer, uint16_t size);   
 
 // *****************************************************************************
 /* Presentation Encryption Provider Write Ready Function Pointer Prototype
@@ -288,8 +287,7 @@ typedef int32_t (*NET_PRES_EncProviderWrite)(void * providerData, const uint8_t 
     - 0, requested (minimum) space cannot be granted
 
  */
-typedef uint16_t (*NET_PRES_EncProviderWriteReady)(void * providerData, 
-                   uint16_t reqSize, uint16_t minSize);   
+typedef uint16_t (*Net_ProvWriteReady)(void * providerData, uint16_t reqSize, uint16_t minSize);   
 
 // *****************************************************************************
 /* Presentation Encryption Provider Read Function Pointer Prototype
@@ -320,8 +318,7 @@ typedef uint16_t (*NET_PRES_EncProviderWriteReady)(void * providerData,
     If the supplied buffer is NULL the operation is ignored.
 
  */
-typedef int32_t (*NET_PRES_EncProviderRead)(void * providerData, uint8_t * buffer, 
-                  uint16_t size);   
+typedef int32_t (*Net_ProvRead)(void * providerData, uint8_t * buffer, uint16_t size);   
 
 // *****************************************************************************
 /* Presentation Encryption Provider Read Ready Function Pointer Prototype
@@ -347,7 +344,7 @@ typedef int32_t (*NET_PRES_EncProviderRead)(void * providerData, uint8_t * buffe
     The number of bytes ready to be read.
 
  */
-typedef int32_t (*NET_PRES_EncProviderReadReady)(void * providerData);   
+typedef int32_t (*Net_ProvReadReady)(void * providerData);   
 
 // *****************************************************************************
 /* Presentation Encryption Provider Is Initialized Pointer Prototype
@@ -371,7 +368,7 @@ typedef int32_t (*NET_PRES_EncProviderReadReady)(void * providerData);
     - false - The provider has not been initialized
 
  */
-typedef bool (*NET_PRES_EncProviderIsInitialized)( void );
+typedef bool (*Net_ProvIsInitialized)( void );
 
 // *****************************************************************************
 /* Presentation Encryption Provider Output Size Function Pointer Prototype
@@ -403,7 +400,7 @@ typedef bool (*NET_PRES_EncProviderIsInitialized)( void );
             - invalid function argument
             - if the SSL/TLS handshake has not been completed yet 
  */
-typedef int32_t (*NET_PRES_EncProviderOutputSize)(void * providerData, int32_t inSize);
+typedef int32_t (*Net_ProvOutputSize)(void * providerData, int32_t inSize);
 
 // *****************************************************************************
 /* Presentation Encryption Provider Maximum Output Size Function Pointer Prototype
@@ -434,7 +431,7 @@ typedef int32_t (*NET_PRES_EncProviderOutputSize)(void * providerData, int32_t i
             - invalid function argument
             - if the SSL/TLS handshake has not been completed yet 
  */
-typedef int32_t (*NET_PRES_EncProviderMaxOutputSize)(void * providerData);
+typedef int32_t (*Net_ProvMaxOutputSize)(void * providerData);
 
 // *****************************************************************************
 /* Presentation Encryption Provider Information Structure
@@ -450,31 +447,32 @@ typedef int32_t (*NET_PRES_EncProviderMaxOutputSize)(void * providerData);
   Remarks:
     None.
 */
-typedef struct _NET_PRES_EncProviderObject
+typedef struct S_NET_PRES_EncProviderObject
 {
-    NET_PRES_EncProviderInit fpInit;               // Function pointer to open/initialize 
+    Net_ProvInit fpInit;               // Function pointer to open/initialize 
                                                    // the provider
-    NET_PRES_EncProviderDeinit fpDeinit;           // Function pointer to close/deinitialize 
+    Net_ProvDeinit fpDeinit;           // Function pointer to close/deinitialize 
                                                    // the provider
-    NET_PRES_EncProviderOpen fpOpen;               // Function pointer to create a stream client 
+    Net_ProvOpen fpOpen;               // Function pointer to create a stream client 
                                                    // connection
-    NET_PRES_EncProviderConnect fpConnect;         // Function pointer to connect and pump the 
+    Net_ProvConnect fpConnect;         // Function pointer to connect and pump the 
                                                    // negotiation of a stream client connection
-    NET_PRES_EncProviderConnectionClose fpClose;   // Function Pointer to close and clean 
+    Net_ProvConnectionClose fpClose;   // Function Pointer to close and clean 
                                                    // up a connection
-    NET_PRES_EncProviderWrite fpWrite;             // Function Pointer to write data to a connection
-    NET_PRES_EncProviderWriteReady fpWriteReady;   // Function Pointer to check the connection write space
-    NET_PRES_EncProviderRead fpRead;               // Function pointer to read data from a connection
-    NET_PRES_EncProviderReadReady fpReadReady;     // Function pointer to return the available read data from a connection
-    NET_PRES_EncProviderRead fpPeek;               // Function pointer to peek at data from a connection
-    NET_PRES_EncProviderIsInitialized fpIsInited;  // Function pointer to check to determine if
+    Net_ProvWrite fpWrite;             // Function Pointer to write data to a connection
+    Net_ProvWriteReady fpWriteReady;   // Function Pointer to check the connection write space
+    Net_ProvRead fpRead;               // Function pointer to read data from a connection
+    Net_ProvReadReady fpReadReady;     // Function pointer to return the available read data from a connection
+    Net_ProvRead fpPeek;               // Function pointer to peek at data from a connection
+    Net_ProvIsInitialized fpIsInited;  // Function pointer to check to determine if
                                                    // the provider has been initialized
-    NET_PRES_EncProviderOutputSize fpOutputSize;   // Function pointer to get the output size
-    NET_PRES_EncProviderMaxOutputSize fpMaxOutputSize; // Function pointer to get the maximum output size
-}NET_PRES_EncProviderObject;
+    Net_ProvOutputSize fpOutputSize;   // Function pointer to get the output size
+    Net_ProvMaxOutputSize fpMaxOutputSize; // Function pointer to get the maximum output size
+}Net_ProvObject;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif // H_NET_PRES_ENCRYPTION_PROVIDER_API_H_
+

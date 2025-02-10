@@ -1,5 +1,5 @@
 <#--
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -138,22 +138,22 @@ static const NET_PRES_INST_DATA netPresCfgs[] =
         .pTransObject_dc = &netPresTransObject${idx}DC,
             </#if>
             <#if supportEncryption && supportStream && supportServer >
-        .pProvObject_ss = &net_pres_EncProviderStreamServer${idx},
+        .pProvObject_ss = &net_ProvStreamServer${idx},
             <#else>
         .pProvObject_ss = NULL,
             </#if>
             <#if supportEncryption && supportStream && supportClient>
-        .pProvObject_sc = &net_pres_EncProviderStreamClient${idx},
+        .pProvObject_sc = &net_ProvStreamClient${idx},
             <#else>
         .pProvObject_sc = NULL,
             </#if>
             <#if supportEncryption && supportDataGram && supportServer>
-        .pProvObject_ds = &net_pres_EncProviderDataGramServer${idx},
+        .pProvObject_ds = &net_ProvDataGramServer${idx},
             <#else>
         .pProvObject_ds = NULL,
             </#if>
             <#if supportEncryption && supportDataGram && supportClient>
-        .pProvObject_dc = &net_pres_EncProviderDataGramClient${idx},
+        .pProvObject_dc = &net_ProvDataGramClient${idx},
             <#else>
         .pProvObject_dc = NULL,
             </#if>

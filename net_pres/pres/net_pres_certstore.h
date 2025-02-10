@@ -21,7 +21,7 @@ MPLAB Harmony Networking Presentation Certificate Storage header file
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,14 +46,14 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
+#ifndef H_NET_PRES_CERTSTORE_H_
+#define H_NET_PRES_CERTSTORE_H_
 
 #include <stdint.h>
 #include <stdbool.h>
 #include "configuration.h"
 
 #include "net_pres.h"
-#ifndef _NET_PRES_CERTSTORE_H_
-#define _NET_PRES_CERTSTORE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -163,4 +163,4 @@ bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * s
 #endif
 
 
-#endif //_NET_PRES_CERTSTORE_H_
+#endif //H_NET_PRES_CERTSTORE_H_

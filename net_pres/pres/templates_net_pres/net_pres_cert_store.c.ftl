@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -56,12 +56,6 @@ bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, 
 {
     return false;
 }
-        <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
-bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, int32_t * certSize, const uint8_t ** pvtKeyPtr, int32_t * pvtKeySize, uint8_t certIndex)
-{
-    return false;
-}
-        </#if>
     </#if>
     <#if NET_PRES_CERT_STORE_STUBS_SERVER>
 bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
@@ -70,6 +64,7 @@ bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * s
 }
     </#if>
 </#if>
+
 <#if NET_PRES_BLOB_CERT_REPO>
     <#if NET_PRES_BLOB_CLIENT_SUPPORT>
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
@@ -78,16 +73,6 @@ bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, 
     *certSize = ${NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE};
     return true;
 }
-        <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
-bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, int32_t * certSize, const uint8_t ** pvtKeyPtr, int32_t * pvtKeySize, uint8_t certIndex)
-{
-    *certPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_VARIABLE};
-    *certSize = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_LEN_VARIABLE};
-    *pvtKeyPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_VARIABLE};
-    *pvtKeySize = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_LEN_VARIABLE};
-    return true;
-}
-        </#if>
     </#if>
     <#if NET_PRES_BLOB_SERVER_SUPPORT>
 bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
@@ -99,4 +84,19 @@ bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * s
     return true;
 }
     </#if>
+</#if>
+
+
+bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, int32_t * certSize, const uint8_t ** pvtKeyPtr, int32_t * pvtKeySize, uint8_t certIndex)
+{
+<#if NET_PRES_BLOB_CERT_REPO> and <#if NET_PRES_BLOB_CLIENT_SUPPORT> and <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
+    *certPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_VARIABLE};
+    *certSize = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_LEN_VARIABLE};
+    *pvtKeyPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_VARIABLE};
+    *pvtKeySize = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_LEN_VARIABLE};
+    return true;
+
+<#else>
+    return false;
+}
 </#if>

@@ -19,7 +19,7 @@ MPLAB Harmony Networking Presentation Layer Header File
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _NET_PRES_H_
-#define _NET_PRES_H_
+#ifndef H_NET_PRES_H_
+#define H_NET_PRES_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -58,8 +58,8 @@ Microchip or any third party.
 extern "C" {
 #endif
 
-struct _NET_PRES_TransportObject;
-struct _NET_PRES_EncProviderObject;
+struct S_NET_PRES_TransportObject;
+struct S_NET_PRES_EncProviderObject;
 //DOM-IGNORE-END   
 
 // *****************************************************************************
@@ -83,21 +83,21 @@ struct _NET_PRES_EncProviderObject;
 
 typedef struct {
     // Pointer to the transport object that handles the stream server
-    const struct _NET_PRES_TransportObject * pTransObject_ss;  
+    const struct S_NET_PRES_TransportObject * pTransObject_ss;  
     // Pointer to the transport object that handles the stream client
-    const struct _NET_PRES_TransportObject * pTransObject_sc;  
+    const struct S_NET_PRES_TransportObject * pTransObject_sc;  
     // Pointer to the transport object that handles the datagram server
-    const struct _NET_PRES_TransportObject * pTransObject_ds;  
+    const struct S_NET_PRES_TransportObject * pTransObject_ds;  
     // Pointer to the transport object that handles the datagram client
-    const struct _NET_PRES_TransportObject * pTransObject_dc;  
+    const struct S_NET_PRES_TransportObject * pTransObject_dc;  
     // Pointer to the encryption provider object that handles the stream server
-    const struct _NET_PRES_EncProviderObject * pProvObject_ss;  
+    const struct S_NET_PRES_EncProviderObject * pProvObject_ss;  
     // Pointer to the encryption provider object that handles the stream client
-    const struct _NET_PRES_EncProviderObject * pProvObject_sc;  
+    const struct S_NET_PRES_EncProviderObject * pProvObject_sc;  
     // Pointer to the encryption provider object that handles the datagram server
-    const struct _NET_PRES_EncProviderObject * pProvObject_ds;  
+    const struct S_NET_PRES_EncProviderObject * pProvObject_ds;  
     // Pointer to the encryption provider object that handles the datagram client
-    const struct _NET_PRES_EncProviderObject * pProvObject_dc;  
+    const struct S_NET_PRES_EncProviderObject * pProvObject_dc;  
 }NET_PRES_INST_DATA;
 
 // *****************************************************************************
@@ -288,15 +288,14 @@ typedef const char*    (*NET_PRES_SNI_CALLBACK)(NET_PRES_SKT_HANDLE_T handle);
   Parameters:
     index   - This is the index of the network presentation layer instance to be initialized.  
               Since there is only one network presentation layer, this parameter is ignored.
-    init    - This is a pointer to a NET_PRES_INIT_DATA structure
+    initData - This is a pointer to a NET_PRES_INIT_DATA structure
     
     Returns:
       - Valid handle to the presentation instance - If successful
       - SYS_MODULE_OBJ_INVALID                    - If unsuccessful 
 */
 
-SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
-                                    const SYS_MODULE_INIT * const init );
+SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index, const void* initData);
 
 // *****************************************************************************
 /* Network Presentation Layer Deinitialization
@@ -335,14 +334,14 @@ void NET_PRES_Deinitialize(SYS_MODULE_OBJ obj);
 
   Parameters:
     object  - The object valid passed back to NET_PRES_Initialize
-    init        - The new initialization structure
+    initData - The new initialization structure
 
     Returns:
     None.
       
     */
 
-void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const SYS_MODULE_INIT * const init);
+void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const void* initData);
 
 // *****************************************************************************
 /* MPLAB Harmony Networking Presentation Layer Tasks
@@ -522,4 +521,4 @@ NET_PRES_SNI_CALLBACK NET_PRES_SniCallbackGet(SYS_MODULE_OBJ obj);
 #endif
 
 
-#endif //_NET_PRES_H_
+#endif //H_NET_PRES_H_

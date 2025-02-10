@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -21,8 +21,8 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 
-#ifndef _NET_PRES_LOCAL_H_
-#define _NET_PRES_LOCAL_H_
+#ifndef H_NET_PRES_LOCAL_H_
+#define H_NET_PRES_LOCAL_H_
 
 #include "../net_pres.h"
 #include "osal/osal.h"
@@ -43,7 +43,7 @@ extern "C" {
 
     
     
-    typedef struct _NET_PRES_InternalData
+    typedef struct
     {
         bool initialized;
         OSAL_MUTEX_HANDLE_TYPE presMutex;
@@ -53,13 +53,13 @@ extern "C" {
         NET_PRES_TransportObject transObjectSC[NET_PRES_NUM_INSTANCE];
         NET_PRES_TransportObject transObjectDS[NET_PRES_NUM_INSTANCE];
         NET_PRES_TransportObject transObjectDC[NET_PRES_NUM_INSTANCE];
-        NET_PRES_EncProviderObject encProvObjectSS[NET_PRES_NUM_INSTANCE];
-        NET_PRES_EncProviderObject encProvObjectSC[NET_PRES_NUM_INSTANCE];
-        NET_PRES_EncProviderObject encProvObjectDS[NET_PRES_NUM_INSTANCE];
-        NET_PRES_EncProviderObject encProvObjectDC[NET_PRES_NUM_INSTANCE];
+        Net_ProvObject encProvObjectSS[NET_PRES_NUM_INSTANCE];
+        Net_ProvObject encProvObjectSC[NET_PRES_NUM_INSTANCE];
+        Net_ProvObject encProvObjectDS[NET_PRES_NUM_INSTANCE];
+        Net_ProvObject encProvObjectDC[NET_PRES_NUM_INSTANCE];
     }NET_PRES_InternalData;
     
-    typedef struct _NET_PRES_SocketData
+    typedef struct 
     {
         uint8_t     inUse;
         uint8_t     provOpen;
@@ -68,7 +68,7 @@ extern "C" {
         uint16_t    socketType; // NET_PRES_SKT_T value
         int16_t     transHandle;
         NET_PRES_TransportObject * transObject;
-        NET_PRES_EncProviderObject * provObject;
+        Net_ProvObject * provObject;
         NET_PRES_SIGNAL_HANDLE    sigHandle;    // registered signal handle
         NET_PRES_SIGNAL_FUNCTION  usrSigFnc;    // user signal function
         const void*               usrSigParam;  // user signal parameter
@@ -79,4 +79,5 @@ extern "C" {
 }
 #endif
 
-#endif
+#endif // H_NET_PRES_LOCAL_H_
+

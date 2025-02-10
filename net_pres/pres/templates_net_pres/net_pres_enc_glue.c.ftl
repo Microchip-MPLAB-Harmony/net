@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -52,11 +52,18 @@ Microchip or any third party.
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
 #include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX2}"
 </#if>
-extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
+/* MISRA C-2012 Rule 8.5 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_8_5_NET_DR_15 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 8.5" "H3_MISRAC_2012_R_8_5_NET_DR_15" 
+extern int CheckAvailableSize(WOLFSSL *ssl, int size);
+#pragma coverity compliance end_block "MISRA C-2012 Rule 8.5"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
+
 <#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
 #include "wolfssl/wolfcrypt/port/atmel/atmel.h"
 </#if>
-
 <#assign needSysConsole=false/>
 <#assign numInstance= 1>
 <#list 0..(numInstance-1) as idx>	
@@ -78,41 +85,41 @@ extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
 			<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>
-NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER} =
+Net_ProvObject net_ProvStreamServer${INST_NUMBER} =
 {
-    .fpInit =    NET_PRES_EncProviderStreamServerInit${INST_NUMBER},
-    .fpDeinit =  NET_PRES_EncProviderStreamServerDeinit${INST_NUMBER},
-    .fpOpen =    NET_PRES_EncProviderStreamServerOpen${INST_NUMBER},
-    .fpConnect = NET_PRES_EncProviderServerAccept${INST_NUMBER},
-    .fpClose =   NET_PRES_EncProviderConnectionClose${INST_NUMBER},
-    .fpWrite =   NET_PRES_EncProviderWrite${INST_NUMBER},
-    .fpWriteReady =   NET_PRES_EncProviderWriteReady${INST_NUMBER},
-    .fpRead =    NET_PRES_EncProviderRead${INST_NUMBER},
-    .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
-    .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
-    .fpIsInited = NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER},
-    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
-    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
+    .fpInit =    &Net_ProvStreamServerInit${INST_NUMBER},
+    .fpDeinit =  &Net_ProvStreamServerDeinit${INST_NUMBER},
+    .fpOpen =    &Net_ProvStreamServerOpen${INST_NUMBER},
+    .fpConnect = &Net_ProvServerAccept${INST_NUMBER},
+    .fpClose =   &Net_ProvConnectionClose${INST_NUMBER},
+    .fpWrite =   &Net_ProvWrite${INST_NUMBER},
+    .fpWriteReady =   &Net_ProvWriteReady${INST_NUMBER},
+    .fpRead =    &Net_ProvRead${INST_NUMBER},
+    .fpReadReady = &Net_ProvReadReady${INST_NUMBER},
+    .fpPeek =    &Net_ProvPeek${INST_NUMBER},
+    .fpIsInited = &Net_ProvStreamServerIsInited${INST_NUMBER},
+    .fpOutputSize = &Net_ProvOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = &Net_ProvMaxOutputSize${INST_NUMBER},
 
 };
             </#if>
 			<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>          
-NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} = 
+Net_ProvObject net_ProvStreamClient${INST_NUMBER} = 
 {
-    .fpInit =    NET_PRES_EncProviderStreamClientInit${INST_NUMBER},
-    .fpDeinit =  NET_PRES_EncProviderStreamClientDeinit${INST_NUMBER},
-    .fpOpen =    NET_PRES_EncProviderStreamClientOpen${INST_NUMBER},
-    .fpConnect = NET_PRES_EncProviderClientConnect${INST_NUMBER},
-    .fpClose =   NET_PRES_EncProviderConnectionClose${INST_NUMBER},
-    .fpWrite =   NET_PRES_EncProviderWrite${INST_NUMBER},
-    .fpWriteReady =   NET_PRES_EncProviderWriteReady${INST_NUMBER},
-    .fpRead =    NET_PRES_EncProviderRead${INST_NUMBER},
-    .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
-    .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
-    .fpIsInited = NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER},
-    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
-    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
+    .fpInit =    &Net_ProvStreamClientInit${INST_NUMBER},
+    .fpDeinit =  &Net_ProvStreamClientDeinit${INST_NUMBER},
+    .fpOpen =    &Net_ProvStreamClientOpen${INST_NUMBER},
+    .fpConnect = &Net_ProvClientConnect${INST_NUMBER},
+    .fpClose =   &Net_ProvConnectionClose${INST_NUMBER},
+    .fpWrite =   &Net_ProvWrite${INST_NUMBER},
+    .fpWriteReady =   &Net_ProvWriteReady${INST_NUMBER},
+    .fpRead =    &Net_ProvRead${INST_NUMBER},
+    .fpReadReady = &Net_ProvReadReady${INST_NUMBER},
+    .fpPeek =    &Net_ProvPeek${INST_NUMBER},
+    .fpIsInited = &Net_ProvStreamClientIsInited${INST_NUMBER},
+    .fpOutputSize = &Net_ProvOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = &Net_ProvMaxOutputSize${INST_NUMBER},
 };
             </#if>
         </#if>
@@ -120,40 +127,40 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} =
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
 			<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>         
-NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER} =
+Net_ProvObject net_ProvDataGramServer${INST_NUMBER} =
 {
-    .fpInit =    NET_PRES_EncProviderDataGramServerInit${INST_NUMBER},
-    .fpDeinit =  NET_PRES_EncProviderDataGramServerDeinit${INST_NUMBER},
-    .fpOpen =    NET_PRES_EncProviderDataGramServerOpen${INST_NUMBER},
-    .fpConnect = NET_PRES_EncProviderServerAccept${INST_NUMBER},
-    .fpClose =   NET_PRES_EncProviderConnectionClose${INST_NUMBER},
-    .fpWrite =   NET_PRES_EncProviderWrite${INST_NUMBER},
-    .fpWriteReady =   NET_PRES_EncProviderWriteReady${INST_NUMBER},
-    .fpRead =    NET_PRES_EncProviderRead${INST_NUMBER},
-    .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
-    .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
-    .fpIsInited = NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER},
-    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
-    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
+    .fpInit =    &Net_ProvDataGramServerInit${INST_NUMBER},
+    .fpDeinit =  &Net_ProvDataGramServerDeinit${INST_NUMBER},
+    .fpOpen =    &Net_ProvDataGramServerOpen${INST_NUMBER},
+    .fpConnect = &Net_ProvServerAccept${INST_NUMBER},
+    .fpClose =   &Net_ProvConnectionClose${INST_NUMBER},
+    .fpWrite =   &Net_ProvWrite${INST_NUMBER},
+    .fpWriteReady =   &Net_ProvWriteReady${INST_NUMBER},
+    .fpRead =    &Net_ProvRead${INST_NUMBER},
+    .fpReadReady = &Net_ProvReadReady${INST_NUMBER},
+    .fpPeek =    &Net_ProvPeek${INST_NUMBER},
+    .fpIsInited = &Net_ProvDataGramServerIsInited${INST_NUMBER},
+    .fpOutputSize = &Net_ProvOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = &Net_ProvMaxOutputSize${INST_NUMBER},
 };
             </#if>
 			<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
             <#if netPresSuppClient?has_content && netPresSuppClient == true>             
-NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
+Net_ProvObject net_ProvDataGramClient${INST_NUMBER} =
 {
-    .fpInit =    NET_PRES_EncProviderDataGramClientInit${INST_NUMBER},
-    .fpDeinit =  NET_PRES_EncProviderDataGramClientDeinit${INST_NUMBER},
-    .fpOpen =    NET_PRES_EncProviderDataGramClientOpen${INST_NUMBER},
-    .fpConnect = NET_PRES_EncProviderClientConnect${INST_NUMBER},
-    .fpClose =   NET_PRES_EncProviderConnectionClose${INST_NUMBER},
-    .fpWrite =   NET_PRES_EncProviderWrite${INST_NUMBER},
-    .fpWriteReady =   NET_PRES_EncProviderWriteReady${INST_NUMBER},
-    .fpRead =    NET_PRES_EncProviderRead${INST_NUMBER},
-    .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
-    .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
-    .fpIsInited = NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER},
-    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
-    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
+    .fpInit =    &Net_ProvDataGramClientInit${INST_NUMBER},
+    .fpDeinit =  &Net_ProvDataGramClientDeinit${INST_NUMBER},
+    .fpOpen =    &Net_ProvDataGramClientOpen${INST_NUMBER},
+    .fpConnect = &Net_ProvClientConnect${INST_NUMBER},
+    .fpClose =   &Net_ProvConnectionClose${INST_NUMBER},
+    .fpWrite =   &Net_ProvWrite${INST_NUMBER},
+    .fpWriteReady =   &Net_ProvWriteReady${INST_NUMBER},
+    .fpRead =    &Net_ProvRead${INST_NUMBER},
+    .fpReadReady = &Net_ProvReadReady${INST_NUMBER},
+    .fpPeek =    &Net_ProvPeek${INST_NUMBER},
+    .fpIsInited = &Net_ProvDataGramClientIsInited${INST_NUMBER},
+    .fpOutputSize = &Net_ProvOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = &Net_ProvMaxOutputSize${INST_NUMBER},
 };
             </#if>
         </#if>
@@ -172,17 +179,17 @@ int g_NewCertFormat;
 
 <#assign netPresUseWolfSSLDebugLog= "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 <#if netPresUseWolfSSLDebugLog?has_content && netPresUseWolfSSLDebugLog == true>
-void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
+void Net_Prov${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
 {
 	<#assign num = "NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS"?eval>
-	static char buffer[${num}][120];
+	static char dataBuff[${num}][120];
 	static int bufNum = 0;
 	if (level > 2)
 	{
 		return;
 	}
-	snprintf(buffer[bufNum], 120, "wolfSSL (%d): %s\r\n", level, message);
-	SYS_CONSOLE_MESSAGE(buffer[bufNum]);
+	snprintf(dataBuff[bufNum], 120, "wolfSSL (%d): %s\r\n", level, message);
+	SYS_CONSOLE_MESSAGE(dataBuff[bufNum]);
 	bufNum ++;
 	if (bufNum == ${num})
 	{
@@ -191,7 +198,7 @@ void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * 
 }
 </#if>
 		
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObject * transObject)
+bool Net_Prov${TYPE}${CONNECTION}Init${INST}(struct S_NET_PRES_TransportObject * transObject)
 {
 	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
@@ -219,15 +226,15 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         return false;
     }
         </#if>
-    if (_net_pres_wolfsslUsers == 0)
+    if (net_pres_wolfsslUsers == 0U)
     {
-        wolfSSL_Init();
+        (void)wolfSSL_Init();
 		<#assign netPresUseWolfSSLDebugLog= "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 		<#if netPresUseWolfSSLDebugLog?has_content && netPresUseWolfSSLDebugLog == true>
-		wolfSSL_SetLoggingCb(NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST});
+		wolfSSL_SetLoggingCb(Net_Prov${TYPE}${CONNECTION}Log${INST});
 		wolfSSL_Debugging_ON();
 		</#if>
-        _net_pres_wolfsslUsers++;
+        net_pres_wolfsslUsers++;
     }
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject = transObject;
         <#if TYPE="Stream">
@@ -243,19 +250,28 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfDTLSv1_server_method());
             </#if>
         </#if>
-    if (net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context == 0)
+    if (net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context == NULL)
     {
         return false;
     }
     <#if NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION == false>
     // Turn off verification, because SNTP is usually blocked by a firewall
-    wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, SSL_VERIFY_NONE, 0);
+    wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, SSL_VERIFY_NONE, NULL);
 		<#else>
-	wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, WOLFSSL_VERIFY_PEER, 0);
+	wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, WOLFSSL_VERIFY_PEER, NULL);
 		</#if>
 	
-    wolfSSL_SetIORecv(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, (CallbackIORecv)&NET_PRES_EncGlue_${TYPE}${CONNECTION}ReceiveCb${INST});
-    wolfSSL_SetIOSend(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, (CallbackIOSend)&NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST});
+    union
+    {
+        int (*receiveCb)(void *sslin, char *buf, int sz, void *ctx);
+        CallbackIORecv ioRecv;
+        int (*sendCb)(void *sslin, char *buf, int sz, void *ctx);
+        CallbackIOSend ioSend;
+    }U_RCV_CBACK;
+    U_RCV_CBACK.receiveCb = &NET_Glue_${TYPE}${CONNECTION}ReceiveCb${INST};
+    wolfSSL_SetIORecv(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, U_RCV_CBACK.ioRecv);
+    U_RCV_CBACK.sendCb = &NET_Glue_${TYPE}${CONNECTION}SendCb${INST};
+    wolfSSL_SetIOSend(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, U_RCV_CBACK.ioSend);
         <#if CONNECTION="Client">
     if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, caCertsPtr, caCertsLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_CERT_FORMAT}) != SSL_SUCCESS)
     {
@@ -404,7 +420,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
+bool Net_Prov${TYPE}${CONNECTION}Deinit${INST}(void)
 {
 	<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
     atmel_finish();
@@ -413,10 +429,10 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited = false;
-    _net_pres_wolfsslUsers--;
-    if (_net_pres_wolfsslUsers == 0)
+    net_pres_wolfsslUsers--;
+    if (net_pres_wolfsslUsers == 0U)
     {
-        wolfSSL_Cleanup();
+        (void)wolfSSL_Cleanup();
     }
     return true;
     <#else>
@@ -429,7 +445,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData)
+bool Net_Prov${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
@@ -468,7 +484,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uin
     <#lt>        return false;
     <#lt>    }
 		</#if>
-    <#lt>    memcpy(providerData, &ssl, sizeof(WOLFSSL*));
+    <#lt>    (void)memcpy(providerData, (void*)&ssl, sizeof(WOLFSSL*));
     <#lt>    return true;
     <#else>
     <#lt>//TODO: Enter in code to open a connection with the provider
@@ -484,36 +500,31 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uin
     <#else>
         <#assign ACCEPT="Connect"/>
     </#if>
-NET_PRES_EncSessionStatus NET_PRES_EncProvider${CONNECTION}${ACCEPT}${INST}(void * providerData)
+NET_PRES_EncSessionStatus Net_Prov${CONNECTION}${ACCEPT}${INST}(void * providerData)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
         <#if CONNECTION=="Server">
     int result = wolfSSL_accept(ssl);
         <#else>
     int result = wolfSSL_connect(ssl);
         </#if>
-    switch (result)
+    if(result == SSL_SUCCESS)
     {
-        case SSL_SUCCESS:
-            return NET_PRES_ENC_SS_OPEN;
-        default:
+        return NET_PRES_ENC_SS_OPEN;
+    }
+    else
+    {
+        int error = wolfSSL_get_error(ssl, result);
+        if(error == SSL_ERROR_WANT_READ || error == SSL_ERROR_WANT_WRITE)
         {
-            int error = wolfSSL_get_error(ssl, result);
-            switch (error)
-            {
-                case SSL_ERROR_WANT_READ:
-                case SSL_ERROR_WANT_WRITE:
-        <#if CONNECTION=="Server">
-                    return NET_PRES_ENC_SS_SERVER_NEGOTIATING;
-        <#else>
-                    return NET_PRES_ENC_SS_CLIENT_NEGOTIATING;
-        </#if>
-                default:
-                    return NET_PRES_ENC_SS_FAILED;
-            }
+            return NET_PRES_ENC_SS_SERVER_NEGOTIATING;
+        }
+        else
+        {
+            return NET_PRES_ENC_SS_FAILED;
         }
     }
     <#else>
@@ -524,12 +535,12 @@ NET_PRES_EncSessionStatus NET_PRES_EncProvider${CONNECTION}${ACCEPT}${INST}(void
 </#macro> 
 <#macro NET_PRES_ENC_GLUE_CLOSE
         INST>
-NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST}(void * providerData)
+NET_PRES_EncSessionStatus Net_ProvConnectionClose${INST}(void * providerData)
 {
 	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
     wolfSSL_free(ssl);
     return NET_PRES_ENC_SS_CLOSED;
     <#else>
@@ -540,13 +551,13 @@ NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST}(void * prov
 </#macro> 
 <#macro NET_PRES_ENC_GLUE_WRITE
         INST>
-int32_t NET_PRES_EncProviderWrite${INST}(void * providerData, const uint8_t * buffer, uint16_t size)
+int32_t Net_ProvWrite${INST}(void * providerData, const uint8_t * dataBuff, uint16_t size)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
-    int ret = wolfSSL_write(ssl, buffer, size);
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
+    int ret = wolfSSL_write(ssl, dataBuff, (int)size);
     if (ret < 0)
     {
         return 0;
@@ -561,29 +572,29 @@ int32_t NET_PRES_EncProviderWrite${INST}(void * providerData, const uint8_t * bu
 
 <#macro NET_PRES_ENC_GLUE_WRITE_READY
         INST>
-uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t reqSize, uint16_t minSize)
+uint16_t Net_ProvWriteReady${INST}(void * providerData, uint16_t reqSize, uint16_t minSize)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     
-    char buffer;
+    char dataBuff;
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
 
-    int ret = wolfSSL_write(ssl, &buffer, 0);
+    int ret = wolfSSL_write(ssl, &dataBuff, 0);
     if(ret < 0)
     {
         return 0;
     }
 
-    ret = CheckAvailableSize(ssl, reqSize);
+    ret = CheckAvailableSize(ssl, (int)reqSize);
     if(ret == 0)
     {   // success
         return reqSize;
     }
-    if(minSize != 0)
+    if(minSize != 0U)
     {
-        ret = CheckAvailableSize(ssl, minSize);
+        ret = CheckAvailableSize(ssl, (int)minSize);
         if(ret == 0)
         {   // success
             return minSize;
@@ -600,13 +611,13 @@ uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t req
 
 <#macro NET_PRES_ENC_GLUE_READ
         INST>
-int32_t NET_PRES_EncProviderRead${INST}(void * providerData, uint8_t * buffer, uint16_t size)
+int32_t Net_ProvRead${INST}(void * providerData, uint8_t * dataBuff, uint16_t size)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
-    int ret = wolfSSL_read(ssl, buffer, size);
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
+    int ret = wolfSSL_read(ssl, dataBuff, (int)size);
     if (ret < 0)
     {
         return 0;
@@ -622,17 +633,17 @@ int32_t NET_PRES_EncProviderRead${INST}(void * providerData, uint8_t * buffer, u
 <#macro NET_PRES_ENC_GLUE_READ_READY
         INST>
 
-int32_t NET_PRES_EncProviderReadReady${INST}(void * providerData)
+int32_t Net_ProvReadReady${INST}(void * providerData)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
     int32_t ret = wolfSSL_pending(ssl);
     if (ret == 0) // wolfSSL_pending() doesn't check the underlying layer.
     {
-        char buffer;
-        if (wolfSSL_peek(ssl, &buffer, 1) == 0)
+        char dataBuff;
+        if (wolfSSL_peek(ssl, &dataBuff, 1) == 0)
         {
             return 0;
         }
@@ -649,13 +660,13 @@ int32_t NET_PRES_EncProviderReadReady${INST}(void * providerData)
 
 <#macro NET_PRES_ENC_GLUE_PEEK
         INST>
-int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, uint16_t size)
+int32_t Net_ProvPeek${INST}(void * providerData, uint8_t * dataBuff, uint16_t size)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
-    int ret = wolfSSL_peek(ssl, buffer, size);
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
+    int ret = wolfSSL_peek(ssl, dataBuff, (int)size);
     if (ret < 0)
     {
         return 0;
@@ -670,12 +681,12 @@ int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, u
 
 <#macro NET_PRES_ENC_GLUE_OUT_SIZE
         INST>
-int32_t NET_PRES_EncProviderOutputSize${INST}(void * providerData, int32_t inSize)
+int32_t Net_ProvOutputSize${INST}(void * providerData, int32_t inSize)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
     int ret = wolfSSL_GetOutputSize(ssl, inSize);
     if (ret < 0)
     {
@@ -691,12 +702,12 @@ int32_t NET_PRES_EncProviderOutputSize${INST}(void * providerData, int32_t inSiz
 
 <#macro NET_PRES_ENC_GLUE_MAX_OUT_SIZE
         INST>
-int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
+int32_t Net_ProvMaxOutputSize${INST}(void * providerData)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
-    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
     int ret = wolfSSL_GetMaxOutputSize(ssl);
     if (ret < 0)
     {
@@ -714,7 +725,7 @@ int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}(void)
+bool Net_Prov${TYPE}${CONNECTION}IsInited${INST}(void)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
@@ -735,22 +746,22 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}(void)
 			<#if netPresSuppStream?has_content && netPresSuppStream == true>
 				<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 				<#if netPresSuppServer?has_content && netPresSuppServer == true>         
-net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamServer${INST};
+static net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamServer${INST};
                 </#if>
 				<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 				<#if netPresSuppClient?has_content && netPresSuppClient == true>           
-net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamClient${INST};
+static net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamClient${INST};
                 </#if>
             </#if>
             <#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 			<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
                 <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 				<#if netPresSuppServer?has_content && netPresSuppServer == true>             
-net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramServer${INST};
+static net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramServer${INST};
                 </#if>
                 <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 				<#if netPresSuppClient?has_content && netPresSuppClient == true>           
-net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
+static net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
                 </#if>
             </#if>
         </#if>
@@ -769,7 +780,7 @@ bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
 		if(sz > NET_PRES_MAX_CERT_LEN)
 			return false;
 			
-        memcpy(g_NewCertFile, in, sz);
+        (void)memcpy(g_NewCertFile, in, sz);
         g_NewCertSz = sz;
 		g_NewCertFormat = format;
         return true;
@@ -792,7 +803,7 @@ bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
     <#if netPresSuppEnc?has_content && netPresSuppEnc == true>
 	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
-static uint8_t _net_pres_wolfsslUsers = 0;
+static uint8_t net_pres_wolfsslUsers = 0U;
 	</#if>
         <#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
@@ -855,33 +866,33 @@ static uint8_t _net_pres_wolfsslUsers = 0;
     TYPE>
 	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
-int NET_PRES_EncGlue_${TYPE}${CONNECTION}ReceiveCb${INST}(void *sslin, char *buf, int sz, void *ctx)
+static int NET_Glue_${TYPE}${CONNECTION}ReceiveCb${INST}(void *sslin, char *buf, int sz, void *ctx)
 {
     int fd = *(int *)ctx;
     uint16_t bufferSize;
     bufferSize = (*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpReadyToRead)((uintptr_t)fd);
-    if (bufferSize == 0)
+    if (bufferSize == 0U)
     {
-        return WOLFSSL_CBIO_ERR_WANT_READ;
+        return (int)WOLFSSL_CBIO_ERR_WANT_READ;
     }
     bufferSize = (*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpRead)((uintptr_t)fd, (uint8_t*)buf, sz);
-    return bufferSize;
+    return (int)bufferSize;
 }
-int NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, int sz, void *ctx)
+static int NET_Glue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, int sz, void *ctx)
 {
     int fd = *(int *)ctx;
     uint16_t bufferSize;
     bufferSize = (*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpReadyToWrite)((uintptr_t)fd);
-    if (bufferSize == 0)
+    if (bufferSize == 0U)
     {
-        return WOLFSSL_CBIO_ERR_WANT_WRITE;
+        return (int)WOLFSSL_CBIO_ERR_WANT_WRITE;
     }
 
     bufferSize =  (*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpWrite)((uintptr_t)fd, (uint8_t*)buf, (uint16_t)sz);
 	<#if TYPE = "DataGram">
-	(*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpFlush)((uintptr_t)fd);
+	(void)(*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpFlush)((uintptr_t)fd);
 	</#if>
-    return bufferSize;
+    return (int)bufferSize;
 }
     </#if>
 </#macro>
@@ -915,11 +926,18 @@ typedef struct
     bool isInited;
 }net_pres_wolfsslInfo;
 
+/* MISRA C-2012 Rule 8.4 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_8_4_NET_DR_16 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 8.4" "H3_MISRAC_2012_R_8_4_NET_DR_16" 
 // Temporary fix till crypto library is upgraded to recent wolfssl versions.
 int  InitRng(RNG* rng)
 {
     return wc_InitRng(rng);
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 8.4"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 </#if>
 <#assign numInstance= 1>
