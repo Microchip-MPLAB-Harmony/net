@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_RESET_RX_STATE_H_
-#define _DRV_ENCX24J600_RESET_RX_STATE_H_
+#ifndef H_DRV_ENCX24J600_RESET_RX_STATE_H_
+#define H_DRV_ENCX24J600_RESET_RX_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,7 +44,7 @@ extern "C" {
 #include "system_config.h"
 #include <stdint.h>
     
-struct _DRV_ENC28J60_DriverInfo;    
+struct S_DRV_ENC28J60_DriverInfo;    
     
 typedef enum
 {
@@ -66,15 +66,13 @@ typedef enum
     DRV_ENC28J60_RRX_WAIT_RXEN,
 }DRV_ENC28J60_RESET_RX_STATES;
 
-typedef struct _DRV_ENC28J60_RESET_RX_INFO
+typedef struct 
 {
     DRV_ENC28J60_RESET_RX_STATES state;
     uintptr_t op;
 }DRV_ENC28J60_RESET_RX_INFO;
 
-int32_t DRV_ENC28J60_ResetRxStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_ResetRxStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_ResetRxStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ResetRxStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
 
 
 
@@ -83,4 +81,5 @@ int32_t DRV_ENC28J60_ResetRxStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_RESET_RX_STATE_H_
+

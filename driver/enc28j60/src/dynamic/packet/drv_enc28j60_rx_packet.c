@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,13 +42,19 @@ Microchip or any third party.
 
 void    DRV_ENC28J60_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
 {
-     struct _DRV_ENC28J60_DriverInfo *pDrvInst = ( struct _DRV_ENC28J60_DriverInfo *)param;
-     TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
+    union
+    {
+        const void* param;
+        struct S_DRV_ENC28J60_DriverInfo*   pDrvInst;
+    }U_V_PARAM_DRV_INST;
+    U_V_PARAM_DRV_INST.param = param;
+    struct S_DRV_ENC28J60_DriverInfo *pDrvInst = U_V_PARAM_DRV_INST.pDrvInst;
+    TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxFreePackets, FC_MacPkt2Node(pkt));
 }
 
 static CACHE_ALIGN DRV_ENC28J60_RSV_EXT rsv_temp_ext;
 
-int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
+int32_t DRV_ENC28J60_RxPacketTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
 {
     uintptr_t ret;
     uint16_t newRXRDLocation; 
@@ -73,7 +79,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
                 pDrvInst->mainStateInfo.runningInfo.resetRxInfo.state = DRV_ENC28J60_RRX_STARTING;
                 pkt->state = DRV_ENC28J60_RX_EMPTY_PACKET;
                 pDrvInst->rxPtrVal = pDrvInst->encMemRxStart;
-                TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)(pkt->macPkt));
+                TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxFreePackets, FC_MacPkt2Node(pkt->macPkt));
                 break;
 
             }
@@ -102,7 +108,10 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // some error, retry
                 pkt->state = DRV_ENC28J60_RX_SET_ERDPTR;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
 
@@ -127,6 +136,10 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // else wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
                        
             // success; process the packet RSV
@@ -136,12 +149,12 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
                 pkt->state = DRV_ENC28J60_RX_SET_ERDPTR;
                 break;
             }
-            memcpy(( uint8_t *)&(pkt->rsv),&rsv_temp_ext.rsv, sizeof(pkt->rsv));
+            (void)memcpy(pkt->rsv.v, rsv_temp_ext.rsv.v, sizeof(pkt->rsv));
             // valid packet
             pkt->retry = 0;
             // start reading the packet
             pkt->state = DRV_ENC28J60_RX_READ_PKT;
-            // no break
+            break;
 
         case DRV_ENC28J60_RX_READ_PKT:
             // the TCPIP_MAC_PACKET should have extra byte as a segLoadOffset! 
@@ -165,14 +178,18 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // success
             pDrvInst->rxPtrVal = pkt->rsv.pNextPacket;
-            pkt->macPkt->pDSeg->segLen = pkt->rsv.rxByteCount - 4 - sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
+            pkt->macPkt->pDSeg->segLen = (uint16_t)pkt->rsv.rxByteCount - 4U - (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
             pkt->macPkt->pMacLayer = pkt->macPkt->pDSeg->segLoad;
             pkt->macPkt->pNetLayer = pkt->macPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);            
             pkt->state = DRV_ENC28J60_RX_PKTDEC;
-            // no break;
+            break;
 
         case DRV_ENC28J60_RX_PKTDEC:
             ret = (*pDrvInst->busVTable->fpDecPktCnt)(pDrvInst, false); 
@@ -195,12 +212,16 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // success
             pDrvInst->mainStateInfo.runningInfo.ctrFromEnc = true;
             pDrvInst->rxPacketPending = false;
             pkt->state = DRV_ENC28J60_RX_RESET_ERXRDPTR;
-            // no break;
+            break;
         
         case DRV_ENC28J60_RX_RESET_ERXRDPTR:
             // Decrement the next packet pointer before writing it into
@@ -212,7 +233,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             }
             else
             { 
-                newRXRDLocation = pkt->rsv.pNextPacket - 1 ;
+                newRXRDLocation = pkt->rsv.pNextPacket - 1U;
             }
 
 
@@ -253,17 +274,21 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // success; mark the packet as available
             if ((pkt->rsv.rxMultcast) && (pkt->rsv.rxBcast))
             {
                 pkt->macPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
             }
-            else if (pkt->rsv.rxBcast)
+            else if (pkt->rsv.rxBcast != 0U)
             {
                 pkt->macPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_BCAST;
             }
-            else if (pkt->rsv.rxMultcast)
+            else if (pkt->rsv.rxMultcast != 0U)
             {
                 pkt->macPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
             }
@@ -272,15 +297,16 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
                 pkt->macPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
             }
 
-            TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxWaitingForPickupPackets, (SGL_LIST_NODE*)pkt->macPkt);
+            TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxWaitingForPickupPackets, FC_MacPkt2Node(pkt->macPkt));
             DRV_ENC28J60_SetEvent(pDrvInst, TCPIP_MAC_EV_RX_DONE);
-            memset(&pkt->rsv, 0, sizeof(DRV_ENC28J60_RSV));
+            (void)memset(&pkt->rsv, 0, sizeof(DRV_ENC28J60_RSV));
             pkt->retry = 0;
             pDrvInst->mainStateInfo.runningInfo.nRxOkPackets ++;
             pkt->state = DRV_ENC28J60_RX_EMPTY_PACKET;
             break;
 
         default:
+            // do nothing
             break;
     }
 
@@ -290,14 +316,14 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
 
 
-int32_t DRV_ENC28J60_RxPacketEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
+int32_t DRV_ENC28J60_RxPacketEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
 {
     pkt->state = DRV_ENC28J60_RX_EMPTY_PACKET;
-    memset(&pkt->rsv, 0, sizeof(DRV_ENC28J60_RSV));
+    (void)memset(&pkt->rsv, 0, sizeof(DRV_ENC28J60_RSV));
     pkt->retry = 0;
     return 0;
 }
-int32_t DRV_ENC28J60_RxPacketExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
+int32_t DRV_ENC28J60_RxPacketExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
 {
     return 0;
 }

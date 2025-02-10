@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENC28J60_LOCAL_H_
-#define _DRV_ENC28J60_LOCAL_H_
+#ifndef H_DRV_ENC28J60_LOCAL_H_
+#define H_DRV_ENC28J60_LOCAL_H_
 
 #include "packet/drv_enc28j60_tx_packet.h"
 #include "packet/drv_enc28j60_rx_packet.h"
@@ -59,7 +59,7 @@ Microchip or any third party.
 // enable ENCJ60 debugging levels
 #define DRV_ENC28J60_DEBUG_LEVEL  0
 
-typedef struct _DRV_ENC28J60_DriverInfo
+typedef struct S_DRV_ENC28J60_DriverInfo
 {
     bool inUse;
     /* The mutex to protect the */
@@ -126,7 +126,7 @@ typedef struct _DRV_ENC28J60_DriverInfo
 
 }DRV_ENC28J60_DriverInfo;
 
-typedef struct _DRV_ENC28J60_ClientInfo
+typedef struct
 {
     bool inUse;
     DRV_ENC28J60_DriverInfo * pDrvInst;
@@ -138,4 +138,5 @@ typedef struct _DRV_ENC28J60_ClientInfo
 void DRV_ENC28J60_Assert(bool cond, const char* message, int lineNo);
 
 
-#endif
+#endif  // H_DRV_ENC28J60_LOCAL_H_
+

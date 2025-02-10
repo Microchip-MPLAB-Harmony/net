@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -41,7 +41,7 @@ Microchip or any third party.
 
 
 
-int32_t DRV_ENC28J60_RunningStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_RunningStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     uint8_t loops;
     DRV_ENC28J60_RUNNING_STATE_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo);
@@ -51,16 +51,16 @@ int32_t DRV_ENC28J60_RunningStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst
     {
         bool running = false;
 
-        if (curSt->ctsToEnc && !TCPIP_Helper_ProtectedSingleListIsEmpty(&pDrvInst->txPendingPackets))
+        if (curSt->ctsToEnc && !TCPIP_Helper_ProtSglListIsEmpty(&pDrvInst->txPendingPackets))
         {
             for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
             {
                 if (pDrvInst->txDescriptors[count].state == DRV_ENC28J60_TP_NO_PKT_STATE)
                 {
-                    pDrvInst->txDescriptors[count].macPkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets);
+                    pDrvInst->txDescriptors[count].macPkt = FC_Node2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->txPendingPackets));
                     pDrvInst->txDescriptors[count].state = DRV_ENC28J60_TP_WRITE_TXST;
                     curSt->ctsToEnc = false;
-                    DRV_ENC28J60_TxPacketTask(pDrvInst, &pDrvInst->txDescriptors[count]);
+                    (void)DRV_ENC28J60_TxPacketTask(pDrvInst, &pDrvInst->txDescriptors[count]);
                     break;
                 }
             }
@@ -75,32 +75,32 @@ int32_t DRV_ENC28J60_RunningStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst
                 {
                     pDrvInst->txDescriptors[count].state = DRV_ENC28J60_TP_RQ_PKT_TX;
                     curSt->ctTx = false;
-                    DRV_ENC28J60_TxPacketTask(pDrvInst, &pDrvInst->txDescriptors[count]);
+                    (void)DRV_ENC28J60_TxPacketTask(pDrvInst, &pDrvInst->txDescriptors[count]);
                     break;
                 }
             }
         }
 
-        DRV_ENC28J60_ChkIntStateTask(pDrvInst);
+        (void)DRV_ENC28J60_ChkIntStateTask(pDrvInst);
 
 
-        if (curSt->ctrFromEnc && pDrvInst->rxPacketPending && !TCPIP_Helper_ProtectedSingleListIsEmpty(&pDrvInst->rxFreePackets))
+        if (curSt->ctrFromEnc && pDrvInst->rxPacketPending && !TCPIP_Helper_ProtSglListIsEmpty(&pDrvInst->rxFreePackets))
         {
             if (pDrvInst->rxDescriptors.state == DRV_ENC28J60_RX_EMPTY_PACKET)
             {
-                pDrvInst->rxDescriptors.macPkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxFreePackets);
+                pDrvInst->rxDescriptors.macPkt = FC_Node2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->rxFreePackets));
                 pDrvInst->rxDescriptors.state = DRV_ENC28J60_RX_SET_ERDPTR;
-                DRV_ENC28J60_RxPacketTask(pDrvInst, &pDrvInst->rxDescriptors);
+                (void)DRV_ENC28J60_RxPacketTask(pDrvInst, &pDrvInst->rxDescriptors);
             }
         }
 
-        DRV_ENC28J60_ChkStatusStateTask(pDrvInst);
-        DRV_ENC28J60_ChkTxStatusStateTask(pDrvInst);
-        DRV_ENC28J60_ResetRxStateTask(pDrvInst);
+        (void)DRV_ENC28J60_ChkStatusStateTask(pDrvInst);
+        (void)DRV_ENC28J60_ChkTxStatusStateTask(pDrvInst);
+        (void)DRV_ENC28J60_ResetRxStateTask(pDrvInst);
 
         if (pDrvInst->rxDescriptors.state != DRV_ENC28J60_RX_EMPTY_PACKET)
         {
-            DRV_ENC28J60_RxPacketTask(pDrvInst, &pDrvInst->rxDescriptors);
+            (void)DRV_ENC28J60_RxPacketTask(pDrvInst, &pDrvInst->rxDescriptors);
             running = true;
         }
 
@@ -108,7 +108,7 @@ int32_t DRV_ENC28J60_RunningStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst
         {
             if (pDrvInst->txDescriptors[count].state != DRV_ENC28J60_TP_NO_PKT_STATE)
             {
-                DRV_ENC28J60_TxPacketTask(pDrvInst, &pDrvInst->txDescriptors[count]);
+                (void)DRV_ENC28J60_TxPacketTask(pDrvInst, &pDrvInst->txDescriptors[count]);
                 running = true;
             }
         }
@@ -121,7 +121,7 @@ int32_t DRV_ENC28J60_RunningStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst
 }
 
 
-int32_t DRV_ENC28J60_RunningStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_RunningStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_RUNNING_STATE_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo);
     curSt->ctTx = true;
@@ -129,27 +129,27 @@ int32_t DRV_ENC28J60_RunningStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvIns
     curSt->ctsToEnc = true;
     curSt->nTxOkPackets = 0;
     curSt->nRxOkPackets = 0;
-    DRV_ENC28J60_ChkIntStateEnter(pDrvInst);
-    DRV_ENC28J60_ChkStatusStateEnter(pDrvInst);
+    (void)DRV_ENC28J60_ChkIntStateEnter(pDrvInst);
+    (void)DRV_ENC28J60_ChkStatusStateEnter(pDrvInst);
     uint8_t count;
     for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
     {
-        DRV_ENC28J60_TxPacketEnter(pDrvInst, &pDrvInst->txDescriptors[count]);
+        (void)DRV_ENC28J60_TxPacketEnter(pDrvInst, &pDrvInst->txDescriptors[count]);
     }
-    DRV_ENC28J60_RxPacketEnter(pDrvInst, &pDrvInst->rxDescriptors);
+    (void)DRV_ENC28J60_RxPacketEnter(pDrvInst, &pDrvInst->rxDescriptors);
     return 0;
 }
 
-int32_t DRV_ENC28J60_RunningStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_RunningStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
-    DRV_ENC28J60_ChkIntStateExit(pDrvInst);
-    DRV_ENC28J60_ChkStatusStateExit(pDrvInst);
+    (void)DRV_ENC28J60_ChkIntStateExit(pDrvInst);
+    (void)DRV_ENC28J60_ChkStatusStateExit(pDrvInst);
     uint8_t count;
     for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
     {
-        DRV_ENC28J60_TxPacketExit(pDrvInst, &pDrvInst->txDescriptors[count]);
+        (void)DRV_ENC28J60_TxPacketExit(pDrvInst, &pDrvInst->txDescriptors[count]);
     }
-    DRV_ENC28J60_RxPacketExit(pDrvInst, &pDrvInst->rxDescriptors);
+    (void)DRV_ENC28J60_RxPacketExit(pDrvInst, &pDrvInst->rxDescriptors);
     return 0;
 }
 

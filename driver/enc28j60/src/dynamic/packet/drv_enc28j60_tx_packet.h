@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,15 +34,15 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENC28J60_TX_PACKET_STATE_H_
-#define _DRV_ENC28J60_TX_PACKET_STATE_H_
+#ifndef H_DRV_ENC28J60_TX_PACKET_STATE_H_
+#define H_DRV_ENC28J60_TX_PACKET_STATE_H_
 
 
 
 #include "tcpip/tcpip_mac.h"
 #include "system_config.h"
 
-struct _DRV_ENC28J60_DriverInfo;
+struct S_DRV_ENC28J60_DriverInfo;
 
 
 typedef enum
@@ -79,9 +79,9 @@ typedef enum
     
 }DRV_ENC28J60_TX_PACKET_STATES;
 
-typedef struct _DRV_ENC28J60_TX_PACKET_INFO
+typedef struct S_DRV_ENC28J60_TX_PACKET_INFO
 {
-    struct _DRV_ENC28J60_TX_PACKET_INFO * next;
+    struct S_DRV_ENC28J60_TX_PACKET_INFO * next;
     DRV_ENC28J60_TX_PACKET_STATES state;
     TCPIP_MAC_PACKET * macPkt;
     TCPIP_MAC_DATA_SEGMENT*         pDSeg;
@@ -90,10 +90,11 @@ typedef struct _DRV_ENC28J60_TX_PACKET_INFO
     uint16_t            pktLen;     // current packet length
 }DRV_ENC28J60_TX_PACKET_INFO;
 
-int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt);
-int32_t DRV_ENC28J60_TxPacketEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt);
-int32_t DRV_ENC28J60_TxPacketExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt);
+int32_t DRV_ENC28J60_TxPacketTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt);
+int32_t DRV_ENC28J60_TxPacketEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt);
+int32_t DRV_ENC28J60_TxPacketExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt);
 
 
 
-#endif
+#endif  // H_DRV_ENC28J60_TX_PACKET_STATE_H_
+

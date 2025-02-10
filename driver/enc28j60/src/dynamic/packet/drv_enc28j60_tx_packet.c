@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -41,7 +41,7 @@ Microchip or any third party.
 #include "../running_state/drv_enc28j60_running_state.h"
 #include "../bus/drv_enc28j60_bus.h"
 
-int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt)
+int32_t DRV_ENC28J60_TxPacketTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt)
 {
   
     uintptr_t ret;
@@ -77,9 +77,13 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             pkt->state = DRV_ENC28J60_TP_SET_ETXND;
-            // no break
+            break;
 
         case DRV_ENC28J60_TP_SET_ETXND:
             count = 0;
@@ -120,9 +124,13 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             pkt->state = DRV_ENC28J60_TP_SET_WRPT;
-            // no break;
+            break;
 
         case DRV_ENC28J60_TP_SET_WRPT:
             pkt->gpPtr = pDrvInst->encMemTxStart;
@@ -148,9 +156,13 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             pkt->state = DRV_ENC28J60_TP_SEND_PKT;
-            // no break
+            break;
 
         case DRV_ENC28J60_TP_SEND_PKT:
             // transmit the packet
@@ -174,6 +186,10 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             else if(busRes == DRV_ENC28J60_BR_PENDING)
             {   // wait some more
                 break;
+            }
+            else
+            {
+                // OK
             }
             // successfully sent the packet to ENC
             DRV_ENC28J60_AddGpData(pDrvInst, pkt->pktLen);  
@@ -204,6 +220,10 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             if(reg.eir.TXERIF == 0)
             {   // no error reported, so no TX reset needed
@@ -213,7 +233,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             }
             // need to reset the TX state machine
             pkt->state = DRV_ENC28J60_TP_SET_TXRST;
-            // no break
+            break;
 
         case DRV_ENC28J60_TP_SET_TXRST:
             reg.value = 0;
@@ -238,9 +258,13 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             pkt->state = DRV_ENC28J60_TP_CLR_TXRST;
-            // no break;
+            break;
 
         case DRV_ENC28J60_TP_CLR_TXRST:
             reg.value = 0;
@@ -265,9 +289,13 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             pkt->state = DRV_ENC28J60_TP_CLR_TXERIF;
-            // no break
+            break;
 
         case DRV_ENC28J60_TP_CLR_TXERIF:
             reg.value = 0;
@@ -292,6 +320,10 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             else if(busRes == DRV_ENC28J60_BR_PENDING)
             {   // wait some more
                 break;
+            }
+            else
+            {
+                // OK
             }
             // success; can transmit the packet
             pkt->state = DRV_ENC28J60_TP_READY_FOR_CTTX;
@@ -327,6 +359,10 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success; transmitted the packet
 
             pkt->state = DRV_ENC28J60_TP_WAIT_FOR_COMPLETE;
@@ -340,11 +376,11 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // update the packet status
                 if (!pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkState)
                 {
-                    pkt->macPkt->ackRes = TCPIP_MAC_PKT_ACK_LINK_DOWN;
+                    pkt->macPkt->ackRes = (int8_t)TCPIP_MAC_PKT_ACK_LINK_DOWN;
                 }
                 else
                 {
-                    pkt->macPkt->ackRes = TCPIP_MAC_PKT_ACK_TX_OK;
+                    pkt->macPkt->ackRes = (int8_t)TCPIP_MAC_PKT_ACK_TX_OK;
                 }
 
                 pkt->macPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
@@ -359,7 +395,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
             // clear the TX int flags
             pkt->state = DRV_ENC28J60_TP_CLR_EIR;
-            // no break
+            break;
 
         case DRV_ENC28J60_TP_CLR_EIR:
             reg.value = 0;
@@ -385,6 +421,10 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success; done
             pkt->state = DRV_ENC28J60_TP_NO_PKT_STATE;
             break;
@@ -400,6 +440,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             break;
 
         default:
+            // do nothing
             break;
 
     }
@@ -408,7 +449,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
 
  
-int32_t DRV_ENC28J60_TxPacketEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt)
+int32_t DRV_ENC28J60_TxPacketEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt)
 {
     pkt->state = DRV_ENC28J60_TP_NO_PKT_STATE;
     pkt->macPkt = NULL;
@@ -416,7 +457,7 @@ int32_t DRV_ENC28J60_TxPacketEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst, D
     return 0;
 }
 
-int32_t DRV_ENC28J60_TxPacketExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt)
+int32_t DRV_ENC28J60_TxPacketExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_TX_PACKET_INFO *pkt)
 {
     return 0;
 }

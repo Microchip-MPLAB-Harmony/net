@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,54 +39,46 @@ Microchip or any third party.
 #include "drv_enc28j60_local.h"
 
 
-int32_t DRV_ENC28J60_MainStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_MainStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
+    int32_t res;
+
     switch (pDrvInst->mainStateInfo.state)
     {
         case DRV_ENC28J60_MS_UNINITIALIZED:
             break;
         case DRV_ENC28J60_MS_INITIALIZATION:
-        {
-            int32_t res = DRV_ENC28J60_InitStateTask(pDrvInst);
+            res = DRV_ENC28J60_InitStateTask(pDrvInst);
             if (res == 1)
             {
                 pDrvInst->mainStateInfo.state = DRV_ENC28J60_MS_CLOSED;
-                DRV_ENC28J60_InitStateExit(pDrvInst);
-                DRV_ENC28J60_ClosedStateEnter(pDrvInst);
+                (void)DRV_ENC28J60_InitStateExit(pDrvInst);
+                (void)DRV_ENC28J60_ClosedStateEnter(pDrvInst);
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENC28J60_MS_CLOSED:
-        {
-            int32_t res = DRV_ENC28J60_ClosedStateTask(pDrvInst);
+            res = DRV_ENC28J60_ClosedStateTask(pDrvInst);
             if (res == 1)
             {
                 pDrvInst->mainStateInfo.state = DRV_ENC28J60_MS_RUNNING;
-                DRV_ENC28J60_ClosedStateExit(pDrvInst);
-                DRV_ENC28J60_RunningStateEnter(pDrvInst);
+                (void)DRV_ENC28J60_ClosedStateExit(pDrvInst);
+                (void)DRV_ENC28J60_RunningStateEnter(pDrvInst);
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+            
         case DRV_ENC28J60_MS_RUNNING:
-        {
-            DRV_ENC28J60_RunningStateTask(pDrvInst);
+            (void)DRV_ENC28J60_RunningStateTask(pDrvInst);
             if (pDrvInst->numClients == 0)
             {
                 pDrvInst->mainStateInfo.state = DRV_ENC28J60_MS_CLOSING;
-                DRV_ENC28J60_RunningStateExit(pDrvInst);
+                (void)DRV_ENC28J60_RunningStateExit(pDrvInst);
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENC28J60_MS_CLOSING:
+        default:
+            // do nothing
             break;
     }
     return 0;

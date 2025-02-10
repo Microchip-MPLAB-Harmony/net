@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,18 +49,18 @@ typedef enum
 // PHY operation current state
 typedef enum
 {
-    DRV_ENC28J60_PHY_OP_STATE_IDLE,             // no operation in progress
-    DRV_ENC28J60_PHY_OP_STATE_START_MIREGADDR,  // start MIREGADR transaction
-    DRV_ENC28J60_PHY_OP_STATE_WAIT_MIREGADDR,   // wait for MIREGADR completion
-    DRV_ENC28J60_PHY_OP_STATE_START_MIIRD_MIWR,  // start MIRD/MIWRLH transaction
-    DRV_ENC28J60_PHY_OP_STATE_WAIT_MIIRD_MIWR,  // wait for MIRD/MIWRLH completion
-    DRV_ENC28J60_PHY_OP_STATE_WAIT_TMO,         // wait for 10.24us to pass
-    DRV_ENC28J60_PHY_OP_STATE_POLL_BUSY,        // poll MISTAT.BUSY to clear itself
-    DRV_ENC28J60_PHY_OP_STATE_WAIT_BUSY,        // wait for MISTAT.BUSY to clear itself
-    DRV_ENC28J60_PHY_OP_STATE_START_MICMD,      // start MICMD.MIIRD transaction
-    DRV_ENC28J60_PHY_OP_STATE_WAIT_MICMD,       // wait for MICMD.MIIRD completion - read op only
-    DRV_ENC28J60_PHY_OP_STATE_START_MIRD,       // start MIRDL/H transaction
-    DRV_ENC28J60_PHY_OP_STATE_WAIT_MIRD,        // wait for MIRDL/H completion - read op only
+    DRV_OP_STATE_IDLE,             // no operation in progress
+    DRV_OP_STATE_START_MIREGADDR,  // start MIREGADR transaction
+    DRV_OP_STATE_WAIT_MIREGADDR,   // wait for MIREGADR completion
+    DRV_OP_STATE_START_MIIRD_MIWR,  // start MIRD/MIWRLH transaction
+    DRV_OP_STATE_WAIT_MIIRD_MIWR,  // wait for MIRD/MIWRLH completion
+    DRV_OP_STATE_WAIT_TMO,         // wait for 10.24us to pass
+    DRV_OP_STATE_POLL_BUSY,        // poll MISTAT.BUSY to clear itself
+    DRV_OP_STATE_WAIT_BUSY,        // wait for MISTAT.BUSY to clear itself
+    DRV_OP_STATE_START_MICMD,      // start MICMD.MIIRD transaction
+    DRV_OP_STATE_WAIT_MICMD,       // wait for MICMD.MIIRD completion - read op only
+    DRV_OP_STATE_START_MIRD,       // start MIRDL/H transaction
+    DRV_OP_STATE_WAIT_MIRD,        // wait for MIRDL/H completion - read op only
 }DRV_ENC28J60_PHY_OP_STATE;
 
 
@@ -78,88 +78,155 @@ typedef struct
     uint32_t                totRetryCnt;    // statistics, debug
 }DRV_ENC28J60_PHY_OP_DCPT;
 
-static DRV_ENC28J60_PHY_OP_DCPT _phyOpDcpt = { 0 };
+static DRV_ENC28J60_PHY_OP_DCPT phyOpDcpt = { 0 };
 
 static const DRV_ENC28J60_BusVTable drv_ENC28J60_spi_vtable =
 {
-    .fpOpenIf = DRV_ENC28J60_SPI_OpenInterface,
-    .fpCloseIf = DRV_ENC28J60_SPI_CloseInterface,
-    .fpOpResult = DRV_ENC28J60_SPI_OperationResult,
-    .fpSfrWr = DRV_ENC28J60_SPI_SfrWrite,
-    .fpSfrWr16 = DRV_ENC28J60_SPI_SfrWrite16,
-    .fpSfrRdStart = DRV_ENC28J60_SPI_SfrReadStart,
-    .fpSfrRdResult = DRV_ENC28J60_SPI_SfrReadResult,
-    .fpSfrRd16Start = DRV_ENC28J60_SPI_SfrRead16Start,
-    .fpSfrRd16Result = DRV_ENC28J60_SPI_SfrRead16Result,
-    .fpSfrBitSet = DRV_ENC28J60_SPI_SfrBitSet,
-    .fpSfrBitClr = DRV_ENC28J60_SPI_SfrBitClear,
-    .fpSysRst = DRV_ENC28J60_SPI_SystemReset,
-    .fpRxEnable = DRV_ENC28J60_SPI_EnableRX,
-    .fpRxDisable = DRV_ENC28J60_SPI_DisableRX,
-    .fpDecPktCnt = DRV_ENC28J60_SPI_DecrPktCtr,
-    .fpIntEnable = DRV_ENC28J60_SPI_EnableInterrupts,
-    .fpIntDisable = DRV_ENC28J60_SPI_DisableInterrupts,
-    .fpFlowCtrlDisable = DRV_ENC28J60_SPI_FlowCtrlDisable,
-    .fpFlowCtrlSingle = DRV_ENC28J60_SPI_FlowCtrlSingle,
-    .fpFlowCtrlMult = DRV_ENC28J60_SPI_FlowCtrlMult,
-    .fpFlowCtrlClr = DRV_ENC28J60_SPI_FlowCtrClear,
-    .fpPhyWrStart = DRV_ENC28J60_SPI_PhyWriteStart,
-    .fpPhyWr = DRV_ENC28J60_SPI_PhyWrite,
-    .fpPhyRdStart = DRV_ENC28J60_SPI_PhyReadStart,
-    .fpPhyRd = DRV_ENC28J60_SPI_PhyRead,
-    .fpPktWr = DRV_ENC28J60_SPI_WritePacket,
-    .fpDataRdStart = DRV_ENC28J60_SPI_ReadDataStart,
+    .fpOpenIf = &DRV_ENC28J60_SPI_OpenInterface,
+    .fpCloseIf = &DRV_ENC28J60_SPI_CloseInterface,
+    .fpOpResult = &DRV_ENC28J60_SPI_OperationResult,
+    .fpSfrWr = &DRV_ENC28J60_SPI_SfrWrite,
+    .fpSfrWr16 = &DRV_ENC28J60_SPI_SfrWrite16,
+    .fpSfrRdStart = &DRV_ENC28J60_SPI_SfrReadStart,
+    .fpSfrRdResult = &DRV_ENC28J60_SPI_SfrReadResult,
+    .fpSfrRd16Start = &DRV_ENC28J60_SPI_SfrRead16Start,
+    .fpSfrRd16Result = &DRV_ENC28J60_SPI_SfrRead16Result,
+    .fpSfrBitSet = &DRV_ENC28J60_SPI_SfrBitSet,
+    .fpSfrBitClr = &DRV_ENC28J60_SPI_SfrBitClear,
+    .fpSysRst = &DRV_ENC28J60_SPI_SystemReset,
+    .fpRxEnable = &DRV_ENC28J60_SPI_EnableRX,
+    .fpRxDisable = &DRV_ENC28J60_SPI_DisableRX,
+    .fpDecPktCnt = &DRV_ENC28J60_SPI_DecrPktCtr,
+    .fpIntEnable = &DRV_ENC28J60_SPI_EnableInterrupts,
+    .fpIntDisable = &DRV_ENC28J60_SPI_DisableInterrupts,
+    .fpFlowCtrlDisable = &DRV_ENC28J60_SPI_FlowCtrlDisable,
+    .fpFlowCtrlSingle = &DRV_ENC28J60_SPI_FlowCtrlSingle,
+    .fpFlowCtrlMult = &DRV_ENC28J60_SPI_FlowCtrlMult,
+    .fpFlowCtrlClr = &DRV_ENC28J60_SPI_FlowCtrClear,
+    .fpPhyWrStart = &DRV_ENC28J60_SPI_PhyWriteStart,
+    .fpPhyWr = &DRV_ENC28J60_SPI_PhyWrite,
+    .fpPhyRdStart = &DRV_ENC28J60_SPI_PhyReadStart,
+    .fpPhyRd = &DRV_ENC28J60_SPI_PhyRead,
+    .fpPktWr = &DRV_ENC28J60_SPI_WritePacket,
+    .fpDataRdStart = &DRV_ENC28J60_SPI_ReadDataStart,
 };
 
-static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo* pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP reg, DRV_ENC28J60_PHY_OP currOp);
-static void _DRV_ReleaseOpDcpt(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt);
-static DRV_ENC28J60_BUS_RESULT _DRV_ENC28J60_OpStatusToResult(DRV_ENC28J60_OP_DCPT* pOpDcpt);
+// helpers, conversion functions
+//
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_ExtBuff2Node(DRV_ENC28J60_OP_EXT_BUFF* pExtBuff)
+{
+    union
+    {
+        DRV_ENC28J60_OP_EXT_BUFF* pExtBuff;
+        SGL_LIST_NODE* node;
+    }U_EXT_BUFF_SGL_NODE;
 
-static void _DRV_AutoAcknowledge(DRV_ENC28J60_spiBusData* pBusData)
+    U_EXT_BUFF_SGL_NODE.pExtBuff = pExtBuff;
+    return U_EXT_BUFF_SGL_NODE.node;
+}
+
+static __inline__ DRV_ENC28J60_OP_EXT_BUFF* __attribute__((always_inline)) FC_Node2ExtBuff(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE* node;
+        DRV_ENC28J60_OP_EXT_BUFF* pExtBuff;
+    }U_SGL_NODE_EXT_BUFF;
+
+    U_SGL_NODE_EXT_BUFF.node = node;
+    return U_SGL_NODE_EXT_BUFF.pExtBuff;
+}
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_OpDcpt2Node(DRV_ENC28J60_OP_DCPT* pOpDcpt)
+{
+    union
+    {
+        DRV_ENC28J60_OP_DCPT* pOpDcpt;
+        SGL_LIST_NODE* node;
+    }U_OP_DCPT_SGL_NODE;
+
+    U_OP_DCPT_SGL_NODE.pOpDcpt = pOpDcpt;
+    return U_OP_DCPT_SGL_NODE.node;
+}
+
+static __inline__ DRV_ENC28J60_OP_DCPT* __attribute__((always_inline)) FC_Node2OpDcpt(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE* node;
+        DRV_ENC28J60_OP_DCPT* pOpDcpt;
+    }U_SGL_NODE_OP_DCPT;
+
+    U_SGL_NODE_OP_DCPT.node = node;
+    return U_SGL_NODE_OP_DCPT.pOpDcpt;
+}
+
+static __inline__ DRV_ENC28J60_OP_DCPT* __attribute__((always_inline)) FC_Handle2OpDcpt(uintptr_t handle)
+{
+    union
+    {
+        uintptr_t handle;
+        DRV_ENC28J60_OP_DCPT* pOpDcpt;
+    }U_HANDLE_OP_DCPT;
+
+    U_HANDLE_OP_DCPT.handle = handle;
+    return U_HANDLE_OP_DCPT.pOpDcpt;
+}
+
+
+// local prototypes
+static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo* pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP reg, DRV_ENC28J60_PHY_OP currOp);
+static void F_DRV_ReleaseOpDcpt(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt);
+static DRV_ENC28J60_BUS_RESULT F_DRV_ENC28J60_OpStatusToResult(DRV_ENC28J60_OP_DCPT* pOpDcpt);
+static bool F_DRV_ENC28J60_DoBankSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP sfr);
+static uintptr_t DRV_SfrBitSet_NoBank(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck);
+static uintptr_t DRV_SfrBitClear_NoBank(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck);
+
+static void F_DRV_AutoAcknowledge(DRV_ENC28J60_spiBusData* pBusData)
 {
     DRV_ENC28J60_BUS_RESULT res;
     SINGLE_LIST             newAutoList;
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
 
     TCPIP_Helper_SingleListInitialize(&newAutoList);
-    while( (pOpDcpt = (DRV_ENC28J60_OP_DCPT*)TCPIP_Helper_SingleListHeadRemove(&pBusData->opListAutoAck)) != 0)
+    while( (pOpDcpt = FC_Node2OpDcpt(TCPIP_Helper_SingleListHeadRemove(&pBusData->opListAutoAck))) != NULL)
     {   // even if it's linked we process it separately: it won't be queried!
         if(pOpDcpt->spiHandle != 0)
         {   // if the handle is 0, it was just added to the list
-            res = _DRV_ENC28J60_OpStatusToResult(pOpDcpt);
+            res = F_DRV_ENC28J60_OpStatusToResult(pOpDcpt);
             if(res != DRV_ENC28J60_BR_PENDING)
             {   // completed
-                _DRV_ReleaseOpDcpt(pBusData, pOpDcpt);
+                F_DRV_ReleaseOpDcpt(pBusData, pOpDcpt);
                 continue;
             }
         }
 
         // still busy or doesn't have a buffer
-        TCPIP_Helper_SingleListTailAdd(&newAutoList, (SGL_LIST_NODE*)pOpDcpt);
+        TCPIP_Helper_SingleListTailAdd(&newAutoList, FC_OpDcpt2Node(pOpDcpt));
     }
     TCPIP_Helper_SingleListAppend(&pBusData->opListAutoAck, &newAutoList);
 
 }
 
-static  DRV_ENC28J60_OP_DCPT* _DRV_GetOpDcpt(DRV_ENC28J60_spiBusData* pBusData, bool autoAck, DRV_ENC28J60_OP_FLAGS opFlags)
+static  DRV_ENC28J60_OP_DCPT* F_DRV_GetOpDcpt(DRV_ENC28J60_spiBusData* pBusData, bool autoAck, uint8_t opFlags)
 {
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
 
     // check first if we need to auto acknowledge
-    _DRV_AutoAcknowledge(pBusData);
+    F_DRV_AutoAcknowledge(pBusData);
 
 
     // grab a free node
-    pOpDcpt = (DRV_ENC28J60_OP_DCPT*)TCPIP_Helper_SingleListHeadRemove(&pBusData->opFreeList);
+    pOpDcpt = FC_Node2OpDcpt(TCPIP_Helper_SingleListHeadRemove(&pBusData->opFreeList));
     
-    if(pOpDcpt)
+    if(pOpDcpt != NULL)
     {
-        pOpDcpt->next = 0;  // show it's not in any list;
-        pOpDcpt->link = 0;  // show it's not linked;
+        pOpDcpt->next = NULL;  // show it's not in any list;
+        pOpDcpt->link = NULL;  // show it's not linked;
         pOpDcpt->spiHandle = 0;
-        pOpDcpt->extBuffer = 0;
-        pOpDcpt->opStatus = DRV_ENC28J60_OP_STAT_BUSY;
-        pOpDcpt->opFlags = autoAck ? opFlags | DRV_ENC28J60_OP_FLAG_AUTO_ACK : opFlags;
+        pOpDcpt->extBuffer = NULL;
+        pOpDcpt->opStatus = (uint8_t)DRV_ENC28J60_OP_STAT_BUSY;
+        pOpDcpt->opFlags = autoAck ? opFlags | (uint8_t)DRV_ENC28J60_OP_FLAG_AUTO_ACK : opFlags;
         pBusData->opDcptOkCnt++;
     }
     else
@@ -169,11 +236,11 @@ static  DRV_ENC28J60_OP_DCPT* _DRV_GetOpDcpt(DRV_ENC28J60_spiBusData* pBusData, 
     return pOpDcpt;
 } 
 
-static __inline__ DRV_ENC28J60_OP_EXT_BUFF* __attribute__((always_inline)) _DRV_GetExtBuffer(DRV_ENC28J60_spiBusData* pBusData)
+static __inline__ DRV_ENC28J60_OP_EXT_BUFF* __attribute__((always_inline)) F_DRV_GetExtBuffer(DRV_ENC28J60_spiBusData* pBusData)
 {
-    DRV_ENC28J60_OP_EXT_BUFF* pExtBuff = (DRV_ENC28J60_OP_EXT_BUFF*)TCPIP_Helper_SingleListHeadRemove(&pBusData->extBuffFreeList);
+    DRV_ENC28J60_OP_EXT_BUFF* pExtBuff = FC_Node2ExtBuff(TCPIP_Helper_SingleListHeadRemove(&pBusData->extBuffFreeList));
 
-    if(pExtBuff)
+    if(pExtBuff != NULL)
     {
         pBusData->extBuffOkCnt++;
     }
@@ -186,60 +253,60 @@ static __inline__ DRV_ENC28J60_OP_EXT_BUFF* __attribute__((always_inline)) _DRV_
 }
 
 // regular release
-static void _DRV_ReleaseOpDcpt(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt)
+static void F_DRV_ReleaseOpDcpt(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt)
 {
-    if(pOpDcpt->extBuffer)
+    if(pOpDcpt->extBuffer != NULL)
     {
-        TCPIP_Helper_SingleListTailAdd(&pBusData->extBuffFreeList, (SGL_LIST_NODE*)pOpDcpt->extBuffer);
-        pOpDcpt->extBuffer = 0;
+        TCPIP_Helper_SingleListTailAdd(&pBusData->extBuffFreeList, FC_ExtBuff2Node(pOpDcpt->extBuffer));
+        pOpDcpt->extBuffer = NULL;
     }
 
-    TCPIP_Helper_SingleListTailAdd(&pBusData->opFreeList, (SGL_LIST_NODE*)pOpDcpt);
-    pOpDcpt->opStatus = DRV_ENC28J60_OP_STAT_IDLE;  // mark it as done
+    TCPIP_Helper_SingleListTailAdd(&pBusData->opFreeList, FC_OpDcpt2Node(pOpDcpt));
+    pOpDcpt->opStatus = (uint8_t)DRV_ENC28J60_OP_STAT_IDLE;  // mark it as done
 }
 
-static void _DRV_ReleaseOpDcptEx(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt)
+static void F_DRV_ReleaseOpDcptEx(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt)
 {
-    if(pOpDcpt->extBuffer)
+    if(pOpDcpt->extBuffer != NULL)
     {
-        TCPIP_Helper_SingleListTailAdd(&pBusData->extBuffFreeList, (SGL_LIST_NODE*)pOpDcpt->extBuffer);
-        pOpDcpt->extBuffer = 0;
+        TCPIP_Helper_SingleListTailAdd(&pBusData->extBuffFreeList, FC_ExtBuff2Node(pOpDcpt->extBuffer));
+        pOpDcpt->extBuffer = NULL;
     }
 
-    TCPIP_Helper_SingleListTailAdd(&pBusData->opFreeList, (SGL_LIST_NODE*)pOpDcpt);
-    pOpDcpt->opStatus = DRV_ENC28J60_OP_STAT_IDLE;  // mark it as done
+    TCPIP_Helper_SingleListTailAdd(&pBusData->opFreeList, FC_OpDcpt2Node(pOpDcpt));
+    pOpDcpt->opStatus = (uint8_t)DRV_ENC28J60_OP_STAT_IDLE;  // mark it as done
 }
 
-static DRV_ENC28J60_BUS_RESULT _DRV_ENC28J60_OpStatusToResult(DRV_ENC28J60_OP_DCPT* pOpDcpt)
+static DRV_ENC28J60_BUS_RESULT F_DRV_ENC28J60_OpStatusToResult(DRV_ENC28J60_OP_DCPT* pOpDcpt)
 {
     DRV_SPI_TRANSFER_EVENT spiEv = DRV_SPI_TransferStatusGet (pOpDcpt->spiHandle);
     if((spiEv == DRV_SPI_TRANSFER_EVENT_COMPLETE) || (spiEv == DRV_SPI_TRANSFER_EVENT_HANDLE_EXPIRED))
     {   // success
-        pOpDcpt->opStatus = DRV_ENC28J60_OP_STAT_SUCCESS;
+        pOpDcpt->opStatus = (uint8_t)DRV_ENC28J60_OP_STAT_SUCCESS;
         return DRV_ENC28J60_BR_SUCCESS;
     }
     else if(spiEv == DRV_SPI_TRANSFER_EVENT_ERROR)
     {
-        pOpDcpt->opStatus = DRV_ENC28J60_OP_STAT_ERROR;
+        pOpDcpt->opStatus = (uint8_t)DRV_ENC28J60_OP_STAT_ERROR;
         return DRV_ENC28J60_BR_ERROR;
     }
     else
     {   // still busy
-        DRV_ENC28J60_Assert(pOpDcpt->opStatus == DRV_ENC28J60_OP_STAT_BUSY, __func__, __LINE__);
+        DRV_ENC28J60_Assert(pOpDcpt->opStatus == (uint8_t)DRV_ENC28J60_OP_STAT_BUSY, __func__, __LINE__);
         return DRV_ENC28J60_BR_PENDING;
     }
 }
 
-static DRV_ENC28J60_BUS_RESULT _DRV_ENC28J60_LinkedOpStatus(DRV_ENC28J60_OP_DCPT* pOpDcpt)
+static DRV_ENC28J60_BUS_RESULT F_DRV_ENC28J60_LinkedOpStatus(DRV_ENC28J60_OP_DCPT* pOpDcpt)
 {
     DRV_ENC28J60_BUS_RESULT res;
     bool    isError;
 
 
     isError = false;
-    for( ; pOpDcpt != 0; pOpDcpt = pOpDcpt->link)
+    for( ; pOpDcpt != NULL; pOpDcpt = pOpDcpt->link)
     {
-        res = _DRV_ENC28J60_OpStatusToResult(pOpDcpt);
+        res = F_DRV_ENC28J60_OpStatusToResult(pOpDcpt);
         if(res == DRV_ENC28J60_BR_PENDING)
         {   // not all descriptors ready
             return DRV_ENC28J60_BR_PENDING;
@@ -248,19 +315,24 @@ static DRV_ENC28J60_BUS_RESULT _DRV_ENC28J60_LinkedOpStatus(DRV_ENC28J60_OP_DCPT
         {
             isError = true;
         }
+        else
+        {
+            // OK
+        }
     }
 
     return isError ? DRV_ENC28J60_BR_ERROR : DRV_ENC28J60_BR_SUCCESS;
 }
 
-static void _DRV_ReleaseLinkedOpDcpt(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_OP_DCPT* pOpDcpt)
+static void F_DRV_ReleaseLinkedOpDcpt(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_OP_DCPT* pOpDcpt)
 {
     DRV_ENC28J60_OP_DCPT*   pDcpt;
 
-    for(; pOpDcpt != 0; pOpDcpt = pDcpt)
+    while(pOpDcpt != NULL)
     {
         pDcpt = pOpDcpt->link;
-        _DRV_ReleaseOpDcptEx((DRV_ENC28J60_spiBusData *)pDrvInstance->busData, pOpDcpt);
+        F_DRV_ReleaseOpDcptEx((DRV_ENC28J60_spiBusData *)pDrvInstance->busData, pOpDcpt);
+        pOpDcpt = pDcpt;
     }
 
 }
@@ -271,9 +343,9 @@ static void _DRV_ReleaseLinkedOpDcpt(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     PLIB_PORTS_PinClear(pDrvInstance->drvCfg.spiSSPortModule, pDrvInstance->drvCfg.spiSSPortChannel, pDrvInstance->drvCfg.spiSSPortPin);
 }
 
-// Note: each descriptor is released by itself when autoAck and added to the free list;
-// the link between multiple linked descriptors should not be needed anymore
-// because the autoAck operation cannot ask for status completion!
+- Note: each descriptor is released by itself when autoAck and added to the free list;
+- the link between multiple linked descriptors should not be needed anymore
+- because the autoAck operation cannot ask for status completion!
 static void DRV_ENC28J60_SPI_OperationEnded (DRV_SPI_TRANSFER_EVENT event, DRV_SPI_TRANSFER_HANDLE bufferHandle, void * context )
 {
     if(event == DRV_SPI_BUFFER_EVENT_COMPLETE || event == DRV_SPI_BUFFER_EVENT_ERROR)
@@ -286,39 +358,39 @@ static void DRV_ENC28J60_SPI_OperationEnded (DRV_SPI_TRANSFER_EVENT event, DRV_S
 
 // this function sets the proper spi handle for an operation
 // it also adds the operation descriptor to the proper list
-static void _DRV_OpSetSpiHandle(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt, DRV_SPI_TRANSFER_HANDLE spiHandle, bool autoAck)
+static void F_DRV_OpSetSpiHandle(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt, DRV_SPI_TRANSFER_HANDLE spiHandle, bool autoAck)
 {
     DRV_ENC28J60_Assert(spiHandle != 0 && pOpDcpt->spiHandle == 0, __func__, __LINE__);
     pOpDcpt->spiHandle = spiHandle;
     // internal ops have autoAck: DoBank!
     if(autoAck)
     {
-        TCPIP_Helper_SingleListTailAdd(&pBusData->opListAutoAck, (SGL_LIST_NODE*)pOpDcpt);
+        TCPIP_Helper_SingleListTailAdd(&pBusData->opListAutoAck, FC_OpDcpt2Node(pOpDcpt));
     }
 }
 
-static DRV_ENC28J60_OP_DCPT* _DRV_OpHandleFromUserHandle(uintptr_t  handle, bool isLinked)
+static DRV_ENC28J60_OP_DCPT* F_DRV_OpHandleFromUserHandle(uintptr_t  handle, bool isLinked)
 {
     bool cond;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt = (DRV_ENC28J60_OP_DCPT*)handle;
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt = FC_Handle2OpDcpt(handle);
 
     if(isLinked)
     {   // possible that no all ops are done; but at least one should be busy
-        cond = (pOpDcpt != 0 && pOpDcpt->link != 0 && (pOpDcpt->opStatus == DRV_ENC28J60_OP_STAT_BUSY || pOpDcpt->link->opStatus == DRV_ENC28J60_OP_STAT_BUSY));
+        cond = (pOpDcpt != NULL && pOpDcpt->link != NULL && (pOpDcpt->opStatus == (uint8_t)DRV_ENC28J60_OP_STAT_BUSY || pOpDcpt->link->opStatus == (uint8_t)DRV_ENC28J60_OP_STAT_BUSY));
         // for now linked nodes don't support autoAck
-        if(pOpDcpt->next != 0)
+        if(pOpDcpt->next != NULL)
         {
             cond = 0;
         }
     }
     else
     {
-        cond = (pOpDcpt != 0 && pOpDcpt->opStatus == DRV_ENC28J60_OP_STAT_BUSY);
+        cond = (pOpDcpt != NULL && pOpDcpt->opStatus == (uint8_t)DRV_ENC28J60_OP_STAT_BUSY);
     }
 
     DRV_ENC28J60_Assert(cond, __func__, __LINE__);
 
-    return cond ? pOpDcpt : 0;
+    return cond ? pOpDcpt : NULL;
 }
 
 /*static void DRV_ENC28J60_SPI_Acknowledge (DRV_SPI_TRANSFER_EVENT event, DRV_SPI_TRANSFER_HANDLE bufferHandle, void * context )
@@ -335,7 +407,7 @@ int32_t DRV_ENC28J60_SPI_InitializeInterface(DRV_ENC28J60_DriverInfo *  pDrvInst
     DRV_ENC28J60_OP_EXT_BUFF*   pExtBuff; 
 
     DRV_ENC28J60_spiBusData * pBusData = (DRV_ENC28J60_spiBusData *)(*pDrvInstance->stackCfg.callocF)(pDrvInstance->stackCfg.memH, 1, sizeof(DRV_ENC28J60_spiBusData));
-    if (pBusData == 0)
+    if (pBusData == NULL)
     {   // failed
         return -1;
     }
@@ -350,19 +422,21 @@ int32_t DRV_ENC28J60_SPI_InitializeInterface(DRV_ENC28J60_DriverInfo *  pDrvInst
     TCPIP_Helper_SingleListInitialize(&pBusData->opListAutoAck);
     TCPIP_Helper_SingleListInitialize(&pBusData->extBuffFreeList);
     pOpDcpt = pBusData->opArray;
-    for(ix = 0; ix < sizeof(pBusData->opArray) / sizeof(*pBusData->opArray); ix++, pOpDcpt++)
+    for(ix = 0; ix < sizeof(pBusData->opArray) / sizeof(*pBusData->opArray); ix++)
     {
         pOpDcpt->pDrvInstance = pDrvInstance;
-        TCPIP_Helper_SingleListTailAdd(&pBusData->opFreeList, (SGL_LIST_NODE*)pOpDcpt);
+        TCPIP_Helper_SingleListTailAdd(&pBusData->opFreeList, FC_OpDcpt2Node(pOpDcpt));
+        pOpDcpt++;
     }
     pExtBuff =  pBusData->extBuffArray;
-    for(ix = 0; ix < sizeof(pBusData->extBuffArray) / sizeof(*pBusData->extBuffArray); ix++, pExtBuff++)
+    for(ix = 0; ix < sizeof(pBusData->extBuffArray) / sizeof(*pBusData->extBuffArray); ix++)
     {
-        TCPIP_Helper_SingleListTailAdd(&pBusData->extBuffFreeList, (SGL_LIST_NODE*)pExtBuff);
+        TCPIP_Helper_SingleListTailAdd(&pBusData->extBuffFreeList, FC_ExtBuff2Node(pExtBuff));
+        pExtBuff++;
     }
     pBusData->extBuffSize = sizeof(pExtBuff->extBuffer) - DRV_ENC28J60_OP_EXT_BUFFER_EXTRA_SIZE; 
 
-    memset(&_phyOpDcpt, 0, sizeof(_phyOpDcpt));
+    (void)memset(&phyOpDcpt, 0, sizeof(phyOpDcpt));
 
     return 0;
 }
@@ -377,7 +451,7 @@ int32_t DRV_ENC28J60_SPI_DeinitializeInterface(DRV_ENC28J60_DriverInfo *  pDrvIn
         DRV_ENC28J60_Assert(TCPIP_Helper_SingleListCount(&pBusData->opFreeList) == sizeof(pBusData->opArray) / sizeof(*pBusData->opArray), __func__, __LINE__);
         DRV_ENC28J60_Assert(TCPIP_Helper_SingleListCount(&pBusData->extBuffFreeList) == sizeof(pBusData->extBuffArray) / sizeof(*pBusData->extBuffArray), __func__, __LINE__);
 
-        (*pDrvInstance->stackCfg.freeF)(pDrvInstance->stackCfg.memH, pDrvInstance->busData);
+        (void)(*pDrvInstance->stackCfg.freeF)(pDrvInstance->stackCfg.memH, pDrvInstance->busData);
         pDrvInstance->busData = NULL;
         pDrvInstance->busVTable = NULL;
     }
@@ -415,7 +489,7 @@ int32_t DRV_ENC28J60_SPI_OpenInterface(DRV_ENC28J60_DriverInfo *  pDrvInstance )
     DRV_SPI_TRANSFER_SETUP spiClientInfo= {    
         .chipSelect = pDrvInstance->drvCfg.spiSetup.chipSelect,//SYS_PORT_PIN_RD9,
     };
-    DRV_SPI_TransferSetup (pBusInfo->clientHandle, &spiClientInfo);
+    (void)DRV_SPI_TransferSetup (pBusInfo->clientHandle, &spiClientInfo);
     return 0;
 }
 
@@ -475,18 +549,18 @@ void DRV_ENC28J60_SPI_CloseInterface( DRV_ENC28J60_DriverInfo *  pDrvInstance)
 DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_OperationResult( DRV_ENC28J60_DriverInfo *  pDrvInstance, uintptr_t  handle, bool ack )
 {
     DRV_ENC28J60_BUS_RESULT res;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt = _DRV_OpHandleFromUserHandle(handle, false);
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt = F_DRV_OpHandleFromUserHandle(handle, false);
 
-    if(pOpDcpt == 0)
+    if(pOpDcpt == NULL)
     {   // no such descriptor
         return DRV_ENC28J60_BR_INVALID;
     }
 
-    res = _DRV_ENC28J60_LinkedOpStatus(pOpDcpt);
+    res = F_DRV_ENC28J60_LinkedOpStatus(pOpDcpt);
 
     if(res != DRV_ENC28J60_BR_PENDING && ack)
     {   // completed
-        _DRV_ReleaseLinkedOpDcpt(pDrvInstance, pOpDcpt);
+        F_DRV_ReleaseLinkedOpDcpt(pDrvInstance, pOpDcpt);
     }
 
     return res;
@@ -494,7 +568,7 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_OperationResult( DRV_ENC28J60_DriverInf
 
 // selects a new register bank
 // returns true if succes or fail and needs retry
-static bool _DRV_ENC28J60_DoBankSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP sfr)
+static bool F_DRV_ENC28J60_DoBankSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP sfr)
 {
     uint8_t     sfrBank;
     bool        success;
@@ -503,7 +577,7 @@ static bool _DRV_ENC28J60_DoBankSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
 
-    sfrBank =  sfr / 0x20;   // ENCJ60 bank size
+    sfrBank =  (uint8_t)sfr / 0x20U;   // ENCJ60 bank size
     DRV_ENC28J60_Assert(sfrBank < 4, __func__, __LINE__);
 
     if( (DRV_ENC28J60_SFR_EIE <= sfr && sfr <= DRV_ENC28J60_SFR_ECON1) || sfrBank == pBusInfo->currentBank )
@@ -517,33 +591,33 @@ static bool _DRV_ENC28J60_DoBankSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV
     {
         case 0:
             // clear both banks
-            success = DRV_ENC28J60_SPI_SfrBitClear(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
+            success = DRV_SfrBitClear_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
             break;
             
         case 1:
             // clear both banks
-            if(DRV_ENC28J60_SPI_SfrBitClear(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0)
+            if(DRV_SfrBitClear_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0)
             {
                 pBusInfo->currentBank = 0;  // just in case the next op fails
                 regEcon1.value = 1;     // set bank 1
-                success = DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
+                success = DRV_SfrBitSet_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
             }
             break;
 
         case 2:
             // clear both banks
-            if(DRV_ENC28J60_SPI_SfrBitClear(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0)
+            if(DRV_SfrBitClear_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0)
             {
                 pBusInfo->currentBank = 0;  // just in case the next op fails
                 regEcon1.value = 2;     // set bank 2
-                success =  DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
+                success =  DRV_SfrBitSet_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
             }
 
             break;
 
         case 3:
             // set both banks
-            success = DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
+            success = DRV_SfrBitSet_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, true) != 0;
             break;
 
         default:
@@ -590,24 +664,24 @@ uintptr_t DRV_ENC28J60_SPI_SfrWrite(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    if(_DRV_ENC28J60_DoBankSet(pDrvInstance, sfr))
+    if(F_DRV_ENC28J60_DoBankSet(pDrvInstance, sfr))
     {   // Put in the data
-        if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
+        if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) != NULL)
         {   
             pWrBuff = pOpDcpt->opWrBuffer;
-            *pWrBuff = DRV_ENC28J60_SPI_INST_WCR | (sfr & 0x1f);
-            *(pWrBuff + 1) = regValue.value;
+            *pWrBuff = (uint8_t)DRV_ENC28J60_SPI_INST_WCR | ((uint8_t)sfr & 0x1fU);
+            *(pWrBuff + 1) = (uint8_t)regValue.value;
             //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-            DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 2, &spiHandle);
+            DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 2UL, &spiHandle);
 
             
             if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
             {
-                _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+                F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
                 return (uintptr_t)pOpDcpt;
             }
             // couldn't launch the SPI op
-            _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+            F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
         }
     }
 
@@ -619,34 +693,34 @@ uintptr_t DRV_ENC28J60_SPI_SfrWrite16(DRV_ENC28J60_DriverInfo *  pDrvInstance, D
 {
     DRV_SPI_TRANSFER_HANDLE   spiHandle1, spiHandle2;
     uint8_t                 *pWrBuff1, *pWrBuff2;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt1 = 0;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt2 = 0;
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt1 = NULL;
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt2 = NULL;
     DRV_ENC28J60_spiBusData *pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    if(_DRV_ENC28J60_DoBankSet(pDrvInstance, sfrLow))
+    if(F_DRV_ENC28J60_DoBankSet(pDrvInstance, sfrLow))
     {   // Put in the data
-        pOpDcpt1 = _DRV_GetOpDcpt(pBusInfo, autoAck, DRV_ENC28J60_OP_FLAG_LINKED);
-        pOpDcpt2 = _DRV_GetOpDcpt(pBusInfo, autoAck, DRV_ENC28J60_OP_FLAG_LINKED);
+        pOpDcpt1 = F_DRV_GetOpDcpt(pBusInfo, autoAck, (uint8_t)DRV_ENC28J60_OP_FLAG_LINKED);
+        pOpDcpt2 = F_DRV_GetOpDcpt(pBusInfo, autoAck, (uint8_t)DRV_ENC28J60_OP_FLAG_LINKED);
 
         if(pOpDcpt1 && pOpDcpt2)
         {   // got both operations
             pWrBuff1 = pOpDcpt1->opWrBuffer;
             pWrBuff2 = pOpDcpt2->opWrBuffer;
-            *pWrBuff1 = DRV_ENC28J60_SPI_INST_WCR | (sfrLow & 0x1f);
+            *pWrBuff1 = (uint8_t)DRV_ENC28J60_SPI_INST_WCR | ((uint8_t)sfrLow & 0x1fU);
             *(pWrBuff1 + 1) = (uint8_t)regValue;
-            *pWrBuff2 = DRV_ENC28J60_SPI_INST_WCR | ((sfrLow + 1) & 0x1f);
+            *pWrBuff2 = (uint8_t)DRV_ENC28J60_SPI_INST_WCR | (((uint8_t)sfrLow + 1U) & 0x1fU);
             *(pWrBuff2 + 1) = (uint8_t)(regValue >> 8);
             
             //spiHandle1 = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff1, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-            DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff1, 2, &spiHandle1);
+            DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff1, 2UL, &spiHandle1);
             if(spiHandle1 != DRV_SPI_TRANSFER_HANDLE_INVALID)
             {
                 //spiHandle2 = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff2, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-                DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff2, 2, &spiHandle2);
+                DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff2, 2UL, &spiHandle2);
                 if(spiHandle2 != DRV_SPI_TRANSFER_HANDLE_INVALID)
                 {   // success
-                    _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, autoAck);
-                    _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt2, spiHandle2, autoAck);
+                    F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, autoAck);
+                    F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt2, spiHandle2, autoAck);
                     // link the descriptors
                     pOpDcpt1->link = pOpDcpt2;
                     return (uintptr_t)pOpDcpt1;
@@ -654,22 +728,22 @@ uintptr_t DRV_ENC28J60_SPI_SfrWrite16(DRV_ENC28J60_DriverInfo *  pDrvInstance, D
                 // couldn't launch the 2nd SPI op and the 1st one it's on its way
                 // that's why this approach is better to be avoided..
                 // mark it for auto deletion
-                _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, true);
-                pOpDcpt1->opFlags |= DRV_ENC28J60_OP_FLAG_AUTO_ACK;
-                pOpDcpt1->opFlags &= ~DRV_ENC28J60_OP_FLAG_LINKED;  // not linked anymore
+                F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, true);
+                pOpDcpt1->opFlags |= (uint8_t)DRV_ENC28J60_OP_FLAG_AUTO_ACK;
+                pOpDcpt1->opFlags &= ~(uint8_t)DRV_ENC28J60_OP_FLAG_LINKED;  // not linked anymore
                 // make sure we don't release it now
-                pOpDcpt1 = 0;
+                pOpDcpt1 = NULL;
             }
         }
     }
 
-    if(pOpDcpt1)
+    if(pOpDcpt1 != NULL)
     {
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt1);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt1);
     }
-    if(pOpDcpt2)
+    if(pOpDcpt2 != NULL)
     {
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt2);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt2);
     }
 
     return 0;
@@ -708,15 +782,15 @@ uintptr_t DRV_ENC28J60_SPI_SfrReadStart(DRV_ENC28J60_DriverInfo *  pDrvInstance,
 
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    if(!_DRV_ENC28J60_DoBankSet(pDrvInstance, sfr))
+    if(!F_DRV_ENC28J60_DoBankSet(pDrvInstance, sfr))
     {
         return 0;
     }
 
-    if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
+    if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) != NULL)
     {
         pWrBuff = pOpDcpt->opWrBuffer;
-        *pWrBuff = DRV_ENC28J60_SPI_INST_RCR | (sfr & 0x1f);    
+        *pWrBuff = (uint8_t)DRV_ENC28J60_SPI_INST_RCR | ((uint8_t)sfr & 0x1fU);
 
         if ((DRV_ENC28J60_SFR_MACON1 <= sfr && sfr <= DRV_ENC28J60_SFR_MAADR2)  || sfr == DRV_ENC28J60_SFR_MISTAT)
         {   // read buffer is selected so that the 1 byte result will be in pOpDcpt->opRdBuffer + 2;
@@ -733,11 +807,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrReadStart(DRV_ENC28J60_DriverInfo *  pDrvInstance,
         DRV_SPI_WriteReadTransferAdd(pBusInfo->clientHandle, pWrBuff, txferLen, pRdBuff, txferLen, &spiHandle);
         if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
         {
-            _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+            F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
             return (uintptr_t)pOpDcpt;
         }
 
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
     }
 
     return 0;
@@ -749,26 +823,26 @@ uintptr_t DRV_ENC28J60_SPI_SfrRead16Start(DRV_ENC28J60_DriverInfo *  pDrvInstanc
     uint8_t                 *pWrBuff1, *pWrBuff2;
     uint8_t                 *pRdBuff1, *pRdBuff2;
     size_t                  txferLen;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt1 = 0;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt2 = 0;
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt1 = NULL;
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt2 = NULL;
 
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    if(!_DRV_ENC28J60_DoBankSet(pDrvInstance, sfrLow))
+    if(!F_DRV_ENC28J60_DoBankSet(pDrvInstance, sfrLow))
     {
         return 0;
     }
 
-    pOpDcpt1 = _DRV_GetOpDcpt(pBusInfo, autoAck, DRV_ENC28J60_OP_FLAG_LINKED);
-    pOpDcpt2 = _DRV_GetOpDcpt(pBusInfo, autoAck, DRV_ENC28J60_OP_FLAG_LINKED);
+    pOpDcpt1 = F_DRV_GetOpDcpt(pBusInfo, autoAck, (uint8_t)DRV_ENC28J60_OP_FLAG_LINKED);
+    pOpDcpt2 = F_DRV_GetOpDcpt(pBusInfo, autoAck, (uint8_t)DRV_ENC28J60_OP_FLAG_LINKED);
 
     if(pOpDcpt1 && pOpDcpt2)
     {   // got both operations
         pWrBuff1 = pOpDcpt1->opWrBuffer;
         pWrBuff2 = pOpDcpt2->opWrBuffer;
 
-        *pWrBuff1 = DRV_ENC28J60_SPI_INST_RCR | (sfrLow & 0x1f);    
-        *pWrBuff2 = DRV_ENC28J60_SPI_INST_RCR | ((sfrLow + 1) & 0x1f);  
+        *pWrBuff1 = (uint8_t)DRV_ENC28J60_SPI_INST_RCR | ((uint8_t)sfrLow & 0x1fU);    
+        *pWrBuff2 = (uint8_t)DRV_ENC28J60_SPI_INST_RCR | (((uint8_t)sfrLow + 1U) & 0x1fU);  
 
         pRdBuff1 = pOpDcpt1->opRdBuffer;
         pRdBuff2 = pOpDcpt2->opRdBuffer;
@@ -791,8 +865,8 @@ uintptr_t DRV_ENC28J60_SPI_SfrRead16Start(DRV_ENC28J60_DriverInfo *  pDrvInstanc
             DRV_SPI_WriteReadTransferAdd(pBusInfo->clientHandle, pWrBuff2, txferLen, pRdBuff2, txferLen, &spiHandle2);
             if(spiHandle2 != DRV_SPI_TRANSFER_HANDLE_INVALID)
             {   // success
-                _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, autoAck);
-                _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt2, spiHandle2, autoAck);
+                F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, autoAck);
+                F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt2, spiHandle2, autoAck);
                 // link the descriptors
                 pOpDcpt1->link = pOpDcpt2;
                 return (uintptr_t)pOpDcpt1;
@@ -800,21 +874,21 @@ uintptr_t DRV_ENC28J60_SPI_SfrRead16Start(DRV_ENC28J60_DriverInfo *  pDrvInstanc
             // couldn't launch the 2nd SPI op and the 1st one it's on its way
             // that's why this approach is better to be avoided..
             // mark it for auto deletion
-            _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, true);
-            pOpDcpt1->opFlags |= DRV_ENC28J60_OP_FLAG_AUTO_ACK;
-            pOpDcpt1->opFlags &= ~DRV_ENC28J60_OP_FLAG_LINKED;  // not linked anymore
+            F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt1, spiHandle1, true);
+            pOpDcpt1->opFlags |= (uint8_t)DRV_ENC28J60_OP_FLAG_AUTO_ACK;
+            pOpDcpt1->opFlags &= ~(uint8_t)DRV_ENC28J60_OP_FLAG_LINKED;  // not linked anymore
             // make sure we don't release it now
-            pOpDcpt1 = 0;
+            pOpDcpt1 = NULL;
         }
     }
 
-    if(pOpDcpt1)
+    if(pOpDcpt1 != NULL)
     {
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt1);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt1);
     }
-    if(pOpDcpt2)
+    if(pOpDcpt2 != NULL)
     {
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt2);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt2);
     }
     return 0;
 }
@@ -849,12 +923,12 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrReadResult(DRV_ENC28J60_DriverInfo *
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
     DRV_ENC28J60_BUS_RESULT res = DRV_ENC28J60_BR_INVALID;
 
-    pOpDcpt = _DRV_OpHandleFromUserHandle(handle, false);
+    pOpDcpt = F_DRV_OpHandleFromUserHandle(handle, false);
 
     // make sure this is not an 16 bit op!
-    if(pOpDcpt && pOpDcpt->link == 0)
+    if(pOpDcpt != NULL && pOpDcpt->link == NULL)
     {
-        res = _DRV_ENC28J60_LinkedOpStatus(pOpDcpt);
+        res = F_DRV_ENC28J60_LinkedOpStatus(pOpDcpt);
 
         if (res == DRV_ENC28J60_BR_SUCCESS)
         {
@@ -863,7 +937,7 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrReadResult(DRV_ENC28J60_DriverInfo *
 
         if(res != DRV_ENC28J60_BR_PENDING && ack)
         {
-            _DRV_ReleaseLinkedOpDcpt(pDrvInstance, pOpDcpt);
+            F_DRV_ReleaseLinkedOpDcpt(pDrvInstance, pOpDcpt);
         }
     }
 
@@ -875,12 +949,12 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrRead16Result(DRV_ENC28J60_DriverInfo
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
     DRV_ENC28J60_BUS_RESULT res = DRV_ENC28J60_BR_INVALID;
 
-    pOpDcpt = _DRV_OpHandleFromUserHandle(handle, true);
+    pOpDcpt = F_DRV_OpHandleFromUserHandle(handle, true);
 
     // make sure this is an 16 bit op!
     if(pOpDcpt && pOpDcpt->link)
     {
-        res = _DRV_ENC28J60_LinkedOpStatus(pOpDcpt);
+        res = F_DRV_ENC28J60_LinkedOpStatus(pOpDcpt);
 
         if (res == DRV_ENC28J60_BR_SUCCESS)
         {
@@ -889,10 +963,43 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrRead16Result(DRV_ENC28J60_DriverInfo
 
         if(res != DRV_ENC28J60_BR_PENDING && ack)
         {   // completed
-            _DRV_ReleaseLinkedOpDcpt(pDrvInstance, pOpDcpt);
+            F_DRV_ReleaseLinkedOpDcpt(pDrvInstance, pOpDcpt);
         }
     }
     return res;
+}
+
+// special function setting the SFR bits with no Bank setting
+// use it for sfr in [DRV_ENC28J60_SFR_EIE, DRV_ENC28J60_SFR_ECON1] range
+// for this range the F_DRV_ENC28J60_DoBankSet() does nothing!
+static uintptr_t DRV_SfrBitSet_NoBank(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck)
+{
+    DRV_SPI_TRANSFER_HANDLE   spiHandle;
+    uint8_t *pWrBuff;
+    DRV_ENC28J60_OP_DCPT*   pOpDcpt;
+    DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
+
+    if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) != NULL)
+    {
+        pWrBuff = pOpDcpt->opWrBuffer;
+
+        // Put the Bit Field Set Command and SFR Adr 
+        *pWrBuff = (uint8_t)DRV_ENC28J60_SPI_INST_BFS | ((uint8_t)reg & 0x1fU);
+        // Put in the bit information to SET
+        *(pWrBuff + 1) = (uint8_t)regValue.value & 0xffU;
+
+        //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
+        DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 2UL, &spiHandle);
+
+        if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
+        {
+            F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+            return (uintptr_t)pOpDcpt;
+        }
+
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+    }
+    return 0;
 }
 
 // *****************************************************************************
@@ -920,39 +1027,47 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrRead16Result(DRV_ENC28J60_DriverInfo
 */
 uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck)
 {
+    // Select and Set the bank address for the SFR 
+    if(F_DRV_ENC28J60_DoBankSet(pDrvInstance, reg))
+    {
+        return DRV_SfrBitSet_NoBank(pDrvInstance, reg, regValue, autoAck);
+    }
+    return 0;
+}
+
+// special function clearing the SFR bits with no Bank setting
+// use it for sfr in [DRV_ENC28J60_SFR_EIE, DRV_ENC28J60_SFR_ECON1] range
+// for this range the F_DRV_ENC28J60_DoBankSet() does nothing!
+static uintptr_t DRV_SfrBitClear_NoBank(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck)
+{
     DRV_SPI_TRANSFER_HANDLE   spiHandle;
-    uint8_t *pWrBuff;
+    uint8_t*    pWrBuff;
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    //Select and Set the bank address for the SFR 
-    if(_DRV_ENC28J60_DoBankSet(pDrvInstance, reg))
+
+    if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) != NULL)
     {
-        if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
+        pWrBuff = pOpDcpt->opWrBuffer;
+
+        // Put the Bit Field Set Command and SFR Adr 
+        *pWrBuff = (uint8_t)DRV_ENC28J60_SPI_INST_BFC | ((uint8_t)reg & 0x1fU);
+        // Put in the bit information to CLR
+        *(pWrBuff + 1) = (uint8_t)regValue.value & 0xffU;
+
+        //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
+        DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 2UL, &spiHandle);
+        if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
         {
-            pWrBuff = pOpDcpt->opWrBuffer;
-
-            // Put the Bit Field Set Command and SFR Adr 
-            *pWrBuff = DRV_ENC28J60_SPI_INST_BFS | (reg & 0x1f);
-            // Put in the bit information to SET
-            *(pWrBuff + 1) = regValue.value & 0xff;
-
-            //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-            DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 2, &spiHandle);
-        
-            if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
-            {
-                _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
-                return (uintptr_t)pOpDcpt;
-            }
-
-            _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+            F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+            return (uintptr_t)pOpDcpt;
         }
+
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
     }
 
     return 0;
 }
-
 // *****************************************************************************
 /* Special Function Register Bit Clear
 
@@ -978,33 +1093,9 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
 */
 uintptr_t DRV_ENC28J60_SPI_SfrBitClear(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck)
 {
-    DRV_SPI_TRANSFER_HANDLE   spiHandle;
-    uint8_t*    pWrBuff;
-    DRV_ENC28J60_OP_DCPT*   pOpDcpt;
-    DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
-
-
-    if(_DRV_ENC28J60_DoBankSet(pDrvInstance, reg))
+    if(F_DRV_ENC28J60_DoBankSet(pDrvInstance, reg))
     {
-        if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
-        {
-            pWrBuff = pOpDcpt->opWrBuffer;
-
-            // Put the Bit Field Set Command and SFR Adr 
-            *pWrBuff = DRV_ENC28J60_SPI_INST_BFC | (reg & 0x1f);
-            // Put in the bit information to CLR
-            *(pWrBuff + 1) = regValue.value & 0xff;
-
-            //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff, 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-            DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 2, &spiHandle);
-            if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
-            {
-                _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
-                return (uintptr_t)pOpDcpt;
-            }
-
-            _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
-        }
+        return DRV_SfrBitClear_NoBank(pDrvInstance, reg, regValue, autoAck);
     }
 
     return 0;
@@ -1037,19 +1128,19 @@ uintptr_t DRV_ENC28J60_SPI_SystemReset(DRV_ENC28J60_DriverInfo *  pDrvInstance, 
     DRV_ENC28J60_OP_DCPT*   pOpDcpt;
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
+    if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) != NULL)
     {
         pWrBuff = pOpDcpt->opWrBuffer;
 
-        *pWrBuff = DRV_ENC28J60_SPI_INST_SRC;
+        *pWrBuff = (uint8_t)DRV_ENC28J60_SPI_INST_SRC;
         //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pWrBuff, 1, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-        DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 1, &spiHandle);
+        DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pWrBuff, 1UL, &spiHandle);
         if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
         {
-            _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+            F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
             return (uintptr_t)pOpDcpt;
         }
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
     }
 
     return 0;
@@ -1080,7 +1171,7 @@ uintptr_t DRV_ENC28J60_SPI_EnableRX(DRV_ENC28J60_DriverInfo *  pDrvInstance, boo
 
     regEcon1.econ1.RXEN = 1;
 
-    return DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, autoAck);
+    return DRV_SfrBitSet_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, autoAck);
 }
 
 
@@ -1110,7 +1201,7 @@ uintptr_t DRV_ENC28J60_SPI_DisableRX(DRV_ENC28J60_DriverInfo *  pDrvInstance, bo
 
     regEcon1.econ1.RXEN = 1;
 
-    return DRV_ENC28J60_SPI_SfrBitClear(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, autoAck);
+    return DRV_SfrBitClear_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON1, regEcon1, autoAck);
 }
 
 // *****************************************************************************
@@ -1141,7 +1232,7 @@ uintptr_t DRV_ENC28J60_SPI_DecrPktCtr(DRV_ENC28J60_DriverInfo *  pDrvInstance, b
 
     regEcon2.econ2.PKTDEC = 1;
 
-    return DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_ECON2, regEcon2, autoAck);
+    return DRV_SfrBitSet_NoBank(pDrvInstance, DRV_ENC28J60_SFR_ECON2, regEcon2, autoAck);
 }
 
 // *****************************************************************************
@@ -1256,14 +1347,14 @@ uintptr_t DRV_ENC28J60_SPI_FlowCtrClear(DRV_ENC28J60_DriverInfo *  pDrvInstance,
 }
 
 // starts the write state machine
-DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWriteStart(struct _DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP  reg, uint16_t regValue)
+DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWriteStart(struct S_DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP  reg, uint16_t regValue)
 {
-    if(_phyOpDcpt.currState != DRV_ENC28J60_PHY_OP_STATE_IDLE)
+    if(phyOpDcpt.currState != (uint16_t)DRV_OP_STATE_IDLE)
     {
         return DRV_ENC28J60_PHY_RES_BUSY; 
     }
 
-    _phyOpDcpt.wrValue = regValue;
+    phyOpDcpt.wrValue = regValue;
 
     return DRV_ENC28J60_SPI_PhyProcess(pDrvInstance, reg, DRV_ENC28J60_PHY_OP_WRITE_START);
 
@@ -1277,7 +1368,7 @@ DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWrite(DRV_ENC28J60_DriverInfo *  pDrvIn
 
 DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyReadStart(DRV_ENC28J60_DriverInfo* pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP reg)
 {
-    if(_phyOpDcpt.currState != DRV_ENC28J60_PHY_OP_STATE_IDLE)
+    if(phyOpDcpt.currState != (uint16_t)DRV_OP_STATE_IDLE)
     {
         return DRV_ENC28J60_PHY_RES_BUSY; 
     }
@@ -1291,7 +1382,7 @@ DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyRead(DRV_ENC28J60_DriverInfo* pDrvInsta
     DRV_ENC28J60_PHY_RES phyRes = DRV_ENC28J60_SPI_PhyProcess(pDrvInstance, reg, DRV_ENC28J60_PHY_OP_READ);
     if(phyRes == DRV_ENC28J60_PHY_RES_OK)
     {
-        *phyRegValue = _phyOpDcpt.rdValue;
+        *phyRegValue = phyOpDcpt.rdValue;
     }
 
     return phyRes;
@@ -1304,29 +1395,29 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
     DRV_ENC28J60_BUS_RESULT busRes;
     DRV_ENC28J60_RegUnion   phyReg;
     
-    if(_phyOpDcpt.currState == DRV_ENC28J60_PHY_OP_STATE_IDLE)
+    if(phyOpDcpt.currState == (uint16_t)DRV_OP_STATE_IDLE)
     {   // starting an operation
 
-        _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_START_MIREGADDR;
-        _phyOpDcpt.currReg = reg;
-        _phyOpDcpt.retryCount = 0;
+        phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_START_MIREGADDR;
+        phyOpDcpt.currReg = (uint16_t)reg;
+        phyOpDcpt.retryCount = 0;
        if(currOp == DRV_ENC28J60_PHY_OP_WRITE_START)
        {
-           _phyOpDcpt.currOp = DRV_ENC28J60_PHY_OP_WRITE;
+           phyOpDcpt.currOp = (uint16_t)DRV_ENC28J60_PHY_OP_WRITE;
        }
        else if(currOp == DRV_ENC28J60_PHY_OP_READ_START)
        {
-           _phyOpDcpt.currOp = DRV_ENC28J60_PHY_OP_READ;
+           phyOpDcpt.currOp = (uint16_t)DRV_ENC28J60_PHY_OP_READ;
        }
        else
        {    // invalid
-           _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_IDLE;
+           phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_IDLE;
            return DRV_ENC28J60_PHY_RES_OP_ERROR; 
        }
     }
     else
     {   // already mid operation
-        if(_phyOpDcpt.currOp != currOp || _phyOpDcpt.currReg != reg)
+        if(phyOpDcpt.currOp != (uint16_t)currOp || phyOpDcpt.currReg != (uint16_t)reg)
         {
             return DRV_ENC28J60_PHY_RES_OP_ERROR; 
         }
@@ -1335,20 +1426,20 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
     
     // assume everything OK
     phyRes = DRV_ENC28J60_PHY_RES_PENDING; 
-    switch(_phyOpDcpt.currState)
+    switch(phyOpDcpt.currState)
     {
-        case DRV_ENC28J60_PHY_OP_STATE_START_MIREGADDR:
+        case (uint16_t)DRV_OP_STATE_START_MIREGADDR:
             phyReg.value = 0;
-            phyReg.miregadr.MIREGADR = reg;
+            phyReg.miregadr.MIREGADR = (uint8_t)reg;
 
-            if((_phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrWrite(pDrvInstance, DRV_ENC28J60_SFR_MIREGADR, phyReg, false)) != 0)
+            if((phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrWrite(pDrvInstance, DRV_ENC28J60_SFR_MIREGADR, phyReg, false)) != 0)
             {   // success
-                _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_WAIT_MIREGADDR;
+                phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_WAIT_MIREGADDR;
             }
             else
             {
-                _phyOpDcpt.totRetryCnt++;
-                if(++_phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
+                phyOpDcpt.totRetryCnt++;
+                if(++phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
                 {   // exceeded retries 
                     phyRes = DRV_ENC28J60_PHY_RES_RESOURCE_ERROR;
                 }
@@ -1356,8 +1447,8 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             // else retry is good
             break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_WAIT_MIREGADDR:
-            busRes = DRV_ENC28J60_SPI_OperationResult(pDrvInstance, _phyOpDcpt.currOpDcpt, true);
+        case (uint16_t)DRV_OP_STATE_WAIT_MIREGADDR:
+            busRes = DRV_ENC28J60_SPI_OperationResult(pDrvInstance, phyOpDcpt.currOpDcpt, true);
             if(busRes < 0)
             {
                 phyRes = DRV_ENC28J60_PHY_RES_TXFER_ERROR; 
@@ -1367,40 +1458,44 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             {
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // done
-            _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_START_MIIRD_MIWR;
-            _phyOpDcpt.retryCount = 0;
-            // no break;
+            phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_START_MIIRD_MIWR;
+            phyOpDcpt.retryCount = 0;
+            break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_START_MIIRD_MIWR:
-            if(_phyOpDcpt.currOp == DRV_ENC28J60_PHY_OP_READ)
+        case (uint16_t)DRV_OP_STATE_START_MIIRD_MIWR:
+            if(phyOpDcpt.currOp == (uint16_t)DRV_ENC28J60_PHY_OP_READ)
             {   // advance: set the MICMD.MIIRD bit
                 phyReg.value = 0;
                 phyReg.micmd.MIIRD = 1;
-                _phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_MICMD, phyReg, false);
+                phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrBitSet(pDrvInstance, DRV_ENC28J60_SFR_MICMD, phyReg, false);
             }
             else
             {   // write
-                _phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrWrite16(pDrvInstance, DRV_ENC28J60_SFR_MIWRL, _phyOpDcpt.wrValue, false);
+                phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrWrite16(pDrvInstance, DRV_ENC28J60_SFR_MIWRL, phyOpDcpt.wrValue, false);
             }
 
-            if(_phyOpDcpt.currOpDcpt != 0)
+            if(phyOpDcpt.currOpDcpt != 0)
             {   // success
-                _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_WAIT_MIIRD_MIWR;
+                phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_WAIT_MIIRD_MIWR;
             }
             else
             {
-                _phyOpDcpt.totRetryCnt++;
-                if(++_phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
+                phyOpDcpt.totRetryCnt++;
+                if(++phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
                 {   // exceeded retries 
                     phyRes = DRV_ENC28J60_PHY_RES_RESOURCE_ERROR;
                 }
             }
             break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_WAIT_MIIRD_MIWR:
-            busRes = DRV_ENC28J60_SPI_OperationResult(pDrvInstance, _phyOpDcpt.currOpDcpt, true);
+        case (uint16_t)DRV_OP_STATE_WAIT_MIIRD_MIWR:
+            busRes = DRV_ENC28J60_SPI_OperationResult(pDrvInstance, phyOpDcpt.currOpDcpt, true);
             if(busRes < 0)
             {
                 phyRes = DRV_ENC28J60_PHY_RES_TXFER_ERROR; 
@@ -1410,41 +1505,45 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             {
                 break;
             } 
+            else
+            {
+                // OK
+            }
 
             // done; advance: wait for the tick to pass
-            _phyOpDcpt.startTick = SYS_TMR_TickCountGet();
-            _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_WAIT_TMO;
+            phyOpDcpt.startTick = SYS_TMR_TickCountGet();
+            phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_WAIT_TMO;
             break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_WAIT_TMO:
-            if(SYS_TMR_TickCountGet() == _phyOpDcpt.startTick)
+        case (uint16_t)DRV_OP_STATE_WAIT_TMO:
+            if(SYS_TMR_TickCountGet() == phyOpDcpt.startTick)
             {   // wait some more
                 break;
             }
 
-            _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_POLL_BUSY;
-            _phyOpDcpt.retryCount = 0;
+            phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_POLL_BUSY;
+            phyOpDcpt.retryCount = 0;
             // advance and poll MISTAT.BUSY
-            // no break;
+            break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_POLL_BUSY:
-            if((_phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrReadStart(pDrvInstance, DRV_ENC28J60_SFR_MISTAT, false)) != 0)
+        case (uint16_t)DRV_OP_STATE_POLL_BUSY:
+            if((phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrReadStart(pDrvInstance, DRV_ENC28J60_SFR_MISTAT, false)) != 0)
             {   // success
-                _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_WAIT_BUSY;
+                phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_WAIT_BUSY;
             }
             else
             {   // failed
-                _phyOpDcpt.totRetryCnt++;
-                if(++_phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
+                phyOpDcpt.totRetryCnt++;
+                if(++phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
                 {   // exceeded retries 
                     phyRes = DRV_ENC28J60_PHY_RES_RESOURCE_ERROR;
                 }
             }
             break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_WAIT_BUSY:
+        case (uint16_t)DRV_OP_STATE_WAIT_BUSY:
             phyReg.value = 0;
-            busRes = DRV_ENC28J60_SPI_SfrReadResult(pDrvInstance, _phyOpDcpt.currOpDcpt, &phyReg, true);
+            busRes = DRV_ENC28J60_SPI_SfrReadResult(pDrvInstance, phyOpDcpt.currOpDcpt, &phyReg, true);
             if(busRes < 0)
             {
                 phyRes = DRV_ENC28J60_PHY_RES_TXFER_ERROR; 
@@ -1454,44 +1553,48 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             {
                 break;
             } 
+            else
+            {
+                // OK
+            }
             // have a read MISTAT reg
-            if(phyReg.mistat.BUSY)
+            if(phyReg.mistat.BUSY != 0U)
             {   // not ready, wait some more
-                _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_POLL_BUSY;
+                phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_POLL_BUSY;
                 break;
             }
             
             // BUSY is cleared; operation complete
-            if(_phyOpDcpt.currOp == DRV_ENC28J60_PHY_OP_WRITE)
+            if(phyOpDcpt.currOp == (uint16_t)DRV_ENC28J60_PHY_OP_WRITE)
             {   // we're done
                 phyRes = DRV_ENC28J60_PHY_RES_OK; 
                 break;
             }
 
             // more ops for read...advance: clear the MICMD.MIIRD bit
-            _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_START_MICMD;
-            _phyOpDcpt.retryCount = 0;
-            // no break
+            phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_START_MICMD;
+            phyOpDcpt.retryCount = 0;
+            break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_START_MICMD:
+        case (uint16_t)DRV_OP_STATE_START_MICMD:
             phyReg.value = 0;
             phyReg.micmd.MIIRD = 1;
-            if((_phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrBitClear(pDrvInstance, DRV_ENC28J60_SFR_MICMD, phyReg, false)) != 0)
+            if((phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrBitClear(pDrvInstance, DRV_ENC28J60_SFR_MICMD, phyReg, false)) != 0)
             {   // success
-                _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_WAIT_MICMD;
+                phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_WAIT_MICMD;
             }
             else
             {
-                _phyOpDcpt.totRetryCnt++;
-                if(++_phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
+                phyOpDcpt.totRetryCnt++;
+                if(++phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
                 {   // exceeded retries 
                     phyRes = DRV_ENC28J60_PHY_RES_RESOURCE_ERROR;
                 }
             }
             break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_WAIT_MICMD:
-            busRes = DRV_ENC28J60_SPI_OperationResult(pDrvInstance, _phyOpDcpt.currOpDcpt, true);
+        case (uint16_t)DRV_OP_STATE_WAIT_MICMD:
+            busRes = DRV_ENC28J60_SPI_OperationResult(pDrvInstance, phyOpDcpt.currOpDcpt, true);
             if(busRes < 0)
             {
                 phyRes = DRV_ENC28J60_PHY_RES_TXFER_ERROR; 
@@ -1501,29 +1604,33 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             {
                 break;
             } 
+            else
+            {
+                // OK
+            }
             
             // done; advance: read the MIRDL/MIRDL registers
-            _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_START_MIRD;
-            _phyOpDcpt.retryCount = 0;
-            // no break
+            phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_START_MIRD;
+            phyOpDcpt.retryCount = 0;
+            break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_START_MIRD:
-            if((_phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrRead16Start(pDrvInstance, DRV_ENC28J60_SFR_MIRDL, false)) != 0)
+        case (uint16_t)DRV_OP_STATE_START_MIRD:
+            if((phyOpDcpt.currOpDcpt = DRV_ENC28J60_SPI_SfrRead16Start(pDrvInstance, DRV_ENC28J60_SFR_MIRDL, false)) != 0)
             {   // success
-                _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_WAIT_MIRD;
+                phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_WAIT_MIRD;
             }
             else
             {
-                _phyOpDcpt.totRetryCnt++;
-                if(++_phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
+                phyOpDcpt.totRetryCnt++;
+                if(++phyOpDcpt.retryCount >= DRV_ENC28J60_PHY_OP_RETRIES)
                 {   // exceeded retries 
                     phyRes = DRV_ENC28J60_PHY_RES_RESOURCE_ERROR;
                 }
             }
             break;
 
-        case DRV_ENC28J60_PHY_OP_STATE_WAIT_MIRD:
-            busRes = DRV_ENC28J60_SPI_SfrRead16Result(pDrvInstance, _phyOpDcpt.currOpDcpt, &_phyOpDcpt.rdValue, true);
+        case (uint16_t)DRV_OP_STATE_WAIT_MIRD:
+            busRes = DRV_ENC28J60_SPI_SfrRead16Result(pDrvInstance, phyOpDcpt.currOpDcpt, &phyOpDcpt.rdValue, true);
             if(busRes < 0)
             {
                 phyRes = DRV_ENC28J60_PHY_RES_TXFER_ERROR; 
@@ -1533,19 +1640,24 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             {
                 break;
             } 
+            else
+            {
+                // OK
+            }
 
             // done: successfully got the result in the rdValue
             phyRes = DRV_ENC28J60_PHY_RES_OK; 
             break;
 
         default:
+            // do nothing
             break;
 
     }
 
     if(phyRes != DRV_ENC28J60_PHY_RES_PENDING)
     {   // operation ended, one way or another
-        _phyOpDcpt.currState = DRV_ENC28J60_PHY_OP_STATE_IDLE;
+        phyOpDcpt.currState = (uint16_t)DRV_OP_STATE_IDLE;
     }
 
 
@@ -1600,38 +1712,38 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
     TCPIP_MAC_RES   res;
     uint16_t    pktLen = 0;
     int         nTxSegs = 0;
-    TCPIP_MAC_DATA_SEGMENT* pSeg = pTxPkt ? pTxPkt->pDSeg : 0;
+    TCPIP_MAC_DATA_SEGMENT* pSeg = pTxPkt != NULL ? pTxPkt->pDSeg : NULL;
 
-    if(autoAck == false && pHandle == 0)
+    if(autoAck == false && pHandle == NULL)
     {   // a packet that has to be acknowledged needs a handle!
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    if(pSeg == 0)
+    if(pSeg == NULL)
     {   // cannot send this packet; 
         return TCPIP_MAC_RES_PACKET_ERR;
     }
 
 
-    if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) == 0)
+    if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) == NULL)
     {   // retry, too many ops ongoing
         return TCPIP_MAC_RES_PENDING;
     }
 
-    if(pHandle)
+    if(pHandle != NULL)
     {
         *pHandle = 0;
     }
 
     // Calculate packet size and number of segments
-    while(pSeg != 0)
+    while(pSeg != NULL)
     {
         nTxSegs++;
         pktLen += pSeg->segLen;
         pSeg = pSeg->next;
     }
 
-    pExtBuff = 0;
+    pExtBuff = NULL;
 
     while(true)
     {
@@ -1647,8 +1759,8 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
                 break;
             }
 
-            pExtBuff = _DRV_GetExtBuffer(pBusInfo);
-            if(pExtBuff == 0)
+            pExtBuff = F_DRV_GetExtBuffer(pBusInfo);
+            if(pExtBuff == NULL)
             {   // not enough buffers; retry later
                 res = TCPIP_MAC_RES_PENDING;
                 break;
@@ -1663,11 +1775,11 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
         }
 
         // Put the Write Buffer Memory Command
-        *pTxBuff = DRV_ENC28J60_SPI_INST_WBM;
+        *pTxBuff = (uint8_t)DRV_ENC28J60_SPI_INST_WBM;
         *(pTxBuff +1) = 0;  // control/override byte: no override, use the MACON settings
 
         //spiHandle = DRV_SPI_BufferAddWrite(pBusInfo->clientHandle, pTxBuff, pktLen + 2, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
-        DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pTxBuff, pktLen + 2, &spiHandle);
+        DRV_SPI_WriteTransferAdd(pBusInfo->clientHandle, pTxBuff, (size_t)pktLen + 2UL, &spiHandle);
         if(spiHandle == DRV_SPI_TRANSFER_HANDLE_INVALID)
         {
             res = TCPIP_MAC_RES_PENDING;
@@ -1675,7 +1787,7 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
         }
 
         // ok, scheduled successfully
-        _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+        F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
         if(autoAck == false)
         {
             *pHandle = (uintptr_t)pOpDcpt;
@@ -1684,7 +1796,7 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
     }
 
     // failed somehow; release the buffer
-    _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+    F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
     return res;
 }
 
@@ -1697,19 +1809,19 @@ uintptr_t DRV_ENC28J60_SPI_ReadDataStart(DRV_ENC28J60_DriverInfo *  pDrvInstance
 
     DRV_ENC28J60_spiBusData * pBusInfo = (DRV_ENC28J60_spiBusData *)pDrvInstance->busData;
 
-    if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
+    if((pOpDcpt = F_DRV_GetOpDcpt(pBusInfo, autoAck, 0U)) != NULL)
     {
         pWrBuff = pOpDcpt->opWrBuffer;
 
-        *pWrBuff = DRV_ENC28J60_SPI_INST_RBM;   
+        *pWrBuff = (uint8_t)DRV_ENC28J60_SPI_INST_RBM;   
 
-        DRV_SPI_WriteReadTransferAdd(pBusInfo->clientHandle, pWrBuff, 1, &buffer[-1], dataSize + 1, &spiHandle);
+        DRV_SPI_WriteReadTransferAdd(pBusInfo->clientHandle, pWrBuff, 1UL, &buffer[-1], (size_t)(dataSize + 1UL), &spiHandle);
         if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
         {
-            _DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
+            F_DRV_OpSetSpiHandle(pBusInfo, pOpDcpt, spiHandle, autoAck);
             return (uintptr_t)pOpDcpt;
         }
-        _DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
+        F_DRV_ReleaseOpDcpt(pBusInfo, pOpDcpt);
     }
 
     return 0;

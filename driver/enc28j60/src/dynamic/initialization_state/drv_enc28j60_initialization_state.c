@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -38,9 +38,10 @@ Microchip or any third party.
 #include "../drv_enc28j60_local.h"
 
 
-int32_t DRV_ENC28J60_InitStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_InitStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     int32_t res;
+    int32_t retVal = 0;
 
     switch (pDrvInst->mainStateInfo.initInfo.state)
     {
@@ -49,7 +50,7 @@ int32_t DRV_ENC28J60_InitStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             if (res == 0)
             {
                 pDrvInst->mainStateInfo.initInfo.state = DRV_ENC28J60_IS_DETECT;
-                DRV_ENC28J60_DetectStateEnter(pDrvInst);
+                (void)DRV_ENC28J60_DetectStateEnter(pDrvInst);
             }
             break;
 
@@ -58,41 +59,45 @@ int32_t DRV_ENC28J60_InitStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             if (res == 1)
             {
                 pDrvInst->mainStateInfo.initInfo.state = DRV_ENC28J60_IS_RESET;
-                DRV_ENC28J60_DetectStateExit(pDrvInst);
-                DRV_ENC28J60_ResetStateEnter(pDrvInst);
+                (void)DRV_ENC28J60_DetectStateExit(pDrvInst);
+                (void)DRV_ENC28J60_ResetStateEnter(pDrvInst);
             }
             break;
-            
+
         case DRV_ENC28J60_IS_RESET:
             res = DRV_ENC28J60_ResetStateTask(pDrvInst);
             if (res == 1)
             {
                 pDrvInst->mainStateInfo.initInfo.state = DRV_ENC28J60_IS_CONFIG;
-                DRV_ENC28J60_ResetStateExit(pDrvInst);
-                DRV_ENC28J60_ConfigStateEnter(pDrvInst);
+                (void)DRV_ENC28J60_ResetStateExit(pDrvInst);
+                (void)DRV_ENC28J60_ConfigStateEnter(pDrvInst);
             }
             break;
-            
+
         case DRV_ENC28J60_IS_CONFIG:
             res = DRV_ENC28J60_ConfigStateTask(pDrvInst);
             if (res == 1)
             {
-                DRV_ENC28J60_ConfigStateExit(pDrvInst);
-                return 1;
+                (void)DRV_ENC28J60_ConfigStateExit(pDrvInst);
+                retVal = 1;
             }
+            break;
+
+        default:
+            // do nothing
             break;
     }
 
-    return 0;
+    return retVal;
 }
 
-int32_t DRV_ENC28J60_InitStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_InitStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     pDrvInst->mainStateInfo.initInfo.state = DRV_ENC28J60_IS_OPEN_BUS;
     return 0;
 }
 
-int32_t DRV_ENC28J60_InitStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_InitStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,14 +34,14 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENC28J60_CHECK_TX_STATUS_STATE_H_
-#define _DRV_ENC28J60_CHECK_TX_STATUS_STATE_H_
+#ifndef H_DRV_ENC28J60_CHECK_TX_STATUS_STATE_H_
+#define H_DRV_ENC28J60_CHECK_TX_STATUS_STATE_H_
 
 #include "system_config.h"
 #include <stdbool.h>
 #include <stdint.h>
 
-struct _DRV_ENC28J60_DriverInfo;
+struct S_DRV_ENC28J60_DriverInfo;
 
 typedef enum
 {
@@ -54,7 +54,7 @@ typedef enum
     DRV_ENC28J60_CTS_DONE,
 }DRV_ENC28J60_CHECK_TX_STATUS_STATES;
 
-typedef struct _DRV_ENC28J60_CHECK_TX_STATUS_INFO
+typedef struct 
 {
     DRV_ENC28J60_CHECK_TX_STATUS_STATES state;
     bool txUpdateNeeded;
@@ -62,8 +62,9 @@ typedef struct _DRV_ENC28J60_CHECK_TX_STATUS_INFO
     void* pTxLock;
 }DRV_ENC28J60_CHECK_TX_STATUS_INFO;
 
-int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_ChkTxStatusStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_ChkTxStatusStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ChkTxStatusStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ChkTxStatusStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
 
-#endif
+#endif  // H_DRV_ENC28J60_CHECK_TX_STATUS_STATE_H_
+

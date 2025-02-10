@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,34 +45,34 @@ Microchip or any third party.
 // Data needed by the TCPIP Stack
 const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject =
 {
-    .macId = TCPIP_MODULE_MAC_ENCJ60,
-    .macType = TCPIP_MAC_TYPE_ETH,    
+    .macId = (uint16_t)TCPIP_MODULE_MAC_ENCJ60,
+    .macType = (uint8_t)TCPIP_MAC_TYPE_ETH,    
     .macName = "ENC28J60",
-    .TCPIP_MAC_Initialize = DRV_ENC28J60_StackInitialize,
+    .MAC_Initialize = &DRV_ENC28J60_StackInitialize,
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-    .TCPIP_MAC_Deinitialize = DRV_ENC28J60_Deinitialize,
-    .TCPIP_MAC_Reinitialize = DRV_ENC28J60_Reinitialize,
+    .MAC_Deinitialize = &DRV_ENC28J60_Deinitialize,
+    .MAC_Reinitialize = &DRV_ENC28J60_Reinitialize,
 #else
-    .TCPIP_MAC_Deinitialize = 0,
-    .TCPIP_MAC_Reinitialize = 0,
+    .MAC_Deinitialize = NULL,
+    .MAC_Reinitialize = NULL,
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-    .TCPIP_MAC_Status = DRV_ENC28J60_Status,
-    .TCPIP_MAC_Tasks = DRV_ENC28J60_Tasks,
-    .TCPIP_MAC_Open = DRV_ENC28J60_Open,
-    .TCPIP_MAC_Close = DRV_ENC28J60_Close,
-    .TCPIP_MAC_LinkCheck = DRV_ENC28J60_LinkCheck,
-    .TCPIP_MAC_RxFilterHashTableEntrySet = DRV_ENC28J60_RxFilterHashTableEntrySet,
-    .TCPIP_MAC_PowerMode = DRV_ENC28J60_PowerMode,
-    .TCPIP_MAC_PacketTx = DRV_ENC28J60_PacketTx,
-    .TCPIP_MAC_PacketRx = DRV_ENC28J60_PacketRx,
-    .TCPIP_MAC_Process = DRV_ENC28J60_Process,
-    .TCPIP_MAC_StatisticsGet = DRV_ENC28J60_StatisticsGet,
-    .TCPIP_MAC_ParametersGet = DRV_ENC28J60_ParametersGet,
-    .TCPIP_MAC_RegisterStatisticsGet = DRV_ENC28J60_RegisterStatisticsGet,
-    .TCPIP_MAC_ConfigGet = DRV_ENC28J60_ConfigGet,
-    .TCPIP_MAC_EventMaskSet = DRV_ENC28J60_EventMaskSet,
-    .TCPIP_MAC_EventAcknowledge = DRV_ENC28J60_EventAcknowledge,
-    .TCPIP_MAC_EventPendingGet = DRV_ENC28J60_EventPendingGet,
+    .MAC_Status = &DRV_ENC28J60_Status,
+    .MAC_Tasks = &DRV_ENC28J60_Tasks,
+    .MAC_Open = &DRV_ENC28J60_Open,
+    .MAC_Close = &DRV_ENC28J60_Close,
+    .MAC_LinkCheck = &DRV_ENC28J60_LinkCheck,
+    .MAC_RxFilterHashTableEntrySet = &DRV_ENC28J60_RxFilterHashTableEntrySet,
+    .MAC_PowerMode = &DRV_ENC28J60_PowerMode,
+    .MAC_PacketTx = &DRV_ENC28J60_PacketTx,
+    .MAC_PacketRx = &DRV_ENC28J60_PacketRx,
+    .MAC_Process = &DRV_ENC28J60_Process,
+    .MAC_StatisticsGet = &DRV_ENC28J60_StatisticsGet,
+    .MAC_ParametersGet = &DRV_ENC28J60_ParametersGet,
+    .MAC_RegisterStatisticsGet = &DRV_ENC28J60_RegisterStatisticsGet,
+    .MAC_ConfigGet = &DRV_ENC28J60_ConfigGet,
+    .MAC_EventMaskSet = &DRV_ENC28J60_EventMaskSet,
+    .MAC_EventAcknowledge = &DRV_ENC28J60_EventAcknowledge,
+    .MAC_EventPendingGet = &DRV_ENC28J60_EventPendingGet,
 };
 
 // Local information
@@ -81,7 +81,7 @@ static DRV_ENC28J60_ClientInfo drvENC28J60ClntInst[DRV_ENC28J60_CLIENT_INSTANCES
 static uint8_t drvENC28J60NumOfDrivers = 0;
 static OSAL_MUTEX_HANDLE_TYPE  drvENC28J60ClntMutex;
 
-bool _DRV_ENC28J60_ValidateDriverInstance(DRV_ENC28J60_DriverInfo * ptr)
+static bool F_DRV_ENC28J60_ValidateDriverInstance(DRV_ENC28J60_DriverInfo * ptr)
 {
     uint8_t x;
     for (x = 0; x < DRV_ENC28J60_INSTANCES_NUMBER; x++)
@@ -98,7 +98,7 @@ bool _DRV_ENC28J60_ValidateDriverInstance(DRV_ENC28J60_DriverInfo * ptr)
     return false;
 }
 
-DRV_ENC28J60_DriverInfo * _DRV_ENC28J60_ValidateClientHandle(DRV_ENC28J60_ClientInfo * ptr)
+static DRV_ENC28J60_DriverInfo * F_DRV_ENC28J60_ValidateClientHandle(DRV_ENC28J60_ClientInfo * ptr)
 {
     uint8_t x;
     for (x = 0; x < DRV_ENC28J60_CLIENT_INSTANCES_IDX0; x++)
@@ -109,7 +109,7 @@ DRV_ENC28J60_DriverInfo * _DRV_ENC28J60_ValidateClientHandle(DRV_ENC28J60_Client
             {
                 return NULL;
             }
-            if (_DRV_ENC28J60_ValidateDriverInstance(ptr->pDrvInst))
+            if (F_DRV_ENC28J60_ValidateDriverInstance(ptr->pDrvInst))
             {
                 return ptr->pDrvInst;
             }
@@ -145,7 +145,7 @@ DRV_ENC28J60_DriverInfo * _DRV_ENC28J60_ValidateClientHandle(DRV_ENC28J60_Client
         If successful: returns a valid handle to the driver instance
         If unsuccessful: returns SYS_MODULE_OBJ_INVALID
 */
-SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT * init)
+SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * init)
 {
     if (index >= DRV_ENC28J60_INSTANCES_NUMBER)
     {
@@ -163,7 +163,7 @@ SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT *
     }
 
     // Clear out any cruft that might be in there
-    memset(pDrvInst, 0, sizeof(*pDrvInst));
+    (void)memset(pDrvInst, 0, sizeof(*pDrvInst));
 
     pDrvInst->inUse = true;
     OSAL_RESULT res;
@@ -178,11 +178,18 @@ SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT *
     res = res;
     SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not create the OSAL Mutex for driver protection");
 
-    memcpy(&(pDrvInst->drvCfg), init, sizeof(DRV_ENC28J60_Configuration));
+    union
+    {
+        const SYS_MODULE_INIT * init;
+        DRV_ENC28J60_Configuration* pDrvCfg;
+    }U_MOD_INIT_DRV_CFG;
 
-    TCPIP_Helper_ProtectedSingleListInitialize(&pDrvInst->rxFreePackets);
-    TCPIP_Helper_ProtectedSingleListInitialize(&pDrvInst->rxWaitingForPickupPackets);
-    TCPIP_Helper_ProtectedSingleListInitialize(&pDrvInst->txPendingPackets);
+    U_MOD_INIT_DRV_CFG.init = init;
+    pDrvInst->drvCfg = *U_MOD_INIT_DRV_CFG.pDrvCfg;
+
+    (void)TCPIP_Helper_ProtSglListInitialize(&pDrvInst->rxFreePackets);
+    (void)TCPIP_Helper_ProtSglListInitialize(&pDrvInst->rxWaitingForPickupPackets);
+    (void)TCPIP_Helper_ProtSglListInitialize(&pDrvInst->txPendingPackets);
 
     return (SYS_MODULE_OBJ)pDrvInst;
 }
@@ -209,39 +216,39 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object)
     DRV_ENC28J60_DriverInfo * pDrvInst = ( DRV_ENC28J60_DriverInfo *)object;
     TCPIP_MAC_PACKET* pkt;
     
-    if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
         return;
     }
 
-    DRV_ENC28J60_SPI_DeinitializeInterface(pDrvInst);
+    (void)DRV_ENC28J60_SPI_DeinitializeInterface(pDrvInst);
 
-    OSAL_MUTEX_Delete(&pDrvInst->drvMutex);
+    (void)OSAL_MUTEX_Delete(&pDrvInst->drvMutex);
     // Clear out any cruft that might be in there
 
-    while (TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->rxFreePackets) != 0)
+    while (TCPIP_Helper_ProtSglListCount(&pDrvInst->rxFreePackets) != 0)
     {
-        TCPIP_MAC_PACKET * pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxFreePackets);
+        pkt = FC_Node2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->rxFreePackets));
         (*pDrvInst->stackCfg.pktFreeF)(pkt);
     }
-    TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxFreePackets);
+    TCPIP_Helper_ProtSglListDeinitialize(&pDrvInst->rxFreePackets);
 
-    while ((pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets)) != 0)
+    while ((pkt = FC_Node2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->txPendingPackets))) != NULL)
     {
         pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;        
         // acknowledge the packet
         (*pDrvInst->stackCfg.pktAckF)(pkt, TCPIP_MAC_PKT_ACK_NET_DOWN, TCPIP_THIS_MODULE_ID);
        
     } 
-    TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->txPendingPackets);
-    TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
+    TCPIP_Helper_ProtSglListDeinitialize(&pDrvInst->txPendingPackets);
+    TCPIP_Helper_ProtSglListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
 
 
-    memset(pDrvInst, 0, sizeof(*pDrvInst));
+    (void)memset(pDrvInst, 0, sizeof(*pDrvInst));
     drvENC28J60NumOfDrivers--;
     if (drvENC28J60NumOfDrivers == 0)
     {
-        OSAL_MUTEX_Delete(&drvENC28J60ClntMutex);
+        (void)OSAL_MUTEX_Delete(&drvENC28J60ClntMutex);
     }
 }
 
@@ -293,23 +300,29 @@ void DRV_ENC28J60_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * co
 SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ object)
 {
     DRV_ENC28J60_DriverInfo * pDrvInst = ( DRV_ENC28J60_DriverInfo *)object;
-    if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
         return SYS_STATUS_ERROR;
     }
+    SYS_STATUS sysStat;
     switch(pDrvInst->mainStateInfo.state)
     {
         case DRV_ENC28J60_MS_UNINITIALIZED:
         case DRV_ENC28J60_MS_INITIALIZATION:
-            return SYS_STATUS_UNINITIALIZED;
+            sysStat = SYS_STATUS_UNINITIALIZED;
+            break;
         case DRV_ENC28J60_MS_CLOSED:
         case DRV_ENC28J60_MS_RUNNING:
-            return SYS_STATUS_READY;
+            sysStat = SYS_STATUS_READY;
+            break;
         case DRV_ENC28J60_MS_CLOSING:
-            return SYS_STATUS_BUSY;
+            sysStat = SYS_STATUS_BUSY;
+            break;
         default:
-            return SYS_STATUS_ERROR;
+            sysStat = SYS_STATUS_ERROR;
+            break;
     }
+    return sysStat;
 }
 
 // *****************************************************************************
@@ -333,11 +346,11 @@ SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ object)
 void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object)
 {
     DRV_ENC28J60_DriverInfo * pDrvInst = ( DRV_ENC28J60_DriverInfo *)object;
-    if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
         return;
     }
-    DRV_ENC28J60_MainStateTask(pDrvInst);
+    (void)DRV_ENC28J60_MainStateTask(pDrvInst);
 }
 
 // *****************************************************************************
@@ -362,12 +375,12 @@ void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object)
     Returns:
         None
 */
-bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init)
+bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, const TCPIP_MAC_MODULE_CTRL * init)
 {
     TCPIP_MAC_PACKET * pkt;
     DRV_ENC28J60_DriverInfo * pDrvInst = ( DRV_ENC28J60_DriverInfo *)object;
 
-    if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
         return false;
     }
@@ -377,10 +390,10 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
         return false;
     }
 
-    memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
-    memcpy(pDrvInst->stackParameters.ifPhyAddress.v, init->ifPhyAddress.v, sizeof(TCPIP_MAC_ADDR));
+    (void)memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
+    (void)memcpy(pDrvInst->stackParameters.ifPhyAddress.v, init->ifPhyAddress.v, sizeof(TCPIP_MAC_ADDR));
     pDrvInst->stackParameters.macType = TCPIP_MAC_TYPE_ETH;
-    pDrvInst->stackParameters.processFlags = 0;
+    pDrvInst->stackParameters.processFlags = TCPIP_MAC_PROCESS_FLAG_NONE;
     pDrvInst->stackCfgReady = true;
    
     int32_t res = DRV_ENC28J60_SPI_InitializeInterface(pDrvInst);
@@ -395,19 +408,19 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
     for (count = 0; count < pDrvInst->drvCfg.rxDescriptors; count++)
     {
         pkt = (*pDrvInst->stackCfg.pktAllocF)(pDrvInst->drvCfg.rxDescBufferSize, pDrvInst->drvCfg.rxDescBufferSize, TCPIP_MAC_PKT_FLAG_STATIC);
-        if(pkt == 0)
+        if(pkt == NULL)
         {
             SYS_ASSERT(false, "ENC28J60: could not allocate packets");
             break;
         }
-        pkt->ackFunc = DRV_ENC28J60_RxPacketAck;
+        pkt->ackFunc = &DRV_ENC28J60_RxPacketAck;
         pkt->ackParam = pDrvInst;
-        TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
+        TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxFreePackets, FC_MacPkt2Node(pkt));
     }
 
     if(count != pDrvInst->drvCfg.rxDescriptors)
     {   // failed
-        while((pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxFreePackets)) != 0)
+        while((pkt = FC_Node2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->rxFreePackets))) != NULL)
         {
             (*pDrvInst->stackCfg.pktFreeF)(pkt);
         }
@@ -439,15 +452,21 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
         If successful: returns a valid handle to the driver instance
         If unsuccessful: returns SYS_MODULE_OBJ_INVALID
 */
-SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
+SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
 {
-    const TCPIP_MAC_INIT * const ptr = (const TCPIP_MAC_INIT * const)init;
-    SYS_MODULE_OBJ pDrvInst = DRV_ENC28J60_Initialize(index - TCPIP_MODULE_MAC_ENCJ60, (SYS_MODULE_INIT *)ptr->moduleData);
+    union
+    {
+        const SYS_MODULE_INIT* init;
+        const TCPIP_MAC_INIT* pMacInit;
+    }U_MOD_INIT_MAC_INIT;
+    U_MOD_INIT_MAC_INIT.init = init;
+    const TCPIP_MAC_INIT * const ptr = U_MOD_INIT_MAC_INIT.pMacInit;
+    SYS_MODULE_OBJ pDrvInst = DRV_ENC28J60_Initialize(index - (SYS_MODULE_INDEX)TCPIP_MODULE_MAC_ENCJ60, (const SYS_MODULE_INIT *)ptr->moduleData);
     if (pDrvInst == SYS_MODULE_OBJ_INVALID)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
-    if(!DRV_ENC28J60_SetMacCtrlInfo(pDrvInst, (TCPIP_MAC_MODULE_CTRL *)ptr->macControl))
+    if(!DRV_ENC28J60_SetMacCtrlInfo(pDrvInst, (const TCPIP_MAC_MODULE_CTRL *)ptr->macControl))
     {
         return SYS_MODULE_OBJ_INVALID;
     }
@@ -485,12 +504,12 @@ SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MO
         If successful: returns a valid handle.
         If unsuccessful: returns INVALID_HANDLE
 */
-DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
+DRV_HANDLE DRV_ENC28J60_Open(const SYS_MODULE_INDEX index, const DRV_IO_INTENT intent)
 {
     uint8_t x;
     DRV_ENC28J60_DriverInfo * pDrvInst = &(drvENC28J60DrvInst[index - TCPIP_MODULE_MAC_ENCJ60]);
     DRV_ENC28J60_ClientInfo * ptr = NULL;
-    if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
         return DRV_HANDLE_INVALID;
     }
@@ -580,7 +599,7 @@ DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
 void DRV_ENC28J60_Close(DRV_HANDLE handle)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)handle;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return;
@@ -594,7 +613,7 @@ void DRV_ENC28J60_Close(DRV_HANDLE handle)
     res = OSAL_MUTEX_Unlock(&pDrvInst->drvMutex);
     res = res;
     SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not release driver instance mutex");
-    memset(pClient, 0, sizeof(DRV_ENC28J60_ClientInfo));
+    (void)memset(pClient, 0, sizeof(DRV_ENC28J60_ClientInfo));
 }
 
 // *****************************************************************************
@@ -619,7 +638,7 @@ void DRV_ENC28J60_Close(DRV_HANDLE handle)
 bool DRV_ENC28J60_LinkCheck(DRV_HANDLE hMac)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return false;
@@ -707,13 +726,13 @@ bool  DRV_ENC28J60_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode)
 TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->txPendingPackets, (SGL_LIST_NODE*)ptrPacket);
+    TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->txPendingPackets, FC_MacPkt2Node(ptrPacket));
     ptrPacket->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
     return TCPIP_MAC_RES_OK;
 }
@@ -745,16 +764,16 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
 TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return NULL;
     }
-    if (TCPIP_Helper_ProtectedSingleListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
+    if (TCPIP_Helper_ProtSglListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
     {
         return NULL;
     }
-    return (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxWaitingForPickupPackets);
+    return FC_Node2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->rxWaitingForPickupPackets));
 
 
 }
@@ -808,7 +827,7 @@ TCPIP_MAC_RES DRV_ENC28J60_Process(DRV_HANDLE hMac)
 TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_RES_OP_ERR;
@@ -816,16 +835,16 @@ TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTIC
     if (pRxStatistics != NULL)
     {
         pRxStatistics->nRxOkPackets = pDrvInst->mainStateInfo.runningInfo.nRxOkPackets;
-        pRxStatistics->nRxPendBuffers = pDrvInst->drvCfg.rxDescriptors - TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->rxFreePackets);
-        pRxStatistics->nRxSchedBuffers = TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->rxFreePackets);
-        pRxStatistics->nRxErrorPackets = -1; //not implemented
-        pRxStatistics->nRxFragmentErrors = -1; //not implemented
-        pRxStatistics->nRxBuffNotAvailable = -1; //not implemented
+        pRxStatistics->nRxPendBuffers = pDrvInst->drvCfg.rxDescriptors - TCPIP_Helper_ProtSglListCount(&pDrvInst->rxFreePackets);
+        pRxStatistics->nRxSchedBuffers = TCPIP_Helper_ProtSglListCount(&pDrvInst->rxFreePackets);
+        pRxStatistics->nRxErrorPackets = 0xffffffffUL;      //not implemented
+        pRxStatistics->nRxFragmentErrors = 0xffffffffUL;    //not implemented
+        pRxStatistics->nRxBuffNotAvailable = 0xffffffffUL;  //not implemented
     }
     if (pTxStatistics != NULL)
     {
         pTxStatistics->nTxOkPackets = pDrvInst->mainStateInfo.runningInfo.nTxOkPackets;
-        pTxStatistics->nTxPendBuffers = TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->txPendingPackets);
+        pTxStatistics->nTxPendBuffers = TCPIP_Helper_ProtSglListCount(&pDrvInst->txPendingPackets);
         uint8_t count = 0;
         for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
         {
@@ -834,8 +853,8 @@ TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTIC
                 pTxStatistics->nTxPendBuffers++;
             }
         }
-        pTxStatistics->nTxErrorPackets = -1; //not implemented
-        pTxStatistics->nTxQueueFull = -1; //not implemented
+        pTxStatistics->nTxErrorPackets = 0xffffffffUL; //not implemented
+        pTxStatistics->nTxQueueFull = 0xffffffffUL; //not implemented
     }
 
     return TCPIP_MAC_RES_OK;
@@ -866,7 +885,7 @@ TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTIC
 TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_RES_OP_ERR;
@@ -875,7 +894,7 @@ TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* 
     //pMacParams->processFlags = 0; 
     //pMacParams->macType = TCPIP_MAC_TYPE_ETH;
     
-    memcpy(pMacParams, &pDrvInst->stackParameters, sizeof(TCPIP_MAC_PARAMETERS));
+    (void)memcpy(pMacParams, &pDrvInst->stackParameters, sizeof(TCPIP_MAC_PARAMETERS));
     return TCPIP_MAC_RES_OK;
 
 }
@@ -904,7 +923,7 @@ TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* 
         TCPIP_MAC_RES_TYPE_ERR: if the hMac is invalid
         TCPIP_MAC_RES_OP_ERR: otherwise
 */
-TCPIP_MAC_RES DRV_ENC28J60_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries)
+TCPIP_MAC_RES DRV_ENC28J60_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, size_t nEntries, size_t* pHwEntries)
 {
     return TCPIP_MAC_RES_OP_ERR;
 }
@@ -960,7 +979,7 @@ size_t DRV_ENC28J60_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize
 bool DRV_ENC28J60_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return false;
@@ -994,7 +1013,7 @@ bool DRV_ENC28J60_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool 
 bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return false;
@@ -1004,7 +1023,7 @@ bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 
     pDrvInst->currentEvents &= ~macEvents;
 
-    if (!TCPIP_Helper_ProtectedSingleListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
+    if (!TCPIP_Helper_ProtSglListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
     {
         pDrvInst->currentEvents |= pDrvInst->eventMask & TCPIP_MAC_EV_RX_DONE;
     }
@@ -1039,7 +1058,7 @@ bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 TCPIP_MAC_EVENT DRV_ENC28J60_EventPendingGet(DRV_HANDLE hMac)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
-    DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);
+    DRV_ENC28J60_DriverInfo * pDrvInst = F_DRV_ENC28J60_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_EV_NONE;

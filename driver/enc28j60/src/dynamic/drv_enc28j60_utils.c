@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,7 +39,7 @@ Microchip or any third party.
 #include "osal/osal.h"
 #include "drv_enc28j60_local.h"
 
-void DRV_ENC28J60_SetEvent(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, TCPIP_MAC_EVENT events)
+void DRV_ENC28J60_SetEvent(struct S_DRV_ENC28J60_DriverInfo *  pDrvInst, TCPIP_MAC_EVENT events)
 {
     events &= pDrvInst->eventMask;
     if (events == 0)
@@ -62,7 +62,7 @@ void DRV_ENC28J60_SetEvent(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, TCPIP_MA
 
 
 
-void DRV_ENC28J60_AddGpData(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_t size)
+void DRV_ENC28J60_AddGpData(struct S_DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_t size)
 {
     pDrvInst->txBufferRemaining -= size;
     pDrvInst->txPtrVal += size;
@@ -75,7 +75,7 @@ void DRV_ENC28J60_AddGpData(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_
 
 // ENCJ60 debugging
 //
-volatile int DRV_ENC28J60_StayAssertLoop = 0;
+static volatile int DRV_ENC28J60_StayAssertLoop = 0;
 
 void DRV_ENC28J60_Assert(bool cond, const char* message, int lineNo)
 {
@@ -84,7 +84,9 @@ void DRV_ENC28J60_Assert(bool cond, const char* message, int lineNo)
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("ENC28J60 Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(DRV_ENC28J60_StayAssertLoop == 1);
+        while(DRV_ENC28J60_StayAssertLoop == 1)
+        {
+        }
     }
     
 #endif  // ((DRV_ENC28J60_DEBUG_LEVEL & DRV_ENC28J60_DEBUG_MASK_BASIC) != 0)

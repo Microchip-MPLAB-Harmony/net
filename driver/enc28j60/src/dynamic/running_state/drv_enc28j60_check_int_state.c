@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,13 +35,13 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 #include "drv_enc28j60_check_int_state.h"
-#include "..//drv_enc28j60_local.h"
+#include "../drv_enc28j60_local.h"
 #include "../drv_enc28j60_utils.h"
 #include "drv_enc28j60_running_state.h"
 
 
 
-int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChkIntStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_CHECK_INT_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkIntInfo);
     DRV_ENC28J60_RegUnion reg;
@@ -51,10 +51,12 @@ int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
     switch(curSt->state)
     {
         case DRV_ENC28J60_CI_WAIT:
-            curSt->state = DRV_ENC28J60_CI_READ_EIR;
-            // no break
-
         case DRV_ENC28J60_CI_READ_EIR:
+            if(curSt->state == DRV_ENC28J60_CI_WAIT)
+            {
+                curSt->state = DRV_ENC28J60_CI_READ_EIR;
+            }
+
             ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENC28J60_SFR_EIR, false);
             if (ret != 0)
             {
@@ -76,6 +78,10 @@ int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // success
             if (reg.eir.LINKIF != 0)
@@ -88,7 +94,7 @@ int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             }
 
             curSt->state = DRV_ENC28J60_CI_READ_PKTCNT;
-            // no break;
+            break;
 
         case DRV_ENC28J60_CI_READ_PKTCNT:
             // Errata Workaround
@@ -114,17 +120,21 @@ int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error; retry
                 curSt->state = DRV_ENC28J60_CI_READ_PKTCNT;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         default:
+            // do nothing
             break;
     }
     return 0;
 
 }
 
-int32_t DRV_ENC28J60_ChkIntStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChkIntStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_CHECK_INT_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkIntInfo);
     curSt->state = DRV_ENC28J60_CI_WAIT;
@@ -132,7 +142,7 @@ int32_t DRV_ENC28J60_ChkIntStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst
 
     return 0;
 }
-int32_t DRV_ENC28J60_ChkIntStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChkIntStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -37,7 +37,7 @@ Microchip or any third party.
 #include "drv_enc28j60_closed_state.h"
 #include "../drv_enc28j60_local.h"
 
-int32_t DRV_ENC28J60_ClosedStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ClosedStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     if (pDrvInst->numClients > 0)
     {
@@ -45,11 +45,11 @@ int32_t DRV_ENC28J60_ClosedStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
     }
     return 0;
 }
-int32_t DRV_ENC28J60_ClosedStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ClosedStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }
-int32_t DRV_ENC28J60_ClosedStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ClosedStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }

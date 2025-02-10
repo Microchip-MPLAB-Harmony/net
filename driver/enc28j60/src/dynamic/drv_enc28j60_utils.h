@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,21 +35,49 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DRV_ENC28J60_UTILS_H_
-#define _DRV_ENC28J60_UTILS_H_
+#ifndef H_DRV_ENC28J60_UTILS_H_
+#define H_DRV_ENC28J60_UTILS_H_
 
 #include "drv_enc28j60_ds_defs.h"
 #include "drv_enc28j60_local.h"
 #include "tcpip/tcpip_mac.h"
 #include "system_config.h" 
 
-void DRV_ENC28J60_SetEvent(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, TCPIP_MAC_EVENT events);
+void DRV_ENC28J60_SetEvent(struct S_DRV_ENC28J60_DriverInfo *  pDrvInst, TCPIP_MAC_EVENT events);
 
-void DRV_ENC28J60_AddGpData(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_t size);
+void DRV_ENC28J60_AddGpData(struct S_DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_t size);
 
-static inline void DRV_ENC28J60_TxAck(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_t size)
+static inline void DRV_ENC28J60_TxAck(struct S_DRV_ENC28J60_DriverInfo *  pDrvInst, uint16_t size)
 {
     pDrvInst->txBufferRemaining += size;
 }
 
-#endif
+// helpers, conversion functions
+//
+static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) FC_Node2MacPkt(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE* node;
+        TCPIP_MAC_PACKET* pMacPkt;
+    }U_SGL_NODE_MAC_PKT;
+
+    U_SGL_NODE_MAC_PKT.node = node;
+    return U_SGL_NODE_MAC_PKT.pMacPkt;
+}
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_MacPkt2Node(TCPIP_MAC_PACKET* pMacPkt)
+{
+    union
+    {
+        TCPIP_MAC_PACKET* pMacPkt;
+        SGL_LIST_NODE* node;
+    }U_MAC_PKT_SGL_NODE;
+
+    U_MAC_PKT_SGL_NODE.pMacPkt = pMacPkt;
+    return U_MAC_PKT_SGL_NODE.node;
+}
+
+
+#endif  // H_DRV_ENC28J60_UTILS_H_
+

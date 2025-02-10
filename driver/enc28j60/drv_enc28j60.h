@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,8 +40,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#if !defined(_DRV_ENC28J60_H_)
-#define _DRV_ENC28J60_H_
+#if !defined(H_DRV_ENC28J60_H_)
+#define H_DRV_ENC28J60_H_
 
 
 #ifdef __cplusplus
@@ -104,7 +104,7 @@ typedef enum
     None.
 */
 
-typedef struct _DRV_ENC28J60_Configuration
+typedef struct
 {
     /* Number of TX Descriptors to Allocate*/
     uint16_t txDescriptors;
@@ -173,7 +173,7 @@ extern const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject;
       - Valid handle to the driver instance     - If successful
       - SYS_MODULE_OBJ_INVALID                  - If unsuccessful 
 */
-SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT * init);
+SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * init);
 
 // *****************************************************************************
 /* ENC28J60 Deinitialization
@@ -241,7 +241,7 @@ void DRV_ENC28J60_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * co
       - SYS_STATUS_BUSY             - if the driver is closing and moving to the closed state
       - SYS_STATUS_READY            - if the driver is ready for client commands
 */
-SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ obect);
+SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ object);
 
 // *****************************************************************************
 /* ENC28J60 Tasks
@@ -288,7 +288,7 @@ void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object);
       true if success
       false otherwise
 */
-bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init);
+bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, const TCPIP_MAC_MODULE_CTRL * init);
 
 // *****************************************************************************
 /* ENC28J60 Stack Initialization
@@ -313,7 +313,7 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
       Returns a valid handle to the driver instance - If successful
       SYS_MODULE_OBJ_INVALID                        - If unsuccessful
 */
-SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
+SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -346,7 +346,7 @@ SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MO
       Returns a valid handle - If successful
       INVALID_HANDLE         - If unsuccessful
 */
-DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent);
+DRV_HANDLE DRV_ENC28J60_Open(const SYS_MODULE_INDEX index, const DRV_IO_INTENT intent);
 
 
 // *****************************************************************************
@@ -590,7 +590,7 @@ TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* 
       - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
       - TCPIP_MAC_RES_OP_ERR    - if the hMac is valid
 */
-TCPIP_MAC_RES DRV_ENC28J60_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+TCPIP_MAC_RES DRV_ENC28J60_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, size_t nEntries, size_t* pHwEntries);
 
 // *****************************************************************************
 /* ENC28J60 Get Configuration
@@ -687,9 +687,12 @@ bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
 */
 TCPIP_MAC_EVENT DRV_ENC28J60_EventPendingGet(DRV_HANDLE hMac);
 
+// supported MAC objects
+extern const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject;
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*!defined(_DRV_ENC28J60_H_)*/
+#endif /*!defined(H_DRV_ENC28J60_H_)*/
  

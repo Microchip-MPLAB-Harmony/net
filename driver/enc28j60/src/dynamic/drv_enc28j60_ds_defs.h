@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,185 +35,185 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DRV_ENC28J60_DS_DEF_H_
-#define _DRV_ENC28J60_DS_DEF_H_
+#ifndef H_DRV_ENC28J60_DS_DEF_H_
+#define H_DRV_ENC28J60_DS_DEF_H_
 
 #include "system_config.h"
 
-#define DRV_ENC28J60_MEM_SIZE 8192
+#define DRV_ENC28J60_MEM_SIZE 8192U
 
-typedef struct _DRV_ENC28J60_RD_ECON1
+typedef struct __attribute__((packed))
 {
-    uint8_t BSEL:2;
-    uint8_t RXEN:1;
-    uint8_t TXRTS:1;
-    uint8_t CSUMEN:1;
-    uint8_t DMAST:1;
-    uint8_t RXRST:1;
-    uint8_t TXRST:1;
+    unsigned BSEL:2;
+    unsigned RXEN:1;
+    unsigned TXRTS:1;
+    unsigned CSUMEN:1;
+    unsigned DMAST:1;
+    unsigned RXRST:1;
+    unsigned TXRST:1;
 }  DRV_ENC28J60_RD_ECON1;
 
 
-typedef struct _DRV_ENC28J60_RD_ECON2
+typedef struct __attribute__((packed))
 {
-    uint8_t :3;
-    uint8_t VRPS:1;
-    uint8_t :1;
-    uint8_t PWRSV:1;
-    uint8_t PKTDEC:1;
-    uint8_t AUTOINC:1;
+    unsigned :3;
+    unsigned VRPS:1;
+    unsigned :1;
+    unsigned PWRSV:1;
+    unsigned PKTDEC:1;
+    unsigned AUTOINC:1;
 }  DRV_ENC28J60_RD_ECON2;
 
-typedef struct _DRV_ENC28J60_RD_EDMACS
+typedef struct 
 {
     uint16_t EDMACS;
 }  DRV_ENC28J60_RD_EDMACS;
 
-typedef struct _DRV_ENC28J60_RD_ERDPT
+typedef struct __attribute__((packed))
 {
-    uint16_t ERDPT:13;
-    uint16_t :3;
+    unsigned ERDPT:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ERDPT;
 
-typedef struct _DRV_ENC28J60_RD_EWRPT
+typedef struct __attribute__((packed))
 {
-    uint16_t EWRPT:13;
-    uint16_t :3;
+    unsigned EWRPT:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_EWRPT;
 
-typedef struct _DRV_ENC28J60_RD_ETXND
+typedef struct __attribute__((packed))
 {
-    uint16_t ETXND:13;
-    uint16_t :3;
+    unsigned ETXND:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ETXND;
 
-typedef struct _DRV_ENC28J60_RD_ERXND
+typedef struct __attribute__((packed))
 {
-    uint16_t ERXND:13;
-    uint16_t :3;
+    unsigned ERXND:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ERXND;
 
 
-typedef struct _DRV_ENC28J60_RD_EDMAND
+typedef struct __attribute__((packed))
 {
-    uint16_t EDMAND:13;
-    uint16_t :3;
+    unsigned EDMAND:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_EDMAND;
 
-typedef struct _DRV_ENC28J60_RD_EDMADST
+typedef struct __attribute__((packed))
 {
-    uint16_t EDMADST:13;
-    uint16_t :3;
+    unsigned EDMADST:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_EDMADST;
 
 
-typedef struct _DRV_ENC28J60_RD_EDMAST
+typedef struct __attribute__((packed))
 {
-    uint16_t EDMAST:13;
-    uint16_t :3;
+    unsigned EDMAST:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_EDMAST;
 
 
 
-typedef struct _DRV_ENC28J60_RD_EHT0
+typedef struct 
 {
     uint8_t EHT0;
 }  DRV_ENC28J60_RD_EHT0;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT1
+typedef struct 
 {
     uint8_t EHT1;
 }  DRV_ENC28J60_RD_EHT1;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT2
+typedef struct 
 {
     uint8_t EHT2;
 }  DRV_ENC28J60_RD_EHT2;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT3
+typedef struct 
 {
     uint8_t EHT3;
 }  DRV_ENC28J60_RD_EHT3;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT4
+typedef struct 
 {
     uint8_t EHT4;
 }  DRV_ENC28J60_RD_EHT4;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT5
+typedef struct 
 {
     uint8_t EHT5;
 }  DRV_ENC28J60_RD_EHT5;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT6
+typedef struct 
 {
     uint8_t EHT6;
 }  DRV_ENC28J60_RD_EHT6;
 
 
-typedef struct _DRV_ENC28J60_RD_EHT7
+typedef struct 
 {
     uint8_t EHT7;
 }  DRV_ENC28J60_RD_EHT7;
 
-typedef struct _DRV_ENC28J60_RD_EIE
+typedef struct __attribute__((packed))
 {
     /**
      * <b>RXERIE: </b>Receive Error Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t RXERIE:1;
+    unsigned RXERIE:1;
     /**
      * <b>TXERIE: </b>Transmit Error Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t TXERIE:1;
+    unsigned TXERIE:1;
     /**
      * <b>Reserved: </b>Ignore on read, don't care on write<b>(1)</b>
      */
-    uint8_t :1;
+    unsigned :1;
     /**
      * <b>TXIE: </b>Transmit Done Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t TXIE:1;
+    unsigned TXIE:1;
     /**
      * <b>LINKIE: </b>PHY Link Status Change Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t LINKIE:1;
+    unsigned LINKIE:1;
     /**
      * <b>DMAIE: </b>DMA Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t DMAIE:1;
+    unsigned DMAIE:1;
     /**
      * <b>PKTIE: </b>RX Packet Pending Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t PKTIE:1;
+    unsigned PKTIE:1;
     /**
      * <b>INTIE: </b>INT Global Interrupt Enable bit
      * 1 = INT pin is controlled by the INT status bit (ESTAT<15>)
      * 0 = INT pin is driven high
      */
-    uint8_t INTIE:1;
+    unsigned INTIE:1;
 }  DRV_ENC28J60_RD_EIE;
 
 
-typedef struct _DRV_ENC28J60_RD_EIR
+typedef struct __attribute__((packed))
 {
 
     
@@ -223,431 +223,431 @@ typedef struct _DRV_ENC28J60_RD_EIR
      * or the packet count is 255
      * 0 = No receive error interrupt is pending
      */
-    uint8_t RXERIF:1;
+    unsigned RXERIF:1;
     /**
      * <b>TXERIF: </b>Transmit Error Interrupt Flag bit
      * 1 = A transmit error has occurred 
      * 0 = No transmit error has occurred
      */
-    uint8_t TXERIF:1;
+    unsigned TXERIF:1;
     /**
     * <b>Reserved: </b>Ignore on read, don't care on write<b>(1)</b>
     */
-    uint8_t :1;
+    unsigned :1;
     /**
      * <b>TXIF:: </b>Transmit Interrupt Flag bit
      * 1 = Transmit request has ended
      * 0 = No transmit interrupt is pending
      */
-    uint8_t TXIF:1;
+    unsigned TXIF:1;
     /**
      * <b>LINKIF:: </b>Link Change Interrupt Flag bit
      * 1 = PHY reports that the link status has changed; read PHIR register to clear
      * 0 = Link status has not changed
      */
-    uint8_t LINKIF:1;
+    unsigned LINKIF:1;
     /**
      * <b>DMAIF:: </b>DMA Interrupt Flag bit
      * 1 = DMA copy or checksum calculation has completed
      * 0 = No DMA interrupt is pending
      */
-    uint8_t DMAIF:1;
+    unsigned DMAIF:1;
     /**
      * <b>PKTIF:: </b>Receive Packet Pending Interrupt Flag bit
      * 1 = Receive buffer contains one or more unprocessed packets; cleared when PKTDEC is set
      * 0 = Receive buffer is empty
      */
-    uint8_t PKTIF:1;
+    unsigned PKTIF:1;
     
     /**
     * <b>Unimplemented: </b>Unimplemented bit. Read as '0')</b>
     */
-    uint8_t :1;
+    unsigned :1;
 }  DRV_ENC28J60_RD_EIR;
 
 
-typedef struct _DRV_ENC28J60_RD_EPAUS
+typedef struct 
 {
     uint16_t EPAUS;
 }  DRV_ENC28J60_RD_EPAUS;
 
 
-typedef struct _DRV_ENC28J60_RD_EPMCS
+typedef struct 
 {
     uint16_t EPMCS;
 }  DRV_ENC28J60_RD_EPMCS;
 
 
-typedef struct _DRV_ENC28J60_RD_EPMM0
+typedef struct 
 {
     uint8_t EPMM0;
 }  DRV_ENC28J60_RD_EPMM0;
 
-typedef struct _DRV_ENC28J60_RD_EPMM1
+typedef struct 
 {
     uint8_t EPMM1;
 }  DRV_ENC28J60_RD_EPMM1;
 
-typedef struct _DRV_ENC28J60_RD_EPMM2
+typedef struct 
 {
     uint8_t EPMM2;
 }  DRV_ENC28J60_RD_EPMM2;
 
-typedef struct _DRV_ENC28J60_RD_EPMM3
+typedef struct 
 {
     uint8_t EPMM3;
 }  DRV_ENC28J60_RD_EPMM3;
 
-typedef struct _DRV_ENC28J60_RD_EPMM4
+typedef struct 
 {
     uint8_t EPMM4;
 }  DRV_ENC28J60_RD_EPMM4;
 
-typedef struct _DRV_ENC28J60_RD_EPMM5
+typedef struct 
 {
     uint8_t EPMM5;
 }  DRV_ENC28J60_RD_EPMM5;
 
-typedef struct _DRV_ENC28J60_RD_EPMM6
+typedef struct 
 {
     uint8_t EPMM6;
 }  DRV_ENC28J60_RD_EPMM6;
 
-typedef struct _DRV_ENC28J60_RD_EPMM7
+typedef struct 
 {
     uint8_t EPMM7;
 }  DRV_ENC28J60_RD_EPMM7;
 
 
-typedef struct _DRV_ENC28J60_RD_EPMO
+typedef struct __attribute__((packed))
 {
-    uint16_t EPMO:13;
-    uint16_t :3;
+    unsigned EPMO:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_EPMO;
 
-typedef struct _DRV_ENC28J60_RD_ERXFCON
+typedef struct __attribute__((packed))
 {
-    uint8_t BCEN:1;
-    uint8_t MCEN:1;
-    uint8_t HTEN:1;
-    uint8_t MPEN:1;
-    uint8_t PMEN:1;
-    uint8_t CRCEN:1;
-    uint8_t ANDOR:1;
-    uint8_t UCEN:1;
+    unsigned BCEN:1;
+    unsigned MCEN:1;
+    unsigned HTEN:1;
+    unsigned MPEN:1;
+    unsigned PMEN:1;
+    unsigned CRCEN:1;
+    unsigned ANDOR:1;
+    unsigned UCEN:1;
 }  DRV_ENC28J60_RD_ERXFCON;
 
 
-typedef struct _DRV_ENC28J60_RD_ERXRDPT
+typedef struct __attribute__((packed))
 {
-    uint16_t ERXRDPT:13;
-    uint8_t :3;
+    unsigned ERXRDPT:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ERXRDPT;
 
 
-typedef struct _DRV_ENC28J60_RD_ERXST
+typedef struct __attribute__((packed))
 {
-    uint16_t ERXST:13;
-    uint8_t :3;
+    unsigned ERXST:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ERXST;
 
-typedef struct _DRV_ENC28J60_RD_ERXWRPT
+typedef struct __attribute__((packed))
 {
-    uint16_t ERXWRPT:13;
-    uint8_t :3;
+    unsigned ERXWRPT:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ERXWRPT;
 
 
-typedef struct _DRV_ENC28J60_RD_ESTAT
+typedef struct __attribute__((packed))
 {
-    uint8_t CLKRDY:1;
-    uint8_t TXABRT:1;
-    uint8_t RXBUSY:1;
-    uint8_t :1;
-    uint8_t LATECOL:1;
-    uint8_t :1; 
-    uint8_t BUFER:1;
-    uint8_t INT:1;
+    unsigned CLKRDY:1;
+    unsigned TXABRT:1;
+    unsigned RXBUSY:1;
+    unsigned :1;
+    unsigned LATECOL:1;
+    unsigned :1; 
+    unsigned BUFER:1;
+    unsigned INT:1;
 }  DRV_ENC28J60_RD_ESTAT;
 
 
 
-typedef struct _DRV_ENC28J60_RD_ETXST
+typedef struct __attribute__((packed))
 {
-    uint16_t ETXST:13;
-    uint8_t :3;
+    unsigned ETXST:13;
+    unsigned :3;
 }  DRV_ENC28J60_RD_ETXST;
 
-typedef struct _DRV_ENC28J60_RD_MAADR1
+typedef struct 
 {
     uint8_t MAADR1;
 }  DRV_ENC28J60_RD_MAADR1;
 
-typedef struct _DRV_ENC28J60_RD_MAADR2
+typedef struct 
 {
     uint8_t MAADR2;
 }  DRV_ENC28J60_RD_MAADR2;
 
-typedef struct _DRV_ENC28J60_RD_MAADR3
+typedef struct 
 {
     uint8_t MAADR3;
 }  DRV_ENC28J60_RD_MAADR3;
 
-typedef struct _DRV_ENC28J60_RD_MAADR4
+typedef struct 
 {
     uint8_t MAADR4;
 } DRV_ENC28J60_RD_MAADR4;
 
-typedef struct _DRV_ENC28J60_RD_MAADR5
+typedef struct 
 {
     uint8_t MAADR5;
 } DRV_ENC28J60_RD_MAADR5;
 
-typedef struct _DRV_ENC28J60_RD_MAADR6
+typedef struct 
 {
     uint8_t MAADR6;
 } DRV_ENC28J60_RD_MAADR6;
 
 
-typedef struct _DRV_ENC28J60_RD_MABBIPG
+typedef struct __attribute__((packed))
 {
-    uint8_t BBIPG:7;
-    uint8_t :1;
+    unsigned BBIPG:7;
+    unsigned :1;
 }  DRV_ENC28J60_RD_MABBIPG;
 
 
-typedef struct _DRV_ENC28J60_RD_MACLCON
+typedef struct __attribute__((packed))
 {
-    uint8_t RETMAX:4;
-    uint8_t COLWIN:6;
+    unsigned RETMAX:4;
+    unsigned COLWIN:6;
 }  DRV_ENC28J60_RD_MACLCON;
 
 
-typedef struct _DRV_ENC28J60_RD_MACON1
+typedef struct __attribute__((packed))
 {
-    uint8_t MARXEN:1;
-    uint8_t PASSALL:1;
-    uint8_t RXPAUS:1;
-    uint8_t TXPAUS:1;
-    uint8_t :4;
+    unsigned MARXEN:1;
+    unsigned PASSALL:1;
+    unsigned RXPAUS:1;
+    unsigned TXPAUS:1;
+    unsigned :4;
 }  DRV_ENC28J60_RD_MACON1;
 
 
-typedef struct _DRV_ENC28J60_RD_MACON3
+typedef struct __attribute__((packed))
 {
-    uint8_t FULDPX:1;
-    uint8_t FRMLNEN:1;
-    uint8_t HFRMEN:1;
-    uint8_t PHDREN:1;
-    uint8_t TXCRCEN:1;
-    uint8_t PADCFG:3;
+    unsigned FULDPX:1;
+    unsigned FRMLNEN:1;
+    unsigned HFRMEN:1;
+    unsigned PHDREN:1;
+    unsigned TXCRCEN:1;
+    unsigned PADCFG:3;
 }  DRV_ENC28J60_RD_MACON3;
 
 
-typedef struct _DRV_ENC28J60_RD_MACON4
+typedef struct __attribute__((packed))
 {
-    uint8_t :4;
-    uint8_t NOBKOFF:1;
-    uint8_t BPEN:1;
-    uint8_t DEFER:1;
-    uint8_t :1;
+    unsigned :4;
+    unsigned NOBKOFF:1;
+    unsigned BPEN:1;
+    unsigned DEFER:1;
+    unsigned :1;
 }  DRV_ENC28J60_RD_MACON4;
 
 
-typedef struct _DRV_ENC28J60_RD_MAIPG
+typedef struct __attribute__((packed))
 {
-    uint8_t IPGL:7;
-    uint8_t IPGH:7;
+    unsigned IPGL:7;
+    unsigned IPGH:7;
 }  DRV_ENC28J60_RD_MAIPG;
 
 
-typedef struct _DRV_ENC28J60_RD_MAMXFL
+typedef struct 
 {
     uint16_t MAMXFL;
 }  DRV_ENC28J60_RD_MAMXFL;
 
 
-typedef struct _DRV_ENC28J60_RD_MICMD
+typedef struct __attribute__((packed))
 {
-    uint8_t MIIRD:1;
-    uint8_t MIISCAN:1;
-    uint8_t :6;
+    unsigned MIIRD:1;
+    unsigned MIISCAN:1;
+    unsigned :6;
 }  DRV_ENC28J60_RD_MICMD;
 
 
-typedef struct _DRV_ENC28J60_RD_MIRD
+typedef struct 
 {
     uint16_t MIRD;
 }  DRV_ENC28J60_RD_MIRD;
 
 
-typedef struct _DRV_ENC28J60_RD_MIREGADR
+typedef struct __attribute__((packed))
 {
-    uint8_t MIREGADR:5;
+    unsigned MIREGADR:5;
 }  DRV_ENC28J60_RD_MIREGADR;
 
 
-typedef struct _DRV_ENC28J60_RD_MISTAT
+typedef struct __attribute__((packed))
 {
-    uint8_t BUSY:1;
-    uint8_t SCAN:1;
-    uint8_t NVALID:1;
-    uint8_t :5; 
+    unsigned BUSY:1;
+    unsigned SCAN:1;
+    unsigned NVALID:1;
+    unsigned :5; 
 }  DRV_ENC28J60_RD_MISTAT;
 
 
-typedef struct _DRV_ENC28J60_RD_MIWR
+typedef struct 
 {
     uint16_t MIWR;
 }  DRV_ENC28J60_RD_MIWR;
 
-typedef struct _DRV_ENC28J60_RD_PHCON1
+typedef struct __attribute__((packed))
 {
-    uint16_t :8;
-    uint16_t PDPXMD:1;
-    uint16_t :2;
-    uint16_t PPWRSV:1;
-    uint16_t :2;
-    uint16_t PLOOPBK:1;
-    uint16_t PRST:1;
+    unsigned :8;
+    unsigned PDPXMD:1;
+    unsigned :2;
+    unsigned PPWRSV:1;
+    unsigned :2;
+    unsigned PLOOPBK:1;
+    unsigned PRST:1;
 }  DRV_ENC28J60_RD_PHCON1;
 
 
-typedef struct _DRV_ENC28J60_RD_PHCON2
+typedef struct __attribute__((packed))
 {
-    uint16_t :8;
-    uint16_t HDLDIS:1;
-    uint16_t :1;
-    uint16_t JABBER:1;
-    uint16_t :2;
-    uint16_t TXDIS:1;
-    uint16_t FRCLNK:1;
-    uint16_t :1;
+    unsigned :8;
+    unsigned HDLDIS:1;
+    unsigned :1;
+    unsigned JABBER:1;
+    unsigned :2;
+    unsigned TXDIS:1;
+    unsigned FRCLNK:1;
+    unsigned :1;
 }  DRV_ENC28J60_RD_PHCON2;
 
 
-typedef struct _DRV_ENC28J60_RD_PHSTAT1
+typedef struct __attribute__((packed))
 {
-    uint16_t :1;
-    uint16_t JBSTAT:1;
-    uint16_t LLSTAT:1;
-    uint16_t :8;
+    unsigned :1;
+    unsigned JBSTAT:1;
+    unsigned LLSTAT:1;
+    unsigned :8;
 
-    uint16_t PHDPX:1;
-    uint16_t PFDPX:1;
-    uint16_t :3;
+    unsigned PHDPX:1;
+    unsigned PFDPX:1;
+    unsigned :3;
     
 }  DRV_ENC28J60_RD_PHSTAT1;
 
 
-typedef struct _DRV_ENC28J60_RD_PHSTAT2
+typedef struct __attribute__((packed))
 {
-    uint16_t :5;
-    uint16_t PLRITY:1;
-    uint16_t :3;
-    uint16_t DPXSTAT:1;
-    uint16_t LSTAT:1;
-    uint16_t COLSTAT:1;
-    uint16_t RXSTAT:1;
-    uint16_t TXSTAT:1;
-    uint16_t :2;
+    unsigned :5;
+    unsigned PLRITY:1;
+    unsigned :3;
+    unsigned DPXSTAT:1;
+    unsigned LSTAT:1;
+    unsigned COLSTAT:1;
+    unsigned RXSTAT:1;
+    unsigned TXSTAT:1;
+    unsigned :2;
 }  DRV_ENC28J60_RD_PHSTAT2;
 
-typedef struct _DRV_ENC28J60_RD_PHID1
+typedef struct 
 {
     uint16_t PHID1;
 }  DRV_ENC28J60_RD_PHID1;
 
-typedef struct _DRV_ENC28J60_RD_PHID2
+typedef struct 
 {
     uint16_t PHID2;
 }  DRV_ENC28J60_RD_PHID2;
 
-typedef struct _DRV_ENC28J60_RD_PHIE
+typedef struct __attribute__((packed))
 {
-    uint16_t :1;
-    uint16_t PGEIE:1;
-    uint16_t :2;
-    uint16_t PLNKIE:1;
-    uint16_t :11;
+    unsigned :1;
+    unsigned PGEIE:1;
+    unsigned :2;
+    unsigned PLNKIE:1;
+    unsigned :11;
 }  DRV_ENC28J60_RD_PHIE;
 
 
-typedef struct _DRV_ENC28J60_RD_PHIR
+typedef struct __attribute__((packed))
 {
-    uint16_t :2;
-    uint16_t PGIF:1;
-    uint16_t :1;
-    uint16_t PLNKIF:1;
-    uint16_t :11;
+    unsigned :2;
+    unsigned PGIF:1;
+    unsigned :1;
+    unsigned PLNKIF:1;
+    unsigned :11;
 }  DRV_ENC28J60_RD_PHIR;
 
-typedef struct _DRV_ENC28J60_RD_PHLCON
+typedef struct __attribute__((packed))
 {
-    uint16_t :1;
-    uint16_t STRCH:1;
-    uint16_t LFRQ0:1;
-    uint16_t LFRQ1:1;
-    uint16_t LBCFG0:1;
-    uint16_t LBCFG1:1;
-    uint16_t LBCFG2:1;
-    uint16_t LBCFG3:1;
-    uint16_t LACFG0:1;
-    uint16_t LACFG1:1;
-    uint16_t LACFG2:1;
-    uint16_t LACFG3:1;
-    uint16_t :4;
+    unsigned :1;
+    unsigned STRCH:1;
+    unsigned LFRQ0:1;
+    unsigned LFRQ1:1;
+    unsigned LBCFG0:1;
+    unsigned LBCFG1:1;
+    unsigned LBCFG2:1;
+    unsigned LBCFG3:1;
+    unsigned LACFG0:1;
+    unsigned LACFG1:1;
+    unsigned LACFG2:1;
+    unsigned LACFG3:1;
+    unsigned :4;
 }  DRV_ENC28J60_RD_PHLCON;
 
-typedef struct _DRV_ENC28J60_RD_EREVID
+typedef struct __attribute__((packed))
 {
-    uint8_t EREVID:5;
-    uint8_t :3;
+    unsigned EREVID:5;
+    unsigned :3;
 }  DRV_ENC28J60_RD_EREVID;
 
-typedef struct _DRV_ENC28J60_RD_ECOCON
+typedef struct __attribute__((packed))
 {
-    uint8_t COCON:3;
-    uint8_t :5;
+    unsigned COCON:3;
+    unsigned :5;
 }  DRV_ENC28J60_RD_ECOCON;
 
-typedef struct _DRV_ENC28J60_RD_EFLOCON
+typedef struct __attribute__((packed))
 {
-    uint8_t FCEN:2;
-    uint8_t FULDPXS:1;
-    uint8_t :5;
+    unsigned FCEN:2;
+    unsigned FULDPXS:1;
+    unsigned :5;
 }  DRV_ENC28J60_RD_EFLOCON;
 
-typedef struct _DRV_ENC28J60_RD_EBSTSD
+typedef struct 
 {
     uint8_t EBSTSD;
 
 }  DRV_ENC28J60_RD_EBSTSD;
 
-typedef struct _DRV_ENC28J60_RD_EBSTCON
+typedef struct __attribute__((packed))
 {
-    uint8_t BISTST:1;
-    uint8_t TME:1;
-    uint8_t TMSEL:2;
-    uint8_t PSEL:1;
-    uint8_t PSV:3;
+    unsigned BISTST:1;
+    unsigned TME:1;
+    unsigned TMSEL:2;
+    unsigned PSEL:1;
+    unsigned PSV:3;
 
 }  DRV_ENC28J60_RD_EBSTCON;
 
-typedef struct _DRV_ENC28J60_RD_EBSTCS
+typedef struct 
 {
     uint16_t EBSTCS;
 
 }  DRV_ENC28J60_RD_EBSTCS;
 
 
-typedef struct _DRV_ENC28J60_RD_EPKTCNT
+typedef struct 
 {
     uint8_t EPKTCNT;
 
 } DRV_ENC28J60_RD_EPKTCNT;
 
-typedef union _DRV_ENC28J60_RegUnion
+typedef union
 {
     uint16_t value;
 
@@ -725,54 +725,60 @@ typedef union _DRV_ENC28J60_RegUnion
     
 }  DRV_ENC28J60_RegUnion;
 
-typedef union {
+typedef union
+{
     uint8_t v[7];
-    struct {
-        uint16_t            ByteCount;
-        uint8_t CollisionCount:4;
-        uint8_t CRCError:1;
-        uint8_t LengthCheckError:1;
-        uint8_t LengthOutOfRange:1;
-        uint8_t Done:1;
-        uint8_t Multicast:1;
-        uint8_t Broadcast:1;
-        uint8_t PacketDefer:1;
-        uint8_t ExcessiveDefer:1;
-        uint8_t MaximumCollisions:1;
-        uint8_t LateCollision:1;
-        uint8_t Giant:1;
-        uint8_t Underrun:1;
-        uint16_t    BytesTransmittedOnWire;
-        uint8_t ControlFrame:1;
-        uint8_t PAUSEControlFrame:1;
-        uint8_t BackpressureApplied:1;
-        uint8_t VLANTaggedFrame:1;
-        uint8_t Zeros:4;
+    struct __attribute__((packed))
+    {
+        uint16_t ByteCount;
+        unsigned CollisionCount:4;
+        unsigned CRCError:1;
+        unsigned LengthCheckError:1;
+        unsigned LengthOutOfRange:1;
+        unsigned Done:1;
+        unsigned Multicast:1;
+        unsigned Broadcast:1;
+        unsigned PacketDefer:1;
+        unsigned ExcessiveDefer:1;
+        unsigned MaximumCollisions:1;
+        unsigned LateCollision:1;
+        unsigned Giant:1;
+        unsigned Underrun:1;
+        uint16_t BytesTransmittedOnWire;
+        unsigned ControlFrame:1;
+        unsigned PAUSEControlFrame:1;
+        unsigned BackpressureApplied:1;
+        unsigned VLANTaggedFrame:1;
+        unsigned Zeros:4;
     } bits;
 } TXSTATUS;
 
 
-typedef struct _DRV_ENC28J60_RSV
+typedef union
 {
-    uint16_t pNextPacket:16;
-    uint16_t rxByteCount:16;
-    uint16_t lonDropEvent:1;
-    uint16_t :1;
-    uint16_t carrierEventPrevSeen:1;
-    uint16_t :1;
-    uint16_t crcError:1;
-    uint16_t lenChkError:1;
-    uint16_t lenOutOfRange:1;
-    uint16_t rxOk:1;
-    uint16_t rxMultcast:1;
-    uint16_t rxBcast:1;
-    uint16_t dribbleNibble:1;
-    uint16_t rxCtrlFrm:1;
-    uint16_t rxPauseCtrlFrm:1;
-    uint16_t rxUnknOpcode:1;
-    uint16_t rxVlanTypeDetected:1;
-    uint16_t zero:1;
-}  DRV_ENC28J60_RSV;
+    uint8_t v[6];
+    struct __attribute__((packed))
+    {
+        unsigned pNextPacket:16;
+        unsigned rxByteCount:16;
+        unsigned lonDropEvent:1;
+        unsigned :1;
+        unsigned carrierEventPrevSeen:1;
+        unsigned :1;
+        unsigned crcError:1;
+        unsigned lenChkError:1;
+        unsigned lenOutOfRange:1;
+        unsigned rxOk:1;
+        unsigned rxMultcast:1;
+        unsigned rxBcast:1;
+        unsigned dribbleNibble:1;
+        unsigned rxCtrlFrm:1;
+        unsigned rxPauseCtrlFrm:1;
+        unsigned rxUnknOpcode:1;
+        unsigned rxVlanTypeDetected:1;
+        unsigned zero:1;
+    };
+}DRV_ENC28J60_RSV;
 
 // Extended Receive Status Vector
 typedef struct 
@@ -932,4 +938,5 @@ typedef enum
 } DRV_ENC28J60_SPI_INST_SET;
 
 
-#endif  
+#endif  // H_DRV_ENC28J60_DS_DEF_H_
+

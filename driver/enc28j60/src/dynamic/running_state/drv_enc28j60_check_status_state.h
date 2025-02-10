@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,13 +34,13 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENC28J60_CHECK_STATUS_STATE_H_
-#define _DRV_ENC28J60_CHECK_STATUS_STATE_H_
+#ifndef H_DRV_ENC28J60_CHECK_STATUS_STATE_H_
+#define H_DRV_ENC28J60_CHECK_STATUS_STATE_H_
 
 #include "system_config.h"
 #include <stdbool.h>
 
-struct _DRV_ENC28J60_DriverInfo;
+struct S_DRV_ENC28J60_DriverInfo;
 
 typedef enum
 {
@@ -51,7 +51,7 @@ typedef enum
     DRV_ENC28J60_CS_WAIT_PHIR,
 }DRV_ENC28J60_CHECK_STATUS_STATES;
 
-typedef struct _DRV_ENC28J60_CHECK_STATUS_INFO
+typedef struct
 {
     DRV_ENC28J60_CHECK_STATUS_STATES state;
     bool linkUpdateNeeded;
@@ -59,9 +59,10 @@ typedef struct _DRV_ENC28J60_CHECK_STATUS_INFO
 
 }DRV_ENC28J60_CHECK_STATUS_INFO;
 
-int32_t DRV_ENC28J60_ChkStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_ChkStatusStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_ChkStatusStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ChkStatusStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ChkStatusStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_ChkStatusStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
 
 
-#endif
+#endif  // H_DRV_ENC28J60_CHECK_STATUS_STATE_H_
+

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,15 +35,15 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DRV_ENC28J60_MAIN_STATE_H_
-#define _DRV_ENC28J60_MAIN_STATE_H_
+#ifndef H_DRV_ENC28J60_MAIN_STATE_H_
+#define H_DRV_ENC28J60_MAIN_STATE_H_
 
 
 #include "initialization_state/drv_enc28j60_initialization_state.h"
 #include "closed_state/drv_enc28j60_closed_state.h"
 #include "running_state/drv_enc28j60_running_state.h"
 
-struct _DRV_ENC28J60_DriverInfo;
+struct S_DRV_ENC28J60_DriverInfo;
 
 typedef enum 
 {
@@ -55,15 +55,16 @@ typedef enum
             
 }DRV_ENC28J60_MAIN_STATES;
 
-typedef struct _DRV_ENC28J60_MainStateInfo
+typedef struct 
 {
     DRV_ENC28J60_MAIN_STATES state;
-    DRV_ENC28J60_INITIALIZATION_STATE_INFO initInfo;
+    DRV_ENC28J60_INIT_STATE_INFO initInfo;
     DRV_ENC28J60_RUNNING_STATE_INFO runningInfo;
 
 }DRV_ENC28J60_MainStateInfo;
 
-int32_t DRV_ENC28J60_MainStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_MainStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
 
 
-#endif
+#endif // H_DRV_ENC28J60_MAIN_STATE_H_
+

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,17 +42,17 @@ Microchip or any third party.
 
 // ENC28J60 does not support auto HD/FD detection
 // this file is not needed
-int32_t DRV_ENC28J60_ChgDupStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChgDupStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }
 
-int32_t DRV_ENC28J60_ChgDupStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChgDupStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }
 
-int32_t DRV_ENC28J60_ChgDupStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChgDupStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }

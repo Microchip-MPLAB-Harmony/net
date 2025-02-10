@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,8 +35,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _ENC28J60_SPI_BUS_H_
-#define _ENC28J60_SPI_BUS_H_
+#ifndef H_ENC28J60_SPI_BUS_H_
+#define H_ENC28J60_SPI_BUS_H_
 
 
 #include "../../drv_enc28j60_local.h"
@@ -71,9 +71,9 @@ Microchip or any third party.
 
 // operation extended buffer descriptor
 // for operation needing extended buffers
-typedef struct _tag_DRV_ENC28J60_OP_EXT_BUFF
+typedef struct S_tag_DRV_ENC28J60_OP_EXT_BUFF
 {
-    struct  _tag_DRV_ENC28J60_OP_EXT_BUFF*   next;              // safe cast to a linked node
+    struct  S_tag_DRV_ENC28J60_OP_EXT_BUFF*   next;              // safe cast to a linked node
     uint8_t extBuffer[DRV_ENC28J60_OP_EXT_BUFFER_SIZE + DRV_ENC28J60_OP_EXT_BUFFER_EXTRA_SIZE];     // always 2 extra byte for SPI ops + control byte
 }DRV_ENC28J60_OP_EXT_BUFF;
 
@@ -96,13 +96,13 @@ typedef enum
 }DRV_ENC28J60_OP_FLAGS;
 
 // operation descriptor
-typedef struct _tag_DRV_ENC28J60_OP_DCPT
+typedef struct S_tag_DRV_ENC28J60_OP_DCPT
 {
-    struct _tag_DRV_ENC28J60_OP_DCPT*   next;   // safe cast to a linked node
+    struct S_tag_DRV_ENC28J60_OP_DCPT*   next;   // safe cast to a linked node
     DRV_ENC28J60_DriverInfo*    pDrvInstance;   // driver it belongs to
     DRV_SPI_TRANSFER_HANDLE       spiHandle;      // ongoing SPI operation handle; 
     DRV_ENC28J60_OP_EXT_BUFF*   extBuffer;      // for operations needing an external buffer
-    struct _tag_DRV_ENC28J60_OP_DCPT*   link;   // for linked ops
+    struct S_tag_DRV_ENC28J60_OP_DCPT*   link;   // for linked ops
     uint8_t                     opWrBuffer[DRV_ENC28J60_OP_WR_INT_BUFFER_SIZE];  // internal buffer for short write operations
     uint8_t                     opRdBuffer[DRV_ENC28J60_OP_RD_INT_BUFFER_SIZE];  // internal buffer for short read operations
     uint8_t                     opStatus;       // DRV_ENC28J60_OP_STATUS: current status
@@ -111,7 +111,7 @@ typedef struct _tag_DRV_ENC28J60_OP_DCPT
 
 }DRV_ENC28J60_OP_DCPT;
 
-typedef struct _DRV_ENC28J60_spiBusData
+typedef struct 
 {
     DRV_HANDLE              clientHandle;
     SINGLE_LIST             opFreeList;     // list of free operation descriptors that can be used
@@ -148,7 +148,7 @@ int32_t DRV_ENC28J60_SPI_DeinitializeInterface(DRV_ENC28J60_DriverInfo *  pDrvIn
     The bus has to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
         Negative if error
@@ -169,7 +169,7 @@ int32_t DRV_ENC28J60_SPI_OpenInterface(DRV_ENC28J60_DriverInfo *  pDrvInstance )
     The bus has to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns:
         None
@@ -189,13 +189,13 @@ void DRV_ENC28J60_SPI_CloseInterface( DRV_ENC28J60_DriverInfo *  pDrvInstance);
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
         handle - Handle created by the operation.
 
     Returns
-        DRV_ENC28J60_BR_SUCCESS â€“ if the operation was successful
-        DRV_ENC28J60_BR_PENDING â€“ if the operation is still pending
-        DRV_ENC28J60_BR_ERROR â€“ if there was an error in the operation
+        DRV_ENC28J60_BR_SUCCESS â?? if the operation was successful
+        DRV_ENC28J60_BR_PENDING â?? if the operation is still pending
+        DRV_ENC28J60_BR_ERROR â?? if there was an error in the operation
 */
 DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_OperationResult( DRV_ENC28J60_DriverInfo *  pDrvInstance, uintptr_t  handle, bool ack );
 
@@ -213,15 +213,15 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_OperationResult( DRV_ENC28J60_DriverInf
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
-        reg â€“ The Special Function Register to write to.
-        Value â€“ the value to write into the register
+        pDrvInstance â?? The driver instance
+        sfr â?? The Special Function Register to write to.
+        regValue â?? the value to write into the register
 
     Returns:
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
-uintptr_t DRV_ENC28J60_SPI_SfrWrite(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  sfr, DRV_ENC28J60_RegUnion  value, bool autoAck);
+uintptr_t DRV_ENC28J60_SPI_SfrWrite(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  sfr, DRV_ENC28J60_RegUnion  regValue, bool autoAck);
 
 // write 2 registers at a time - 16 bit operation
 uintptr_t DRV_ENC28J60_SPI_SfrWrite16(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  sfrLow, uint16_t regValue, bool autoAck);
@@ -239,14 +239,14 @@ uintptr_t DRV_ENC28J60_SPI_SfrWrite16(DRV_ENC28J60_DriverInfo *  pDrvInstance, D
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
-        reg â€“ The Special Function Register to write to.
+        pDrvInstance â?? The driver instance
+        sfr â?? The Special Function Register to write to.
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
-uintptr_t DRV_ENC28J60_SPI_SfrReadStart(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, bool autoAck);
+uintptr_t DRV_ENC28J60_SPI_SfrReadStart(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  sfr, bool autoAck);
 
 // same read operation in 16 bits
 uintptr_t DRV_ENC28J60_SPI_SfrRead16Start(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  sfrLow, bool autoAck);
@@ -265,16 +265,16 @@ uintptr_t DRV_ENC28J60_SPI_SfrRead16Start(DRV_ENC28J60_DriverInfo *  pDrvInstanc
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
-        handle â€“ the handle from the read start operation
-        value â€“ where to put the results of the operation
+        pDrvInstance â?? The driver instance
+        handle â?? the handle from the read start operation
+        regValue â?? where to put the results of the operation
 
     Returns
-        DRV_ENC28J60_BR_SUCCESS â€“ if the operation was successful
-        DRV_ENC28J60_BR_PENDING â€“ if the operation is still pending
-        DRV_ENC28J60_BR_ERROR â€“ if there was an error in the operation
+        DRV_ENC28J60_BR_SUCCESS â?? if the operation was successful
+        DRV_ENC28J60_BR_PENDING â?? if the operation is still pending
+        DRV_ENC28J60_BR_ERROR â?? if there was an error in the operation
 */
-DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrReadResult(DRV_ENC28J60_DriverInfo *  pDrvInstance, uintptr_t  handle, DRV_ENC28J60_RegUnion *  value, bool ack);
+DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrReadResult(DRV_ENC28J60_DriverInfo *  pDrvInstance, uintptr_t  handle, DRV_ENC28J60_RegUnion * regValue, bool ack);
 
 DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_SfrRead16Result(DRV_ENC28J60_DriverInfo *  pDrvInstance, uintptr_t  handle, uint16_t* value, bool ack);
 
@@ -297,15 +297,15 @@ DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyRead(DRV_ENC28J60_DriverInfo *  pDrvIns
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
-        reg â€“ The Special Function Register to write to.
-        Value â€“ The bits to set in the register.
+        pDrvInstance â?? The driver instance
+        reg â?? The Special Function Register to write to.
+        regValue â?? The bits to set in the register.
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
-uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  value, bool autoAck);
+uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck);
 
 // *****************************************************************************
 /* Special Function Register Bit Clear
@@ -322,15 +322,15 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
-        reg â€“ The Special Function Register to write to.
-        Value â€“ The bits to clear in the register.
+        pDrvInstance â?? The driver instance
+        reg â?? The Special Function Register to write to.
+        regValue â?? The bits to clear in the register.
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
- uintptr_t DRV_ENC28J60_SPI_SfrBitClear(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  value, bool autoAck);
+uintptr_t DRV_ENC28J60_SPI_SfrBitClear(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP  reg, DRV_ENC28J60_RegUnion  regValue, bool autoAck);
 
 // *****************************************************************************
 /* System Reset
@@ -345,11 +345,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns:
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_SystemReset(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck );
 
@@ -366,11 +366,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_EnableRX(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck);
 
@@ -387,11 +387,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_DisableRX(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck);
 
@@ -410,11 +410,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_DecrPktCtr(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck);
 
@@ -431,11 +431,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_EnableInterrupts(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck  );
 
@@ -452,11 +452,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns:
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_DisableInterrupts(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck);
 
@@ -473,11 +473,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_FlowCtrlDisable(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck );
 
@@ -494,11 +494,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_FlowCtrlSingle(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck );
 
@@ -515,11 +515,11 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns:
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_FlowCtrlMult(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck );
 
@@ -536,15 +536,15 @@ uintptr_t DRV_ENC28J60_SPI_SfrBitSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DR
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
+        pDrvInstance â?? The driver instance
 
     Returns:
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
  uintptr_t DRV_ENC28J60_SPI_FlowCtrClear(DRV_ENC28J60_DriverInfo *  pDrvInstance, bool autoAck );
 
-DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWriteStart(struct _DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP  reg, uint16_t  regValue);
+DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWriteStart(struct S_DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP  reg, uint16_t  regValue);
 
 // *****************************************************************************
 /*  PHY Register Write
@@ -560,13 +560,13 @@ DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWriteStart(struct _DRV_ENC28J60_DriverI
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance â€“ The driver instance
-        reg â€“ The PHY register to write
-        value â€“ the Value to write
+        pDrvInstance â?? The driver instance
+        reg â?? The PHY register to write
+        value â?? the Value to write
 
     Returns:
-        NULL â€“ On Error
-        Valid Handle â€“ on success
+        NULL â?? On Error
+        Valid Handle â?? on success
 */
 DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyWrite(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_PHY_SFR_MAP  reg);
 
@@ -621,16 +621,17 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance â€“ The driver instance
-        reg â€“ the register to write to
-        buffer â€“ the location of the buffer to write
-        dataSize â€“ the size of the data to read.
+        pDrvInstance â?? The driver instance
+        reg â?? the register to write to
+        buffer â?? the location of the buffer to write
+        dataSize â?? the size of the data to read.
 
     Returns:
-        0 â€“ on error
-        Valid handle â€“ on success
+        0 â?? on error
+        Valid handle â?? on success
 */
 uintptr_t DRV_ENC28J60_SPI_ReadDataStart(DRV_ENC28J60_DriverInfo*  pDrvInstance, uint8_t* buffer, uint16_t dataSize, bool autoAck);
 
 
-#endif
+#endif  // H_ENC28J60_SPI_BUS_H_
+

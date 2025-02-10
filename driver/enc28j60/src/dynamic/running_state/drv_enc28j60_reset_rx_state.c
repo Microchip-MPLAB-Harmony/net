@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,7 +39,7 @@ Microchip or any third party.
 #include "../drv_enc28j60_utils.h"
 #include "drv_enc28j60_running_state.h"
 
-int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ResetRxStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_RESET_RX_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.resetRxInfo);
     DRV_ENC28J60_BUS_RESULT busRes;
@@ -54,10 +54,11 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             break;
 
         case DRV_ENC28J60_RRX_STARTING:
-            curSt->state = DRV_ENC28J60_RRX_SET_RXRST;
-            // no break;
-
         case DRV_ENC28J60_RRX_SET_RXRST:
+            if(curSt->state == DRV_ENC28J60_RRX_STARTING)
+            {
+                curSt->state = DRV_ENC28J60_RRX_SET_RXRST;
+            }
             reg.value = 0;
             reg.econ1.RXRST = 1;
             ret = (*pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENC28J60_SFR_ECON1, reg, false);
@@ -78,7 +79,10 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_RRX_SET_RXRST;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_RRX_CLR_RXRST:
@@ -102,7 +106,10 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_RRX_CLR_RXRST;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_RRX_READ_EPKTCNT_START:
@@ -125,6 +132,10 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // success
 
@@ -139,10 +150,7 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
                 }
             }
 
-            if(failClrPkt)
-            {
-                curSt->state = failClrPkt ? DRV_ENC28J60_RRX_READ_EPKTCNT_START : DRV_ENC28J60_RRX_SET_ERXST;
-            }
+            curSt->state = failClrPkt ? DRV_ENC28J60_RRX_READ_EPKTCNT_START : DRV_ENC28J60_RRX_SET_ERXST;
             break;                    
 
         case DRV_ENC28J60_RRX_SET_ERXST:
@@ -165,9 +173,13 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wiat some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             curSt->state = DRV_ENC28J60_RRX_SET_ERXRDPT;
-            // no break
+            break;
 
         case DRV_ENC28J60_RRX_SET_ERXRDPT:
             ret = (*pDrvInst->busVTable->fpSfrWr16)(pDrvInst, DRV_ENC28J60_SFR_ERXRDPTL, pDrvInst->encMemRxEnd, false);
@@ -189,9 +201,13 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             curSt->state = DRV_ENC28J60_RRX_SET_ERXND;
-            // no break
+            break;            
 
         case DRV_ENC28J60_RRX_SET_ERXND:
             ret = (*pDrvInst->busVTable->fpSfrWr16)(pDrvInst, DRV_ENC28J60_SFR_ERXNDL, pDrvInst->encMemRxEnd, false);
@@ -213,9 +229,13 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             curSt->state = DRV_ENC28J60_RRX_SET_RXEN;
-            // no break
+            break;
 
         case DRV_ENC28J60_RRX_SET_RXEN:
             ret = (*pDrvInst->busVTable->fpRxEnable)(pDrvInst, false);
@@ -237,11 +257,16 @@ int32_t DRV_ENC28J60_ResetRxStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success
             curSt->state = DRV_ENC28J60_RRX_WAIT;
             break;
 
         default:
+            // do nothing
             break;
     }
     return 0;

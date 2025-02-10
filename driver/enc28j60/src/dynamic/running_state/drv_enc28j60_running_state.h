@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENC28J60_RUNNING_STATE_H_
-#define _DRV_ENC28J60_RUNNING_STATE_H_
+#ifndef H_DRV_ENC28J60_RUNNING_STATE_H_
+#define H_DRV_ENC28J60_RUNNING_STATE_H_
 
 
 #include "system_config.h"
@@ -45,7 +45,7 @@ Microchip or any third party.
 #include "drv_enc28j60_check_tx_status_state.h"
 #include "drv_enc28j60_reset_rx_state.h"
 
-struct _DRV_ENC28J60_DriverInfo;
+struct S_DRV_ENC28J60_DriverInfo;
 
 typedef enum
 {
@@ -75,19 +75,14 @@ typedef enum
     DRV_ENC28J60_RRX_OP_SET_RXRST,
     DRV_ENC28J60_RRX_OP_SET_ERXSTL,
     DRV_ENC28J60_RRX_OP_SET_ERXSTH,
-    DRV_ENC28J60_RRX_OP_SET_ERXRDPTL,
-    DRV_ENC28J60_RRX_OP_SET_ERXRDPTH,
+    DRV_ENC28J60_RRX_OP_SET_ERXRDL,
+    DRV_ENC28J60_RRX_OP_SET_ERXRDH,
     DRV_ENC28J60_RRX_OP_SET_ERXNDL,
     DRV_ENC28J60_RRX_OP_SET_ERXNDH,
-    DRV_ENC28J60_RRX_OP_DEC_PKT_CNT = DRV_ENC28J60_RRX_OP_SET_ERXSTL,
-    DRV_ENC28J60_RRX_OP_CLEAR_RXRST,
-    DRV_ENC28J60_RRX_OP_SET_RXST = DRV_ENC28J60_RRX_OP_CLEAR_RXRST,
-    DRV_ENC28J60_RRX_OP_READ_EPKCNT,
-    DRV_ENC28J60_RRX_OP_RXEN = DRV_ENC28J60_RRX_OP_READ_EPKCNT,
         
 }DRV_ENC28J60_RUNNING_STATE_OPS;
 
-typedef struct _DRV_ENC28J60_RUNNING_STATE_INFO
+typedef struct
 {
     bool ctsToEnc;
     bool ctTx;
@@ -98,17 +93,18 @@ typedef struct _DRV_ENC28J60_RUNNING_STATE_INFO
     DRV_ENC28J60_CHANGE_DUPLEX_INFO chgDupInfo;
     DRV_ENC28J60_CHECK_TX_STATUS_INFO chkTxStaInfo;
     DRV_ENC28J60_RESET_RX_INFO resetRxInfo;
-    int nTxOkPackets;
-    int nRxOkPackets;
+    uint32_t nTxOkPackets;
+    uint32_t nRxOkPackets;
 }DRV_ENC28J60_RUNNING_STATE_INFO;
 
 
-int32_t DRV_ENC28J60_RunningStateTask( struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_RunningStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
-int32_t DRV_ENC28J60_RunningStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_RunningStateTask( struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_RunningStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
+int32_t DRV_ENC28J60_RunningStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst);
 
 
 
 
 
-#endif
+#endif  // H_DRV_ENC28J60_RUNNING_STATE_H_
+

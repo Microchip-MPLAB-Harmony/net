@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,12 +39,14 @@ Microchip or any third party.
 #include "../drv_enc28j60_utils.h"
 
 
-int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_DetectStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     uint16_t    phyID1Value;
     DRV_ENC28J60_PHY_RES phyRes;
     DRV_ENC28J60_RegUnion phyReg;
     DRV_ENC28J60_DETECT_STATE_INFO* pInfo = &pDrvInst->mainStateInfo.initInfo.detectStateInfo;
+
+    int32_t retVal = 0;
 
     switch (pInfo->state)
     {
@@ -68,6 +70,10 @@ int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // success; check it's the proper ID
             if(phyID1Value != DRV_ENC28J60_PHY_ID1_VALUE)
             {   // failed; retry
@@ -77,7 +83,7 @@ int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
 
             // success; reset the PHY
             pInfo->state = DRV_ENC28J60_DS_RESET_PHY; 
-            // no break
+            break;
             
         case DRV_ENC28J60_DS_RESET_PHY:
             phyReg.value = 0;
@@ -95,29 +101,36 @@ int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             if(phyRes == DRV_ENC28J60_PHY_RES_OK)
             {   // success
                 pInfo->state = DRV_ENC28J60_DS_WAIT_FOR_DETECT_RESTART;
-                return 1;
+                retVal = 1;
+                break;
             }
             else if(phyRes < 0)
             {   // error: retry
                 pInfo->state = DRV_ENC28J60_DS_RESET_PHY;
             }
+            else
+            {
+                // OK
+            }
             // else wait some more
             break;
             
         case DRV_ENC28J60_DS_WAIT_FOR_DETECT_RESTART:
+        default:
+            // do nothing
             break;
     }
 
-    return 0;
+    return retVal;
 }
 
-int32_t DRV_ENC28J60_DetectStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_DetectStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENC28J60_DS_PHID1_READ;
     return 0;
 }
 
-int32_t DRV_ENC28J60_DetectStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_DetectStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }

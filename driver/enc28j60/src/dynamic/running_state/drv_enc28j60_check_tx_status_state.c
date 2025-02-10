@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,12 +35,12 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 #include "drv_enc28j60_check_tx_status_state.h"
-#include "..//drv_enc28j60_local.h"
+#include "../drv_enc28j60_local.h"
 #include "../drv_enc28j60_utils.h"
 #include "drv_enc28j60_running_state.h"
 
 
-int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     int choice;
     int count;
@@ -74,7 +74,7 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
 
             // no txUpdateNeeded detected
             // try to avoid a TX lock; check if any lock in the DRV_ENC28J60_TP_WAIT_FOR_COMPLETE status
-            pTxLock = 0;
+            pTxLock = NULL;
             for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
             {
                 if (pDrvInst->txDescriptors[count].state == DRV_ENC28J60_TP_WAIT_FOR_COMPLETE)
@@ -84,7 +84,7 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
                 }
             }
 
-            if(pTxLock)
+            if(pTxLock != NULL)
             {
                 curSt->pTxLock =  pTxLock;
                 curSt->state = DRV_ENC28J60_CTS_READ_PHSTAT2;
@@ -112,6 +112,10 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
             // got the PHY value
             reg.value = phyRegValue;
             if(reg.phstat2.TXSTAT != 0)
@@ -120,7 +124,7 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
                 break;
             }
             curSt->state = DRV_ENC28J60_CTS_READ_ECON1;
-            // no break
+            break;
 
         case DRV_ENC28J60_CTS_READ_ECON1:
             ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENC28J60_SFR_ECON1, false);
@@ -143,6 +147,10 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
             {   // wait some more
                 break;
             }
+            else
+            {
+                // OK
+            }
 
             // have ECON1
             if(reg.econ1.TXRTS == 0)
@@ -155,10 +163,14 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
             ((DRV_ENC28J60_TX_PACKET_INFO*)curSt->pTxLock)->state = DRV_ENC28J60_TP_RESET_TX;
             curSt->txUpdateNeeded = true;
             curSt->state = DRV_ENC28J60_CTS_DONE;
-            // no break
+            break;
 
         case DRV_ENC28J60_CTS_DONE:
             curSt->state = DRV_ENC28J60_CTS_WAIT;
+            break;
+
+        default:
+            // do nothing
             break;
     }
 
@@ -169,7 +181,7 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
 
 
 
-int32_t DRV_ENC28J60_ChkTxStatusStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChkTxStatusStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_CHECK_TX_STATUS_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkTxStaInfo);
     curSt->state = DRV_ENC28J60_CTS_WAIT;
@@ -177,7 +189,7 @@ int32_t DRV_ENC28J60_ChkTxStatusStateEnter(struct _DRV_ENC28J60_DriverInfo * pDr
 
     return 0;
 }
-int32_t DRV_ENC28J60_ChkTxStatusStateExit(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ChkTxStatusStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,7 +40,7 @@ Microchip or any third party.
 
 // returns 0 for ongoing op
 // 1 when successful
-int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ConfigStateTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_CONFIGURE_STATE_INFO * curSt = &(pDrvInst->mainStateInfo.initInfo.configStateInfo);
     DRV_ENC28J60_RegUnion reg;
@@ -48,6 +48,7 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
     DRV_ENC28J60_BUS_RESULT busRes;
     uint16_t  sfr16Val;
     uintptr_t ret;
+    int32_t  retVal = 0; 
 
     switch (curSt->state)
     {
@@ -71,7 +72,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ERXST;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_ERXRDPT:
@@ -95,7 +99,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ERXRDPT;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_ERXND:
@@ -119,7 +126,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ERXND;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_ETXST:
@@ -142,7 +152,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ETXST;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_EWRPT:
@@ -165,7 +178,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_EWRPT;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MACON1:
@@ -194,7 +210,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MACON1;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MACON3:
@@ -224,7 +243,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MACON3;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MABBIPG:
@@ -252,7 +274,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MABBIPG;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MACON4:
@@ -281,7 +306,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MACON4;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MACLCON2:
@@ -308,7 +336,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MACLCON2;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MAIPG:
@@ -334,7 +365,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MAIPG;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_MAMXFL:
@@ -359,7 +393,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_MAMXFL;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_WRITE_MAADR5:
@@ -382,7 +419,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_WRITE_MAADR5;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_WRITE_MAADR3:
@@ -405,7 +445,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_WRITE_MAADR3;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_WRITE_MAADR1:
@@ -423,7 +466,7 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             if(busRes == DRV_ENC28J60_BR_SUCCESS)
             {
                 curSt->state = DRV_ENC28J60_CS_SET_ECOCON;
-                pDrvInst->stackParameters.processFlags = 0;
+                pDrvInst->stackParameters.processFlags = TCPIP_MAC_PROCESS_FLAG_NONE;
                 pDrvInst->stackParameters.macType = TCPIP_MAC_TYPE_ETH;
                 pDrvInst->stackParameters.linkMtu = TCPIP_MAC_LINK_MTU_ETH;
             }
@@ -431,7 +474,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_WRITE_MAADR1;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_ECOCON:
@@ -455,7 +501,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ECOCON;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_PHCON2:
@@ -478,7 +527,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // error: retry
                 curSt->state = DRV_ENC28J60_CS_SET_PHCON2;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_PHLCON:
@@ -500,7 +552,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // error: retry
                 curSt->state = DRV_ENC28J60_CS_SET_PHLCON;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
             
         case DRV_ENC28J60_CS_SET_PHCON1:
@@ -525,7 +580,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // error: retry
                 curSt->state = DRV_ENC28J60_CS_SET_PHCON1;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_PHIE:
@@ -550,7 +608,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // error: retry
                 curSt->state = DRV_ENC28J60_CS_SET_PHIE;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_EIE:
@@ -574,7 +635,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_EIE;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_ECON2:
@@ -598,7 +662,10 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ECON2;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         case DRV_ENC28J60_CS_SET_ECON1:
@@ -618,32 +685,37 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             if(busRes == DRV_ENC28J60_BR_SUCCESS)
             {
                 curSt->state = DRV_ENC28J60_CS_DONE;
-                return 1;
+                retVal = 1;
+                break;
             }
             else if(busRes < 0)
             {   // some error, retry
                 curSt->state = DRV_ENC28J60_CS_SET_ECON1;
             }
-            // else wait some more
+            else
+            {
+                // else wait some more
+            }
             break;
 
         default:
+            // do nothing
             break;
     }
 
-    return 0;
+    return retVal;
 }
 
 
-int32_t DRV_ENC28J60_ConfigStateEnter(DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ConfigStateEnter(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     pDrvInst->mainStateInfo.initInfo.configStateInfo.state = DRV_ENC28J60_CS_SET_ERXST;
 
     pDrvInst->encRamForAppSize = 1024;
     pDrvInst->encRamForAppStartAdr = DRV_ENC28J60_MEM_SIZE - pDrvInst->encRamForAppSize;
-    pDrvInst->encMemTxStart=pDrvInst->encRamForAppStartAdr - (1514 + 7 + 1);    // max packet + 7 bytes TSV + 1 Control Byte; Should be even!
+    pDrvInst->encMemTxStart = pDrvInst->encRamForAppStartAdr - (1514U + 7U + 1U);    // max packet + 7 bytes TSV + 1 Control Byte; Should be even!
     pDrvInst->encMemRxStart = 0x0000;
-    pDrvInst->encMemRxEnd = pDrvInst->encMemTxStart - 3;  //  2 bytes gap Tx <-> RX
+    pDrvInst->encMemRxEnd = pDrvInst->encMemTxStart - 3U;  //  2 bytes gap Tx <-> RX
 
 
     //pDrvInst->encMemWrPtr= pDrvInst->encMemTxStart;
@@ -655,7 +727,7 @@ int32_t DRV_ENC28J60_ConfigStateEnter(DRV_ENC28J60_DriverInfo * pDrvInst)
     return 0;
 }
 
-int32_t DRV_ENC28J60_ConfigStateExit(DRV_ENC28J60_DriverInfo * pDrvInst)
+int32_t DRV_ENC28J60_ConfigStateExit(struct S_DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     return 0;
 }
