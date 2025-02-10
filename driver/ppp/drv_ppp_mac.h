@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_PPP_MAC_H_
-#define _DRV_PPP_MAC_H_
+#ifndef H_DRV_PPP_MAC_H_
+#define H_DRV_PPP_MAC_H_
 
 // *****************************************************************************
 // *****************************************************************************
@@ -75,14 +75,14 @@ Microchip or any third party.
 // Definition of the serial object supporting the functionality required by PPP/HDLC
 // PPP uses HDLC which needs an object to transport PPP frames over a serial interface: asynchronous, synchronous, modems, etc.
 // Currently the asynchronous serial line is supported using the UART plib with ring buffer
-typedef struct _tag_SERIAL_HDLC_OBJECT
+typedef struct S_tag_SERIAL_HDLC_OBJECT
 {
     // read data in a buffer
-    size_t (*read)(uint8_t* pRdBuffer, const size_t size);
+    size_t (*readBuff)(uint8_t* pRdBuffer, const size_t size);
     // the number of available bytes to be read
     size_t (*readCount)(void);
     // write data from a buffer
-    size_t (*write)(uint8_t* pWrBuffer, const size_t size );
+    size_t (*writeBuff)(uint8_t* pWrBuffer, const size_t size );
     // available write space in the TX buffer
     size_t (*writeFreeSpace)(void);
 }SERIAL_HDLC_OBJECT;
@@ -139,10 +139,10 @@ typedef enum
     // Not supported (yet) configuration options.
     // These will be eventually added.
     /*
-    DRV_LCP_OPT_FLAG_PFC            , // LCP: Protocol-Field-Compression
-    DRV_LCP_OPT_FLAG_ACFC           , // LCP: Address-and-Control-Field-Compression
-    DRV_LCP_OPT_FLAG_AUTH_PROT      , // LCP: Authentication-Protocol
-    DRV_LCP_OPT_FLAG_QUALITY_PRO    , // LCP: Quality-Protocol
+    DRV_LCP_OPT_FLAG_PFC            , - LCP: Protocol-Field-Compression
+    DRV_LCP_OPT_FLAG_ACFC           , - LCP: Address-and-Control-Field-Compression
+    DRV_LCP_OPT_FLAG_AUTH_PROT      , - LCP: Authentication-Protocol
+    DRV_LCP_OPT_FLAG_QUALITY_PRO    , - LCP: Quality-Protocol
     */
 }DRV_LCP_CONFIG_OPTION_FLAG;
 
@@ -303,7 +303,7 @@ typedef struct
     uint32_t    rxAccm;
 
     /* Non-volatile pointer to the HDLC object to be used by PPP MAC */
-    const struct _tag_DRV_HDLC_OBJECT*   pHdlcObj;   
+    const struct S_tag_DRV_HDLC_OBJECT*   pHdlcObj;   
 
     /* size of the HDLC processing buffer to perform reads from the serial object
        and assemble HDLC frames.
@@ -898,7 +898,7 @@ TCPIP_MAC_RES     DRV_PPP_MAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETER
 
 // *****************************************************************************
 /*  Function:
-     TCPIP_MAC_RES       DRV_PPP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+     TCPIP_MAC_RES       DRV_PPP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, size_t nEntries, size_t* pHwEntries);
 
   Summary:
     Gets the current MAC hardware statistics registers.
@@ -940,7 +940,7 @@ TCPIP_MAC_RES     DRV_PPP_MAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETER
     Note that this function may NOT apply to a PPP link over a serial line.
 
 */
-TCPIP_MAC_RES       DRV_PPP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+TCPIP_MAC_RES       DRV_PPP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, size_t nEntries, size_t* pHwEntries);
     
 // *****************************************************************************
 /*  Function:
@@ -984,7 +984,7 @@ size_t      DRV_PPP_MAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buff
     
 /***********************************************************************************************************
   Function:
-        bool DRV_PPP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
+        bool DRV_PPP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enable);
     
   Summary:
     Enables/disables the MAC events.
@@ -1036,7 +1036,7 @@ size_t      DRV_PPP_MAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buff
       if a notification handler is in place) it will be disabled until the
       DRV_PPP_MAC_EventAcknowledge() is called.                                                        
   ***********************************************************************************************************/
-bool DRV_PPP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
+bool DRV_PPP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enable);
 
 
 /****************************************************************************************************
@@ -1148,6 +1148,9 @@ bool    DRV_PPP_MAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv);
 TCPIP_MAC_EVENT DRV_PPP_MAC_EventPendingGet(DRV_HANDLE hMac);
 
 
+// supported MAC objects
+extern const TCPIP_MAC_OBJECT DRV_PPP_MACObject;
+
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -1155,7 +1158,7 @@ TCPIP_MAC_EVENT DRV_PPP_MAC_EventPendingGet(DRV_HANDLE hMac);
 #endif
 //DOM-IGNORE-END
 
-#endif // #ifndef _DRV_PPP_MAC_H_
+#endif // #ifndef H_DRV_PPP_MAC_H_
 
 /*******************************************************************************
  End of File

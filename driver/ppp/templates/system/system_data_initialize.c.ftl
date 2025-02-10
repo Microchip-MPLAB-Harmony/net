@@ -1,5 +1,5 @@
 <#--
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -24,9 +24,9 @@ Microchip or any third party.
 
 const SERIAL_HDLC_OBJECT PPP_UART_HDLC =
 {
-    .read = ${DRV_PPP_UART_TYPE}_Read,
+    .readBuff = ${DRV_PPP_UART_TYPE}_Read,
     .readCount = ${DRV_PPP_UART_TYPE}_ReadCountGet,
-    .write = ${DRV_PPP_UART_TYPE}_Write,
+    .writeBuff = ${DRV_PPP_UART_TYPE}_Write,
     .writeFreeSpace = ${DRV_PPP_UART_TYPE}_WriteFreeBufferCountGet,
 };
 

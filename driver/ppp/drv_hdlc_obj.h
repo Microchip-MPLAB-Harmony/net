@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#ifndef _DRV_HDLC_OBJ_H_
-#define _DRV_HDLC_OBJ_H_
+#ifndef H_DRV_HDLC_OBJ_H_
+#define H_DRV_HDLC_OBJ_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -81,12 +81,12 @@ typedef struct
     /*  calloc type allocation function */
     void*   (*callocF)(HDLC_ALLOC_HANDLE allocH, size_t nElems, size_t elemSize);
     /*  free type allocation free function */
-    void    (*freeF)(HDLC_ALLOC_HANDLE allocH, const void* pBuff);
+    size_t  (*freeF)(HDLC_ALLOC_HANDLE allocH, const void* pBuff);
     /*  handle to be used in the allocation calls */
     HDLC_ALLOC_HANDLE   allocH; 
 
     // the serial object to be used
-    const struct _tag_SERIAL_HDLC_OBJECT* serialObj;
+    const struct S_tag_SERIAL_HDLC_OBJECT* serialObj;
 }DRV_HDLC_CONFIG;
 
 // *****************************************************************************
@@ -172,20 +172,20 @@ typedef enum
                                             // write space in its internal buffer
                                             // probably busy with previous write operations
 
-    DRV_HDLC_RES_ALLOC_ERR          = 2,    // failure when trying to allocate memory for the frame
     
     // fatal errors
     DRV_HDLC_RES_HANDLE_ERR         = -1,   // wrong handle for the operation
     DRV_HDLC_RES_WRITE_ERR          = -2,   // the underlying serial object performed a truncated write
+    DRV_HDLC_RES_ALLOC_ERR          = -3,   // failure when trying to allocate memory for the frame
     
 
 }DRV_HDLC_RES;
 
 
 // frames are owned by PPP and passed to HDLC with addRxFrame
-typedef struct _tag_DRV_HDLC_FRAME
+typedef struct S_tag_DRV_HDLC_FRAME
 {
-    struct _tag_DRV_HDLC_FRAME* next;   // cast to SGL_LIST_NODE*
+    struct S_tag_DRV_HDLC_FRAME* next;   // cast to SGL_LIST_NODE*
                                         // could be used by HDLC client
                                         // when getting a frame with 'readFrame' 
     const void* hdlcPkt;                // pointer to the TCPIP_MAC_PACKET this frame belongs to
@@ -203,7 +203,7 @@ typedef struct _tag_DRV_HDLC_FRAME
 }DRV_HDLC_FRAME;
 
 
-typedef struct _tag_DRV_HDLC_OBJECT
+typedef struct S_tag_DRV_HDLC_OBJECT
 {
     SYS_MODULE_OBJ      (*initialize)(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
     void                (*deinitialize)(SYS_MODULE_OBJ object);
@@ -246,7 +246,7 @@ typedef struct _tag_DRV_HDLC_OBJECT
     bool                (*getStatistics)(DRV_HANDLE hHdlc, DRV_HDLC_STATISTICS* pStat, bool clear);
     // set the event notification callback
     // the event is a TCPIP_MAC_EVENT
-    bool                (*setEventCback)(DRV_HANDLE hHdlc, void (*cback)(DRV_HANDLE, int evMask), DRV_HANDLE handle);
+    bool                (*setEventCback)(DRV_HANDLE hHdlc, void (*cback)(DRV_HANDLE handle, int evMask), DRV_HANDLE handle);
 }DRV_HDLC_OBJECT;        // HDLC driver object descriptor
 
 
@@ -255,5 +255,5 @@ typedef struct _tag_DRV_HDLC_OBJECT
 // default DRV_HDLC_AsyncObject: transport over a serial asynchronous line
 extern const DRV_HDLC_OBJECT DRV_HDLC_AsyncObject;
 
-#endif  // _DRV_HDLC_OBJ_H_
+#endif  // H_DRV_HDLC_OBJ_H_
 

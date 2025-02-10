@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,8 +43,8 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#ifndef _DRV_PPP_H_
-#define _DRV_PPP_H_
+#ifndef H_DRV_PPP_H_
+#define H_DRV_PPP_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -101,7 +101,7 @@ typedef const void* PPP_REQUEST_HANDLE;
 
 
 // Forward definition for a request structure
-struct _tag_PPPP_ECHO_REQUEST;
+struct S_tag_PPPP_ECHO_REQUEST;
 
 // *****************************************************************************
 /* PPP Request Callback function
@@ -126,7 +126,7 @@ struct _tag_PPPP_ECHO_REQUEST;
     None
 
 */
-typedef void (*PPP_ECHO_CALLBACK)(const struct _tag_PPPP_ECHO_REQUEST* pEchoReq, PPP_REQUEST_HANDLE pppHandle, PPP_ECHO_RESULT result, const void* param);
+typedef void (*PPP_ECHO_CALLBACK)(const struct S_tag_PPPP_ECHO_REQUEST* pEchoReq, PPP_REQUEST_HANDLE pppHandle, PPP_ECHO_RESULT result, const void* param);
 
 // *****************************************************************************
 /* PPP Request Data Structure
@@ -147,7 +147,7 @@ typedef void (*PPP_ECHO_CALLBACK)(const struct _tag_PPPP_ECHO_REQUEST* pEchoReq,
     Being a network interface a regular ICMP ping could be used instead
 
 */
-typedef struct _tag_PPPP_ECHO_REQUEST
+typedef struct S_tag_PPPP_ECHO_REQUEST
 {
     uint8_t*            pData;      // input: data buffer to be sent as part of the request
                                     // callback : pointer to the received data buffer
@@ -197,8 +197,8 @@ typedef struct _tag_PPPP_ECHO_REQUEST
 
   Example:
   <code>
-    uint8_t  myDataBuffer[200];     // buffer for the echo request data
-    void EchoCallback(PPP_ECHO_REQUEST* pReqData, PPP_REQUEST_HANDLE pppHandle, PPP_ECHO_RESULT result);    // callback function to be called
+    uint8_t  myDataBuffer[200];     - buffer for the echo request data
+    void EchoCallback(PPP_ECHO_REQUEST* pReqData, PPP_REQUEST_HANDLE pppHandle, PPP_ECHO_RESULT result);    - callback function to be called
 
     PPP_ECHO_REQUEST myEchoRequest;
     myEchoRequest.pData          = myDataBuffer;
@@ -208,13 +208,13 @@ typedef struct _tag_PPPP_ECHO_REQUEST
 
     if(PPP_EchoRequest(hMac, &myEchoRequest, 0) == PPP_ECHO_OK )
     {
-        // successfully sent the PPP request
-        //
-        // EchoCallback() will be called and data can be examined
+        - successfully sent the PPP request
+        -
+        - EchoCallback() will be called and data can be examined
     }
     else
     {
-        // process the error
+        - process the error
     }
   </code>
 
@@ -744,5 +744,5 @@ uint32_t        PPP_GetRemoteIpv4Addr(DRV_HANDLE hMac);
 bool        PPP_GetState(DRV_HANDLE hMac, PPP_STATE state[2]);
 //
 // 
-#endif  // _DRV_PPP_H_
+#endif  // H_DRV_PPP_H_
 
