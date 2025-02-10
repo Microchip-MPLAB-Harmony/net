@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,7 +40,7 @@ Microchip or any third party.
 #include "../drv_encx24j600_utils.h"
 
 
-int32_t DRV_ENCX24J600_ChgDupStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ChgDupStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     DRV_ENCX24J600_CHANGE_DUPLEX_INFO * curSt = &pDrvInst->mainStateInfo.runningInfo.chgDupInfo;
     DRV_ENCX24J600_RegUnion reg = {0};
@@ -49,18 +49,13 @@ int32_t DRV_ENCX24J600_ChgDupStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
     switch (curSt->state)
     {
         case DRV_ENCX24J600_CD_WAIT:
-        {
             if (curSt->duplexChangeNeeded)
             {
                 curSt->state = DRV_ENCX24J600_CD_SET_MACON2;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_CD_SET_MACON2:
-        {
             reg.value = 0;
             reg.macon2.FULDPX = 1;
             if (curSt->duplexMode)
@@ -71,18 +66,14 @@ int32_t DRV_ENCX24J600_ChgDupStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
             {
                 ret = (pDrvInst->busVTable->fpSfrBitClr)(pDrvInst, DRV_ENCX24J600_SFR_MACON2, reg, DRV_ENCX24J600_CD_OP_SET_MACON2);
             }
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_CD_SET_BBIPG;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_CD_SET_BBIPG:
-        {
-            reg.value = 0;
+            reg.value = 0U;
             if (curSt->duplexMode)
             {
                 reg.mabbipg.BBIPG = 0x15;
@@ -92,30 +83,30 @@ int32_t DRV_ENCX24J600_ChgDupStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
                 reg.mabbipg.BBIPG = 0x12;
             }
             ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MABBIPG, reg, DRV_ENCX24J600_CD_OP_SET_BBIPG);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_CD_ENABLE_RX;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_CD_ENABLE_RX:
-        {
             ret = (*pDrvInst->busVTable->fpRxEnable)(pDrvInst);
             if (ret != 0)
             {
                 curSt->duplexChangeNeeded = false;
                 curSt->state = DRV_ENCX24J600_CD_WAIT;
             }
-        }
+            break;
+
+        default:
+            // do nothing
+            break;
     }
 
     return 0;
 }
 
-int32_t DRV_ENCX24J600_ChgDupStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ChgDupStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     DRV_ENCX24J600_CHANGE_DUPLEX_INFO * curSt = &pDrvInst->mainStateInfo.runningInfo.chgDupInfo;
     curSt->state = DRV_ENCX24J600_CD_WAIT;
@@ -124,7 +115,7 @@ int32_t DRV_ENCX24J600_ChgDupStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrv
     return 0;
 }
 
-int32_t DRV_ENCX24J600_ChgDupStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ChgDupStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     return 0;
 }

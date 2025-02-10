@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,68 +39,57 @@ Microchip or any third party.
 #include "../drv_encx24j600_utils.h"
 
 
-int32_t DRV_ENCX24J600_DetectStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_DetectStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     DRV_ENCX24J600_RegUnion reg = {0};
     uintptr_t ret;
+    int32_t res = 0;
+
     switch (pDrvInst->mainStateInfo.initInfo.detectStateInfo.state)
     {
         case DRV_ENCX24J600_DS_WRITE_EUDAST:
-        {
             reg.eudast.EUDAST = 0x1234;
             ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, reg, DRV_ENCX24J600_DS_OPS_WRITE_EUDAST);
             if (ret != 0)
             {
                 pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_READ_EUDAST;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
         case DRV_ENCX24J600_DS_READ_EUDAST:
-        {
             ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, DRV_ENCX24J600_DS_OPS_READ_EUDAST);
             if (ret != 0)
             {
                 pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WAIT_FOR_READ;
                 pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp = ret;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
         case DRV_ENCX24J600_DS_WAIT_FOR_READ:
-        {
-            if (_DRV_ENCX24J600_ReadSfr(pDrvInst, pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp, &reg, DRV_ENCX24J600_DS_OPS_READ_EUDAST))
+            if (DRV_ENCX24J600_ReadSfr(pDrvInst, pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp, &reg, (uint8_t)DRV_ENCX24J600_DS_OPS_READ_EUDAST))
             {
                 if (reg.eudast.EUDAST == 0x1234)
                 {
-                    return 1;
+                    res = 1;
                 }
                 else
                 {
                     pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WRITE_EUDAST;
-                    break;
                 }
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+        default:
+            // do nothing
+            break;
     }
-    return 0;
+    return res;
 }
 
-int32_t DRV_ENCX24J600_DetectStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_DetectStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WRITE_EUDAST;
     return 0;
 }
 
-int32_t DRV_ENCX24J600_DetectStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_DetectStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     return 0;
 }

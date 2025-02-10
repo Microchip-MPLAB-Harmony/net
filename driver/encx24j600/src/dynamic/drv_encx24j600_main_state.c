@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -38,57 +38,42 @@ Microchip or any third party.
 #include "drv_encx24j600_local.h"
 
 
-int32_t DRV_ENCX24J600_MainStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+void DRV_ENCX24J600_MainStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
+    int32_t res;
     switch (pDrvInst->mainStateInfo.state)
     {
-        case DRV_ENCX24J600_MS_UNINITIALIZED:
-            break;
         case DRV_ENCX24J600_MS_INITIALIZATION:
-        {
-            int32_t res = DRV_ENCX24J600_InitStateTask(pDrvInst);
+            res = DRV_ENCX24J600_InitStateTask(pDrvInst);
             if (res == 1)
             {
                 pDrvInst->mainStateInfo.state = DRV_ENCX24J600_MS_CLOSED;
-                DRV_ENCX24J600_InitStateExit(pDrvInst);
-                DRV_ENCX24J600_ClosedStateEnter(pDrvInst);
+                (void)DRV_ENCX24J600_InitStateExit(pDrvInst);
+                (void)DRV_ENCX24J600_ClosedStateEnter(pDrvInst);
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
         case DRV_ENCX24J600_MS_CLOSED:
-        {
-            int32_t res = DRV_ENCX24J600_ClosedStateTask(pDrvInst);
+            res = DRV_ENCX24J600_ClosedStateTask(pDrvInst);
             if (res == 1)
             {
                 pDrvInst->mainStateInfo.state = DRV_ENCX24J600_MS_RUNNING;
-                DRV_ENCX24J600_ClosedStateExit(pDrvInst);
-                DRV_ENCX24J600_RunningStateEnter(pDrvInst);
+                (void)DRV_ENCX24J600_ClosedStateExit(pDrvInst);
+                (void)DRV_ENCX24J600_RunningStateEnter(pDrvInst);
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
         case DRV_ENCX24J600_MS_RUNNING:
-        {
-            DRV_ENCX24J600_RunningStateTask(pDrvInst);
+            (void)DRV_ENCX24J600_RunningStateTask(pDrvInst);
             if (pDrvInst->numClients == 0)
             {
                 pDrvInst->mainStateInfo.state = DRV_ENCX24J600_MS_CLOSING;
-                DRV_ENCX24J600_RunningStateExit(pDrvInst);
+                (void)DRV_ENCX24J600_RunningStateExit(pDrvInst);
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+        case DRV_ENCX24J600_MS_UNINITIALIZED:
         case DRV_ENCX24J600_MS_CLOSING:
+        default:
+            // do nothing
             break;
     }
-    return 0;
-
-
 }
+

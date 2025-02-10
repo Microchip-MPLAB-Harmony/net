@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#if !defined(_DRV_ENCX24J600_BUS_H_)
-#define _DRV_ENCX24J600_BUS_H_
+#if !defined(H_DRV_ENCX24J600_BUS_H_)
+#define H_DRV_ENCX24J600_BUS_H_
 
 
 #ifdef __cplusplus
@@ -48,7 +48,7 @@ extern "C" {
  
 
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum
 {
@@ -93,7 +93,7 @@ typedef enum
         Negative if error
         Valid Handle on success
 */
-typedef int32_t (*DRV_ENCX24J600_OpenInterface)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef int32_t (*DRV_ENCX24J600_OpenInterface)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /* Close
@@ -113,7 +113,7 @@ typedef int32_t (*DRV_ENCX24J600_OpenInterface)(struct _DRV_ENCX24J600_DriverInf
     Returns:
         None
 */
-typedef void (*DRV_ENCX24J600_CloseInterface)( struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance);
+typedef void (*DRV_ENCX24J600_CloseInterface)( struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance);
 
 // *****************************************************************************
 /* Operation Result
@@ -136,7 +136,7 @@ typedef void (*DRV_ENCX24J600_CloseInterface)( struct _DRV_ENCX24J600_DriverInfo
         DRV_ENCX24J600_BR_PENDING - if the operation is still pending
         DRV_ENCX24J600_BR_ERROR - if there was an error in the operation
 */
-typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_OperationResult)( struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t  handle );
+typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_OperationResult)( struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t  handle );
 
 
 // *****************************************************************************
@@ -163,7 +163,7 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_OperationResult)( struct _DRV
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_SfrWrite)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value,  uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_SfrWrite)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value,  uint8_t  opIndex );
 
 // *****************************************************************************
 /* Special Function Register Read Start
@@ -188,7 +188,7 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrWrite)(struct _DRV_ENCX24J600_DriverInfo *
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_SfrReadStart)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_SfrReadStart)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, uint8_t  opIndex );
 
 // *****************************************************************************
 /* Special Function Register Read Result
@@ -214,7 +214,7 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrReadStart)(struct _DRV_ENCX24J600_DriverIn
         DRV_ENCX24J600_BR_PENDING - if the operation is still pending
         DRV_ENCX24J600_BR_ERROR - if there was an error in the operation
 */
-typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_SfrReadResult)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t  handle, DRV_ENCX24J600_RegUnion *  value,  uint8_t  opIndex );
+typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_SfrReadResult)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t  handle, DRV_ENCX24J600_RegUnion *  value,  uint8_t  opIndex );
 
 // *****************************************************************************
 /* Special Function Register Bit Set
@@ -240,7 +240,7 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_SfrReadResult)(struct _DRV_EN
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_SfrBitSet)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_SfrBitSet)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
 
 // *****************************************************************************
 /* Special Function Register Bit Clear
@@ -266,7 +266,7 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrBitSet)(struct _DRV_ENCX24J600_DriverInfo 
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_SfrBitClear)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_SfrBitClear)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
 
 // *****************************************************************************
 /* System Reset
@@ -287,7 +287,7 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrBitClear)(struct _DRV_ENCX24J600_DriverInf
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_SystemReset)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_SystemReset)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /* Enable Receive
@@ -308,7 +308,7 @@ typedef uintptr_t (*DRV_ENCX24J600_SystemReset)(struct _DRV_ENCX24J600_DriverInf
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_EnableRX)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_EnableRX)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /* Disable Receive
@@ -329,7 +329,7 @@ typedef uintptr_t (*DRV_ENCX24J600_EnableRX)(struct _DRV_ENCX24J600_DriverInfo *
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_DisableRX)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_DisableRX)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /* Request Packet Transmission
@@ -352,7 +352,7 @@ typedef uintptr_t (*DRV_ENCX24J600_DisableRX)(struct _DRV_ENCX24J600_DriverInfo 
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_ReqPktTx)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_ReqPktTx)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /* Decrement Packet Counter
@@ -374,7 +374,7 @@ typedef uintptr_t (*DRV_ENCX24J600_ReqPktTx)(struct _DRV_ENCX24J600_DriverInfo *
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_DecrPktCtr)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_DecrPktCtr)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /* Enable Interrupts
@@ -395,7 +395,7 @@ typedef uintptr_t (*DRV_ENCX24J600_DecrPktCtr)(struct _DRV_ENCX24J600_DriverInfo
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_EnableInterrupts)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_EnableInterrupts)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /*  Disable Interrupts
@@ -416,7 +416,7 @@ typedef uintptr_t (*DRV_ENCX24J600_EnableInterrupts)(struct _DRV_ENCX24J600_Driv
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_DisableInterrupts)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_DisableInterrupts)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /*  Disable Flow Control
@@ -437,7 +437,7 @@ typedef uintptr_t (*DRV_ENCX24J600_DisableInterrupts)(struct _DRV_ENCX24J600_Dri
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlDisable)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlDisable)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /*  Single Flow Control
@@ -458,7 +458,7 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlDisable)(struct _DRV_ENCX24J600_Drive
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlSingle)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlSingle)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /*  Multiple Flow Control
@@ -479,7 +479,7 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlSingle)(struct _DRV_ENCX24J600_Driver
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlMult)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlMult)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /*  Clear Flow Control
@@ -500,7 +500,7 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlMult)(struct _DRV_ENCX24J600_DriverIn
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_FlowCtrClear)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
+typedef uintptr_t (*DRV_ENCX24J600_FlowCtrClear)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
 // *****************************************************************************
 /*  PHY Register Write
@@ -526,7 +526,7 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrClear)(struct _DRV_ENCX24J600_DriverIn
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_PhyWrite)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_PHY_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_PhyWrite)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_PHY_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
 
 // *****************************************************************************
 /*  Write Pointer
@@ -551,7 +551,7 @@ typedef uintptr_t (*DRV_ENCX24J600_PhyWrite)(struct _DRV_ENCX24J600_DriverInfo *
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_WritePointer)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint16_t  value, uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_WritePointer)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint16_t  value, uint8_t  opIndex );
 
 // *****************************************************************************
 /*  Read Pointer Start
@@ -575,7 +575,7 @@ typedef uintptr_t (*DRV_ENCX24J600_WritePointer)(struct _DRV_ENCX24J600_DriverIn
         NULL - On Error
         Valid Handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_ReadPointerStart)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t  opIndex );
+typedef uintptr_t (*DRV_ENCX24J600_ReadPointerStart)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t  opIndex );
 
 // *****************************************************************************
 /*  Read Pointer Result
@@ -600,7 +600,7 @@ typedef uintptr_t (*DRV_ENCX24J600_ReadPointerStart)(struct _DRV_ENCX24J600_Driv
         DRV_ENCX24J600_BR_PENDING - if the operation is still pending
         DRV_ENCX24J600_BR_ERROR - if there was an error in the operation
 */
-typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t handle, uint16_t* value, uint8_t  opIndex );
+typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t handle, uint16_t* value, uint8_t  opIndex );
 
 // *****************************************************************************
 /* Write Data
@@ -609,7 +609,7 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DR
     Writes data to the ENC hardware
     
     Details:
-    This function writes a data segment to the ENC. 
+    This function writes data to the ENC. 
 
     Preconditions:
     The bus had to have been initialized first.  The parameters to this function 
@@ -625,21 +625,14 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DR
     Parameters:
         pDrvInstance - The driver instance
         reg - the register to write to
-        pkt - the packet with the buffer to write
+        buffer - the location of the buffer to write
         dataSize - the size of the data to write.
 
     Returns:
         0 - on error
         Valid handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_WriteSeg)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, struct _DRV_ENCX24J600_TX_PACKET_INFO *  pkt);
-
-// *****************************************************************************
-// Write packet data to the ENC
-// This function performs a copy of the packet in an allocated buffer and sends it to the ENC
-// Return 0 if an error.
-// Valid handle on success
-typedef uintptr_t (*DRV_ENCX24J600_WritePkt)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, struct _DRV_ENCX24J600_TX_PACKET_INFO *  pkt, uint16_t dataSize);
+typedef uintptr_t (*DRV_ENCX24J600_WriteData)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t *  buffer, uint16_t  dataSize);
 
 // *****************************************************************************
 /* Read Data Start
@@ -671,9 +664,9 @@ typedef uintptr_t (*DRV_ENCX24J600_WritePkt)(struct _DRV_ENCX24J600_DriverInfo *
         0 - on error
         Valid handle - on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_ReadData)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t *  buffer, uint16_t  dataSize);
+typedef uintptr_t (*DRV_ENCX24J600_ReadData)(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t *  buffer, uint16_t  dataSize);
 
-typedef struct _DRV_ENCX24J600_BusVTable
+typedef struct
 {
     DRV_ENCX24J600_OpenInterface fpOpenIf;
     DRV_ENCX24J600_CloseInterface fpCloseIf;
@@ -698,8 +691,7 @@ typedef struct _DRV_ENCX24J600_BusVTable
     DRV_ENCX24J600_WritePointer fpPtrWr;
     DRV_ENCX24J600_ReadPointerStart fpPtrRdStart;
     DRV_ENCX24J600_ReadPointerResult fpPtrRdResult;
-    DRV_ENCX24J600_WritePkt  fpDataPktWr;
-    DRV_ENCX24J600_WriteSeg fpDataSegWr;
+    DRV_ENCX24J600_WriteData fpDataWr;
     DRV_ENCX24J600_ReadData fpDataRd;
 }DRV_ENCX24J600_BusVTable;
 
@@ -710,4 +702,5 @@ typedef struct _DRV_ENCX24J600_BusVTable
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_BUS_H_
+

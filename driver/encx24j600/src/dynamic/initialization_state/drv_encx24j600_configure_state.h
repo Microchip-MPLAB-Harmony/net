@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_CONFIGURE_STATE_H_
-#define _DRV_ENCX24J600_CONFIGURE_STATE_H_
+#ifndef H_DRV_ENCX24J600_CONFIGURE_STATE_H_
+#define H_DRV_ENCX24J600_CONFIGURE_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,7 +44,7 @@ extern "C" {
 #include "system_config.h"
 
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum
 {
@@ -77,13 +77,9 @@ typedef enum
 typedef enum
 {
     DRV_ENCX24J600_CS_OP_SET_EGPRDPT,
-    DRV_ENCX24J600_CS_OP_SET_MACON2 = DRV_ENCX24J600_CS_OP_SET_EGPRDPT,
     DRV_ENCX24J600_CS_OP_SET_ERXRDPT,
-    DRV_ENCX24J600_CS_OP_SET_PHANA_1 = DRV_ENCX24J600_CS_OP_SET_ERXRDPT,
     DRV_ENCX24J600_CS_OP_SET_EUDARDPT,
-    DRV_ENCX24J600_CS_OP_SET_PHANA_2 = DRV_ENCX24J600_CS_OP_SET_EUDARDPT,
     DRV_ENCX24J600_CS_OP_SET_EGPWRPT,
-    DRV_ENCX24J600_CS_OP_SET_EIE = DRV_ENCX24J600_CS_OP_SET_EGPWRPT,
     DRV_ENCX24J600_CS_OP_SET_ERXWRPT,
     DRV_ENCX24J600_CS_OP_SET_EUDAWRPT,
     DRV_ENCX24J600_CS_OP_SET_ERXST,
@@ -93,16 +89,20 @@ typedef enum
     DRV_ENCX24J600_CS_OP_SET_EUDAND,
     DRV_ENCX24J600_CS_OP_SET_ERXFCON,
     DRV_ENCX24J600_CS_OP_READ_MACON2,
-    DRV_ENCX24J600_CS_OP_WRITE_MAADR1,
-    DRV_ENCX24J600_CS_OP_WRITE_MAADR2,
-    DRV_ENCX24J600_CS_OP_WRITE_MAADR3,
-    DRV_ENCX24J600_CS_OP_READ_MAADR1,
-    DRV_ENCX24J600_CS_OP_READ_MAADR2,
-    DRV_ENCX24J600_CS_OP_READ_MAADR3,
+    DRV_ENCX24J600_CS_OP_WR_MAADR1,
+    DRV_ENCX24J600_CS_OP_WR_MAADR2,
+    DRV_ENCX24J600_CS_OP_WR_MAADR3,
+    DRV_ENCX24J600_CS_OP_RD_MAADR1,
+    DRV_ENCX24J600_CS_OP_RD_MAADR2,
+    DRV_ENCX24J600_CS_OP_RD_MAADR3,
 
 }DRV_ENCX24J600_CONFIG_STATE_OPS;
+#define DRV_ENCX24J600_CS_OP_SET_MACON2 DRV_ENCX24J600_CS_OP_SET_EGPRDPT
+#define DRV_ENCX24J600_CS_OP_SET_PH_1 DRV_ENCX24J600_CS_OP_SET_ERXRDPT
+#define DRV_ENCX24J600_CS_OP_SET_PH_2 DRV_ENCX24J600_CS_OP_SET_EUDARDPT
+#define DRV_ENCX24J600_CS_OP_SET_EIE DRV_ENCX24J600_CS_OP_SET_EGPWRPT
 
-typedef struct _DRV_ENCX24J600_CONFIGURE_STATE_INFO
+typedef struct
 {
     DRV_ENCX24J600_CONFIGURE_STATES state;
     uintptr_t waitForMacon2Op;
@@ -111,9 +111,9 @@ typedef struct _DRV_ENCX24J600_CONFIGURE_STATE_INFO
     uintptr_t waitForMaddr3Op;
 }DRV_ENCX24J600_CONFIGURE_STATE_INFO;
 
-int32_t DRV_ENCX24J600_ConfigStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ConfigStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ConfigStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ConfigStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ConfigStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ConfigStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -122,4 +122,5 @@ int32_t DRV_ENCX24J600_ConfigStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvI
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_CONFIGURE_STATE_H_
+

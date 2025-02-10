@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,13 +43,14 @@ Microchip or any third party.
 
 void    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
 {
-     struct _DRV_ENCX24J600_DriverInfo *pDrvInst = ( struct _DRV_ENCX24J600_DriverInfo *)param;
-     TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
+     struct S_DRV_ENCX24J600_DriverInfo *pDrvInst = FC_Param2DrvInfo(param);
+     TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxFreePackets, FC_MacPkt2SglNode(pkt));
 }
 
 static CACHE_ALIGN DRV_ENCx24J600_RSV_EXT rsv_temp_ext;
-int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
+int32_t DRV_ENCX24J600_RxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
 {
+    uint16_t rxTail;
     uintptr_t ret;
     DRV_ENCX24J600_RegUnion reg = {0};
     if (pDrvInst->mainStateInfo.runningInfo.resetRxInfo.state != DRV_ENCX24J600_RRX_WAIT)
@@ -60,8 +61,8 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
     {
         case DRV_ENCX24J600_RX_EMPTY_PACKET:
             break;
+
         case DRV_ENCX24J600_RX_SET_ERXRDPTR:
-        {
             //SYS_CONSOLE_PRINT("Trying RX @ %x\r\n", pDrvInst->rxPtrVal);
             if (pkt->retry >= 3)
             {
@@ -70,30 +71,28 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
                 pDrvInst->mainStateInfo.runningInfo.resetRxInfo.state = DRV_ENCX24J600_RRX_STARTING;
                 pkt->state = DRV_ENCX24J600_RX_EMPTY_PACKET;
                 pDrvInst->rxPtrVal = pDrvInst->encMemRxStart;
-                TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)(pkt->pkt));
+                TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxFreePackets, FC_MacPkt2SglNode(pkt->pkt));
                 break;
             }
             ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, pDrvInst->rxPtrVal, DRV_ENCX24J600_RP_OP_SET_RXRDPTR);
-            if (ret == 0)
+            if (ret != 0U)
             {
-                break;
+                pkt->state = DRV_ENCX24J600_RX_READ_RSV;
             }
-            pkt->state = DRV_ENCX24J600_RX_READ_RSV;
-        }
+            break;
+
         case DRV_ENCX24J600_RX_READ_RSV:
-        {
-            
+
             ret = (*pDrvInst->busVTable->fpDataRd)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, ( uint8_t *)&rsv_temp_ext.rsv, sizeof(DRV_ENCx24J600_RSV));
-            
-            if (ret == 0)
+
+            if (ret != 0U)
             {
-                break;
+                pkt->operation = ret;
+                pkt->state = DRV_ENCX24J600_RX_WAIT_FOR_RSV;
             }
-            pkt->operation = ret;
-            pkt->state = DRV_ENCX24J600_RX_WAIT_FOR_RSV;
-        }
+            break;
+
         case DRV_ENCX24J600_RX_WAIT_FOR_RSV:
-        {
             if ((*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation) == DRV_ENCX24J600_BR_PENDING)
             {
                 break;
@@ -121,24 +120,23 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             }
 
             //SYS_CONSOLE_PRINT("RX Packet @ %x Len %d next %x\r\n", pDrvInst->rxPtrVal, pkt->rsv.rxByteCount, pkt->rsv.pNextPacket);
-            memcpy(( uint8_t *)&(pkt->rsv),&rsv_temp_ext.rsv, sizeof(pkt->rsv));
+            (void)memcpy(pkt->rsv.val, rsv_temp_ext.rsv.val, sizeof(pkt->rsv));
             pDrvInst->rxPtrVal = pkt->rsv.pNextPacket;
             pkt->state = DRV_ENCX24J600_RX_READ_PKT;
             pkt->retry = 0;
-        }
+            break;
+
         case DRV_ENCX24J600_RX_READ_PKT:
-        {
             ret = (*pDrvInst->busVTable->fpDataRd)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, pkt->pkt->pDSeg->segLoad, pkt->rsv.rxByteCount);
-            if (ret == 0)
+            if (ret != 0U)
             {
-                break;
+                pkt->operation = ret;
+                pkt->state = DRV_ENCX24J600_RX_WAIT_FOR_READ;
+                pkt->pkt->pDSeg->segLen = (uint16_t)pkt->rsv.rxByteCount - 4U - (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
             }
-            pkt->operation = ret;
-            pkt->state = DRV_ENCX24J600_RX_WAIT_FOR_READ;
-            pkt->pkt->pDSeg->segLen = pkt->rsv.rxByteCount - 4 - sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
-        }
+            break;
+
         case DRV_ENCX24J600_RX_WAIT_FOR_READ:
-        {
             if ((*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation) == DRV_ENCX24J600_BR_PENDING)
             {
                 break;
@@ -146,36 +144,34 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             pkt->pkt->pMacLayer = pkt->pkt->pDSeg->segLoad;
             pkt->pkt->pNetLayer = pkt->pkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
             pkt->state = DRV_ENCX24J600_RX_SET_ERXTAIL;
-        }
+            break;
+
         case DRV_ENCX24J600_RX_SET_ERXTAIL:
-        {
-            uint16_t rxTail = pkt->rsv.pNextPacket - 2;
+            rxTail = (uint16_t)pkt->rsv.pNextPacket - 2U;
             if (rxTail < pDrvInst->encMemRxStart)
             {
                 rxTail = pDrvInst->encMemRxEnd - (pDrvInst->encMemRxStart - rxTail);
             }
             reg.value = 0;
-            reg.erxtail.ERXTAIL = rxTail;
+            reg.erxtail.ERXTAIL = rxTail & 0x7fffU;
             ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXTAIL, reg, DRV_ENCX24J600_RP_OP_SET_RXTAIL);
             //SYS_CONSOLE_PRINT("Setting RXTail to %x\r\n", rxTail);
-            if (ret == 0)
+            if (ret != 0U)
             {
-                break;
+                pkt->state = DRV_ENCX24J600_RX_SEND_PKTDEC;
             }
-            pkt->state = DRV_ENCX24J600_RX_SEND_PKTDEC;
-        }
+            break;
+
         case DRV_ENCX24J600_RX_SEND_PKTDEC:
-        {
             ret = (*pDrvInst->busVTable->fpDecPktCnt)(pDrvInst);
-            if (ret == 0)
+            if (ret != 0U)
             {
-                break;
+                pkt->state = DRV_ENCX24J600_RX_RST_EIR;
+                pDrvInst->mainStateInfo.runningInfo.ctrFromEnc = true;
             }
-            pkt->state = DRV_ENCX24J600_RX_RST_EIR;
-            pDrvInst->mainStateInfo.runningInfo.ctrFromEnc = true;
-        }
+            break;
+
         case DRV_ENCX24J600_RX_RST_EIR:
-        {
             reg.value = 0;
             reg.eir.RXABTIF = 1;
             reg.eir.PCFULIF = 1;
@@ -187,11 +183,11 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             // Moved down to past the reset interrupt state, since the SPI driver might not keep up.  MH-4456
             pDrvInst->rxPacketPending = false;
             pDrvInst->rxPacketJustComplete = true;
-            if (pkt->rsv.rxBcast)
+            if (pkt->rsv.rxBcast != 0U)
             {
                 pkt->pkt->pktFlags |= TCPIP_MAC_PKT_FLAG_BCAST;
             }
-            else if (pkt->rsv.rxMultcast)
+            else if (pkt->rsv.rxMultcast != 0U)
             {
                 pkt->pkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
             }
@@ -199,34 +195,39 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             {
                 pkt->pkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
             }
-            TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxWaitingForPickupPackets, (SGL_LIST_NODE*)pkt->pkt);
+            TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxWaitingForPickupPackets, FC_MacPkt2SglNode(pkt->pkt));
 
             DRV_ENCX24J600_SetEvent(pDrvInst, TCPIP_MAC_EV_RX_DONE);
             pkt->state = DRV_ENCX24J600_RX_EMPTY_PACKET;
-            memset(&pkt->rsv, 0, sizeof(DRV_ENCx24J600_RSV));
+            (void)memset(&pkt->rsv, 0, sizeof(DRV_ENCx24J600_RSV));
             pkt->retry = 0;
             pDrvInst->mainStateInfo.runningInfo.nRxOkPackets ++;
+            break;
 
-
-        }
         case DRV_ENCX24J600_RX_WAIT_FOR_PICKUP:
             break;
+
         case DRV_ENCX24J600_RX_WAIT_FOR_ACK:
             break;
+
         case DRV_ENCX24J600_RX_RESET_ERXRDPTR:
+            break;
+
+        default:
+            // do nothing
             break;
     }
 
     return 0;
 }
-int32_t DRV_ENCX24J600_RxPacketEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
+int32_t DRV_ENCX24J600_RxPacketEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
 {
     pkt->state = DRV_ENCX24J600_RX_EMPTY_PACKET;
-    memset(&pkt->rsv, 0, sizeof(DRV_ENCx24J600_RSV));
+    (void)memset(&pkt->rsv, 0, sizeof(DRV_ENCx24J600_RSV));
     pkt->retry = 0;
     return 0;
 }
-int32_t DRV_ENCX24J600_RxPacketExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
+int32_t DRV_ENCX24J600_RxPacketExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
 {
     return 0;
 }

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_INITIALIZATION_STATE_H_
-#define _DRV_ENCX24J600_INITIALIZATION_STATE_H_
+#ifndef H_DRV_ENCX24J600_INITIALIZATION_STATE_H_
+#define H_DRV_ENCX24J600_INITIALIZATION_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,7 +46,7 @@ extern "C" {
 #include "drv_encx24j600_reset_state.h"
 #include "drv_encx24j600_configure_state.h"
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum
 {
@@ -54,19 +54,19 @@ typedef enum
     DRV_ENCX24J600_IS_DETECT,
     DRV_ENCX24J600_IS_RESET,
     DRV_ENCX24J600_IS_CONFIG,
-}DRV_ENCX24J600_INITIALIZATION_STATES;
+}DRV_ENCX24J600_INIT_STATES;
 
-typedef struct _DRV_ENCX24J600_INITIALIZATION_STATE_INFO
+typedef struct
 {
-    DRV_ENCX24J600_INITIALIZATION_STATES state;
+    DRV_ENCX24J600_INIT_STATES state;
     DRV_ENCX24J600_DETECT_STATE_INFO detectStateInfo;
     DRV_ENCX24J600_RESET_STATE_INFO resetStateInfo;
     DRV_ENCX24J600_CONFIGURE_STATE_INFO configStateInfo;
-}DRV_ENCX24J600_INITIALIZATION_STATE_INFO;
+}DRV_ENCX24J600_INIT_STATE_INFO;
 
-int32_t DRV_ENCX24J600_InitStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_InitStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_InitStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_InitStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_InitStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_InitStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -75,4 +75,5 @@ int32_t DRV_ENCX24J600_InitStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvIns
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_INITIALIZATION_STATE_H_
+

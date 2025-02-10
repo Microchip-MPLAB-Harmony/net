@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -37,7 +37,7 @@ Microchip or any third party.
 #include "drv_encx24j600_closed_state.h"
 #include "../drv_encx24j600_local.h"
 
-int32_t DRV_ENCX24J600_ClosedStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ClosedStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     if (pDrvInst->numClients > 0)
     {
@@ -49,11 +49,11 @@ int32_t DRV_ENCX24J600_ClosedStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
     }
     return 0;
 }
-int32_t DRV_ENCX24J600_ClosedStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ClosedStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     return 0;
 }
-int32_t DRV_ENCX24J600_ClosedStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ClosedStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     return 0;
 }

@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -38,7 +38,21 @@ Microchip or any third party.
 #include "drv_encx24j600_utils.h"
 #include "osal/osal.h"
 #include "drv_encx24j600_local.h"
-void DRV_ENCX24J600_SetEvent(struct _DRV_ENCX24J600_DriverInfo *  pDrvInst, TCPIP_MAC_EVENT events)
+
+bool DRV_ENCX24J600_ReadSfr(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInst, uintptr_t  handle, DRV_ENCX24J600_RegUnion *  value,  uint8_t  opIndex )
+{
+    DRV_ENCX24J600_BUS_RESULT busRes = pDrvInst->busVTable->fpOpResult(pDrvInst, handle);
+
+    if(busRes == DRV_ENCX24J600_BR_SUCCESS)
+    {
+        (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, handle, value, opIndex);
+        return true;
+    } 
+
+    return false;
+}
+
+void DRV_ENCX24J600_SetEvent(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInst, TCPIP_MAC_EVENT events)
 {
     events &= pDrvInst->eventMask;
     if (events == 0)
@@ -58,7 +72,7 @@ void DRV_ENCX24J600_SetEvent(struct _DRV_ENCX24J600_DriverInfo *  pDrvInst, TCPI
 
 }
 
-void DRV_ENCX24J600_AddGpData(struct _DRV_ENCX24J600_DriverInfo *  pDrvInst, uint16_t size)
+void DRV_ENCX24J600_AddGpData(struct S_DRV_ENCX24J600_DriverInfo *  pDrvInst, uint16_t size)
 {
     pDrvInst->txBufferRemaining -= size;
     pDrvInst->gpPtrVal += size;

@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,8 +40,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#if !defined(_DRV_ENCX24J600_H_)
-#define _DRV_ENCX24J600_H_
+#if !defined(H_DRV_ENCX24J600_H_)
+#define H_DRV_ENCX24J600_H_
 
 
 #ifdef __cplusplus
@@ -104,7 +104,7 @@ typedef enum
     None.
 */
 
-typedef struct _DRV_ENCX24J600_Configuration
+typedef struct
 {
     /* Number of TX Descriptors to Allocate*/
     uint16_t txDescriptors;
@@ -175,7 +175,7 @@ extern const TCPIP_MAC_OBJECT DRV_ENCX24J600_MACObject;
       - Valid handle to the driver instance     - If successful
       - SYS_MODULE_OBJ_INVALID                  - If unsuccessful 
 */
-SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT * init);
+SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * init);
 
 // *****************************************************************************
 /* ENCX24J600 Deinitialization
@@ -245,7 +245,7 @@ void DRV_ENCX24J600_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * 
       - SYS_STATUS_BUSY             - if the driver is closing and moving to the closed state
       - SYS_STATUS_READY            - if the driver is ready for client commands
 */
-SYS_STATUS DRV_ENCX24J600_Status(SYS_MODULE_OBJ obect);
+SYS_STATUS DRV_ENCX24J600_Status(SYS_MODULE_OBJ object);
 
 // *****************************************************************************
 /* ENCX24J600 Tasks
@@ -291,7 +291,7 @@ void DRV_ENCX24J600_Tasks(SYS_MODULE_OBJ object);
     Returns:
       None.
 */
-void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init);
+void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, const TCPIP_MAC_MODULE_CTRL * init);
 
 // *****************************************************************************
 /* ENCX24J600 Stack Initialization
@@ -317,7 +317,7 @@ void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL 
       Returns a valid handle to the driver instance - If successful
       SYS_MODULE_OBJ_INVALID                        - If unsuccessful
 */
-SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
+SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -350,7 +350,7 @@ SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(SYS_MODULE_INDEX index, const SYS_
       Returns a valid handle - If successful
       INVALID_HANDLE         - If unsuccessful
 */
-DRV_HANDLE DRV_ENCX24J600_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent);
+DRV_HANDLE DRV_ENCX24J600_Open(const SYS_MODULE_INDEX index, const DRV_IO_INTENT intent);
 
 
 // *****************************************************************************
@@ -594,7 +594,7 @@ TCPIP_MAC_RES DRV_ENCX24J600_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS
       - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
       - TCPIP_MAC_RES_OP_ERR    - if the hMac is valid
 */
-TCPIP_MAC_RES DRV_ENCX24J600_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+TCPIP_MAC_RES DRV_ENCX24J600_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, uint32_t nEntries, uint32_t* pHwEntries);
 
 // *****************************************************************************
 /* ENCX24J600 Get Configuration
@@ -691,9 +691,12 @@ bool DRV_ENCX24J600_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 */
 TCPIP_MAC_EVENT DRV_ENCX24J600_EventPendingGet(DRV_HANDLE hMac);
 
+// supported MAC objects
+extern const TCPIP_MAC_OBJECT DRV_ENCX24J600_MACObject;
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*!defined(_DRV_ENCX24J600_H_)*/
+#endif /*!defined(H_DRV_ENCX24J600_H_)*/
  

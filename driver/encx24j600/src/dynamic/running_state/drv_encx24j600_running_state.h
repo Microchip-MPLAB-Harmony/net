@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_RUNNING_STATE_H_
-#define _DRV_ENCX24J600_RUNNING_STATE_H_
+#ifndef H_DRV_ENCX24J600_RUNNING_STATE_H_
+#define H_DRV_ENCX24J600_RUNNING_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +48,7 @@ extern "C" {
 #include "drv_encx24j600_check_tx_status_state.h"
 #include "drv_encx24j600_reset_rx_state.h"
     
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum
 {
@@ -59,21 +59,21 @@ typedef enum
     DRV_ENCX24J600_CD_OP_SET_BBIPG,
     DRV_ENCX24J600_CTS_OP_READ_ETXSTAT,
     DRV_ENCX24J500_TP_OP_READ_GPWRREG,
-    DRV_ENCX24J600_TP_OP_SET_ETXST = DRV_ENCX24J500_TP_OP_READ_GPWRREG,
     DRV_ENCX24J600_TP_OP_SET_ETXLEN,
     DRV_ENCX24J600_TP_OP_RST_EIR,
     DRV_ENCX24J600_RP_OP_SET_RXRDPTR,
-    DRV_ENCX24J600_RP_OP_SET_RXTAIL = DRV_ENCX24J600_RP_OP_SET_RXRDPTR,
     DRV_ENCX24J600_RP_OP_RST_EIR,
     DRV_ENCX24J600_RRX_OP_SET_RXRST,
-    DRV_ENCX24J600_RRX_OP_DEC_PKT_CNT = DRV_ENCX24J600_RRX_OP_SET_RXRST,
     DRV_ENCX24J600_RRX_OP_CLEAR_RXRST,
-    DRV_ENCX24J600_RRX_OP_SET_RXST = DRV_ENCX24J600_RRX_OP_CLEAR_RXRST,
     DRV_ENCX24J600_RRX_OP_READ_ESTAT,
-    DRV_ENCX24J600_RRX_OP_RXEN = DRV_ENCX24J600_RRX_OP_READ_ESTAT,
 }DRV_ENCX24J600_RUNNING_STATE_OPS;
+#define DRV_ENCX24J600_TP_OP_SET_ETXST      DRV_ENCX24J500_TP_OP_READ_GPWRREG
+#define DRV_ENCX24J600_RP_OP_SET_RXTAIL     DRV_ENCX24J600_RP_OP_SET_RXRDPTR
+#define DRV_ENCX24J600_RRX_OP_DEC_PKT_CNT   DRV_ENCX24J600_RRX_OP_SET_RXRST
+#define DRV_ENCX24J600_RRX_OP_SET_RXST      DRV_ENCX24J600_RRX_OP_CLEAR_RXRST
+#define DRV_ENCX24J600_RRX_OP_RXEN          DRV_ENCX24J600_RRX_OP_READ_ESTAT
 
-typedef struct _DRV_ENCX24J600_RUNNING_STATE_INFO
+typedef struct
 {
     bool ctsToEnc;
     bool ctTx;
@@ -84,14 +84,14 @@ typedef struct _DRV_ENCX24J600_RUNNING_STATE_INFO
     DRV_ENCX24J600_CHANGE_DUPLEX_INFO chgDupInfo;
     DRV_ENCX24J600_CHECK_TX_STATUS_INFO chkTxStaInfo;
     DRV_ENCX24J600_RESET_RX_INFO resetRxInfo;
-    int nTxOkPackets;
-    int nRxOkPackets;
+    uint32_t nTxOkPackets;
+    uint32_t nRxOkPackets;
 }DRV_ENCX24J600_RUNNING_STATE_INFO;
 
 
-int32_t DRV_ENCX24J600_RunningStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_RunningStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_RunningStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_RunningStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_RunningStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_RunningStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -101,4 +101,5 @@ int32_t DRV_ENCX24J600_RunningStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrv
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_RUNNING_STATE_H_
+

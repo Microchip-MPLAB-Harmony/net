@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,7 +39,7 @@ Microchip or any third party.
 #include "../drv_encx24j600_utils.h"
 #include "drv_encx24j600_running_state.h"
 
-int32_t DRV_ENCX24J600_ResetRxStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ResetRxStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     DRV_ENCX24J600_RESET_RX_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.resetRxInfo);
     DRV_ENCX24J600_RegUnion reg = {0};
@@ -49,52 +49,42 @@ int32_t DRV_ENCX24J600_ResetRxStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrv
     {
         case DRV_ENCX24J600_RRX_WAIT:
             break;
+
         case DRV_ENCX24J600_RRX_STARTING:
             curSt->state = DRV_ENCX24J600_RRX_SET_RXRST;
+            break;
+
         case DRV_ENCX24J600_RRX_SET_RXRST:
-        {
             reg.value = 0;
             reg.econ2.RXRST = 1;
             ret = (*pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENCX24J600_SFR_ECON2, reg, DRV_ENCX24J600_RRX_OP_SET_RXRST);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_RRX_RESET_RXRST;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_RRX_RESET_RXRST:
-        {
             reg.value = 0;
             reg.econ2.RXRST = 1;
             ret = (*pDrvInst->busVTable->fpSfrBitClr)(pDrvInst, DRV_ENCX24J600_SFR_ECON2, reg, DRV_ENCX24J600_RRX_OP_CLEAR_RXRST);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_RRX_READ_ESTAT_START;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_RRX_READ_ESTAT_START:
-        {
             ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_ESTAT, DRV_ENCX24J600_RRX_OP_READ_ESTAT);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_RRX_READ_ESTAT_WAIT;
                 curSt->estatOp = ret;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_RRX_READ_ESTAT_WAIT:
-        {
-            if (_DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->estatOp, &reg, DRV_ENCX24J600_CS_OP_READ_ESTAT))
+            if (DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->estatOp, &reg, (uint8_t)DRV_ENCX24J600_CS_OP_READ_ESTAT))
             {
                 if (reg.estat.PKTCNT == 0)
                 {
@@ -106,59 +96,48 @@ int32_t DRV_ENCX24J600_ResetRxStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrv
                     for (x = 0; x < reg.estat.PKTCNT; x++)
                     {
                         ret = (*pDrvInst->busVTable->fpDecPktCnt)(pDrvInst);
-                        if (ret == 0)
+                        if (ret == 0U)
                         {
                             break;
                         }
                     }
                     curSt->state = DRV_ENCX24J600_RRX_READ_ESTAT_START;
-                    break;                    
                 }
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_RRX_SET_ERXST:
-        {
             reg.value = 0;
             reg.erxst.ERXST = pDrvInst->encMemRxStart;
             ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXST, reg, DRV_ENCX24J600_CS_OP_SET_ERXST);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_RRX_SET_ERXTAIL;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_RRX_SET_ERXTAIL:
-        {
             reg.value = 0;
-            reg.erxtail.ERXTAIL = pDrvInst->encMemRxEnd - 2;
+            reg.erxtail.ERXTAIL = (pDrvInst->encMemRxEnd - 2U) & 0x7fffU;
             ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXTAIL, reg, DRV_ENCX24J600_CS_OP_SET_ERXTAIL);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_RRX_SET_RXEN;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_RRX_SET_RXEN:
-        {
             ret = (*pDrvInst->busVTable->fpRxEnable)(pDrvInst);
-            if (ret != 0)
+            if (ret != 0U)
             {
                 curSt->state = DRV_ENCX24J600_RRX_WAIT;
             }
             break;
-        }      
+
         default:
+            // do nothing
             break;
     }
     return 0;
 }
+

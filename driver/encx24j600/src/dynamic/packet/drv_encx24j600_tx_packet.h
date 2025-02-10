@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX244J600_TX_PACKET_STATE_H_
-#define _DRV_ENCX244J600_TX_PACKET_STATE_H_
+#ifndef H_DRV_ENCX244J600_TX_PACKET_STATE_H_
+#define H_DRV_ENCX244J600_TX_PACKET_STATE_H_
 
 
 #ifdef __cplusplus
@@ -46,7 +46,7 @@ extern "C" {
 #include "system_config.h"
 
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 
 typedef enum
@@ -64,20 +64,19 @@ typedef enum
     DRV_ENCX24J600_TP_RST_EIR
 }DRV_ENCX24J600_TX_PACKET_STATES;
 
-typedef struct _DRV_ENCX24J600_TX_PACKET_INFO
+typedef struct S_DRV_ENCX24J600_TX_PACKET_INFO
 {
     DRV_ENCX24J600_TX_PACKET_STATES state;
     TCPIP_MAC_PACKET * pkt;
-    struct _DRV_ENCX24J600_TX_PACKET_INFO * next;
+    struct S_DRV_ENCX24J600_TX_PACKET_INFO * next;
     uint16_t gpPtr;
     TCPIP_MAC_DATA_SEGMENT*         pDSeg;
     uintptr_t operation;
-    void*    pCopyBuff;
 }DRV_ENCX24J600_TX_PACKET_INFO;
 
-int32_t DRV_ENCX24J600_TxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
-int32_t DRV_ENCX24J600_TxPacketEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
-int32_t DRV_ENCX24J600_TxPacketExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
+int32_t DRV_ENCX24J600_TxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
+int32_t DRV_ENCX24J600_TxPacketEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
+int32_t DRV_ENCX24J600_TxPacketExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
 
 
 
@@ -85,4 +84,5 @@ int32_t DRV_ENCX24J600_TxPacketExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
 }
 #endif
 
-#endif
+#endif  // H_DRV_ENCX244J600_TX_PACKET_STATE_H_
+

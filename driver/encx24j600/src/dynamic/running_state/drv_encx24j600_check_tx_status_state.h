@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_CHECK_TX_STATUS_STATE_H_
-#define _DRV_ENCX24J600_CHECK_TX_STATUS_STATE_H_
+#ifndef H_DRV_ENCX24J600_CHECK_TX_STATUS_STATE_H_
+#define H_DRV_ENCX24J600_CHECK_TX_STATUS_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,7 +45,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum
 {
@@ -53,19 +53,19 @@ typedef enum
     DRV_ENCX24J600_CTS_READ_ETXSTAT,
     DRV_ENCX24J600_CTS_WAIT_FOR_ETXSTAT
 
-}DRV_ENCX24J600_CHECK_TX_STATUS_STATES;
+}DRV_ENCX24J600_CHECK_TX_STATE;
 
-typedef struct _DRV_ENCX24J600_CHECK_TX_STATUS_INFO
+typedef struct
 {
-    DRV_ENCX24J600_CHECK_TX_STATUS_STATES state;
+    DRV_ENCX24J600_CHECK_TX_STATE state;
     uintptr_t etxstatOp;
     bool statusUpdateNeeded;
     uint16_t status;
 }DRV_ENCX24J600_CHECK_TX_STATUS_INFO;
 
-int32_t DRV_ENCX24J600_ChkTxStatusStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ChkTxStatusStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ChkTxStatusStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ChkTxStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ChkTxStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ChkTxStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -75,4 +75,5 @@ int32_t DRV_ENCX24J600_ChkTxStatusStateExit(struct _DRV_ENCX24J600_DriverInfo * 
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_CHECK_TX_STATUS_STATE_H_
+

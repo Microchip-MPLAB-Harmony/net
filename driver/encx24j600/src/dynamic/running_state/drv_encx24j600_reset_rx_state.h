@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_RESET_RX_STATE_H_
-#define _DRV_ENCX24J600_RESET_RX_STATE_H_
+#ifndef H_DRV_ENCX24J600_RESET_RX_STATE_H_
+#define H_DRV_ENCX24J600_RESET_RX_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,7 +44,7 @@ extern "C" {
 #include "system_config.h"
 #include <stdint.h>
     
-struct _DRV_ENCX24J600_DriverInfo;    
+struct S_DRV_ENCX24J600_DriverInfo;    
     
 typedef enum
 {
@@ -60,15 +60,13 @@ typedef enum
     DRV_ENCX24J600_RRX_SET_RXEN,
 }DRV_ENCX24J600_RESET_RX_STATES;
 
-typedef struct _DRV_ENCX24J600_RESET_RX_INFO
+typedef struct
 {
     DRV_ENCX24J600_RESET_RX_STATES state;
     uintptr_t estatOp;
 }DRV_ENCX24J600_RESET_RX_INFO;
 
-int32_t DRV_ENCX24J600_ResetRxStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ResetRxStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ResetRxStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ResetRxStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -77,4 +75,5 @@ int32_t DRV_ENCX24J600_ResetRxStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrv
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_RESET_RX_STATE_H_
+

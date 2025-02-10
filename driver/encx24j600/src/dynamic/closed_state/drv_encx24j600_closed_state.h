@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_CLOSED_STATE_H_
-#define _DRV_ENCX24J600_CLOSED_STATE_H_
+#ifndef H_DRV_ENCX24J600_CLOSED_STATE_H_
+#define H_DRV_ENCX24J600_CLOSED_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,11 +44,11 @@ extern "C" {
 #include "system_config.h"
 
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
-int32_t DRV_ENCX24J600_ClosedStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ClosedStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ClosedStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ClosedStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ClosedStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ClosedStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -57,4 +57,5 @@ int32_t DRV_ENCX24J600_ClosedStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvI
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_CLOSED_STATE_H_
+

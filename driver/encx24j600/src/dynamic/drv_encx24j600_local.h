@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_LOCAL_H_
-#define _DRV_ENCX24J600_LOCAL_H_
+#ifndef H_DRV_ENCX24J600_LOCAL_H_
+#define H_DRV_ENCX24J600_LOCAL_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +52,7 @@ extern "C" {
 #define MAX_TX_DESCRIPTORS 2
 #define MAX_RX_DESCRIPTORS 1
 
-typedef struct _DRV_ENCX24J600_DriverInfo
+typedef struct S_DRV_ENCX24J600_DriverInfo
 {
     bool inUse;
     /* The mutex to protect the */
@@ -100,7 +100,7 @@ typedef struct _DRV_ENCX24J600_DriverInfo
 
 }DRV_ENCX24J600_DriverInfo;
 
-typedef struct _DRV_ENCX24J600_ClientInfo
+typedef struct
 {
     bool inUse;
     DRV_ENCX24J600_DriverInfo * pDrvInst;
@@ -109,4 +109,5 @@ typedef struct _DRV_ENCX24J600_ClientInfo
 #ifdef __cplusplus
 }
 #endif
-#endif
+#endif  // H_DRV_ENCX24J600_LOCAL_H_
+

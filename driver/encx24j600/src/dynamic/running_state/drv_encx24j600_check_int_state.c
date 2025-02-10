@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,7 +40,7 @@ Microchip or any third party.
 #include "drv_encx24j600_running_state.h"
 
 
-int32_t DRV_ENCX24J600_ChkIntStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ChkIntStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     DRV_ENCX24J600_CHECK_INT_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkIntInfo);
     DRV_ENCX24J600_RegUnion reg = {0};
@@ -48,25 +48,20 @@ int32_t DRV_ENCX24J600_ChkIntStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
     switch(curSt->state)
     {
         case DRV_ENCX24J600_CI_WAIT:
-        {
             curSt->state = DRV_ENCX24J600_CI_READ_EIR;
-        }
+            break;
+
         case DRV_ENCX24J600_CI_READ_EIR:
-        {
             ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_EIR, DRV_ENCX24J600_CI_OP_READ_EIR);
             if (ret != 0)
             {
                 curSt->state = DRV_ENCX24J600_CI_WAIT_FOR_EIR;
                 curSt->eirOp = ret;
             }
-            else
-            {
-                break;
-            }
-        }
+            break;
+
         case DRV_ENCX24J600_CI_WAIT_FOR_EIR:
-        {
-            if (_DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->eirOp, &reg, DRV_ENCX24J600_CI_OP_READ_EIR))
+            if (DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->eirOp, &reg, (uint8_t)DRV_ENCX24J600_CI_OP_READ_EIR))
             {
                 if (reg.eir.LINKIF == 1)
                 {
@@ -109,12 +104,16 @@ int32_t DRV_ENCX24J600_ChkIntStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
                 }
                 curSt->state = DRV_ENCX24J600_CI_WAIT;
             }
-        }
+            break;
+
+        default:
+            // do nothing
+            break;
     }
 
     return 0;
 }
-int32_t DRV_ENCX24J600_ChkIntStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ChkIntStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     DRV_ENCX24J600_CHECK_INT_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkIntInfo);
     curSt->state = DRV_ENCX24J600_CI_WAIT;
@@ -122,7 +121,7 @@ int32_t DRV_ENCX24J600_ChkIntStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrv
 
     return 0;
 }
-int32_t DRV_ENCX24J600_ChkIntStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst)
+int32_t DRV_ENCX24J600_ChkIntStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst)
 {
     return 0;
 }

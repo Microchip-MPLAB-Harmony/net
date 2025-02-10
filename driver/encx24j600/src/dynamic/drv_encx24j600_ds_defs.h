@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,198 +44,198 @@ extern "C" {
 
 #include "system_config.h"
 
-#define DRV_ENCX24J600_MEM_SIZE 0x6000
+#define DRV_ENCX24J600_MEM_SIZE 0x6000U
 
-typedef struct _DRV_ENCX24J600_RD_ECON1
+typedef struct __attribute__((packed))
 {
-    uint8_t RXEN:1;
-    uint8_t TXRTS:1;
-    uint8_t DMANOCS:1;
-    uint8_t DMACSSD:1;
-    uint8_t DMACPY:1;
-    uint8_t DMAST:1;
-    uint8_t FCOP:2;
-    uint8_t PKTDEC:1;
-    uint8_t AESOP:2;
-    uint8_t AESST:1;
-    uint8_t HASHLST:1;
-    uint8_t HASHOP:1;
-    uint8_t HASHEN:1;
-    uint8_t MODEXST:1;
+    unsigned RXEN:1;
+    unsigned TXRTS:1;
+    unsigned DMANOCS:1;
+    unsigned DMACSSD:1;
+    unsigned DMACPY:1;
+    unsigned DMAST:1;
+    unsigned FCOP:2;
+    unsigned PKTDEC:1;
+    unsigned AESOP:2;
+    unsigned AESST:1;
+    unsigned HASHLST:1;
+    unsigned HASHOP:1;
+    unsigned HASHEN:1;
+    unsigned MODEXST:1;
 }  DRV_ENCX24J600_RD_ECON1;
 
 
-typedef struct _DRV_ENCX24J600_RD_ECON2
+typedef struct  __attribute__((packed))
 {
-    uint8_t AESLEN:2;
-    uint8_t MODLEN:2;
-    uint8_t ETHRST:1;
-    uint8_t RXRST:1;
-    uint8_t TXRST:1;
-    uint8_t AUTOFC:1;
-    uint8_t COCON:4;
-    uint8_t SHA1MD5:1;
-    uint8_t TXMAC:1;
-    uint8_t STRCH:1;
-    uint8_t ETHEN:1;
+    unsigned AESLEN:2;
+    unsigned MODLEN:2;
+    unsigned ETHRST:1;
+    unsigned RXRST:1;
+    unsigned TXRST:1;
+    unsigned AUTOFC:1;
+    unsigned COCON:4;
+    unsigned SHA1MD5:1;
+    unsigned TXMAC:1;
+    unsigned STRCH:1;
+    unsigned ETHEN:1;
 }  DRV_ENCX24J600_RD_ECON2;
 
 
-typedef struct _DRV_ENCX24J600_RD_EDMACS
+typedef struct 
 {
     uint16_t EDMACS;
 }  DRV_ENCX24J600_RD_EDMACS;
 
 
-typedef struct _DRV_ENCX24J600_RD_EDMALEN
+typedef struct  __attribute__((packed))
 {
-    uint16_t EDMALEN:15;
-    uint8_t :1;
+    unsigned EDMALEN:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EDMALEN;
 
 
-typedef struct _DRV_ENCX24J600_RD_EDMAST
+typedef struct  __attribute__((packed))
 {
-    uint16_t EDMAST:15;
-    uint8_t :1;
+    unsigned EDMAST:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EDMAST;
 
 
-typedef struct _DRV_ENCX24J600_RD_EGPDATA
+typedef struct  __attribute__((packed))
 {
     uint8_t EGPDATA;
-    uint8_t :8;
+    unsigned :8;
 }  DRV_ENCX24J600_RD_EGPDATA;
 
 
-typedef struct _DRV_ENCX24J600_RD_EGPRDPT
+typedef struct  __attribute__((packed))
 {
-    uint16_t EGPRDPT:15;
-    uint8_t :1;
+    unsigned EGPRDPT:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EGPRDPT;
 
 
-typedef struct _DRV_ENCX24J600_RD_EGPWRPT
+typedef struct  __attribute__((packed))
 {
-    uint16_t EGPWRPT:15;
-    uint8_t :1;
+    unsigned EGPWRPT:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EGPWRPT;
 
 
-typedef struct _DRV_ENCX24J600_RD_EHT1
+typedef struct 
 {
     uint16_t EHT1;
 }  DRV_ENCX24J600_RD_EHT1;
 
 
-typedef struct _DRV_ENCX24J600_RD_EHT2
+typedef struct 
 {
     uint16_t EHT2;
 }  DRV_ENCX24J600_RD_EHT2;
 
 
-typedef struct _DRV_ENCX24J600_RD_EHT3
+typedef struct 
 {
     uint16_t EHT3;
 }  DRV_ENCX24J600_RD_EHT3;
 
 
-typedef struct _DRV_ENCX24J600_RD_EHT4
+typedef struct 
 {
     uint16_t EHT4;
 }  DRV_ENCX24J600_RD_EHT4;
 
 
-typedef struct _DRV_ENCX24J600_RD_EIDLED
+typedef struct  __attribute__((packed))
 {
-    uint8_t REVID:5;
-    uint8_t DEVID:3;
-    uint8_t LBCFG:4;
-    uint8_t LACFG:4;
+    unsigned REVID:5;
+    unsigned DEVID:3;
+    unsigned LBCFG:4;
+    unsigned LACFG:4;
 }  DRV_ENCX24J600_RD_EIDLED;
 
 
-typedef struct _DRV_ENCX24J600_RD_EIE
+typedef struct  __attribute__((packed))
 {
     /**
      * <b>PCFULIE: </b>Packet Counter Full Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t PCFULIE:1;
+    unsigned PCFULIE:1;
     /**
      * <b>RXABTIE: </b>Receive Abort Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t RXABTIE:1;
+    unsigned RXABTIE:1;
     /**
      * <b>TXABTIE: </b>Transmit Abort Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t TXABTIE:1;
+    unsigned TXABTIE:1;
     /**
      * <b>TXIE: </b>Transmit Done Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t TXIE:1;
+    unsigned TXIE:1;
     /**
      * <b>Reserved: </b>Ignore on read, don't care on write<b>(1)</b>
      */
-    uint8_t :1;
+    unsigned :1;
     /**
      * <b>DMAIE: </b>DMA Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t DMAIE:1;
+    unsigned DMAIE:1;
     /**
      * <b>PKTIE: </b>RX Packet Pending Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t PKTIE:1;
+    unsigned PKTIE:1;
     /**
      * <b>Reserved: </b>Write as '0'
      */
-    uint8_t :1;
-    uint8_t :3;
+    unsigned :1;
+    unsigned :3;
     /**
      * <b>LINKIE: </b>PHY Link Status Change Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t LINKIE:1;
+    unsigned LINKIE:1;
     /**
      * <b>AESIE: </b>AES Encrypt/Decrypt Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t AESIE:1;
+    unsigned AESIE:1;
     /**
      * <b>HASHIE: </b>MD5/SHA-1 Hash Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t HASHIE:1;
+    unsigned HASHIE:1;
     /**
      * <b>MODEXIE: </b>Modular Exponentiation Interrupt Enable bit
      * 1 = Enabled
      * 0 = Disabled
      */
-    uint8_t MODEXIE:1;
+    unsigned MODEXIE:1;
     /**
      * <b>INTIE: </b>INT Global Interrupt Enable bit
      * 1 = INT pin is controlled by the INT status bit (ESTAT<15>)
      * 0 = INT pin is driven high
      */
-    uint8_t INTIE:1;
+    unsigned INTIE:1;
 }  DRV_ENCX24J600_RD_EIE;
 
 
-typedef struct _DRV_ENCX24J600_RD_EIR
+typedef struct  __attribute__((packed))
 {
     /**
      * <b>PCFULIF: </b>Packet Counter Full Interrupt Flag bit
@@ -243,14 +243,14 @@ typedef struct _DRV_ENCX24J600_RD_EIR
      * prevent the next RX packet from being dropped.
      * 0 = No interrupt pending
      */
-    uint8_t PCFULIF:1;
+    unsigned PCFULIF:1;
     /**
      * <b>RXABTIF: </b>Receive Abort Interrupt Flag bit
      * 1 = An RX packet was dropped because there is insufficient space in the RX
      * buffer to store the complete packet or the PKTCNT field is saturated at FFh
      * 0 = No interrupt pending
      */
-    uint8_t RXABTIF:1;
+    unsigned RXABTIF:1;
     /**
      * <b>TXABTIF: </b>Transmit Abort Interrupt Flag bit
      * 1 = Packet transmission has been aborted due to an error. Read the ETXSTAT
@@ -258,24 +258,24 @@ typedef struct _DRV_ENCX24J600_RD_EIR
      * 
      * 0 = No interrupt pending
      */
-    uint8_t TXABTIF:1;
+    unsigned TXABTIF:1;
     /**
      * <b>TXIF: </b>Transmit Done Interrupt Flag bit
      * 1 = Packet transmission has completed. TXRTS (ECON1<1>) has been cleared by
      * hardware.
      * 0 = No interrupt pending
      */
-    uint8_t TXIF:1;
+    unsigned TXIF:1;
     /**
      * <b>Reserved: </b>Ignore on read, don't care on write
      */
-    uint8_t :1;
+    unsigned :1;
     /**
      * <b>DMAIF: </b>DMA Interrupt Flag bit
      * 1 = DMA copy or checksum operation is complete
      * 0 = No interrupt pending
      */
-    uint8_t DMAIF:1;
+    unsigned DMAIF:1;
     /**
      * <b>PKTIF: </b>RX Packet Pending Interrupt Flag bit
      * 1 = One or more RX packets have been saved and are ready for software
@@ -284,37 +284,37 @@ typedef struct _DRV_ENCX24J600_RD_EIR
      * PKTCNT bits to zero by setting PKTDEC (ECON1<8>).
      * 0 = No RX packets are pending
      */
-    uint8_t PKTIF:1;
+    unsigned PKTIF:1;
     /**
      * <b>Reserved: </b>Ignore on read, don't care on write
      */
-    uint8_t :1;
-    uint8_t :3;
+    unsigned :1;
+    unsigned :3;
     /**
      * <b>LINKIF: </b>PHY Link Status Change Interrupt Flag bit
      * 1 = PHY Ethernet link status has changed. Read PHYLNK (ESTAT<8>) to determine
      * the current state.
      * 0 = No interrupt pending
      */
-    uint8_t LINKIF:1;
+    unsigned LINKIF:1;
     /**
      * <b>AESIF: </b>AES Encrypt/Decrypt Interrupt Flag bit
      * 1 = AES encrypt/decrypt operation is complete
      * 0 = No interrupt pending
      */
-    uint8_t AESIF:1;
+    unsigned AESIF:1;
     /**
      * <b>HASHIF: </b>MD5/SHA-1 Hash Interrupt Flag bit
      * 1 = MD5/SHA-1 hash operation is complete
      * 0 = No interrupt pending
      */
-    uint8_t HASHIF:1;
+    unsigned HASHIF:1;
     /**
      * <b>MODEXIF: </b>Modular Exponentiation Interrupt Flag bit
      * 1 = Modular exponentiation calculation is complete
      * 0 = No interrupt pending
      */
-    uint8_t MODEXIF:1;
+    unsigned MODEXIF:1;
     /**
      * <b>CRYPTEN</b>: Modular Exponentiation and AES Cryptographic Modules Enable
      * bit
@@ -322,414 +322,412 @@ typedef struct _DRV_ENCX24J600_RD_EIR
      * 0 = Modular exponentiation and AES modules are disabled and powered down;
      * MD5/SHA-1 hashing is still available
      */
-    uint8_t CRYPTEN:1;
+    unsigned CRYPTEN:1;
 }  DRV_ENCX24J600_RD_EIR;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPAUS
+typedef struct 
 {
     uint16_t EPAUS;
 }  DRV_ENCX24J600_RD_EPAUS;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPMCS
+typedef struct 
 {
     uint16_t EPMCS;
 }  DRV_ENCX24J600_RD_EPMCS;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPMM1
+typedef struct 
 {
     uint16_t EPMM1;
 }  DRV_ENCX24J600_RD_EPMM1;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPMM2
+typedef struct 
 {
     uint16_t EPMM2;
 }  DRV_ENCX24J600_RD_EPMM2;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPMM3
+typedef struct 
 {
     uint16_t EPMM3;
 }  DRV_ENCX24J600_RD_EPMM3;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPMM4
+typedef struct 
 {
     uint16_t EPMM4;
 }  DRV_ENCX24J600_RD_EPMM4;
 
 
-typedef struct _DRV_ENCX24J600_RD_EPMO
+typedef struct 
 {
     uint16_t EPMO;
 }  DRV_ENCX24J600_RD_EPMO;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXDATA
+typedef struct  __attribute__((packed))
 {
     uint8_t ERXDATA;
-    uint8_t :8;
+    unsigned :8;
 }  DRV_ENCX24J600_RD_ERXDATA;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXFCON
+typedef struct  __attribute__((packed))
 {
-    uint8_t BCEN:1;
-    uint8_t MCEN:1;
-    uint8_t NOTMEEN:1;
-    uint8_t UCEN:1;
-    uint8_t RUNTEN:1;
-    uint8_t RUNTEEN:1;
-    uint8_t CRCEN:1;
-    uint8_t CRCEEN:1;
-    uint8_t PMEN:4;
-    uint8_t NOTPM:1;
-    uint8_t :1;
-    uint8_t MPEN:1;
-    uint8_t HTEN:1;
+    unsigned BCEN:1;
+    unsigned MCEN:1;
+    unsigned NOTMEEN:1;
+    unsigned UCEN:1;
+    unsigned RUNTEN:1;
+    unsigned RUNTEEN:1;
+    unsigned CRCEN:1;
+    unsigned CRCEEN:1;
+    unsigned PMEN:4;
+    unsigned NOTPM:1;
+    unsigned :1;
+    unsigned MPEN:1;
+    unsigned HTEN:1;
 }  DRV_ENCX24J600_RD_ERXFCON;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXHEAD
+typedef struct  __attribute__((packed))
 {
-    uint16_t ERXTAIL:15;
-    uint8_t :1;
+    uint16_t ERXTAIL;   // 15 bits only
 }  DRV_ENCX24J600_RD_ERXHEAD;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXRDPT
+typedef struct  __attribute__((packed))
 {
-    uint16_t ERXRDPT:15;
-    uint8_t :1;
+    unsigned ERXRDPT:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_ERXRDPT;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXST
+typedef struct  __attribute__((packed))
 {
-    uint16_t ERXST:15;
-    uint8_t :1;
+    unsigned ERXST:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_ERXST;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXTAIL
+typedef struct  __attribute__((packed))
 {
-    uint16_t ERXTAIL:15;
-    uint8_t :1;
+    uint16_t ERXTAIL;   // 15 bits only
 }  DRV_ENCX24J600_RD_ERXTAIL;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXWM
+typedef struct 
 {
     uint8_t RXEWM;
     uint8_t RXFWM;
 }  DRV_ENCX24J600_RD_ERXWM;
 
 
-typedef struct _DRV_ENCX24J600_RD_ERXWRPT
+typedef struct  __attribute__((packed))
 {
-    uint16_t ERXWRPT:15;
-    uint8_t :1;
+    unsigned ERXWRPT:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_ERXWRPT;
 
 
-typedef struct _DRV_ENCX24J600_RD_ESTAT
+typedef struct  __attribute__((packed))
 {
-    uint8_t PKTCNT:8;
-    uint8_t PHYLNK:1;
-    uint8_t :1;
-    uint8_t PHYDPX:1;
-    uint8_t :1;
-    uint8_t CLKRDY:1;
-    uint8_t RXBUSY:1;
-    uint8_t FCIDLE:1;
-    uint8_t INT:1;
+    unsigned PKTCNT:8;
+    unsigned PHYLNK:1;
+    unsigned :1;
+    unsigned PHYDPX:1;
+    unsigned :1;
+    unsigned CLKRDY:1;
+    unsigned RXBUSY:1;
+    unsigned FCIDLE:1;
+    unsigned INT:1;
 }  DRV_ENCX24J600_RD_ESTAT;
 
 
-typedef struct _DRV_ENCX24J600_RD_ETXLEN
+typedef struct  __attribute__((packed))
 {
-    uint16_t ETXLEN:15;
-    uint8_t :1;
+    unsigned ETXLEN:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_ETXLEN;
 
 
-typedef struct _DRV_ENCX24J600_RD_ETXST
+typedef struct  __attribute__((packed))
 {
-    uint16_t ETXST:15;
-    uint8_t :1;
+    unsigned ETXST:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_ETXST;
 
 
-typedef struct _DRV_ENCX24J600_RD_ETXSTAT
+typedef struct  __attribute__((packed))
 {
-    uint8_t COLCNT:4;
-    uint8_t CRCBAD:1;
-    uint8_t :2;
-    uint8_t DEFER:1;
-    uint8_t EXDEFER:1;
-    uint8_t MAXCOL:1;
-    uint8_t LATECOL:1;
-    uint8_t :5;
+    unsigned COLCNT:4;
+    unsigned CRCBAD:1;
+    unsigned :2;
+    unsigned DEFER:1;
+    unsigned EXDEFER:1;
+    unsigned MAXCOL:1;
+    unsigned LATECOL:1;
+    unsigned :5;
 }  DRV_ENCX24J600_RD_ETXSTAT;
 
 
-typedef struct _DRV_ENCX24J600_RD_ETXWIRE
+typedef struct 
 {
     uint16_t ETXWIRE;
 }  DRV_ENCX24J600_RD_ETXWIRE;
 
 
-typedef struct _DRV_ENCX24J600_RD_EUDADATA
+typedef struct  __attribute__((packed))
 {
-    uint8_t EUDADATA;
-    uint8_t :8;
+    unsigned EUDADATA;
+    unsigned :8;
 }  DRV_ENCX24J600_RD_EUDADATA;
 
 
-typedef struct _DRV_ENCX24J600_RD_EUDAND
+typedef struct  __attribute__((packed))
 {
-    uint16_t EUDAND:15;
-    uint8_t :1;
+    unsigned EUDAND:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EUDAND;
 
 
-typedef struct _DRV_ENCX24J600_RD_EUDARDPT
+typedef struct  __attribute__((packed))
 {
-    uint16_t EUDARDPT:15;
-    uint8_t :1;
+    unsigned EUDARDPT:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EUDARDPT;
 
 
-typedef struct _DRV_ENCX24J600_RD_EUDAST
+typedef struct  __attribute__((packed))
 {
-    uint16_t EUDAST:15;
-    uint8_t :1;
+    unsigned EUDAST:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EUDAST;
 
 
-typedef struct _DRV_ENCX24J600_RD_EUDAWRPT
+typedef struct  __attribute__((packed))
 {
-    uint16_t EUDAWRPT:15;
-    uint8_t :1;
+    unsigned EUDAWRPT:15;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_EUDAWRPT;
 
 
-typedef struct _DRV_ENCX24J600_RD_MAADR1
+typedef struct 
 {
     uint16_t MAADR1;
 }  DRV_ENCX24J600_RD_MAADR1;
 
 
-typedef struct _DRV_ENCX24J600_RD_MAADR2
+typedef struct 
 {
     uint16_t MAADR2;
 }  DRV_ENCX24J600_RD_MAADR2;
 
 
-typedef struct _DRV_ENCX24J600_RD_MAADR3
+typedef struct 
 {
     uint16_t MAADR3;
 }  DRV_ENCX24J600_RD_MAADR3;
 
 
-typedef struct _DRV_ENCX24J600_RD_MABBIPG
+typedef struct  __attribute__((packed))
 {
-    uint8_t BBIPG:7;
-    uint16_t :9;
+    unsigned BBIPG:7;
+    unsigned :9;
 }  DRV_ENCX24J600_RD_MABBIPG;
 
 
-typedef struct _DRV_ENCX24J600_RD_MACLCON
+typedef struct  __attribute__((packed))
 {
-    uint8_t MAXRET:4;
-    uint16_t :12;
+    unsigned MAXRET:4;
+    unsigned :12;
 }  DRV_ENCX24J600_RD_MACLCON;
 
 
-typedef struct _DRV_ENCX24J600_RD_MACON1
+typedef struct  __attribute__((packed))
 {
-    uint8_t :1;
-    uint8_t PASSALL:1;
-    uint8_t RXPAUS:1;
-    uint8_t :1;
-    uint8_t LOOPBK:1;
-    uint16_t :11;
+    unsigned :1;
+    unsigned PASSALL:1;
+    unsigned RXPAUS:1;
+    unsigned :1;
+    unsigned LOOPBK:1;
+    unsigned :11;
 }  DRV_ENCX24J600_RD_MACON1;
 
 
-typedef struct _DRV_ENCX24J600_RD_MACON2
+typedef struct  __attribute__((packed))
 {
-    uint8_t FULDPX:1;
-    uint8_t :1;
-    uint8_t HFRMEN:1;
-    uint8_t PHDREN:1;
-    uint8_t TXCRCEN:1;
-    uint8_t PADCFG:3;
-    uint8_t :4;
-    uint8_t NOBKOFF:1;
-    uint8_t BPEN:1;
-    uint8_t DEFER:1;
-    uint8_t :1;
+    unsigned FULDPX:1;
+    unsigned :1;
+    unsigned HFRMEN:1;
+    unsigned PHDREN:1;
+    unsigned TXCRCEN:1;
+    unsigned PADCFG:3;
+    unsigned :4;
+    unsigned NOBKOFF:1;
+    unsigned BPEN:1;
+    unsigned DEFER:1;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_MACON2;
 
 
-typedef struct _DRV_ENCX24J600_RD_MAIPG
+typedef struct  __attribute__((packed))
 {
-    uint8_t IPG:7;
-    uint16_t :9;
+    unsigned IPG:7;
+    unsigned :9;
 }  DRV_ENCX24J600_RD_MAIPG;
 
 
-typedef struct _DRV_ENCX24J600_RD_MAMXFL
+typedef struct 
 {
     uint16_t MAMXFL;
 }  DRV_ENCX24J600_RD_MAMXFL;
 
 
-typedef struct _DRV_ENCX24J600_RD_MICMD
+typedef struct  __attribute__((packed))
 {
-    uint8_t MIIRD:1;
-    uint8_t MIISCAN:1;
-    uint16_t :14;
+    unsigned MIIRD:1;
+    unsigned MIISCAN:1;
+    unsigned :14;
 }  DRV_ENCX24J600_RD_MICMD;
 
 
-typedef struct _DRV_ENCX24J600_RD_MIRD
+typedef struct 
 {
     uint16_t MIRD;
 }  DRV_ENCX24J600_RD_MIRD;
 
 
-typedef struct _DRV_ENCX24J600_RD_MIREGADR
+typedef struct  __attribute__((packed))
 {
-    uint8_t PHREG:5;
-    uint8_t :3;
-    uint8_t writeAsOne:1;
-    uint8_t :7;
+    unsigned PHREG:5;
+    unsigned :3;
+    unsigned writeAsOne:1;
+    unsigned :7;
 }  DRV_ENCX24J600_RD_MIREGADR;
 
 
-typedef struct _DRV_ENCX24J600_RD_MISTAT
+typedef struct  __attribute__((packed))
 {
-    uint8_t BUSY:1;
-    uint8_t SCAN:1;
-    uint8_t NVALID:1;
-    uint16_t :13;
+    unsigned BUSY:1;
+    unsigned SCAN:1;
+    unsigned NVALID:1;
+    unsigned :13;
 }  DRV_ENCX24J600_RD_MISTAT;
 
 
-typedef struct _DRV_ENCX24J600_RD_MIWR
+typedef struct 
 {
     uint16_t MIWR;
 }  DRV_ENCX24J600_RD_MIWR;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHANA
+typedef struct  __attribute__((packed))
 {
-    uint8_t ADIEEE:5;
-    uint8_t AD10:1;
-    uint8_t AD10FD:1;
-    uint8_t AD100:1;
-    uint8_t AD100FD:1;
-    uint8_t __unnamed_9:1;
-    uint8_t ADPAUS:2;
-    uint8_t __unnamed_12:1;
-    uint8_t ADFAULT:1;
-    uint8_t __unnamed_14:1;
-    uint8_t ADNP:1;
+    unsigned ADIEEE:5;
+    unsigned AD10:1;
+    unsigned AD10FD:1;
+    unsigned AD100:1;
+    unsigned AD100FD:1;
+    unsigned unnamed_9:1;
+    unsigned ADPAUS:2;
+    unsigned unnamed_12:1;
+    unsigned ADFAULT:1;
+    unsigned unnamed_14:1;
+    unsigned ADNP:1;
 }  DRV_ENCX24J600_RD_PHANA;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHANE
+typedef struct  __attribute__((packed))
 {
-    uint8_t LPANABL:1;
-    uint8_t LPAPCD:1;
-    uint8_t :2;
-    uint8_t PDFLT:1;
-    uint16_t :11;
+    unsigned LPANABL:1;
+    unsigned LPAPCD:1;
+    unsigned :2;
+    unsigned PDFLT:1;
+    unsigned :11;
 }  DRV_ENCX24J600_RD_PHANE;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHANLPA
+typedef struct  __attribute__((packed))
 {
-    uint8_t LPIEEE:5;
-    uint8_t LP10:1;
-    uint8_t LP10FD:1;
-    uint8_t LP100:1;
-    uint8_t LP100FD:1;
-    uint8_t LP100T4:1;
-    uint8_t LPPAUS:2;
-    uint8_t :1;
-    uint8_t LPFAULT:1;
-    uint8_t LPACK:1;
-    uint8_t LPNP:1;
+    unsigned LPIEEE:5;
+    unsigned LP10:1;
+    unsigned LP10FD:1;
+    unsigned LP100:1;
+    unsigned LP100FD:1;
+    unsigned LP100T4:1;
+    unsigned LPPAUS:2;
+    unsigned :1;
+    unsigned LPFAULT:1;
+    unsigned LPACK:1;
+    unsigned LPNP:1;
 }  DRV_ENCX24J600_RD_PHANLPA;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHCON1
+typedef struct  __attribute__((packed))
 {
-    uint8_t :8;
-    uint8_t PFULDPX:1;
-    uint8_t REGNEG:1;
-    uint8_t :1;
-    uint8_t PSLEEP:1;
-    uint8_t ANEN:1;
-    uint8_t SPD100:1;
-    uint8_t PLOOPBK:1;
-    uint8_t PRST:1;
+    unsigned :8;
+    unsigned PFULDPX:1;
+    unsigned REGNEG:1;
+    unsigned :1;
+    unsigned PSLEEP:1;
+    unsigned ANEN:1;
+    unsigned SPD100:1;
+    unsigned PLOOPBK:1;
+    unsigned PRST:1;
 }  DRV_ENCX24J600_RD_PHCON1;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHCON2
+typedef struct  __attribute__((packed))
 {
-    uint8_t :1;
-    uint8_t EDSTAT:1;
-    uint8_t FRCLNK:1;
-    uint8_t :8;
-    uint8_t EDTHRES:1;
-    uint8_t :1;
-    uint8_t EDPWRDN:1;
-    uint8_t :2;
+    unsigned :1;
+    unsigned EDSTAT:1;
+    unsigned FRCLNK:1;
+    unsigned :8;
+    unsigned EDTHRES:1;
+    unsigned :1;
+    unsigned EDPWRDN:1;
+    unsigned :2;
 }  DRV_ENCX24J600_RD_PHCON2;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHSTAT1
+typedef struct  __attribute__((packed))
 {
-    uint8_t EXTREGS:1;
-    uint8_t :1;
-    uint8_t LLSTAT:1;
-    uint8_t ANABLE:1;
-    uint8_t LRFAULT:1;
-    uint8_t ANDONE:1;
-    uint8_t :5;
-    uint8_t HALF10:1;
-    uint8_t FULL10:1;
-    uint8_t HALF100:1;
-    uint8_t FULL100:1;
-    uint8_t :1;
+    unsigned EXTREGS:1;
+    unsigned :1;
+    unsigned LLSTAT:1;
+    unsigned ANABLE:1;
+    unsigned LRFAULT:1;
+    unsigned ANDONE:1;
+    unsigned :5;
+    unsigned HALF10:1;
+    unsigned FULL10:1;
+    unsigned HALF100:1;
+    unsigned FULL100:1;
+    unsigned :1;
 }  DRV_ENCX24J600_RD_PHSTAT1;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHSTAT2
+typedef struct  __attribute__((packed))
 {
-    uint8_t :4;
-    uint8_t PLRITY:1;
-    uint16_t :11;
+    unsigned :4;
+    unsigned PLRITY:1;
+    unsigned :11;
 }  DRV_ENCX24J600_RD_PHSTAT2;
 
 
-typedef struct _DRV_ENCX24J600_RD_PHSTAT3
+typedef struct  __attribute__((packed))
 {
-    uint8_t :2;
-    uint8_t SPDDPX:3;
-    uint16_t :11;
+    unsigned :2;
+    unsigned SPDDPX:3;
+    unsigned :11;
 }  DRV_ENCX24J600_RD_PHSTAT3;
 
 
-typedef union _DRV_ENCX24J600_RegUnion
+typedef union 
 {
     uint16_t value;
     DRV_ENCX24J600_RD_ECON1 econ1;
@@ -797,33 +795,37 @@ typedef union _DRV_ENCX24J600_RegUnion
 }  DRV_ENCX24J600_RegUnion;
 
 
-typedef struct _DRV_ENCX24J600_RSV
+typedef union
 {
-    uint16_t pNextPacket:16;
-    uint16_t rxByteCount:16;
-    uint8_t prevIgnored:1;
-    uint8_t :1;
-    uint8_t carrierEventPrevSeen:1;
-    uint8_t :1;
-    uint8_t crcError:1;
-    uint8_t lenChkError:1;
-    uint8_t lenOutOfRange:1;
-    uint8_t rxOk:1;
-    uint8_t rxMultcast:1;
-    uint8_t rxBcast:1;
-    uint8_t dribbleNibble:1;
-    uint8_t rxCtrlFrm:1;
-    uint8_t rxPauseCtrlFrm:1;
-    uint8_t rxUkwnOpCode:1;
-    uint8_t rxVLAN:1;
-    uint8_t runtFltrMtch:1;
-    uint8_t notMeFltrMtch:1;
-    uint8_t hashFltrMtch:1;
-    uint8_t magicPktFltrMtch:1;
-    uint8_t patternFltrMtch:1;
-    uint8_t unicastFltrMtch:1;
-    uint16_t :11;
-}  DRV_ENCx24J600_RSV;
+    uint8_t val[8];
+    struct  __attribute__((packed))
+    {
+        unsigned pNextPacket:16;
+        unsigned rxByteCount:16;
+        unsigned prevIgnored:1;
+        unsigned :1;
+        unsigned carrierEventPrevSeen:1;
+        unsigned :1;
+        unsigned crcError:1;
+        unsigned lenChkError:1;
+        unsigned lenOutOfRange:1;
+        unsigned rxOk:1;
+        unsigned rxMultcast:1;
+        unsigned rxBcast:1;
+        unsigned dribbleNibble:1;
+        unsigned rxCtrlFrm:1;
+        unsigned rxPauseCtrlFrm:1;
+        unsigned rxUkwnOpCode:1;
+        unsigned rxVLAN:1;
+        unsigned runtFltrMtch:1;
+        unsigned notMeFltrMtch:1;
+        unsigned hashFltrMtch:1;
+        unsigned magicPktFltrMtch:1;
+        unsigned patternFltrMtch:1;
+        unsigned unicastFltrMtch:1;
+        unsigned :11;
+    };
+}DRV_ENCx24J600_RSV;
 
 typedef struct
 {
@@ -907,192 +909,192 @@ typedef enum
     /**
      * Bank 0 Select
      */
-    DRV_ENCX24J600_SPI_INST_B0SEL = 0xC0,
+    DRV_ENCX24J600_SPI_B0SEL = 0xC0,
     /**
      * Bank 1 Select
      */
-    DRV_ENCX24J600_SPI_INST_B1SEL = 0xC2,
+    DRV_ENCX24J600_SPI_B1SEL = 0xC2,
     /**
      * Bank 2 Select
      */
-    DRV_ENCX24J600_SPI_INST_B2SEL = 0xC4,
+    DRV_ENCX24J600_SPI_B2SEL = 0xC4,
     /**
      * Bank 3 Select
      */
-    DRV_ENCX24J600_SPI_INST_B3SEL = 0xC6,
+    DRV_ENCX24J600_SPI_B3SEL = 0xC6,
     /**
      * System Reset
      */
-    DRV_ENCX24J600_SPI_INST_SETETHRST = 0xCA,
+    DRV_ENCX24J600_SPI_SETETHRST = 0xCA,
     /**
      * Flow Control Disable
      */
-    DRV_ENCX24J600_SPI_INST_FCDISABLE = 0xE0,
+    DRV_ENCX24J600_SPI_FCDISABLE = 0xE0,
     /**
      * Flow Control Single
      */
-    DRV_ENCX24J600_SPI_INST_FCSINGLE = 0xE2,
+    DRV_ENCX24J600_SPI_FCSINGLE = 0xE2,
     /**
      * Flow Control Multiple
      */
-    DRV_ENCX24J600_SPI_INST_FCMULTIPLE = 0xE4,
+    DRV_ENCX24J600_SPI_FCMULTIPLE = 0xE4,
     /**
      * Flow Control Clear
      */
-    DRV_ENCX24J600_SPI_INST_FCCLEAR = 0xE6,
+    DRV_ENCX24J600_SPI_FCCLEAR = 0xE6,
     /**
      * Decrement Packet Counter
      */
-    DRV_ENCX24J600_SPI_INST_SETPKTDEC = 0xCC,
+    DRV_ENCX24J600_SPI_SETPKTDEC = 0xCC,
     /**
      * DMA Stop
      */
-    DRV_ENCX24J600_SPI_INST_DMASTOP = 0xD2,
+    DRV_ENCX24J600_SPI_DMASTOP = 0xD2,
     /**
      * DMA Start Checksum
      */
-    DRV_ENCX24J600_SPI_INST_DMACKSUM = 0xD8,
+    DRV_ENCX24J600_SPI_DMACKSUM = 0xD8,
     /**
      * DMA Start Checksum with Seed
      */
-    DRV_ENCX24J600_SPI_INST_DMACKSUMS = 0xDA,
+DRV_ENCX24J600_SPI_DMACKSUMS = 0xDA,
     /**
      * DMA Start Copy
      */
-    DRV_ENCX24J600_SPI_INST_DMACOPY = 0xDC,
+    DRV_ENCX24J600_SPI_DMACOPY = 0xDC,
     /**
      * DMA Start Copy and Checksum with Seed
      */
-    DRV_ENCX24J600_SPI_INST_DMACOPYS = 0xDE,
+    DRV_ENCX24J600_SPI_DMACOPYS = 0xDE,
     /**
      * Request Packet Transmission
      */
-    DRV_ENCX24J600_SPI_INST_SETTXRTS = 0xD4,
+    DRV_ENCX24J600_SPI_SETTXRTS = 0xD4,
     /**
      * Enable RX
      */
-    DRV_ENCX24J600_SPI_INST_ENABLERX = 0xE8,
+    DRV_ENCX24J600_SPI_ENABLERX = 0xE8,
     /**
      * Disable RX
      */
-    DRV_ENCX24J600_SPI_INST_DISABLERX = 0xEA,
+    DRV_ENCX24J600_SPI_DISABLERX = 0xEA,
     /**
      * Enable Interrupts
      */
-    DRV_ENCX24J600_SPI_INST_SETEIE = 0xEC,
+    DRV_ENCX24J600_SPI_SETEIE = 0xEC,
     /**
      * Disable Interrupts
      */
-    DRV_ENCX24J600_SPI_INST_CLREIE = 0xEE,
+    DRV_ENCX24J600_SPI_CLREIE = 0xEE,
     /**
      * Read Bank Select
      */
-    DRV_ENCX24J600_SPI_INST_RBSEL = 0xC8,
+    DRV_ENCX24J600_SPI_RBSEL = 0xC8,
     /**
      * Write EGPRDPT
      */
-    DRV_ENCX24J600_SPI_INST_WGPRDPT = 0x60,
+    DRV_ENCX24J600_SPI_WGPRDPT = 0x60,
     /**
      * Read EGPRDPT
      */
-    DRV_ENCX24J600_SPI_INST_RGPRDPT = 0x62,
+    DRV_ENCX24J600_SPI_RGPRDPT = 0x62,
     /**
      * Write ERXRDPT
      */
-    DRV_ENCX24J600_SPI_INST_WRXRDPT = 0x64,
+    DRV_ENCX24J600_SPI_WRXRDPT = 0x64,
     /**
      * Read ERXRDPT
      */
-    DRV_ENCX24J600_SPI_INST_RRXRDPT = 0x66,
+    DRV_ENCX24J600_SPI_RRXRDPT = 0x66,
     /**
      * Write EUDARDPT
      */
-    DRV_ENCX24J600_SPI_INST_WUDARDPT = 0x68,
+    DRV_ENCX24J600_SPI_WUDARDPT = 0x68,
     /**
      * Read EUDARDPT
      */
-    DRV_ENCX24J600_SPI_INST_RUDARDPT = 0x6A,
+    DRV_ENCX24J600_SPI_RUDARDPT = 0x6A,
     /**
      * Write EGPWRPT
      */
-    DRV_ENCX24J600_SPI_INST_WGPWRPT = 0x6C,
+    DRV_ENCX24J600_SPI_WGPWRPT = 0x6C,
     /**
      * Read EGPWRPT
      */
-    DRV_ENCX24J600_SPI_INST_RGPWRPT = 0x6E,
+    DRV_ENCX24J600_SPI_RGPWRPT = 0x6E,
     /**
      * Write ERXWRPT
      */
-    DRV_ENCX24J600_SPI_INST_WRXWRPT = 0x70,
+    DRV_ENCX24J600_SPI_WRXWRPT = 0x70,
     /**
      * Read ERXWRPT
      */
-    DRV_ENCX24J600_SPI_INST_RRXWRPT = 0x72,
+    DRV_ENCX24J600_SPI_RRXWRPT = 0x72,
     /**
      * Write EUDAWRPT
      */
-    DRV_ENCX24J600_SPI_INST_WUDAWRPT = 0x74,
+    DRV_ENCX24J600_SPI_WUDAWRPT = 0x74,
     /**
      * Read EUDAWRPT
      */
-    DRV_ENCX24J600_SPI_INST_RUDAWRPT = 0x76,
+    DRV_ENCX24J600_SPI_RUDAWRPT = 0x76,
     /**
      * Read Control Register
      */
-    DRV_ENCX24J600_SPI_INST_RCR = 0x00,
+    DRV_ENCX24J600_SPI_RCR = 0x00,
     /**
      * Write Control Register
      */
-    DRV_ENCX24J600_SPI_INST_WCR = 0x40,
+    DRV_ENCX24J600_SPI_WCR = 0x40,
     /**
      * Read Control Register Unbanked
      */
-    DRV_ENCX24J600_SPI_INST_RCRU = 0x20,
+    DRV_ENCX24J600_SPI_RCRU = 0x20,
     /**
      * Write Control Register Unbanked
      */
-    DRV_ENCX24J600_SPI_INST_WCRU = 0x22,
+    DRV_ENCX24J600_SPI_WCRU = 0x22,
     /**
      * Bit Field Set
      */
-    DRV_ENCX24J600_SPI_INST_BFS = 0x80,
+    DRV_ENCX24J600_SPI_BFS = 0x80,
     /**
      * Bit Field Clear
      */
-    DRV_ENCX24J600_SPI_INST_BFC = 0xA0,
+    DRV_ENCX24J600_SPI_BFC = 0xA0,
     /**
      * Bit Field Set Unbanked
      */
-    DRV_ENCX24J600_SPI_INST_BFSU = 0x24,
+    DRV_ENCX24J600_SPI_BFSU = 0x24,
     /**
      * Bit Field Clear Unbanked
      */
-    DRV_ENCX24J600_SPI_INST_BFCU = 0x26,
+    DRV_ENCX24J600_SPI_BFCU = 0x26,
     /**
      * Read EGPDATA
      */
-    DRV_ENCX24J600_SPI_INST_RGPDATA = 0x28,
+    DRV_ENCX24J600_SPI_RGPDATA = 0x28,
     /**
      * Write EGPDATA
      */
-    DRV_ENCX24J600_SPI_INST_WGPDATA = 0x2A,
+    DRV_ENCX24J600_SPI_WGPDATA = 0x2A,
     /**
      * Read ERXDATA
      */
-    DRV_ENCX24J600_SPI_INST_RRXDATA = 0x2C,
+    DRV_ENCX24J600_SPI_RRXDATA = 0x2C,
     /**
      * Write ERXDATA
      */
-    DRV_ENCX24J600_SPI_INST_WRXDATA = 0x2E,
+    DRV_ENCX24J600_SPI_WRXDATA = 0x2E,
     /**
      * Read EUDADATA
      */
-    DRV_ENCX24J600_SPI_INST_RUDADATA = 0x30,
+    DRV_ENCX24J600_SPI_RUDADATA = 0x30,
     /**
      * Write EUDADATA
      */
-    DRV_ENCX24J600_SPI_INST_WUDADATA = 0x32
-} DRV_ENCX24J600_SPI_INST_SET;
+    DRV_ENCX24J600_SPI_WUDADATA = 0x32
+} DRV_ENCX24J600_SPI_SET;
 
 typedef enum
 {

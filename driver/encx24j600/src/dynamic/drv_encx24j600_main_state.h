@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -35,8 +35,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DRV_ENCX24J600_MAIN_STATE_H_
-#define _DRV_ENCX24J600_MAIN_STATE_H_
+#ifndef H_DRV_ENCX24J600_MAIN_STATE_H_
+#define H_DRV_ENCX24J600_MAIN_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,7 +46,7 @@ extern "C" {
 #include "closed_state/drv_encx24j600_closed_state.h"
 #include "running_state/drv_encx24j600_running_state.h"
 
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum {
     DRV_ENCX24J600_MS_UNINITIALIZED,
@@ -56,19 +56,20 @@ typedef enum {
     DRV_ENCX24J600_MS_CLOSING,
 }DRV_ENCX24J600_MAIN_STATES;
 
-typedef struct _DRV_ENCX24J600_MainStateInfo
+typedef struct
 {
     DRV_ENCX24J600_MAIN_STATES state;
-    DRV_ENCX24J600_INITIALIZATION_STATE_INFO initInfo;
+    DRV_ENCX24J600_INIT_STATE_INFO initInfo;
     DRV_ENCX24J600_RUNNING_STATE_INFO runningInfo;
 
 }DRV_ENCX24J600_MainStateInfo;
 
-int32_t DRV_ENCX24J600_MainStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+void DRV_ENCX24J600_MainStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 #ifdef __cplusplus
 extern "C" }
 #endif
 
-#endif
+#endif  // H_DRV_ENCX24J600_MAIN_STATE_H_
+

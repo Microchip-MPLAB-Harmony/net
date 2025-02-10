@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,34 +42,34 @@ Microchip or any third party.
 // Data needed by the TCPIP Stack
 const TCPIP_MAC_OBJECT DRV_ENCX24J600_MACObject =
 {
-    .macId = TCPIP_MODULE_MAC_ENCJ600,
-    .macType = TCPIP_MAC_TYPE_ETH,    
+    .macId = (uint16_t)TCPIP_MODULE_MAC_ENCJ600,
+    .macType = (uint8_t)TCPIP_MAC_TYPE_ETH,    
     .macName = "ENCX24J600",
-    .TCPIP_MAC_Initialize = DRV_ENCX24J600_StackInitialize,
+    .MAC_Initialize = &DRV_ENCX24J600_StackInitialize,
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-    .TCPIP_MAC_Deinitialize = DRV_ENCX24J600_Deinitialize,
-    .TCPIP_MAC_Reinitialize = DRV_ENCX24J600_Reinitialize,
+    .MAC_Deinitialize = &DRV_ENCX24J600_Deinitialize,
+    .MAC_Reinitialize = &DRV_ENCX24J600_Reinitialize,
 #else
-    .TCPIP_MAC_Deinitialize = 0,
-    .TCPIP_MAC_Reinitialize = 0,
+    .MAC_Deinitialize = NULL,
+    .MAC_Reinitialize = NULL,
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-    .TCPIP_MAC_Status = DRV_ENCX24J600_Status,
-    .TCPIP_MAC_Tasks = DRV_ENCX24J600_Tasks,
-    .TCPIP_MAC_Open = DRV_ENCX24J600_Open,
-    .TCPIP_MAC_Close = DRV_ENCX24J600_Close,
-    .TCPIP_MAC_LinkCheck = DRV_ENCX24J600_LinkCheck,
-    .TCPIP_MAC_RxFilterHashTableEntrySet = DRV_ENCX24J600_RxFilterHashTableEntrySet,
-    .TCPIP_MAC_PowerMode = DRV_ENCX24J600_PowerMode,
-    .TCPIP_MAC_PacketTx = DRV_ENCX24J600_PacketTx,
-    .TCPIP_MAC_PacketRx = DRV_ENCX24J600_PacketRx,
-    .TCPIP_MAC_Process = DRV_ENCX24J600_Process,
-    .TCPIP_MAC_StatisticsGet = DRV_ENCX24J600_StatisticsGet,
-    .TCPIP_MAC_ParametersGet = DRV_ENCX24J600_ParametersGet,
-    .TCPIP_MAC_RegisterStatisticsGet = DRV_ENCX24J600_RegisterStatisticsGet,
-    .TCPIP_MAC_ConfigGet = DRV_ENCX24J600_ConfigGet,
-    .TCPIP_MAC_EventMaskSet = DRV_ENCX24J600_EventMaskSet,
-    .TCPIP_MAC_EventAcknowledge = DRV_ENCX24J600_EventAcknowledge,
-    .TCPIP_MAC_EventPendingGet = DRV_ENCX24J600_EventPendingGet,
+    .MAC_Status = &DRV_ENCX24J600_Status,
+    .MAC_Tasks = &DRV_ENCX24J600_Tasks,
+    .MAC_Open = &DRV_ENCX24J600_Open,
+    .MAC_Close = &DRV_ENCX24J600_Close,
+    .MAC_LinkCheck = &DRV_ENCX24J600_LinkCheck,
+    .MAC_RxFilterHashTableEntrySet = &DRV_ENCX24J600_RxFilterHashTableEntrySet,
+    .MAC_PowerMode = &DRV_ENCX24J600_PowerMode,
+    .MAC_PacketTx = &DRV_ENCX24J600_PacketTx,
+    .MAC_PacketRx = &DRV_ENCX24J600_PacketRx,
+    .MAC_Process = &DRV_ENCX24J600_Process,
+    .MAC_StatisticsGet = &DRV_ENCX24J600_StatisticsGet,
+    .MAC_ParametersGet = &DRV_ENCX24J600_ParametersGet,
+    .MAC_RegisterStatisticsGet = &DRV_ENCX24J600_RegisterStatisticsGet,
+    .MAC_ConfigGet = &DRV_ENCX24J600_ConfigGet,
+    .MAC_EventMaskSet = &DRV_ENCX24J600_EventMaskSet,
+    .MAC_EventAcknowledge = &DRV_ENCX24J600_EventAcknowledge,
+    .MAC_EventPendingGet = &DRV_ENCX24J600_EventPendingGet,
 };
 
 // Local information
@@ -77,8 +77,9 @@ static DRV_ENCX24J600_DriverInfo drvEncX24J600DrvInst[DRV_ENCX24J600_INSTANCES_N
 static DRV_ENCX24J600_ClientInfo drvEncX24J600ClntInst[DRV_ENCX24J600_CLIENT_INSTANCES_IDX0];
 static uint8_t drvEncX24J600NumOfDrivers = 0;
 static OSAL_MUTEX_HANDLE_TYPE  drvEncX24J600ClntMutex;
+static DRV_ENCX24J600_DriverInfo * F_DRV_ENCX24J600_ValidateClientHandle(DRV_ENCX24J600_ClientInfo * ptr);
 
-bool _DRV_ENCX24J600_ValidateDriverInstance(DRV_ENCX24J600_DriverInfo * ptr)
+static bool F_DRV_ENCX24J600_ValidateDriverInstance(DRV_ENCX24J600_DriverInfo * ptr)
 {
     uint8_t x;
     for (x = 0; x < DRV_ENCX24J600_INSTANCES_NUMBER; x++)
@@ -95,7 +96,7 @@ bool _DRV_ENCX24J600_ValidateDriverInstance(DRV_ENCX24J600_DriverInfo * ptr)
     return false;
 }
 
-DRV_ENCX24J600_DriverInfo * _DRV_ENCX24J600_ValidateClientHandle(DRV_ENCX24J600_ClientInfo * ptr)
+static DRV_ENCX24J600_DriverInfo * F_DRV_ENCX24J600_ValidateClientHandle(DRV_ENCX24J600_ClientInfo * ptr)
 {
     uint8_t x;
     for (x = 0; x < DRV_ENCX24J600_CLIENT_INSTANCES_IDX0; x++)
@@ -106,7 +107,7 @@ DRV_ENCX24J600_DriverInfo * _DRV_ENCX24J600_ValidateClientHandle(DRV_ENCX24J600_
             {
                 return NULL;
             }
-            if (_DRV_ENCX24J600_ValidateDriverInstance(ptr->pDrvInst))
+            if (F_DRV_ENCX24J600_ValidateDriverInstance(ptr->pDrvInst))
             {
                 return ptr->pDrvInst;
             }
@@ -141,7 +142,7 @@ DRV_ENCX24J600_DriverInfo * _DRV_ENCX24J600_ValidateClientHandle(DRV_ENCX24J600_
         If successful: returns a valid handle to the driver instance
         If unsuccessful: returns SYS_MODULE_OBJ_INVALID
 */
-SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT * init)
+SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * init)
 {
     if (index >= DRV_ENCX24J600_INSTANCES_NUMBER)
     {
@@ -159,10 +160,10 @@ SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT
     }
 
     // Clear out any cruft that might be in there
-    memset(pDrvInst, 0, sizeof(*pDrvInst));
+    (void)memset(pDrvInst, 0, sizeof(*pDrvInst));
 
     pDrvInst->inUse = true;
-    OSAL_RESULT res = 0;
+    OSAL_RESULT res = OSAL_RESULT_FAIL;
     res = res; // Force ignore of unused variable, which will be used if SYS_ASSERT was used
     if (drvEncX24J600NumOfDrivers == 0)
     {
@@ -174,11 +175,18 @@ SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT
     res = OSAL_MUTEX_Create(&(pDrvInst->drvMutex));
     SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not create the OSAL Mutex for driver protection");
 
-    memcpy(&(pDrvInst->drvCfg), init, sizeof(DRV_ENCX24J600_Configuration));
+    union
+    {
+        const SYS_MODULE_INIT * init;
+        DRV_ENCX24J600_Configuration* pDrvCfg;
+    }U_MOD_INIT_DRV_CFG;
+    U_MOD_INIT_DRV_CFG.init = init;
 
-    TCPIP_Helper_ProtectedSingleListInitialize(&pDrvInst->rxFreePackets);
-    TCPIP_Helper_ProtectedSingleListInitialize(&pDrvInst->rxWaitingForPickupPackets);
-    TCPIP_Helper_ProtectedSingleListInitialize(&pDrvInst->txPendingPackets);
+    (void)memcpy(&(pDrvInst->drvCfg), U_MOD_INIT_DRV_CFG.pDrvCfg, sizeof(DRV_ENCX24J600_Configuration));
+
+    (void)TCPIP_Helper_ProtSglListInitialize(&pDrvInst->rxFreePackets);
+    (void)TCPIP_Helper_ProtSglListInitialize(&pDrvInst->rxWaitingForPickupPackets);
+    (void)TCPIP_Helper_ProtSglListInitialize(&pDrvInst->txPendingPackets);
 
     return (SYS_MODULE_OBJ)pDrvInst;
 }
@@ -205,39 +213,39 @@ void DRV_ENCX24J600_Deinitialize(SYS_MODULE_OBJ object)
     DRV_ENCX24J600_DriverInfo * pDrvInst = ( DRV_ENCX24J600_DriverInfo *)object;    
     TCPIP_MAC_PACKET* pkt;
     
-    if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
     {
         return;
     }
     
     
-    DRV_ENCX24J600_SPI_DeinitializeInterface(pDrvInst);
+    (void)DRV_ENCX24J600_SPI_DeinitializeInterface(pDrvInst);
 
-    OSAL_MUTEX_Delete(&pDrvInst->drvMutex);
+    (void)OSAL_MUTEX_Delete(&pDrvInst->drvMutex);
     // Clear out any cruft that might be in there
 
-    while (TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->rxFreePackets) != 0)
+    while (TCPIP_Helper_ProtSglListCount(&pDrvInst->rxFreePackets) != 0)
     {
-        TCPIP_MAC_PACKET * pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxFreePackets);
+        pkt = FC_SglNode2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->rxFreePackets));
         (*pDrvInst->stackCfg.pktFreeF)(pkt);
     }
-    TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxFreePackets);
+    TCPIP_Helper_ProtSglListDeinitialize(&pDrvInst->rxFreePackets);
     
-    while ((pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets)) != 0)
+    while ((pkt = FC_SglNode2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->txPendingPackets))) != NULL)
     {
         pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;        
         // acknowledge the packet
         (*pDrvInst->stackCfg.pktAckF)(pkt, TCPIP_MAC_PKT_ACK_NET_DOWN, TCPIP_THIS_MODULE_ID);
        
     } 
-    TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->txPendingPackets);
-    TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
+    TCPIP_Helper_ProtSglListDeinitialize(&pDrvInst->txPendingPackets);
+    TCPIP_Helper_ProtSglListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
 
-    memset(pDrvInst, 0, sizeof(*pDrvInst));
+    (void)memset(pDrvInst, 0, sizeof(*pDrvInst));
     drvEncX24J600NumOfDrivers--;
     if (drvEncX24J600NumOfDrivers == 0)
     {
-        OSAL_MUTEX_Delete(&drvEncX24J600ClntMutex);
+        (void)OSAL_MUTEX_Delete(&drvEncX24J600ClntMutex);
     }
 }
 
@@ -291,23 +299,30 @@ void DRV_ENCX24J600_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * 
 SYS_STATUS DRV_ENCX24J600_Status(SYS_MODULE_OBJ object)
 {
     DRV_ENCX24J600_DriverInfo * pDrvInst = ( DRV_ENCX24J600_DriverInfo *)object;
-    if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
     {
         return SYS_STATUS_ERROR;
     }
+    
+    SYS_STATUS stat;
     switch(pDrvInst->mainStateInfo.state)
     {
         case DRV_ENCX24J600_MS_UNINITIALIZED:
         case DRV_ENCX24J600_MS_INITIALIZATION:
-            return SYS_STATUS_UNINITIALIZED;
+            stat = SYS_STATUS_UNINITIALIZED;
+            break;
         case DRV_ENCX24J600_MS_CLOSED:
         case DRV_ENCX24J600_MS_RUNNING:
-            return SYS_STATUS_READY;
+            stat = SYS_STATUS_READY;
+            break;
         case DRV_ENCX24J600_MS_CLOSING:
-            return SYS_STATUS_BUSY;
+            stat = SYS_STATUS_BUSY;
+            break;
         default:
-            return SYS_STATUS_ERROR;
+            stat = SYS_STATUS_ERROR;
+            break;
     }
+    return stat;
 }
 
 // *****************************************************************************
@@ -331,7 +346,7 @@ SYS_STATUS DRV_ENCX24J600_Status(SYS_MODULE_OBJ object)
 void DRV_ENCX24J600_Tasks(SYS_MODULE_OBJ object)
 {
     DRV_ENCX24J600_DriverInfo * pDrvInst = ( DRV_ENCX24J600_DriverInfo *)object;
-    if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
     {
         return;
     }
@@ -360,14 +375,14 @@ void DRV_ENCX24J600_Tasks(SYS_MODULE_OBJ object)
     Returns:
         None
 */
-void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init)
+void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, const TCPIP_MAC_MODULE_CTRL * init)
 {
     DRV_ENCX24J600_DriverInfo * pDrvInst = ( DRV_ENCX24J600_DriverInfo *)object;
-    if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
     {
         return;
     }
-    memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
+    (void)memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
     pDrvInst->stackCfgReady = true;
     int32_t res = DRV_ENCX24J600_SPI_InitializeInterface(pDrvInst);
     res = res;// Silly compiler warning fix
@@ -377,9 +392,9 @@ void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL 
     for (count = 0; count < pDrvInst->drvCfg.rxDescriptors; count++)
     {
         TCPIP_MAC_PACKET * pkt = (*pDrvInst->stackCfg.pktAllocF)(pDrvInst->drvCfg.rxDescBufferSize, pDrvInst->drvCfg.rxDescBufferSize, TCPIP_MAC_PKT_FLAG_STATIC);
-        pkt->ackFunc = DRV_ENCX24J600_RxPacketAck;
+        pkt->ackFunc = &DRV_ENCX24J600_RxPacketAck;
         pkt->ackParam = pDrvInst;
-        TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
+        TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->rxFreePackets, FC_MacPkt2SglNode(pkt));
 
     }
 }
@@ -406,15 +421,22 @@ void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL 
         If successful: returns a valid handle to the driver instance
         If unsuccessful: returns SYS_MODULE_OBJ_INVALID
 */
-SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
+SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
 {
-    const TCPIP_MAC_INIT * const ptr = (const TCPIP_MAC_INIT * const)init;
-    SYS_MODULE_OBJ pDrvInst = DRV_ENCX24J600_Initialize(index - TCPIP_MODULE_MAC_ENCJ600, (SYS_MODULE_INIT *)ptr->moduleData);
+    union
+    {
+        const SYS_MODULE_INIT * init;
+        const TCPIP_MAC_INIT * const ptr;
+    }U_MOD_INIT_MAC_INIT;
+
+    U_MOD_INIT_MAC_INIT.init = init;
+    const TCPIP_MAC_INIT * const ptr = U_MOD_INIT_MAC_INIT.ptr;
+    SYS_MODULE_OBJ pDrvInst = DRV_ENCX24J600_Initialize(index - (SYS_MODULE_INDEX)TCPIP_MODULE_MAC_ENCJ600, (const SYS_MODULE_INIT *)ptr->moduleData);
     if (pDrvInst == SYS_MODULE_OBJ_INVALID)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
-    DRV_ENCX24J600_SetMacCtrlInfo(pDrvInst, (TCPIP_MAC_MODULE_CTRL *)ptr->macControl);
+    DRV_ENCX24J600_SetMacCtrlInfo(pDrvInst, (const TCPIP_MAC_MODULE_CTRL *)ptr->macControl);
 
     return pDrvInst;
 }
@@ -449,12 +471,12 @@ SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(SYS_MODULE_INDEX index, const SYS_
         If successful: returns a valid handle.
         If unsuccessful: returns INVALID_HANDLE
 */
-DRV_HANDLE DRV_ENCX24J600_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
+DRV_HANDLE DRV_ENCX24J600_Open(const SYS_MODULE_INDEX index, const DRV_IO_INTENT intent)
 {
     uint8_t x;
     DRV_ENCX24J600_DriverInfo * pDrvInst = &(drvEncX24J600DrvInst[index - TCPIP_MODULE_MAC_ENCJ600]);
     DRV_ENCX24J600_ClientInfo * ptr = NULL;
-    if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
+    if (!F_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
     {
         return DRV_HANDLE_INVALID;
     }
@@ -544,7 +566,7 @@ DRV_HANDLE DRV_ENCX24J600_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
 void DRV_ENCX24J600_Close(DRV_HANDLE handle)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)handle;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return;
@@ -558,7 +580,7 @@ void DRV_ENCX24J600_Close(DRV_HANDLE handle)
     pDrvInst->exclusiveMode = false;
     res = OSAL_MUTEX_Unlock(&pDrvInst->drvMutex);
     SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not release driver instance mutex");
-    memset(pClient, 0, sizeof(DRV_ENCX24J600_ClientInfo));
+    (void)memset(pClient, 0, sizeof(DRV_ENCX24J600_ClientInfo));
 }
 
 // *****************************************************************************
@@ -583,7 +605,7 @@ void DRV_ENCX24J600_Close(DRV_HANDLE handle)
 bool DRV_ENCX24J600_LinkCheck(DRV_HANDLE hMac)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return false;
@@ -671,13 +693,13 @@ bool  DRV_ENCX24J600_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode)
 TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->txPendingPackets, (SGL_LIST_NODE*)ptrPacket);
+    TCPIP_Helper_ProtSglListTailAdd(&pDrvInst->txPendingPackets, FC_MacPkt2SglNode(ptrPacket));
     ptrPacket->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
     return TCPIP_MAC_RES_OK;
 }
@@ -709,16 +731,16 @@ TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPac
 TCPIP_MAC_PACKET* DRV_ENCX24J600_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return NULL;
     }
-    if (TCPIP_Helper_ProtectedSingleListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
+    if (TCPIP_Helper_ProtSglListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
     {
         return NULL;
     }
-    return (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxWaitingForPickupPackets);
+    return FC_SglNode2MacPkt(TCPIP_Helper_ProtSglListHeadRemove(&pDrvInst->rxWaitingForPickupPackets));
 
 
 }
@@ -771,7 +793,7 @@ TCPIP_MAC_RES DRV_ENCX24J600_Process(DRV_HANDLE hMac)
 TCPIP_MAC_RES DRV_ENCX24J600_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_RES_OP_ERR;
@@ -779,18 +801,18 @@ TCPIP_MAC_RES DRV_ENCX24J600_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATIST
     if (pRxStatistics != NULL)
     {
         pRxStatistics->nRxOkPackets = pDrvInst->mainStateInfo.runningInfo.nRxOkPackets;
-        pRxStatistics->nRxPendBuffers = pDrvInst->drvCfg.rxDescriptors - TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->rxFreePackets);
-        pRxStatistics->nRxSchedBuffers = TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->rxFreePackets);
-        pRxStatistics->nRxBuffNotAvailable = -1; //not Implemented
-        pRxStatistics->nRxFragmentErrors = -1; //not Implemented
-        pRxStatistics->nRxErrorPackets = -1; //not Implemented
+        pRxStatistics->nRxPendBuffers = pDrvInst->drvCfg.rxDescriptors - TCPIP_Helper_ProtSglListCount(&pDrvInst->rxFreePackets);
+        pRxStatistics->nRxSchedBuffers = TCPIP_Helper_ProtSglListCount(&pDrvInst->rxFreePackets);
+        pRxStatistics->nRxBuffNotAvailable = 0xffffffffU; //not Implemented
+        pRxStatistics->nRxFragmentErrors = 0xffffffffU; //not Implemented
+        pRxStatistics->nRxErrorPackets = 0xffffffffU; //not Implemented
     }
     if (pTxStatistics != NULL)
     {
         pTxStatistics->nTxOkPackets = pDrvInst->mainStateInfo.runningInfo.nTxOkPackets;
-        pTxStatistics->nTxPendBuffers = TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->txPendingPackets);
-        pTxStatistics->nTxErrorPackets = -1; //not Implemented
-        pTxStatistics->nTxQueueFull = -1; //not Implemented
+        pTxStatistics->nTxPendBuffers = TCPIP_Helper_ProtSglListCount(&pDrvInst->txPendingPackets);
+        pTxStatistics->nTxErrorPackets = 0xffffffffU; //not Implemented
+        pTxStatistics->nTxQueueFull = 0xffffffffU; //not Implemented
         uint8_t count = 0;
         for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
         {
@@ -829,12 +851,12 @@ TCPIP_MAC_RES DRV_ENCX24J600_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATIST
 TCPIP_MAC_RES DRV_ENCX24J600_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
-    memcpy(pMacParams, &pDrvInst->stackParameters, sizeof(TCPIP_MAC_PARAMETERS));
+    (void)memcpy(pMacParams, &pDrvInst->stackParameters, sizeof(TCPIP_MAC_PARAMETERS));
     return TCPIP_MAC_RES_OK;
 }
 
@@ -862,7 +884,7 @@ TCPIP_MAC_RES DRV_ENCX24J600_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS
         TCPIP_MAC_RES_TYPE_ERR: if the hMac is invalid
         TCPIP_MAC_RES_OP_ERR: otherwise
 */
-TCPIP_MAC_RES DRV_ENCX24J600_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries)
+TCPIP_MAC_RES DRV_ENCX24J600_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, uint32_t nEntries, uint32_t* pHwEntries)
 {
     return TCPIP_MAC_RES_OP_ERR;
 }
@@ -918,7 +940,7 @@ size_t DRV_ENCX24J600_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSi
 bool DRV_ENCX24J600_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return false;
@@ -952,7 +974,7 @@ bool DRV_ENCX24J600_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, boo
 bool DRV_ENCX24J600_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return false;
@@ -964,7 +986,7 @@ bool DRV_ENCX24J600_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 
     pDrvInst->currentEvents &= ~macEvents;
 
-    if (!TCPIP_Helper_ProtectedSingleListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
+    if (!TCPIP_Helper_ProtSglListIsEmpty(&pDrvInst->rxWaitingForPickupPackets))
     {
         pDrvInst->currentEvents |= pDrvInst->eventMask & TCPIP_MAC_EV_RX_DONE;
     }
@@ -998,7 +1020,7 @@ bool DRV_ENCX24J600_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents)
 TCPIP_MAC_EVENT DRV_ENCX24J600_EventPendingGet(DRV_HANDLE hMac)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
-    DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
+    DRV_ENCX24J600_DriverInfo * pDrvInst = F_DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)
     {
         return TCPIP_MAC_EV_NONE;

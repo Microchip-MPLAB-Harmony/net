@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,8 +34,8 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
-#ifndef _DRV_ENCX24J600_CHECK_INT_STATE_H_
-#define _DRV_ENCX24J600_CHECK_INT_STATE_H_
+#ifndef H_DRV_ENCX24J600_CHECK_INT_STATE_H_
+#define H_DRV_ENCX24J600_CHECK_INT_STATE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +43,7 @@ extern "C" {
 
 #include "system_config.h"
 #include <stdint.h>
-struct _DRV_ENCX24J600_DriverInfo;
+struct S_DRV_ENCX24J600_DriverInfo;
 
 typedef enum
 {
@@ -53,16 +53,16 @@ typedef enum
 
 }DRV_ENCX24J600_CHECK_INT_STATES;
 
-typedef struct _DRV_ENCX24J600_CHECK_INT_INFO
+typedef struct
 {
     DRV_ENCX24J600_CHECK_INT_STATES state;
     uintptr_t eirOp;
 
 }DRV_ENCX24J600_CHECK_INT_INFO;
 
-int32_t DRV_ENCX24J600_ChkIntStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ChkIntStateEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
-int32_t DRV_ENCX24J600_ChkIntStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ChkIntStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ChkIntStateEnter(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
+int32_t DRV_ENCX24J600_ChkIntStateExit(struct S_DRV_ENCX24J600_DriverInfo * pDrvInst);
 
 
 
@@ -72,4 +72,5 @@ int32_t DRV_ENCX24J600_ChkIntStateExit(struct _DRV_ENCX24J600_DriverInfo * pDrvI
 #endif
 
 
-#endif
+#endif  // H_DRV_ENCX24J600_CHECK_INT_STATE_H_
+
