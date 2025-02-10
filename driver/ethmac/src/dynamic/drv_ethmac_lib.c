@@ -13,7 +13,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2008-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2008-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,14 +47,86 @@ Microchip or any third party.
 // to allow for this adjustment!:
 //  allocSize >= align + ObjSize
 //  We're using align == 16, ObjSize == 16
-#define _EthAlignAdjust(pL)  ((DRV_ETHMAC_DCPT_LIST*)(((uint32_t)(pL) + (DRV_ETHMAC_DCPT_LIST_ALIGN - 1)) & (~(DRV_ETHMAC_DCPT_LIST_ALIGN -1))))
+#define F_EthAlignAdjust(pL)  ((DRV_ETHMAC_DCPT_LIST*)(((uint32_t)(pL) + (DRV_ETHMAC_DCPT_LIST_ALIGN - 1)) & (~(DRV_ETHMAC_DCPT_LIST_ALIGN -1))))
         
 
+static void  F_EnetPoolFreeDcptList(DRV_ETHMAC_DCPT_LIST* pList, DRV_ETHMAC_DCPT_FreeF fFree, void* fParam);
+static DRV_ETHMAC_DCPT_NODE* F_EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_LIST* pList);
+static uint32_t F_EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl);
 
-static void  _EnetPoolFreeDcptList(DRV_ETHMAC_DCPT_LIST* pList, DRV_ETHMAC_DCPT_FreeF fFree, void* fParam);
-static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_LIST* pList);
-static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl);
 
+// conversion functions/helpers
+static __inline__ DRV_ETHMAC_DCPT_NODE_TX* __attribute__((always_inline)) CF_EthMacNodeDcptTx(DRV_ETHMAC_DCPT_NODE * pEthDcptNode)
+{
+    union
+    {
+        DRV_ETHMAC_DCPT_NODE * pNode;
+        DRV_ETHMAC_DCPT_NODE_TX * pNodeEthDcptTx;
+    }U_DCPT_NODE_NODETX;
+
+    U_DCPT_NODE_NODETX.pNode = pEthDcptNode;
+    return U_DCPT_NODE_NODETX.pNodeEthDcptTx;
+}
+
+static __inline__ DRV_ETHMAC_DCPT_NODE_RX* __attribute__((always_inline)) CF_EthMacNodeDcptRx(DRV_ETHMAC_DCPT_NODE * pEthDcptNode)
+{
+    union
+    {
+        DRV_ETHMAC_DCPT_NODE * pNode;
+        DRV_ETHMAC_DCPT_NODE_RX * pNodeEthDcptRx;
+    }U_DCPT_NODE_NODERX;
+
+    U_DCPT_NODE_NODERX.pNode = pEthDcptNode;
+    return U_DCPT_NODE_NODERX.pNodeEthDcptRx;
+}
+
+static __inline__ uint32_t __attribute__((always_inline)) CF_VoidPtr2Uint32(const void * pParam)
+{
+    union
+    {
+        const void * pAddr;
+        uint32_t uintAddr;        
+    }U_VPTR_UINT;
+
+    U_VPTR_UINT.pAddr = pParam;
+    return U_VPTR_UINT.uintAddr;
+}
+
+static __inline__ const void * __attribute__((always_inline)) CF_phyAddr2VoidPtr(_paddr_t phyAddr)
+{
+    union
+    {
+        _paddr_t phyAddress;
+        const void * pAddr;      
+    }U_PHYADDR_VPTR;
+
+    U_PHYADDR_VPTR.phyAddress = phyAddr;
+    return U_PHYADDR_VPTR.pAddr;
+}
+
+static __inline__ const DRV_ETHMAC_PKT_STAT_TX* __attribute__((always_inline)) CF_TXvStat2cStat(volatile DRV_ETHMAC_PKT_STAT_TX* vStat)
+{
+    union
+    {
+        volatile DRV_ETHMAC_PKT_STAT_TX* vstat;
+        const DRV_ETHMAC_PKT_STAT_TX*    cstat;
+    }U_PKT_STAT_TX;
+
+    U_PKT_STAT_TX.vstat = vStat;
+    return U_PKT_STAT_TX.cstat;
+}
+
+static __inline__ const DRV_ETHMAC_PKT_STAT_RX* __attribute__((always_inline)) CF_RXvStat2cStat(volatile DRV_ETHMAC_PKT_STAT_RX* vStat)
+{
+    union
+    {
+        volatile DRV_ETHMAC_PKT_STAT_RX* vstat;
+        const DRV_ETHMAC_PKT_STAT_RX*    cstat;
+    }U_PKT_STAT_RX;
+
+    U_PKT_STAT_RX.vstat = vStat;
+    return U_PKT_STAT_RX.cstat;
+}
 // *****************************************************************************
 // *****************************************************************************
 // Section: Code from _eth_append_busy_list_lib.c
@@ -62,7 +134,7 @@ static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl);
 // *****************************************************************************
 
 /****************************************************************************
- * Function:        _EthAppendBusyList
+ * Function:        F_EthAppendBusyList
  *
  * PreCondition:    None
  *
@@ -82,20 +154,22 @@ static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl);
  *                  end descriptor and won't do much good.
  *                  We have to specifically write the BUFCDEC when there's a new descriptor seen by the hw that has EOWN=1.
  *****************************************************************************/
-static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIST* pBusyList, DRV_ETHMAC_DCPT_LIST* pNewList, int rxAck)
+static void F_EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIST* pBusyList, DRV_ETHMAC_DCPT_LIST* pNewList, int rxAck)
 {
     DRV_ETHMAC_DCPT_NODE   *head, *tail, *pN;
     DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
+    uint32_t temprx_nack;
 
     tail=pBusyList->tail;
     head=DRV_ETHMAC_LIB_ListRemoveHead(pNewList);
     head->hwDcpt.hdr.EOWN=0;    // not hw owned yet!
 
     // add all the required new descriptors/buffers
-    while((pN=DRV_ETHMAC_LIB_ListRemoveHead(pNewList)))
+    while((pN=DRV_ETHMAC_LIB_ListRemoveHead(pNewList))!= NULL)
     {
         DRV_ETHMAC_LIB_ListAddTail(pBusyList, pN);
-        if(rxAck && !pN->hwDcpt.hdr.rx_nack)
+        temprx_nack = pN->hwDcpt.hdr.rx_nack;
+        if((rxAck != 0) && ( temprx_nack == 0U))
         {
             DRV_ETH_RxBufferCountDecrement(ethId);
         }
@@ -106,10 +180,11 @@ static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_
     *tail=*head;            // replace the prev tail
 
     head->hwDcpt.hdr.w=0;   // make it invalid descriptor for searches!
-    head->hwDcpt.pEDBuff = 0;
+    head->hwDcpt.pEDBuff = NULL;
     DRV_ETHMAC_LIB_ListAddTail(pBusyList, head); // end properly, with EOWN=0;
     tail->hwDcpt.hdr.EOWN=1;    // ready to go!
-    if(rxAck && !tail->hwDcpt.hdr.rx_nack)
+    temprx_nack = tail->hwDcpt.hdr.rx_nack;
+    if((rxAck != 0) && ( temprx_nack == 0U))
     {
         DRV_ETH_RxBufferCountDecrement(ethId);
     }
@@ -117,16 +192,16 @@ static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_
 }
 
 
-static void _EthMacReset(DRV_ETHERNET_REGISTERS* ethId)
+static void F_EthMacReset(DRV_ETHERNET_REGISTERS* ethId)
 {
     DRV_ETH_MIIResetEnable(ethId);
     DRV_ETH_MIIResetDisable(ethId);
 }
 
 
-static void _EthMacInit(DRV_ETHERNET_REGISTERS* ethId)
+static void F_EthMacInit(DRV_ETHERNET_REGISTERS* ethId)
 {
-    _EthMacReset(ethId);
+    F_EthMacReset(ethId);
     DRV_ETH_MaxFrameLengthSet(ethId,0x600);
 }
 
@@ -147,16 +222,16 @@ void DRV_ETHMAC_LibInit(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
     }
     DRV_ETH_Enable(ethId);
 
-    while(DRV_ETH_RxPacketCountGet(ethId) > 0 )
+    while(DRV_ETH_RxPacketCountGet(ethId) > 0U )
     {
         DRV_ETH_RxBufferCountDecrement(ethId);
     }
 
     // initialize the Ethernet TX/RX lists
-    pMacD->mData._EnetTxFreePtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData._EnetTxFreeList);
-    pMacD->mData._EnetTxBusyPtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData._EnetTxBusyList);
-    pMacD->mData._EnetRxFreePtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData._EnetRxFreeList);
-    pMacD->mData._EnetRxBusyPtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData._EnetRxBusyList);
+    pMacD->mData.EnetTxFreePtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData.EnetTxFreeList);
+    pMacD->mData.EnetTxBusyPtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData.EnetTxBusyList);
+    pMacD->mData.EnetRxFreePtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData.EnetRxFreeList);
+    pMacD->mData.EnetRxBusyPtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData.EnetRxBusyList);
 
 
     DRV_ETH_EventsClear(ethId, DRV_ETH_EV_ALL);
@@ -165,7 +240,7 @@ void DRV_ETHMAC_LibInit(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 
     // leave filtering and ETHIEN as they were
 
-    _EthMacInit(ethId);
+    F_EthMacInit(ethId);
 }
 
 
@@ -177,7 +252,7 @@ void DRV_ETHMAC_LibClose(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_CLOSE_FLAGS
     // disable Rx, Tx, Eth controller itself
     DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
-    if(cFlags&DRV_ETHMAC_CLOSE_GRACEFUL)
+    if(((uint32_t)cFlags & (uint32_t)DRV_ETHMAC_CLOSE_GRACEFUL) != 0U)
     {
         DRV_ETH_TxRTSDisable(ethId);
         while (DRV_ETH_TransmitIsBusy(ethId))
@@ -193,7 +268,7 @@ void DRV_ETHMAC_LibClose(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_CLOSE_FLAGS
     DRV_ETH_TxRTSDisable(ethId);
     DRV_ETH_RxDisable(ethId);
 
-    _EthMacReset(ethId);
+    F_EthMacReset(ethId);
 
     DRV_ETH_Disable(ethId);
     while( DRV_ETH_EthernetIsBusy(ethId) )
@@ -211,30 +286,30 @@ void DRV_ETHMAC_LibClose(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_CLOSE_FLAGS
  *****************************************************************************/
 void DRV_ETHMAC_LibMACOpen(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_ETH_OPEN_FLAGS oFlags, TCPIP_ETH_PAUSE_TYPE pauseType)
 {
-    unsigned int    cfg1;
+    uint32_t    cfg1;
     DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
-    cfg1=_EMACxCFG1_RXENABLE_MASK|((oFlags&TCPIP_ETH_OPEN_MAC_LOOPBACK)?_EMACxCFG1_LOOPBACK_MASK:0);
+    cfg1=(uint32_t)_EMACxCFG1_RXENABLE_MASK|((((uint32_t)oFlags& (uint32_t)TCPIP_ETH_OPEN_MAC_LOOPBACK) != 0U)?(uint32_t)_EMACxCFG1_LOOPBACK_MASK:0U);
 
-    if(oFlags&TCPIP_ETH_OPEN_FDUPLEX)
+    if(((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_FDUPLEX) != 0U)
     {
-        if(pauseType&TCPIP_ETH_PAUSE_TYPE_EN_TX)
+        if(((uint32_t)pauseType & (uint32_t)TCPIP_ETH_PAUSE_TYPE_EN_TX) != 0U)
         {
-            cfg1|=_EMACxCFG1_TXPAUSE_MASK;
+            cfg1|=(uint32_t)_EMACxCFG1_TXPAUSE_MASK;
         }
-        if(pauseType&TCPIP_ETH_PAUSE_TYPE_EN_RX)
+        if(((uint32_t)pauseType & (uint32_t)TCPIP_ETH_PAUSE_TYPE_EN_RX) != 0U)
         {
-            cfg1|=_EMACxCFG1_RXPAUSE_MASK;
+            cfg1|=(uint32_t)_EMACxCFG1_RXPAUSE_MASK;
         }
     }
 
     EMACxCFG1=cfg1;
 
-    EMACxCFG2=_EMACxCFG2_EXCESSDFR_MASK|_EMACxCFG2_AUTOPAD_MASK|_EMACxCFG2_PADENABLE_MASK|_EMACxCFG2_CRCENABLE_MASK|
-            ((oFlags&TCPIP_ETH_OPEN_HUGE_PKTS)?_EMACxCFG2_HUGEFRM_MASK:0)|_EMACxCFG2_LENGTHCK_MASK|
-            ((oFlags&TCPIP_ETH_OPEN_HDUPLEX)?0:_EMACxCFG2_FULLDPLX_MASK);
+    EMACxCFG2=(uint32_t)_EMACxCFG2_EXCESSDFR_MASK|(uint32_t)_EMACxCFG2_AUTOPAD_MASK|(uint32_t)_EMACxCFG2_PADENABLE_MASK|(uint32_t)_EMACxCFG2_CRCENABLE_MASK|
+            ((((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_HUGE_PKTS) != 0U)?(uint32_t)_EMACxCFG2_HUGEFRM_MASK:0U)|(uint32_t)_EMACxCFG2_LENGTHCK_MASK|
+            ((((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_HDUPLEX) != 0U)?0U:(uint32_t)_EMACxCFG2_FULLDPLX_MASK);
 
-    DRV_ETH_BackToBackIPGSet(ethId,(oFlags&TCPIP_ETH_OPEN_HDUPLEX)?0x12:0x15);
+    DRV_ETH_BackToBackIPGSet(ethId,(((uint8_t)oFlags & (uint8_t)TCPIP_ETH_OPEN_HDUPLEX) != 0U)?0x12U:0x15U);
 
     DRV_ETH_NonBackToBackIPG1Set(ethId,0x0C);
     DRV_ETH_NonBackToBackIPG2Set(ethId,0x12);
@@ -242,11 +317,11 @@ void DRV_ETHMAC_LibMACOpen(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_ETH_OPEN_FLAGS
     DRV_ETH_CollisionWindowSet(ethId,0x37);
     DRV_ETH_ReTxMaxSet(ethId,0x0F);
 
-    if(oFlags&TCPIP_ETH_OPEN_RMII)
+    if(((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_RMII) != 0U)
     {
         DRV_ETH_RMIIResetEnable(ethId);
         DRV_ETH_RMIIResetDisable(ethId);
-        DRV_ETH_RMIISpeedSet(ethId,(oFlags&TCPIP_ETH_OPEN_100)?DRV_ETH_RMII_100Mps:DRV_ETH_RMII_10Mbps);
+        DRV_ETH_RMIISpeedSet(ethId,(((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_100) != 0U)?DRV_ETH_RMII_100Mps:DRV_ETH_RMII_10Mbps);
     }
 }
 
@@ -272,19 +347,19 @@ int DRV_ETHMAC_LibDescriptorsPoolAdd (DRV_ETHMAC_INSTANCE_DCPT* pMacD, int nDesc
     DRV_ETHMAC_DCPT_LIST    *pFList, *pBList;   // free and busy lists
     int     nCreated;
 
-    if(fAlloc==0)
+    if(fAlloc == NULL)
     {
         return 0;
     }
     else if(dType == DRV_ETHMAC_DCPT_TYPE_TX)
     {
-        pFList=pMacD->mData._EnetTxFreePtr;
-        pBList=pMacD->mData._EnetTxBusyPtr;
+        pFList=pMacD->mData.EnetTxFreePtr;
+        pBList=pMacD->mData.EnetTxBusyPtr;
     }
     else if(dType == DRV_ETHMAC_DCPT_TYPE_RX)
     {
-        pFList=pMacD->mData._EnetRxFreePtr;
-        pBList=pMacD->mData._EnetRxBusyPtr;
+        pFList=pMacD->mData.EnetRxFreePtr;
+        pBList=pMacD->mData.EnetRxBusyPtr;
     }
     else
     {
@@ -294,7 +369,7 @@ int DRV_ETHMAC_LibDescriptorsPoolAdd (DRV_ETHMAC_INSTANCE_DCPT* pMacD, int nDesc
     if(DRV_ETHMAC_LIB_ListIsEmpty(pBList))
     {   // first time we're creating descriptors for this list...
         pDcpt=(DRV_ETHMAC_DCPT_NODE*)(*fAlloc)(1, sizeof(*pDcpt), fParam);
-        if(!pDcpt)
+        if(pDcpt == NULL)
         {
             return 0;
         }
@@ -303,10 +378,10 @@ int DRV_ETHMAC_LibDescriptorsPoolAdd (DRV_ETHMAC_INSTANCE_DCPT* pMacD, int nDesc
 
     // create the descriptors
     nCreated=0;
-    while(nDescriptors--)
+    while(nDescriptors-- != 0)
     {
         pDcpt=(DRV_ETHMAC_DCPT_NODE*)(*fAlloc)(1, sizeof(*pDcpt), fParam);
-        if(!pDcpt)
+        if(pDcpt == NULL)
         {
             break;
         }
@@ -340,25 +415,25 @@ int DRV_ETHMAC_LibDescriptorsPoolRemove (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  int n
 
     if(dType == DRV_ETHMAC_DCPT_TYPE_TX)
     {
-        pList=pMacD->mData._EnetTxFreePtr;
+        pList=pMacD->mData.EnetTxFreePtr;
     }
     else if(dType == DRV_ETHMAC_DCPT_TYPE_RX)
     {
-        pList=pMacD->mData._EnetRxFreePtr;
+        pList=pMacD->mData.EnetRxFreePtr;
     }
     else
     {
         return 0;
     }
 
-    while(nDescriptors--)
+    while(nDescriptors-- != 0)
     {
         pN=DRV_ETHMAC_LIB_ListRemoveHead(pList);
-        if(!pN)
+        if(pN == NULL)
         {
             break;
         }
-        if(fFree)
+        if(fFree != NULL)
         {
             (*fFree)(pN, fParam);
         }
@@ -381,20 +456,25 @@ void DRV_ETHMAC_LibDescriptorsPoolCleanUp(DRV_ETHMAC_INSTANCE_DCPT* pMacD,  DRV_
 {
     // free all allocated descriptors
 
-    if(dType&DRV_ETHMAC_DCPT_TYPE_TX)
+    if(((uint32_t)dType & (uint32_t)DRV_ETHMAC_DCPT_TYPE_TX) != 0U)
     {
-        _EnetPoolFreeDcptList(pMacD->mData._EnetTxFreePtr, fFree, fParam);
-        _EnetPoolFreeDcptList(pMacD->mData._EnetTxBusyPtr, fFree, fParam);
+        F_EnetPoolFreeDcptList(pMacD->mData.EnetTxFreePtr, fFree, fParam);
+        F_EnetPoolFreeDcptList(pMacD->mData.EnetTxBusyPtr, fFree, fParam);
     }
 
-    if(dType&DRV_ETHMAC_DCPT_TYPE_RX)
+    if(((uint32_t)dType & (uint32_t)DRV_ETHMAC_DCPT_TYPE_RX) != 0U)
     {
-        _EnetPoolFreeDcptList(pMacD->mData._EnetRxFreePtr, fFree, fParam);
-        _EnetPoolFreeDcptList(pMacD->mData._EnetRxBusyPtr, fFree, fParam);
+        F_EnetPoolFreeDcptList(pMacD->mData.EnetRxFreePtr, fFree, fParam);
+        F_EnetPoolFreeDcptList(pMacD->mData.EnetRxBusyPtr, fFree, fParam);
     }
 
 }
 
+
+/* MISRA C-2012 Rule 11.6 deviated:6 Deviation record ID -  H3_MISRAC_2012_R_11_6_NET_DR_9 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:6 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_NET_DR_9" 
 
 /*******************************************************************************
   Function:
@@ -405,12 +485,20 @@ void DRV_ETHMAC_LibDescriptorsPoolCleanUp(DRV_ETHMAC_INSTANCE_DCPT* pMacD,  DRV_
  *****************************************************************************/
 void* DRV_ETHMAC_LibDescriptorGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  void *pDcpt )
 {
-    void*       pBuff=0;
+    void*       pBuff = NULL;
     DRV_ETHMAC_DCPT_NODE*  pEDcpt=(DRV_ETHMAC_DCPT_NODE*) pDcpt;
 
-    if(pEDcpt->hwDcpt.pEDBuff != 0)
+    if(pEDcpt->hwDcpt.pEDBuff != NULL)
     {
-        pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
+        uintptr_t buffPtr = (uintptr_t)pEDcpt->hwDcpt.pEDBuff;
+        if(pEDcpt->hwDcpt.hdr.kv0 != 0U)
+        {
+            pBuff = PA_TO_KVA0(buffPtr);
+        }
+        else
+        {
+            pBuff = PA_TO_KVA1(buffPtr);
+        }
     }
 
     return pBuff;
@@ -419,7 +507,7 @@ void* DRV_ETHMAC_LibDescriptorGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  void 
 
 
 /****************************************************************************
- * Function:        _EnetPoolFreeDcptList
+ * Function:        F_EnetPoolFreeDcptList
  *
  * PreCondition:    None
  *
@@ -435,13 +523,13 @@ void* DRV_ETHMAC_LibDescriptorGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  void 
  *
  * Note:            None
  *****************************************************************************/
-static void _EnetPoolFreeDcptList(DRV_ETHMAC_DCPT_LIST* pList, DRV_ETHMAC_DCPT_FreeF fFree, void* fParam)
+static void F_EnetPoolFreeDcptList(DRV_ETHMAC_DCPT_LIST* pList, DRV_ETHMAC_DCPT_FreeF fFree, void* fParam)
 {
     DRV_ETHMAC_DCPT_NODE*  pN;
 
-    while((pN=DRV_ETHMAC_LIB_ListRemoveHead(pList)))
+    while((pN=DRV_ETHMAC_LIB_ListRemoveHead(pList))!= NULL)
     {
-        if(fFree)
+        if(fFree != NULL)
         {
             (*fFree)(pN, fParam);
         }
@@ -474,61 +562,68 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
         nBuffs=0x7fffffff;
     }
 
-    pNewList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(newList));
+    pNewList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(newList));
 
     res=DRV_ETHMAC_RES_OK;
     ethId = pMacD->mData.pEthReg;
 
-    for(pBuff=*ppBuff; pBuff!=0 && nBuffs; pBuff=*(++ppBuff), nBuffs--)
+    pBuff = *ppBuff; 
+    while((pBuff != NULL) && (nBuffs != 0))
     {
-        pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pMacD->mData._EnetRxFreePtr);
-        if(!pEDcpt)
+        pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pMacD->mData.EnetRxFreePtr);
+        if(pEDcpt == NULL)
         {   // we've run out of descriptors...
             res=DRV_ETHMAC_RES_NO_DESCRIPTORS;
             break;
         }
         // ok valid descriptor
         // pas it to hw, always use linked descriptors
-        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(pBuff);
+        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(CF_VoidPtr2Uint32(pBuff));
 
-        pEDcpt->hwDcpt.hdr.w=_SDCPT_HDR_NPV_MASK_|_SDCPT_HDR_EOWN_MASK_;    // hw owned
+        pEDcpt->hwDcpt.hdr.w=(uint32_t)SDCPT_HDR_NPV_MASK_|(uint32_t)SDCPT_HDR_EOWN_MASK_;    // hw owned
 
-        if(rxFlags&DRV_ETHMAC_BUFF_FLAG_RX_STICKY)
+        if(((uint32_t)rxFlags & (uint32_t)DRV_ETHMAC_BUFF_FLAG_RX_STICKY) != 0U)
         {
             pEDcpt->hwDcpt.hdr.sticky=1;
         }
 
-        if(rxFlags&DRV_ETHMAC_BUFF_FLAG_RX_UNACK)
+        if(((uint32_t)rxFlags & (uint32_t)DRV_ETHMAC_BUFF_FLAG_RX_UNACK) != 0U)
         {
             pEDcpt->hwDcpt.hdr.rx_nack=1;
         }
 
-        if(IS_KVA0(pBuff))
+        if(IS_KVA0(CF_VoidPtr2Uint32(pBuff)))
         {
             pEDcpt->hwDcpt.hdr.kv0=1;
         }
-        else if(!IS_KVA(pBuff))
+        else if(!IS_KVA(CF_VoidPtr2Uint32(pBuff)))
         {
             res=DRV_ETHMAC_RES_USPACE_ERR;
             break;
         }
+        else
+        {
+            /* Do Nothing */
+        }
 
         DRV_ETHMAC_LIB_ListAddTail(pNewList, pEDcpt);
+        nBuffs--;
+        pBuff=*(++ppBuff);
     }
 
-    if(pBuff && nBuffs)
+    if((pBuff != NULL) && (nBuffs != 0))
     {   // failed, still buffers in the descriptors, put back the removed nodes
-        DRV_ETHMAC_LIB_ListAppendTail(pMacD->mData._EnetRxFreePtr, pNewList);
+        DRV_ETHMAC_LIB_ListAppendTail(pMacD->mData.EnetRxFreePtr, pNewList);
         return res;
     }
 
     // all's well
     if(!DRV_ETHMAC_LIB_ListIsEmpty(pNewList))
     {
-        _EthAppendBusyList(pMacD, pMacD->mData._EnetRxBusyPtr, pNewList, 1);
+        F_EthAppendBusyList(pMacD, pMacD->mData.EnetRxBusyPtr, pNewList, 1);
         if ( NULL == DRV_ETH_RxPacketDescAddrGet(ethId) )
         {   // 1st time transmission!
-            DRV_ETH_RxPacketDescAddrSet(ethId, (uint8_t *)KVA_TO_PA(&pMacD->mData._EnetRxBusyPtr->head->hwDcpt) );
+            DRV_ETH_RxPacketDescAddrSet(ethId, (uint8_t *)KVA_TO_PA(&pMacD->mData.EnetRxBusyPtr->head->hwDcpt) );
         }
         DRV_ETH_RxEnable(ethId);  // and we're running!
     }
@@ -545,7 +640,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
 // *****************************************************************************
 
 /****************************************************************************
- * Function:        _EthTxSchedBuffer
+ * Function:        F_EthTxSchedBuffer
  *
  * PreCondition:    pBuff, nBytes, pList - valid
  *
@@ -562,25 +657,25 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
  *
  * Note:            None
  *****************************************************************************/
-static DRV_ETHMAC_RESULT _EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff, unsigned short int nBytes, DRV_ETHMAC_DCPT_LIST* pList)
+static DRV_ETHMAC_RESULT F_EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff, unsigned short int nBytes, DRV_ETHMAC_DCPT_LIST* pList)
 {
     DRV_ETHMAC_DCPT_NODE   *pEDcpt;
     DRV_ETHMAC_RESULT     res;
-
-    if(!IS_KVA(pBuff))
+        
+    if(!IS_KVA(CF_VoidPtr2Uint32(pBuff)))
     {
         return DRV_ETHMAC_RES_USPACE_ERR;
     }
 
-    pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pMacD->mData._EnetTxFreePtr);
+    pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pMacD->mData.EnetTxFreePtr);
 
-    if(pEDcpt)
+    if(pEDcpt != NULL)
     {   // ok valid descriptor
         // pass it to hw, always use linked descriptors, set proper size
-        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(pBuff);
-        pEDcpt->hwDcpt.hdr.w=_SDCPT_HDR_NPV_MASK_|_SDCPT_HDR_EOWN_MASK_|(nBytes<<_SDCPT_HDR_BCOUNT_POS_);   // hw owned
+        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(CF_VoidPtr2Uint32(pBuff));
+        pEDcpt->hwDcpt.hdr.w =(uint32_t)SDCPT_HDR_NPV_MASK_|(uint32_t)SDCPT_HDR_EOWN_MASK_|((uint32_t)nBytes<<SDCPT_HDR_BCOUNT_POS_);   // hw owned
 
-        if(IS_KVA0(pBuff))
+        if(IS_KVA0(CF_VoidPtr2Uint32(pBuff)))
         {
             pEDcpt->hwDcpt.hdr.kv0=1;
         }
@@ -598,7 +693,7 @@ static DRV_ETHMAC_RESULT _EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, cons
 
 
 /****************************************************************************
- * Function:        _EthTxSchedList
+ * Function:        F_EthTxSchedList
  *
  * PreCondition:    pList - valid
  *
@@ -614,7 +709,7 @@ static DRV_ETHMAC_RESULT _EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, cons
  *
  * Note:            None
  *****************************************************************************/
-static void _EthTxSchedList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIST* pList)
+static void F_EthTxSchedList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIST* pList)
 {
     DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
@@ -622,11 +717,11 @@ static void _EthTxSchedList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIS
     {
         (pList->head)->hwDcpt.hdr.SOP=1;
         (pList->tail)->hwDcpt.hdr.EOP=1;
-        _EthAppendBusyList(pMacD, pMacD->mData._EnetTxBusyPtr, pList, 0);
+        F_EthAppendBusyList(pMacD, pMacD->mData.EnetTxBusyPtr, pList, 0);
 
         if ( NULL == DRV_ETH_TxPacketDescAddrGet(ethId) )
         {   // 1st time transmission!
-            DRV_ETH_TxPacketDescAddrSet(ethId,(uint8_t *)KVA_TO_PA(&pMacD->mData._EnetTxBusyPtr->head->hwDcpt) );
+            DRV_ETH_TxPacketDescAddrSet(ethId,(uint8_t *)KVA_TO_PA(&pMacD->mData.EnetTxBusyPtr->head->hwDcpt) );
         }
         DRV_ETH_TxRTSEnable(ethId);
 
@@ -644,16 +739,20 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
     DRV_ETHMAC_DCPT_LIST*   pNewList;
     uint8_t newList [(DRV_ETHMAC_DCPT_LIST_ALIGN -1) + sizeof(DRV_ETHMAC_DCPT_LIST)];
 
-    pNewList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(newList));
+    pNewList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(newList));
 
-    res=_EthTxSchedBuffer(pMacD, pBuff, nBytes, pNewList);
+    res=F_EthTxSchedBuffer(pMacD, pBuff, nBytes, pNewList);
     if(res==DRV_ETHMAC_RES_OK)
     {
-        _EthTxSchedList(pMacD, pNewList);
+        F_EthTxSchedList(pMacD, pNewList);
     }
     else if(!DRV_ETHMAC_LIB_ListIsEmpty(pNewList))
     {   // we failed, put back the removed nodes
-        DRV_ETHMAC_LIB_ListAppendTail(pMacD->mData._EnetTxFreePtr, pNewList);
+        DRV_ETHMAC_LIB_ListAppendTail(pMacD->mData.EnetTxFreePtr, pNewList);
+    }
+    else
+    {
+        /* Do Nothing */
     }
 
     return res;
@@ -670,24 +769,28 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
     DRV_ETHMAC_DCPT_LIST*   pNewList;
     uint8_t newList [(DRV_ETHMAC_DCPT_LIST_ALIGN -1) + sizeof(DRV_ETHMAC_DCPT_LIST)];
 
-    pNewList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(newList));
+    pNewList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(newList));
 
     res=DRV_ETHMAC_RES_OK;
-    while(pPkt!=0 && pPkt->pBuff!=0 && pPkt->nBytes!=0 && res==DRV_ETHMAC_RES_OK)
+    while((pPkt != NULL) && (pPkt->pBuff != NULL) && (pPkt->nBytes != 0U) && (res==DRV_ETHMAC_RES_OK))
     {
 
-        res=_EthTxSchedBuffer(pMacD, pPkt->pBuff, pPkt->nBytes, pNewList);
+        res=F_EthTxSchedBuffer(pMacD, pPkt->pBuff, pPkt->nBytes, pNewList);
         pPkt=pPkt->next;    // next buffer in packet
     }
 
 
     if(res==DRV_ETHMAC_RES_OK)
     {   // all's well
-        _EthTxSchedList(pMacD, pNewList);
+        F_EthTxSchedList(pMacD, pNewList);
     }
     else if(!DRV_ETHMAC_LIB_ListIsEmpty(pNewList))
     {   // we failed, put back the removed nodes
-        DRV_ETHMAC_LIB_ListAppendTail(pMacD->mData._EnetTxFreePtr, pNewList);
+        DRV_ETHMAC_LIB_ListAppendTail(pMacD->mData.EnetTxFreePtr, pNewList);
+    }
+    else
+    {
+        /* Do Nothing */
     }
 
     return res;
@@ -703,22 +806,22 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus(DRV_ETHMAC_INSTANCE_DCPT* pMac
     DRV_ETHMAC_DCPT_NODE   *pHead;
     DRV_ETHMAC_RESULT     res;
 
-    if(pTxStat)
+    if(pTxStat != NULL)
     {
-        *pTxStat=0;
+        *pTxStat = NULL;
     }
 
-    if((pHead=_EnetFindPacket(pBuff, pMacD->mData._EnetTxBusyPtr)))
+    if((pHead=F_EnetFindPacket(pBuff, pMacD->mData.EnetTxBusyPtr))!= NULL)
     {
-        if(pHead->hwDcpt.hdr.EOWN)
+        if(pHead->hwDcpt.hdr.EOWN != 0U)
         {
             res=DRV_ETHMAC_RES_PACKET_QUEUED;  // not done
         }
         else
         {   // that's it, got it! The 1st descriptor to be updated by the hw is the packet header!
-            if(pTxStat)
+            if(pTxStat != NULL)
             {
-                *pTxStat=(const DRV_ETHMAC_PKT_STAT_TX*)&((DRV_ETHMAC_DCPT_NODE_TX*)pHead)->hwDcpt.stat;
+                *pTxStat=CF_TXvStat2cStat(&(CF_EthMacNodeDcptTx(pHead)->hwDcpt.stat));
             }
             res=DRV_ETHMAC_RES_OK;
         }
@@ -734,7 +837,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus(DRV_ETHMAC_INSTANCE_DCPT* pMac
 
 
 /****************************************************************************
- * Function:        _EnetFindPacket
+ * Function:        F_EnetFindPacket
  *
  * PreCondition:    None
  *
@@ -749,16 +852,16 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus(DRV_ETHMAC_INSTANCE_DCPT* pMac
  *
  * Note:            None
  *****************************************************************************/
-static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_LIST* pList)
+static DRV_ETHMAC_DCPT_NODE* F_EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_LIST* pList)
 {
     DRV_ETHMAC_DCPT_NODE*  pEDcpt;
     const void* pPhysPkt;
 
-    pPhysPkt=(const void*)KVA_TO_PA(pBuff);
+    pPhysPkt=CF_phyAddr2VoidPtr(KVA_TO_PA(CF_VoidPtr2Uint32(pBuff)));
 
-    for(pEDcpt=pList->head; pEDcpt!=0; pEDcpt=pEDcpt->next)
+    for(pEDcpt=pList->head; pEDcpt != NULL; pEDcpt=pEDcpt->next)
     {
-        if(pEDcpt->hwDcpt.hdr.SOP)
+        if(pEDcpt->hwDcpt.hdr.SOP != 0U)
         { // found the beg of the packet
             if(pPhysPkt==pEDcpt->hwDcpt.pEDBuff)
             {   // ok, found it
@@ -779,7 +882,7 @@ static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_
 // *****************************************************************************
 
 /****************************************************************************
- * Function:        _EthGetAckedPacket
+ * Function:        F_EthGetAckedPacket
  *
  * PreCondition:    None
  *
@@ -799,7 +902,7 @@ static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_
  *
  * Note:            None
  *****************************************************************************/
-static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* pRemList, DRV_ETHMAC_DCPT_LIST* pAddList)
+static DRV_ETHMAC_RESULT F_EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* pRemList, DRV_ETHMAC_DCPT_LIST* pAddList)
 {
 
     DRV_ETHMAC_DCPT_NODE   *pEDcpt;
@@ -807,16 +910,19 @@ static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LI
     int     nAcks;
     int     pktFound;
 
-    prev=next=0;
-    nAcks=pktFound=0;
+    prev = NULL;
+    next = NULL;
+    nAcks = 0;
+    pktFound = 0;
 
-    for(pEDcpt=pRemList->head; pEDcpt!=0; pEDcpt=next)
+    pEDcpt=pRemList->head; 
+    while( pEDcpt != NULL ) 
     {
-        if(pEDcpt->hwDcpt.hdr.SOP && (pPkt==0 || pEDcpt->hwDcpt.pEDBuff==(uint8_t*)KVA_TO_PA(pPkt)))
+        if((pEDcpt->hwDcpt.hdr.SOP != 0U) && ((pPkt==NULL) || pEDcpt->hwDcpt.pEDBuff==(uint8_t*)KVA_TO_PA(CF_VoidPtr2Uint32(pPkt))))
         { // found the beg of a packet
             pktFound=1;
 
-            if(pEDcpt->hwDcpt.hdr.EOWN)
+            if(pEDcpt->hwDcpt.hdr.EOWN != 0U)
             {
                 break;      // hw not done with it
             }
@@ -826,13 +932,16 @@ static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LI
             {
                 pEDcpt=next;
                 next=pEDcpt->next;
-                while(pEDcpt->hwDcpt.hdr.EOWN);         // shouldn't happen
+                while(pEDcpt->hwDcpt.hdr.EOWN != 0U)       // shouldn't happen
+                {
+                    /* Do Nothing */
+                }
                 DRV_ETHMAC_LIB_ListAddTail(pAddList, pEDcpt);    // ack this node
-            }while(!pEDcpt->hwDcpt.hdr.EOP);
+            }while(pEDcpt->hwDcpt.hdr.EOP == 0U);
 
             nAcks++;
             // reconstruct the removed list
-            if(prev)
+            if(prev != NULL)
             {
                 prev->next=next;
                 // prev->next_ed shouldn't matter here!
@@ -842,7 +951,7 @@ static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LI
                 pRemList->head=next;
             }
 
-            if(pPkt)
+            if(pPkt != NULL)
             {   // done, just one packet ack-ed
                 break;  // done
             }
@@ -852,14 +961,15 @@ static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LI
             prev=pEDcpt;
             next=pEDcpt->next;
         }
+        pEDcpt=next;
     }
 
-    return nAcks ? DRV_ETHMAC_RES_OK : (pktFound ? DRV_ETHMAC_RES_PACKET_QUEUED : DRV_ETHMAC_RES_NO_PACKET);
+    return (nAcks != 0) ? DRV_ETHMAC_RES_OK : ((pktFound != 0) ? DRV_ETHMAC_RES_PACKET_QUEUED : DRV_ETHMAC_RES_NO_PACKET);
 
 }
 
 /****************************************************************************
- * Function:        _EthRxAckBuffer
+ * Function:        F_EthRxAckBuffer
  *
  * PreCondition:    DRV_ETHMAC_LibRxSetBufferSize, DRV_ETHMAC_LibRxBuffersAppend, DRV_ETHMAC_LibRxGetPacket should have been called.
  *
@@ -880,7 +990,7 @@ static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LI
  *                  - pBuff must be the pointer to the first buffer in the packet, if the packet spans multiple buffers.
  *                  - ackFnc is just a helper that allows the application to call an acknowledge function for each received buffer in turn.
  *****************************************************************************/
-static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff)
+static DRV_ETHMAC_RESULT F_EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff)
 {
     DRV_ETHMAC_RESULT     res;
     DRV_ETHMAC_DCPT_NODE*  pEDcpt;
@@ -892,26 +1002,28 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
     
     ethId = pMacD->mData.pEthReg;
 
-    pAckList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(ackList));
-    pStickyList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(stickyList));
+    pAckList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(ackList));
+    pStickyList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(stickyList));
 
 
-    res = _EthGetAckedPacket(pBuff, pMacD->mData._EnetRxBusyPtr, pAckList);
+    res = F_EthGetAckedPacket(pBuff, pMacD->mData.EnetRxBusyPtr, pAckList);
 
-    while((pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pAckList)))
+    while((pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pAckList)) != NULL)
     {
-        if(pEDcpt->hwDcpt.hdr.sticky)
+        if(pEDcpt->hwDcpt.hdr.sticky != 0U)
         {
             // add it to the busy list...
-            pEDcpt->hwDcpt.hdr.SOP=pEDcpt->hwDcpt.hdr.EOP=pEDcpt->hwDcpt.hdr.rx_wack=0;
-            pEDcpt->hwDcpt.hdr.EOWN=1;  // hw owned
+            pEDcpt->hwDcpt.hdr.SOP = 0U;
+            pEDcpt->hwDcpt.hdr.EOP = 0U;
+            pEDcpt->hwDcpt.hdr.rx_wack = 0U;
+            pEDcpt->hwDcpt.hdr.EOWN =1;  // hw owned
             DRV_ETHMAC_LIB_ListAddTail(pStickyList, pEDcpt);
         }
         else
         {
-            DRV_ETHMAC_LIB_ListAddTail(pMacD->mData._EnetRxFreePtr, pEDcpt);
-            pEDcpt->hwDcpt.pEDBuff = 0; // corresponding buffer is not owned
-            if(!pEDcpt->hwDcpt.hdr.rx_nack)
+            DRV_ETHMAC_LIB_ListAddTail(pMacD->mData.EnetRxFreePtr, pEDcpt);
+            pEDcpt->hwDcpt.pEDBuff = NULL; // corresponding buffer is not owned
+            if(pEDcpt->hwDcpt.hdr.rx_nack == 0U)
             {
                 DRV_ETH_RxBufferCountDecrement(ethId);
             }
@@ -920,7 +1032,7 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
 
     if(!DRV_ETHMAC_LIB_ListIsEmpty(pStickyList))
     {
-        _EthAppendBusyList(pMacD, pMacD->mData._EnetRxBusyPtr, pStickyList, 1);    // append the descriptors that have valid buffers
+        F_EthAppendBusyList(pMacD, pMacD->mData.EnetRxBusyPtr, pStickyList, 1);    // append the descriptors that have valid buffers
     }
 
     return res;
@@ -933,7 +1045,7 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
  *****************************************************************************/
 DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgeBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff)
 {
-    return _EthRxAckBuffer(pMacD, pBuff);
+    return F_EthRxAckBuffer(pMacD, pBuff);
 }
 
 
@@ -947,35 +1059,44 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxAcknowledgeBuffer(DRV_ETHMAC_INSTANCE_DCPT* pM
     DRV_ETHMAC_DCPT_LIST*   pAckList;
     uint8_t ackList [(DRV_ETHMAC_DCPT_LIST_ALIGN -1) + sizeof(DRV_ETHMAC_DCPT_LIST)];
     
-    pAckList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(ackList));
+    pAckList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(ackList));
     
 
-    _DRV_ETHMAC_TxLock(pMacD);
-    res = _EthGetAckedPacket(pBuff, pMacD->mData._EnetTxBusyPtr, pAckList);
+    F_DRV_ETHMAC_TxLock(pMacD);
+    res = F_EthGetAckedPacket(pBuff, pMacD->mData.EnetTxBusyPtr, pAckList);
 
-    _DRV_ETHMAC_TxUnlock(pMacD);
+    F_DRV_ETHMAC_TxUnlock(pMacD);
 
     // acknowledge the packets
-    if(ackFnc)
+    if(ackFnc != NULL)
     {
-        for(pEDcpt = pAckList->head; pEDcpt != 0; pEDcpt = pEDcpt->next)
+        for(pEDcpt = pAckList->head; pEDcpt != NULL; pEDcpt = pEDcpt->next)
         {
-            if(pEDcpt->hwDcpt.hdr.SOP)
+            if(pEDcpt->hwDcpt.hdr.SOP != 0U)
             {
-                void* pBuff = (pEDcpt->hwDcpt.hdr.kv0 ? PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff) : PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
-                (*ackFnc)(pBuff, fParam); // call user's acknowledge
+                void* pBuffTemp;
+                uintptr_t buffPtr = (uintptr_t)pEDcpt->hwDcpt.pEDBuff;
+                if(pEDcpt->hwDcpt.hdr.kv0 != 0U)
+                {
+                    pBuffTemp = PA_TO_KVA0(buffPtr);
+                }
+                else
+                {
+                    pBuffTemp = PA_TO_KVA1(buffPtr);
+                }
+                (*ackFnc)(pBuffTemp, fParam); // call user's acknowledge
             }
         }
     }
 
     // reinsert the ack-ed list
-    _DRV_ETHMAC_TxLock(pMacD);
-    while((pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pAckList)))
+    F_DRV_ETHMAC_TxLock(pMacD);
+    while((pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pAckList))!= NULL)
     {
-        pEDcpt->hwDcpt.pEDBuff = 0; // corresponding buffer is not owned
-        DRV_ETHMAC_LIB_ListAddTail(pMacD->mData._EnetTxFreePtr, pEDcpt);
+        pEDcpt->hwDcpt.pEDBuff = NULL; // corresponding buffer is not owned
+        DRV_ETHMAC_LIB_ListAddTail(pMacD->mData.EnetTxFreePtr, pEDcpt);
     }
-    _DRV_ETHMAC_TxUnlock(pMacD);
+    F_DRV_ETHMAC_TxUnlock(pMacD);
 
     return res;
 }
@@ -997,7 +1118,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, voi
     DRV_ETHMAC_PKT_DCPT     pktDcpt;
     int             nBuffs;     // buffers per packet
 
-    pktDcpt.next=0;     // create a single buffer packet descriptor;
+    pktDcpt.next = NULL;     // create a single buffer packet descriptor;
 
     res=DRV_ETHMAC_LibRxGetPacket(pMacD, &pktDcpt, &nBuffs, pRxStat);
 
@@ -1015,63 +1136,79 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV
 {
     DRV_ETHMAC_DCPT_NODE   *pEDcpt, *pHead;
     DRV_ETHMAC_RESULT     res;
+    uint32_t temprx_wack;
 
     res=DRV_ETHMAC_RES_NO_PACKET;
 
-    if(pPkt)
+    if(pPkt != NULL)
     {
-        pPkt->pBuff=0;
+        pPkt->pBuff = NULL;
         pPkt->nBytes=0;
     }
-
-    for(pEDcpt=pMacD->mData._EnetRxBusyPtr->head; pEDcpt!=0; pEDcpt=pEDcpt->next)
+    
+    
+    pEDcpt=pMacD->mData.EnetRxBusyPtr->head; 
+    while(pEDcpt != NULL) 
     {
-        if(pEDcpt->hwDcpt.hdr.EOWN)
+        temprx_wack = pEDcpt->hwDcpt.hdr.rx_wack ;
+        if(pEDcpt->hwDcpt.hdr.EOWN != 0U)
         {
             res=DRV_ETHMAC_RES_PACKET_QUEUED;
             break;      // not done
         }
-        else if(pEDcpt->hwDcpt.hdr.SOP && pEDcpt->hwDcpt.hdr.rx_wack==0)
+        else if((pEDcpt->hwDcpt.hdr.SOP != 0U) && (temprx_wack == 0U))
         { // found the beg of a packet
             DRV_ETHMAC_PKT_DCPT*    pBuffDcpt;
             int     nBuffs, reportBuffs;
 
             pHead=pEDcpt;
-            nBuffs=reportBuffs=0;
+            nBuffs = 0;
+            reportBuffs = 0;
             pBuffDcpt=pPkt;
             res=DRV_ETHMAC_RES_OK;
 
-            if(pRxStat)
+            if(pRxStat != NULL)
             {
-                *pRxStat=(const DRV_ETHMAC_PKT_STAT_RX*)&((DRV_ETHMAC_DCPT_NODE_RX*)pEDcpt)->hwDcpt.stat;
+                *pRxStat = CF_RXvStat2cStat(&(CF_EthMacNodeDcptRx(pEDcpt))->hwDcpt.stat);
             }
 
-            while(pBuffDcpt || pnBuffs)
+            while((pBuffDcpt != NULL) || (pnBuffs != NULL))
             {   // either way, we have to parse the packet
-                if(pBuffDcpt)
+                if(pBuffDcpt != NULL)
                 {
-                    pBuffDcpt->pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
+                    uintptr_t buffPtr = (uintptr_t)pEDcpt->hwDcpt.pEDBuff;
+                    if(pEDcpt->hwDcpt.hdr.kv0 != 0U)
+                    {
+                        pBuffDcpt->pBuff = PA_TO_KVA0(buffPtr);
+                    }
+                    else
+                    {
+                        pBuffDcpt->pBuff = PA_TO_KVA1(buffPtr);
+                    }
                     pBuffDcpt->nBytes=pEDcpt->hwDcpt.hdr.bCount;
                     pBuffDcpt=pBuffDcpt->next;
                     reportBuffs++;
                 }
                 nBuffs++;
 
-                while(pEDcpt->hwDcpt.hdr.EOWN);     // shouldn't happen
-                if(pEDcpt->hwDcpt.hdr.EOP)
+                while(pEDcpt->hwDcpt.hdr.EOWN != 0U)     // shouldn't happen
+                {
+                    /* Do Nothing */
+                }
+                if(pEDcpt->hwDcpt.hdr.EOP != 0U)
                 {   // end of packet
-                    if(pnBuffs)
+                    if(pnBuffs != NULL)
                     {
                         *pnBuffs=nBuffs;
                     }
 
-                    if(pBuffDcpt)
+                    if(pBuffDcpt != NULL)
                     {
-                        pBuffDcpt->pBuff=0; // end it properly
+                        pBuffDcpt->pBuff = NULL; // end it properly
                         pBuffDcpt->nBytes=0;
                     }
 
-                    if(pPkt)
+                    if(pPkt != NULL)
                     {
                         if(reportBuffs!=nBuffs)
                         {
@@ -1089,28 +1226,36 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV
 
             break;
         }
+        else
+        {
+            /* Do nothing */
+        }
+        pEDcpt = pEDcpt->next;
     }
 
     return res;
 
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.6"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 {
-    if(pnBuffs)
+    if(pnBuffs != NULL)
     {
-        *pnBuffs = _EnetDescriptorsCount(pMacD->mData._EnetRxBusyPtr, false);
+        *pnBuffs = F_EnetDescriptorsCount(pMacD->mData.EnetRxBusyPtr, false);
     }
 
     return DRV_ETHMAC_RES_OK; 
 
 }
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 {
-    if(pnBuffs)
+    if(pnBuffs != NULL)
     {
-        *pnBuffs = _EnetDescriptorsCount(pMacD->mData._EnetRxBusyPtr, true);
+        *pnBuffs = F_EnetDescriptorsCount(pMacD->mData.EnetRxBusyPtr, true);
     }
 
     return DRV_ETHMAC_RES_OK; 
@@ -1118,26 +1263,26 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* 
 }
 
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 {
-    if(pnBuffs)
+    if(pnBuffs != NULL)
     {
-        *pnBuffs = _EnetDescriptorsCount(pMacD->mData._EnetTxBusyPtr, false);
+        *pnBuffs = F_EnetDescriptorsCount(pMacD->mData.EnetTxBusyPtr, false);
     }
 
     return DRV_ETHMAC_RES_OK; 
 
 }
 
-static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl)
+static uint32_t F_EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl)
 {
     DRV_ETHMAC_DCPT_NODE    *pEDcpt;
-    int     nDcpts=0;
+    uint32_t nDcpts=0;
     
     
-    for(pEDcpt=pList->head; pEDcpt!=0 && pEDcpt->next!=0; pEDcpt=pEDcpt->next)
+    for(pEDcpt=pList->head; (pEDcpt != NULL) && (pEDcpt->next != NULL); pEDcpt=pEDcpt->next)
     {   // don't count the ending dummy descriptor 
-        if(pEDcpt->hwDcpt.hdr.EOWN == isHwCtrl)
+        if(pEDcpt->hwDcpt.hdr.EOWN == (uint32_t)isHwCtrl)
         {
             nDcpts++;
         }
@@ -1153,11 +1298,12 @@ static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl)
 DRV_ETHMAC_SGL_LIST_NODE*  DRV_ETHMAC_SingleListHeadRemove(DRV_ETHMAC_SGL_LIST* pL)
 {
     DRV_ETHMAC_SGL_LIST_NODE* pN = pL->head;
-    if(pN)
+    if(pN != NULL)
     {
         if(pL->head == pL->tail)
         {
-            pL->head = pL->tail = 0;
+            pL->head = NULL;
+            pL->tail = NULL;
         }
         else
         {
@@ -1172,10 +1318,11 @@ DRV_ETHMAC_SGL_LIST_NODE*  DRV_ETHMAC_SingleListHeadRemove(DRV_ETHMAC_SGL_LIST* 
 // adds node to tail
 void  DRV_ETHMAC_SingleListTailAdd(DRV_ETHMAC_SGL_LIST* pL, DRV_ETHMAC_SGL_LIST_NODE* pN)
 {
-    pN->next = 0;
-    if(pL->tail == 0)
+    pN->next = NULL;
+    if(pL->tail == NULL)
     {
-        pL->head = pL->tail = pN;
+        pL->head = pN;
+        pL->tail = pN;
     }
     else
     {
@@ -1188,7 +1335,7 @@ void  DRV_ETHMAC_SingleListTailAdd(DRV_ETHMAC_SGL_LIST* pL, DRV_ETHMAC_SGL_LIST_
 void  DRV_ETHMAC_SingleListAppend(DRV_ETHMAC_SGL_LIST* pDstL, DRV_ETHMAC_SGL_LIST* pAList)
 {
     DRV_ETHMAC_SGL_LIST_NODE* pN;
-    while((pN = DRV_ETHMAC_SingleListHeadRemove(pAList)))
+    while((pN = DRV_ETHMAC_SingleListHeadRemove(pAList))!= NULL)
     {
         DRV_ETHMAC_SingleListTailAdd(pDstL, pN);
     }

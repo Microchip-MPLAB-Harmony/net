@@ -20,7 +20,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2008-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2008-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,8 +45,8 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#ifndef _DRV_ETHMAC_LIB_H_
-#define _DRV_ETHMAC_LIB_H_
+#ifndef H_DRV_ETHMAC_LIB_H_
+#define H_DRV_ETHMAC_LIB_H_
 
 #include <stdlib.h>
 #include <sys/kmem.h>
@@ -56,9 +56,10 @@ Microchip or any third party.
 #include "system/debug/sys_debug.h"
 #include "system/time/sys_time.h"
 #include "system/sys_time_h2_adapter.h"
+#include "interrupts.h"
 
 #include "tcpip/tcpip_ethernet.h"
-#include "driver/ethmac/src/dynamic/_eth_dcpt_lists.h"
+#include "driver/ethmac/src/dynamic/drv_ethmac_lists.h"
 #include "driver/ethmac/src/dynamic/drv_eth_pic32_lib.h"
 #include "driver/ethmac/src/drv_ethmac_local.h"
 
@@ -335,18 +336,18 @@ void DRV_ETHMAC_LibInit (DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 
   Example:
     <code>
-    // Enable loopback at the MAC level
+    # Enable loopback at the MAC level
     oFlags    = TCPIP_ETH_OPEN_FDUPLEX|TCPIP_ETH_OPEN_100|TCPIP_ETH_OPEN_HUGE_PKTS|TCPIP_ETH_OPEN_MAC_LOOPBACK;
-    // Use both TX and RX pause type for Full Duplex
+    # Use both TX and RX pause type for Full Duplex
     pauseType = TCPIP_MAC_PAUSE_ALL;
 
-    // Start the initialization sequence
+    # Start the initialization sequence
     DRV_ETHMAC_LibInit(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 
-    // Open and configure the MAC.
-    //
-    // Since we're not connected to an external PHY there's no negotiation
-    // going on and we know all our opening flags
+    # Open and configure the MAC.
+    #
+    # Since we're not connected to an external PHY there's no negotiation
+    # going on and we know all our opening flags
     DRV_ETHMAC_LibMACOpen(DRV_ETHMAC_INSTANCE_DCPT* pMacD, oFlags, pauseType);
     </code>
 
@@ -437,7 +438,7 @@ void DRV_ETHMAC_LibClose (DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_CLOSE_FLAG
     <code>
     if( DRV_ETHMAC_LibDescriptorsPoolAdd(DRV_ETHMAC_INSTANCE_DCPT* pMacD, txDcptNo, DRV_ETHMAC_DCPT_TYPE_TX, fMemAlloc, &myInstanceData) != txDcptNo )
     {
-        // Handle allocation error
+        # Handle allocation error
     }
     </code>
 
@@ -492,7 +493,7 @@ int DRV_ETHMAC_LibDescriptorsPoolAdd (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  int nDes
     <code>
     if ( DRV_ETHMAC_LibDescriptorsPoolRemove(pMacD, txDcptNo, DRV_ETHMAC_DCPT_TYPE_TX, ffree, 0) != txDcptNo)
     {
-        // Handle de-allocation error.
+        # Handle de-allocation error.
     }
     </code>
 
@@ -589,7 +590,7 @@ void DRV_ETHMAC_LibDescriptorsPoolCleanUp (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  DRV
         void* pBuff = DRV_ETHMAC_LibDescriptorGetBuffer(pMacD, ptr);
         if(pBuff)
         {
-            // De-allocate the associated buffer
+            # De-allocate the associated buffer
         }
     }
     </code>
@@ -661,7 +662,7 @@ void*  DRV_ETHMAC_LibDescriptorGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  void
     ethRes = DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD, rxBuffers, rxDcptNo, DRV_ETHMAC_BUFF_FLAG_RX_STICKY);
     if ( ethRes != DRV_ETHMAC_RES_OK )
     {
-        // Handle error
+        # Handle error
     }
     </code>
 
@@ -811,7 +812,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  
     ethRes = DRV_ETHMAC_LibTxSendPacket(pMacD, &txDcpt);
     if ( ethRes != DRV_ETHMAC_RES_OK )
     {
-        // Transmission failed
+        # Transmission failed
     }
     </code>
 
@@ -863,7 +864,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendPacket (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  
     ethRes = DRV_ETHMAC_LibTxGetBufferStatus(pMacD, pTxBuff, NULL);
     if ( ethRes != DRV_ETHMAC_RES_OK )
     {
-        // Handle packet not transmitted
+        # Handle packet not transmitted
     }
     </code>
 
@@ -915,7 +916,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus (DRV_ETHMAC_INSTANCE_DCPT* pMa
     ethRes = DRV_ETHMAC_LibTxGetPacketStatus(pMacD, pTxPacket, NULL);
     if ( ethRes != DRV_ETHMAC_RES_OK )
     {
-        // Handle packet not transmitted
+        # Handle packet not transmitted
     }
     </code>
 
@@ -930,7 +931,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus (DRV_ETHMAC_INSTANCE_DCPT* pMa
 // DOM-IGNORE-BEGIN
 static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibTxGetPacketStatus(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, const DRV_ETHMAC_PKT_STAT_TX** pTxStat)
 {
-    return  DRV_ETHMAC_LibTxGetBufferStatus(pMacD, pPkt?pPkt->pBuff:0, pTxStat);
+    return  DRV_ETHMAC_LibTxGetBufferStatus(pMacD, pPkt?pPkt->pBuff:NULL, pTxStat);
 }
 // DOM-IGNORE-END
 
@@ -983,7 +984,7 @@ static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_Li
     void myAckFnc(void* pBuff, void* param)
     {
         myInstanceType* pType=(myInstanceType*)param;
-        // Handle each buffer acknowledgement
+        # Handle each buffer acknowledgement
     }
     </code>
 
@@ -1067,7 +1068,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxAcknowledgeBuffer (DRV_ETHMAC_INSTANCE_DCPT* p
 // DOM-IGNORE-BEGIN
 static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibTxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )
 {
-    return  DRV_ETHMAC_LibTxAcknowledgeBuffer(pMacD, pPkt ? pPkt->pBuff : 0, ackFnc, fParam);
+    return  DRV_ETHMAC_LibTxAcknowledgeBuffer(pMacD, pPkt ? pPkt->pBuff : NULL, ackFnc, fParam);
 }
 // DOM-IGNORE-END
 
@@ -1106,13 +1107,13 @@ static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_Li
     ethRes = DRV_ETHMAC_LibRxAcknowledgeBuffer(pMacD, pRxBuff, myAckFnc, &myInstanceData);
     if ( ethRes != DRV_ETHMAC_RES_OK )
     {
-        // Handle buffer not acknowledged
+        # Handle buffer not acknowledged
     }
 
     void myAckFnc(void* pBuff, int buffIx, void* param)
     {
         myInstanceType* pType=(myInstanceType*)param;
-        // Handle each buffer acknowledgement
+        # Handle each buffer acknowledgement
     }
     </code>
 
@@ -1166,7 +1167,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgeBuffer (DRV_ETHMAC_INSTANCE_DCPT* p
     ethRes = DRV_ETHMAC_LibRxAcknowledgePacket(pMacD, pRxPkt);
     if ( ethRes != DRV_ETHMAC_RES_OK )
     {
-        // Handle packet not acknowledged
+        # Handle packet not acknowledged
     }
     </code>
 
@@ -1184,7 +1185,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgeBuffer (DRV_ETHMAC_INSTANCE_DCPT* p
 // DOM-IGNORE-BEGIN
 static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibRxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt)
 {
-    return DRV_ETHMAC_LibRxAcknowledgeBuffer(pMacD, pPkt ? pPkt->pBuff : 0);
+    return DRV_ETHMAC_LibRxAcknowledgeBuffer(pMacD, pPkt ? pPkt->pBuff : NULL);
 }
 // DOM-IGNORE-END
 
@@ -1238,7 +1239,7 @@ static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_Li
 
   Example:
     <code>
-    // Wait to receive a packet
+    # Wait to receive a packet
     do
     {
         ethRes = DRV_ETHMAC_LibRxGetBuffer(pMacD, &pBuff, &pRxPktStat);
@@ -1318,7 +1319,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  v
 
   Example:
     <code>
-    // Wait to receive a packet
+    # Wait to receive a packet
     do
     {
         ethRes = DRV_ETHMAC_LibRxGetPacket(pMacD, &rxPktDcpt, &buffsPerRxPkt, &pRxPktStat);
@@ -1355,7 +1356,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  D
 
 /*******************************************************************************
   Function:
-    DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
+    DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 
   Summary:
     Returns the number of pending RX buffers/descriptors in the driver's queues.
@@ -1388,11 +1389,11 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  D
 
  *****************************************************************************/
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs);
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs);
 
 /*******************************************************************************
   Function:
-    DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
+    DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 
   Summary:
     Returns the number of scheduled RX buffers/descriptors in the driver's queues.
@@ -1422,11 +1423,11 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pM
 
  *****************************************************************************/
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs);
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs);
 
 /*******************************************************************************
   Function:
-    DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
+    DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 
   Summary:
     Returns the number of pending TX buffers/descriptors in the driver's queues.
@@ -1457,9 +1458,9 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxScheduledBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* 
 
  *****************************************************************************/
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs);
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs);
 
 
 
-#endif  // _DRV_ETHMAC_LIB_H_
+#endif  // H_DRV_ETHMAC_LIB_H_
 

@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_ETHMAC_H
-#define _DRV_ETHMAC_H
+#ifndef H_DRV_ETHMAC_H
+#define H_DRV_ETHMAC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -817,7 +817,7 @@ TCPIP_MAC_RES     DRV_ETHMAC_PIC32MACParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PA
     - The reported values are info only and change dynamically.
 
 */
-TCPIP_MAC_RES       DRV_ETHMAC_PIC32MACRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+TCPIP_MAC_RES       DRV_ETHMAC_PIC32MACRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, size_t nEntries, size_t* pHwEntries);
     
 // *****************************************************************************
 /*  Function:
@@ -861,7 +861,7 @@ size_t      DRV_ETHMAC_PIC32MACConfigGet(DRV_HANDLE hMac, void* configBuff, size
     
 /***********************************************************************************************************
   Function:
-        bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
+        bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enable);
     
   Summary:
     Enables/disables the MAC events.
@@ -913,7 +913,7 @@ size_t      DRV_ETHMAC_PIC32MACConfigGet(DRV_HANDLE hMac, void* configBuff, size
       if a notification handler is in place) it will be disabled until the
       DRV_ETHMAC_PIC32MACEventAcknowledge() is called.                                                        
   ***********************************************************************************************************/
-bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
+bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enable);
 
 
 /****************************************************************************************************
@@ -1053,6 +1053,9 @@ TCPIP_MAC_EVENT DRV_ETHMAC_PIC32MACEventPendingGet(DRV_HANDLE hMac);
   ******************************************************************************/
 void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex );
 
+// supported MAC objects
+#include "tcpip/tcpip_mac_object.h"
+extern const TCPIP_MAC_OBJECT DRV_ETHMAC_PIC32MACObject;
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -1060,7 +1063,7 @@ void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex );
 #endif
 //DOM-IGNORE-END
 
-#endif // #ifndef _DRV_ETHMAC_H
+#endif // #ifndef H_DRV_ETHMAC_H
 
 /*******************************************************************************
  End of File

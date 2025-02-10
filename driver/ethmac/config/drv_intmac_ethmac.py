@@ -1,5 +1,5 @@
 """
-Copyright (C) 2019-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -567,11 +567,11 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacLocalHeaderFile.setType("HEADER")
     tcpipEthmacLocalHeaderFile.setOverwrite(True)
     
-    # file TCPIP_MAC_DESC_H "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/dynamic/_eth_dcpt_lists.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethmac/src/dynamic/_eth_dcpt_lists.h"
-    # Add _eth_dcpt_lists.h file to project
+    # file TCPIP_MAC_DESC_H "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/dynamic/drv_ethmac_lists.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethmac/src/dynamic/drv_ethmac_lists.h"
+    # Add drv_ethmac_lists.h file to project
     tcpipEthmacDcptHeaderFile = drvPic32mEthmacComponent.createFileSymbol(None, None)
-    tcpipEthmacDcptHeaderFile.setSourcePath("driver/ethmac/src/dynamic/_eth_dcpt_lists.h")
-    tcpipEthmacDcptHeaderFile.setOutputName("_eth_dcpt_lists.h")
+    tcpipEthmacDcptHeaderFile.setSourcePath("driver/ethmac/src/dynamic/drv_ethmac_lists.h")
+    tcpipEthmacDcptHeaderFile.setOutputName("drv_ethmac_lists.h")
     tcpipEthmacDcptHeaderFile.setDestPath("driver/ethmac/src/dynamic/")
     tcpipEthmacDcptHeaderFile.setProjectPath("config/" + configName + "/driver/ethmac/src/dynamic/")
     tcpipEthmacDcptHeaderFile.setType("HEADER")

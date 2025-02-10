@@ -19,7 +19,7 @@
 
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2008-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2008-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 */
 // DOM-IGNORE-END
 
-#ifndef _DRV_ETH_LIB_H_
-#define _DRV_ETH_LIB_H_
+#ifndef H_DRV_ETH_LIB_H_
+#define H_DRV_ETH_LIB_H_
 
 #include <stdio.h>
 #include <stdint.h>
@@ -2545,7 +2545,7 @@ void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* pEthReg, ETH_MIIM_CLK MIIMClock)
+    void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t miimClock)
 
   Summary:
     Sets the EMAC MIM clock selection.
@@ -2558,7 +2558,7 @@ void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* pEthReg);
 
   Parameters:
     pEthReg - pointer to the Ethernet registers
-    MIIMClock - of type ETH_MIIM_CLK - the system clock divisor for MII
+    miimClock - of type ETH_MIIM_CLK - the system clock divisor for MII
 
   Returns:
     None.
@@ -2571,14 +2571,14 @@ void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* pEthReg);
     2.5 MHz. Some PHYs support clock rates up to 12.5 MHz.
 
 */
-void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* pEthReg , ETH_MIIM_CLK MIIMClock );
+void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* pEthReg , uint8_t miimClock );
 
 #ifdef __cplusplus
 }
 #endif
 
 
-#endif //_DRV_ETH_LIB_H_
+#endif //H_DRV_ETH_LIB_H_
 
 //******************************************************************************
 /* End of File

@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,8 +40,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_ETHMAC_LOCAL_H
-#define _DRV_ETHMAC_LOCAL_H
+#ifndef H_DRV_ETHMAC_LOCAL_H
+#define H_DRV_ETHMAC_LOCAL_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -86,12 +86,12 @@ Microchip or any third party.
 */
 typedef struct
 {
-    TCPIP_MAC_EVENT             _TcpEnabledEvents;          // group enabled notification events
-    volatile TCPIP_MAC_EVENT    _TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
-    DRV_ETH_EVENTS             _EthEnabledEvents;          // copy in DRV_ETH_EVENTS space
-    volatile DRV_ETH_EVENTS    _EthPendingEvents;          // copy in DRV_ETH_EVENTS space
-    TCPIP_MAC_EventF            _TcpNotifyFnc;              // group notification handler
-    const void*                 _TcpNotifyParam;            // notification parameter
+    TCPIP_MAC_EVENT             TcpEnabledEvents;          // group enabled notification events
+    volatile TCPIP_MAC_EVENT    TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
+    DRV_ETH_EVENTS              EthEnabledEvents;          // copy in DRV_ETH_EVENTS space
+    volatile DRV_ETH_EVENTS     EthPendingEvents;          // copy in DRV_ETH_EVENTS space
+    TCPIP_MAC_EventF            TcpNotifyFnc;              // group notification handler
+    const void*                 TcpNotifyParam;            // notification parameter
 }DRV_ETHMAC_EVENT_DCPT;   // event descriptor per group
 
 
@@ -120,11 +120,11 @@ typedef struct
 //#define   DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK
 
 
-#define ETH_PIC32_INT_MAC_MIN_RX_SIZE           128     // minimum RX buffer size
+#define ETH_PIC32_INT_MAC_MIN_RX_SIZE           (128U)     // minimum RX buffer size
                                                         // less than this creates excessive fragmentation
                                                         // Keep it always multiple of 16!
 
-#define ETH_PIC32_INT_MAC_MIN_TX_DESCRIPTORS    4       // minimum number of TX descriptors
+#define ETH_PIC32_INT_MAC_MIN_TX_DESCRIPTORS    (4U)       // minimum number of TX descriptors
                                                         // needed to accomodate zero copy and TCP traffic
                                                         //
 // *****************************************************************************
@@ -163,8 +163,8 @@ typedef enum
 
 typedef struct
 {
-    uint16_t            _macIx;             // index of the MAC, for multiple MAC's support
-    uint16_t            _phyIx;             // index of the associated PHY
+    uint16_t            macIx;             // index of the MAC, for multiple MAC's support
+    uint16_t            phyIx;             // index of the associated PHY
     SYS_MODULE_OBJ      hPhySysObject;      // PHY object handle
     SYS_MODULE_OBJ      hPhyClient;         // PHY handle
     SYS_STATUS          sysStat;            // driver status
@@ -173,49 +173,58 @@ typedef struct
         uint16_t        val;
         struct
         {
-            uint16_t    _init               : 1;    // the corresponding MAC is initialized
-            uint16_t    _open               : 1;    // the corresponding MAC is opened
-            uint16_t    _linkPresent        : 1;    // lif connection to the PHY properly detected : on/off
-            uint16_t    _linkNegotiation    : 1;    // if an auto-negotiation is in effect : on/off
-            uint16_t    _linkPrev           : 1;    // last value of the link status: on/off
-            uint16_t    _linkUpDone         : 1;    // the link up sequence done
+            unsigned int    macInit             : 1;    // the corresponding MAC is initialized
+            unsigned int    macOpen             : 1;    // the corresponding MAC is opened
+            unsigned int    linkPresent         : 1;    // if connection to the PHY properly detected : on/off
+            unsigned int    linkNegotiation     : 1;    // if an auto-negotiation is in effect : on/off
+            unsigned int    linkPrev            : 1;    // last value of the link status: on/off
+            unsigned int    linkUpDone          : 1;    // the link up sequence done
             // add another flags here
         };
-    }                   _macFlags;          // corresponding MAC flags
+    }macFlags;                             // corresponding MAC flags
 
-    uint16_t            _controlFlags;      // TCPIP_MAC_CONTROL_FLAGS value 
-    int16_t             _gapDcptOffset;     // gap descriptor offset
-    uint16_t            _gapDcptSize;       // gap size
-    uint32_t            _dataOffsetMask;    // the data offset mask, based on the TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag
+    uint16_t            controlFlags;      // TCPIP_MAC_CONTROL_FLAGS value 
+    int16_t             gapDcptOffset;     // gap descriptor offset
+    uint16_t            gapDcptSize;       // gap size
+    uint32_t            dataOffsetMask;    // the data offset mask, based on the TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag
 
     TCPIP_MODULE_MAC_PIC32INT_CONFIG    macConfig;  // configuration parameters
     DRV_ETHERNET_REGISTERS*             pEthReg;    // pointer to Ethernet registers describing the peripheral
 
-    DRV_ETHMAC_SGL_LIST _TxQueue;           // current TX queue; stores TX queued packets 
+    DRV_ETHMAC_SGL_LIST TxQueue;           // current TX queue; stores TX queued packets 
 
     // general stuff
-    const void*            _AllocH ;        // allocation handle  
-    TCPIP_MAC_HEAP_CallocF _callocF;        // allocation functions
-    TCPIP_MAC_HEAP_FreeF   _freeF;
+    const void*            mac_AllocH ;        // allocation handle  
+    TCPIP_MAC_HEAP_CallocF mac_callocF;        // allocation functions
+    TCPIP_MAC_HEAP_FreeF   mac_freeF;
 
     // packet allocation functions
-    TCPIP_MAC_PKT_AllocF    pktAllocF;
-    TCPIP_MAC_PKT_FreeF     pktFreeF;
+    union
+    {
+        TCPIP_MAC_PKT_AllocF    pktAllocF;
+        TCPIP_MAC_PKT_AllocFDbg pktAllocFDbg;
+    };
+    union
+    {
+        TCPIP_MAC_PKT_FreeF     pktFreeF;
+        TCPIP_MAC_PKT_FreeFDbg  pktFreeFDbg;
+    };
+    
     TCPIP_MAC_PKT_AckF      pktAckF;
     
-    // synhchronization
-    TCPIP_MAC_SynchReqF     _synchF;
+    // synchronization
+    TCPIP_MAC_SynchReqF     macSynchF;
 
     // timing and link status maintenance
-    TCPIP_ETH_OPEN_FLAGS      _linkResFlags;        // resulted link flags
-    uint32_t            _linkUpTick;          // tick value when the link up sequence was started
-    uint32_t            _linkWaitTick;        // tick value to wait for
-    DRV_ETHPHY_NEGOTIATION_RESULT   _negResult;  // negotiation result storage
-    DRV_ETHMAC_LINK_CHECK_STATE _linkCheckState;    // link state machine current status
+    TCPIP_ETH_OPEN_FLAGS    linkResFlags;        // resulted link flags
+    uint32_t                linkUpTick;          // tick value when the link up sequence was started
+    uint32_t                linkWaitTick;        // tick value to wait for
+    DRV_ETHPHY_NEGOTIATION_RESULT   negResult;   // negotiation result storage
+    DRV_ETHMAC_LINK_CHECK_STATE linkCheckState;  // link state machine current status
 
-    INT_SOURCE     _macIntSrc;             // this MAC interrupt source
+    INT_SOURCE     macIntSrc;                    // this MAC interrupt source
 
-    DRV_ETHMAC_EVENT_DCPT _pic32_ev_group_dcpt;
+    DRV_ETHMAC_EVENT_DCPT  pic32m_ev_group_dcpt;
 
     // rx descriptor; supports maximum fragmentation
     DRV_ETHMAC_PKT_DCPT         rxPktDcpt[TCPIP_EMAC_RX_FRAGMENTS];
@@ -223,25 +232,25 @@ typedef struct
     // descriptor lists
     // for PIC32MZ these need to be 16 bytes aligned!
     // Aligning them will conserve some space
-    DRV_ETHMAC_DCPT_LIST _EnetTxFreeList;    // transmit list of free descriptors
-    DRV_ETHMAC_DCPT_LIST _EnetTxBusyList;    // transmit list of descriptors passed to the Tx Engine
-                                     // the _EnetTxBusyList always ends with an sw owned descriptor (hdr.EOWN=0);
+    DRV_ETHMAC_DCPT_LIST EnetTxFreeList;    // transmit list of free descriptors
+    DRV_ETHMAC_DCPT_LIST EnetTxBusyList;    // transmit list of descriptors passed to the Tx Engine
+                                            // the EnetTxBusyList always ends with an sw owned descriptor (hdr.EOWN=0);
 
-    DRV_ETHMAC_DCPT_LIST _EnetRxFreeList;    // receive list of free descriptors
-    DRV_ETHMAC_DCPT_LIST _EnetRxBusyList;    // receive list of descriptors passed to the Rx Engine
+    DRV_ETHMAC_DCPT_LIST EnetRxFreeList;    // receive list of free descriptors
+    DRV_ETHMAC_DCPT_LIST EnetRxBusyList;    // receive list of descriptors passed to the Rx Engine
 
-    DRV_ETHMAC_DCPT_LIST* _EnetTxFreePtr;    // pointer to the transmit list of free descriptors
-    DRV_ETHMAC_DCPT_LIST* _EnetTxBusyPtr;    // pointer to the transmit list of descriptors passed to the Tx Engine
+    DRV_ETHMAC_DCPT_LIST* EnetTxFreePtr;    // pointer to the transmit list of free descriptors
+    DRV_ETHMAC_DCPT_LIST* EnetTxBusyPtr;    // pointer to the transmit list of descriptors passed to the Tx Engine
 
-    DRV_ETHMAC_DCPT_LIST* _EnetRxFreePtr;    // pointer to the receive list of free descriptors
-    DRV_ETHMAC_DCPT_LIST* _EnetRxBusyPtr;    // pointer to the receive list of descriptors passed to the Rx Engine
+    DRV_ETHMAC_DCPT_LIST* EnetRxFreePtr;    // pointer to the receive list of free descriptors
+    DRV_ETHMAC_DCPT_LIST* EnetRxBusyPtr;    // pointer to the receive list of descriptors passed to the Rx Engine
 
-    uintptr_t             _syncRxH;          // synch object handle for RX operations
-    uintptr_t             _syncTxH;          // synch object handle for TX operations
+    uintptr_t             syncRxH;          // synch object handle for RX operations
+    uintptr_t             syncTxH;          // synch object handle for TX operations
 
     // debug: run time statistics
-    TCPIP_MAC_RX_STATISTICS _rxStat;
-    TCPIP_MAC_TX_STATISTICS _txStat;
+    TCPIP_MAC_RX_STATISTICS rxStat;
+    TCPIP_MAC_TX_STATISTICS txStat;
 
 
 } DRV_ETHMAC_INSTANCE_DATA;
@@ -290,124 +299,124 @@ typedef struct
 
 // RX lock functions
 #if defined(DRV_ETHMAC_USE_RX_SEMAPHORE_LOCK)
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) F_DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    return (pMacD->mData._synchF == 0) ? true : (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
+    return (pMacD->mData.macSynchF == 0) ? true : (*pMacD->mData.macSynchF)(&pMacD->mData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
     }
 }
 
 #else
 // use critical sections
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) F_DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     return true;
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
     }
 }
 #endif  // defined(DRV_ETHMAC_USE_RX_SEMAPHORE_LOCK)
 
 // TX lock functions
 #if defined(DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK)
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) F_DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    return (pMacD->mData._synchF == 0) ? true : (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
+    return (pMacD->mData.macSynchF == 0) ? true : (*pMacD->mData.macSynchF)(&pMacD->mData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
     }
 }
 #else
 // use critical sections
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) F_DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     return true;
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) F_DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    if(pMacD->mData._synchF != 0)
+    if(pMacD->mData.macSynchF != NULL)
     {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
+        (void)(*pMacD->mData.macSynchF)(&pMacD->mData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
     }
 }
 #endif  // defined(DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK)
 
 
 
-#endif //#ifndef _DRV_ETHMAC_LOCAL_H
+#endif //#ifndef H_DRV_ETHMAC_LOCAL_H
 
 /*******************************************************************************
  End of File
