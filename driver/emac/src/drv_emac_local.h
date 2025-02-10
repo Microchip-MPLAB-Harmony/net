@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2020-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2020-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -38,8 +38,8 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 //DOM-IGNORE-END
-#ifndef _DRV_EMAC_LOCAL_H
-#define _DRV_EMAC_LOCAL_H
+#ifndef H_DRV_EMAC_LOCAL_H_
+#define H_DRV_EMAC_LOCAL_H_
 
 // -----------------------------------------------------------------------------
 // Section: File includes
@@ -57,6 +57,8 @@ Microchip or any third party.
 
 #include "driver/emac/drv_emac.h"
 
+#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_MAC_SAM9X60
+
 // *****************************************************************************
 /* Ethernet Event Flags
 
@@ -67,7 +69,8 @@ Microchip or any third party.
     This enumeration defines flags for the possible Ethernet events that can
     cause interrupts.
 */
-typedef enum {
+typedef enum
+{
     MAC_EV_NONE                 = 0,
     //
     MAC_EV_MGMTFRAMESENT        = EMAC_ISR_MFD_Msk,                         // 0x0001
@@ -155,8 +158,22 @@ typedef struct
     TCPIP_MAC_HEAP_CallocF          callocF;            // allocation functions
     TCPIP_MAC_HEAP_FreeF            freeF;
     // packet allocation functions
-    TCPIP_MAC_PKT_AllocF            pktAllocF;
-    TCPIP_MAC_PKT_FreeF             pktFreeF;
+    union
+    {
+        TCPIP_MAC_PKT_AllocF    pktAllocF;
+        TCPIP_MAC_PKT_AllocFDbg pktAllocFDbg;
+    };
+    union
+    {
+        TCPIP_MAC_PKT_FreeF     pktFreeF;
+        TCPIP_MAC_PKT_FreeFDbg  pktFreeFDbg;
+    };
+    union
+    {
+        TCPIP_MAC_PKT_FreeF     pktFreeF;
+        TCPIP_MAC_PKT_FreeFDbg  pktFreeFDbg;
+    };
+    
     TCPIP_MAC_PKT_AckF              pktAckF;
     // synchronization
     TCPIP_MAC_SynchReqF             synchF;
@@ -176,7 +193,7 @@ typedef struct
 {
     TCPIP_MAC_PACKET *      head;       // list head
     TCPIP_MAC_PACKET *      tail;       // list tail
-    int32_t                 nNodes;     // number of packet pointers in the list
+    uint32_t                nNodes;     // number of packet pointers in the list
 } MAC_DRVR_PACKET_LIST;
 
 typedef struct
@@ -196,7 +213,8 @@ typedef struct
 
   Description: All the data related to MAC driver
 */
-typedef struct {
+typedef struct
+{
     const TCPIP_MAC_OBJECT *        pObj;                   // safe cast to TCPIP_MAC_DCPT
     //
     uint32_t                        macIx;                  // index of the MAC, for multiple MAC's support
@@ -207,22 +225,22 @@ typedef struct {
     union
     {
         uint8_t         val;
-        struct
+        struct __attribute__((packed))
         {
-            uint8_t     _open               : 1;            // the corresponding MAC is opened
-            uint8_t     _linkPresent        : 1;            // lif connection to the PHY properly detected : on/off
-            uint8_t     _linkNegotiation    : 1;            // if an auto-negotiation is in effect : on/off
-            uint8_t     _linkPrev           : 1;            // last value of the link status: on/off
-            uint8_t     _linkUpDone         : 1;            // the link up sequence done
-            // add another flags here
+            unsigned     open               : 1;            // the corresponding MAC is opened
+            unsigned     linkPresent        : 1;            // lif connection to the PHY properly detected : on/off
+            unsigned     linkNegotiation    : 1;            // if an auto-negotiation is in effect : on/off
+            unsigned     linkPrev           : 1;            // last value of the link status: on/off
+            unsigned     linkUpDone         : 1;            // the link up sequence done
+            unsigned     reserved           : 3;            // add another flags here
         };
     } macFlags;                                             // corresponding MAC flags
-    uint8_t                         _dataOffset;            // the data offset (TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag)
+    uint8_t                         dataOffset;            // the data offset (TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag)
 
-    int16_t                         _gapDcptOffset;         // gap descriptor offset  
-    uint16_t                        _gapDcptSize;           // gap descriptor size
+    int16_t                         gapDcptOffset;         // gap descriptor offset  
+    uint16_t                        gapDcptSize;           // gap descriptor size
     // control flags from the stack
-    uint16_t                        _controlFlags;
+    uint16_t                        controlFlags;
 
 
 
@@ -254,7 +272,7 @@ typedef struct {
 } MAC_DRIVER;
 
 /* Function prototype for accessing Statistics registers */
-typedef uint32_t (* MAC_DRVR_HW_REG_FUNC)( emac_registers_t * );
+typedef uint32_t (* MAC_DRVR_HW_REG_FUNC)( emac_registers_t * pMacRegs);
 
 // *****************************************************************************
 /* MAC Hardware statistics register access structure
@@ -296,14 +314,14 @@ typedef union
     uint8_t index;
     struct __attribute__((packed))
     {
-        uint8_t b0:1;
-        uint8_t b1:1;
-        uint8_t b2:1;
-        uint8_t b3:1;
-        uint8_t b4:1;
-        uint8_t b5:1;
-        uint8_t b6:1;
-        uint8_t b7:1;
+        unsigned b0:1;
+        unsigned b1:1;
+        unsigned b2:1;
+        unsigned b3:1;
+        unsigned b4:1;
+        unsigned b5:1;
+        unsigned b6:1;
+        unsigned b7:1;
     } bits;
 } MAC_DRVR_HASH_INDEX;
 
@@ -312,14 +330,14 @@ typedef union
     uint8_t addr_val;
     struct __attribute__((packed))
     {
-        uint8_t b0:1;
-        uint8_t b1:1;
-        uint8_t b2:1;
-        uint8_t b3:1;
-        uint8_t b4:1;
-        uint8_t b5:1;
-        uint8_t b6:1;
-        uint8_t b7:1;
+        unsigned b0:1;
+        unsigned b1:1;
+        unsigned b2:1;
+        unsigned b3:1;
+        unsigned b4:1;
+        unsigned b5:1;
+        unsigned b6:1;
+        unsigned b7:1;
     } bits;
 } MAC_DRVR_ADDR_OCTET;
 
@@ -330,30 +348,25 @@ typedef union
 static  __inline__ void  __attribute__((always_inline))
 macDrvrPacketListInitialize( MAC_DRVR_PACKET_LIST * pList )
 {
-    pList->head = pList->tail = 0;
+    pList->head = pList->tail = NULL;
     pList->nNodes = 0;
 }
 
 // Return number of nodes in list
-static  __inline__ int32_t __attribute__((always_inline))
+static  __inline__ uint32_t __attribute__((always_inline))
 macDrvrPacketListCount( MAC_DRVR_PACKET_LIST * pList )
 {
     return pList->nNodes;
 }
 
-TCPIP_MAC_PACKET * macDrvrPacketListHeadRemove(
-    MAC_DRVR_PACKET_LIST * pList
-    );
+TCPIP_MAC_PACKET * macDrvrPacketListHeadRemove( MAC_DRVR_PACKET_LIST * pList);
 
-void macDrvrPacketListTailAdd(
-    MAC_DRVR_PACKET_LIST *  pList,
-    TCPIP_MAC_PACKET *      pMacPacket
-    );
+void macDrvrPacketListTailAdd( MAC_DRVR_PACKET_LIST *  pList, TCPIP_MAC_PACKET *  pMacPacket);
 
-void macDrvrPacketListHeadAdd(
-    MAC_DRVR_PACKET_LIST *  pList,
-    TCPIP_MAC_PACKET *      pMacPacket
-    );
+void macDrvrPacketListHeadAdd( MAC_DRVR_PACKET_LIST *  pList, TCPIP_MAC_PACKET *  pMacPacket);
 
-#endif // _DRV_EMAC_LOCAL_H
+// statistics access to the MAC_DRIVER object
+MAC_DRIVER* macDrvrObjGet(size_t* pnObjects);
+
+#endif // H_DRV_EMAC_LOCAL_H_
 

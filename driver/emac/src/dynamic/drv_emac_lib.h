@@ -20,7 +20,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2020-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2020-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 // DOM-IGNORE-END
-#ifndef _DRV_EMAC_LIB_H_
-#define _DRV_EMAC_LIB_H_
+#ifndef H_DRV_EMAC_LIB_H_
+#define H_DRV_EMAC_LIB_H_
 
 #include <stdlib.h>
 #include "system_config.h"
@@ -79,7 +79,9 @@ Microchip or any third party.
     If a packet isn't rejected/accepted after all filters are tried, it will be
     rejected by default!
 */
-typedef enum{
+typedef enum
+{
+    MAC_FILT_NONE       = 0,        // no filter set
     // Frames with wrong Preamble are accepted
     MAC_FILT_PREAMBLE_ERR_ACCEPT    /*DOM-IGNORE-BEGIN*/ = EMAC_NCFGR_IRXFCS_Msk /*DOM-IGNORE-END*/,
     // Frames with wrong CRC are accepted
@@ -252,7 +254,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr );
     ethRes = macDrvrLibRxInit( pMacDrvr );
     if( ethRes != MAC_DRVR_RES_OK )
     {
-        // Handle error
+        - Handle error
     }
     </code>
   Remarks:
@@ -289,7 +291,7 @@ MAC_DRVR_RESULT macDrvrLibRxInit( MAC_DRIVER * pMacDrvr );
     ethRes = macDrvrLibTxInit( pMacDrvrx );
     if( ethRes != MAC_DRVR_RES_OK )
     {
-        // Handle error
+        - Handle error
     }
     </code>
   Remarks:
@@ -335,10 +337,7 @@ void macDrvrLibTransferEnable( MAC_DRIVER * pMacDrvr );
 
 /*******************************************************************************
   Function:
-    void macDrvrLibMacOpen( MAC_DRIVER *            pMacDrvr,
-                            TCPIP_ETH_OPEN_FLAGS    oFlags,
-                            TCPIP_ETH_PAUSE_TYPE    pauseType
-                            )
+    void macDrvrLibMacOpen( MAC_DRIVER *  pMacDrvr, TCPIP_ETH_OPEN_FLAGS  oFlags, TCPIP_ETH_PAUSE_TYPE  pauseType)
   Summary:
     Initializes and configures the Ethernet MAC.
 
@@ -363,10 +362,10 @@ void macDrvrLibTransferEnable( MAC_DRIVER * pMacDrvr );
 
   Example:
     <code>
-    // Open and configure the MAC.
-    //
-    // Since we're not connected to an external PHY there's no negotiation
-    // going on and we know all our opening flags
+    - Open and configure the MAC.
+    -
+    - Since we're not connected to an external PHY there's no negotiation
+    - going on and we know all our opening flags
     macDrvrLibMacOpen( pMacDrvr, oFlags, pauseType );
     </code>
 
@@ -377,17 +376,11 @@ void macDrvrLibTransferEnable( MAC_DRIVER * pMacDrvr );
     be the ones obtained as a result of the PHY negotiation procedure!
     <p>Replaces:<p><c><b>void EthMACOpen( oFlags, pauseType )</b></c>
  ******************************************************************************/
-void macDrvrLibMacOpen(
-    MAC_DRIVER *            pMacDrvr,
-    TCPIP_ETH_OPEN_FLAGS    oFlags,
-    TCPIP_ETH_PAUSE_TYPE    pauseType
-    );
+void macDrvrLibMacOpen( MAC_DRIVER *  pMacDrvr, TCPIP_ETH_OPEN_FLAGS  oFlags, TCPIP_ETH_PAUSE_TYPE  pauseType);
 
 /*******************************************************************************
   Function:
-    void macDrvrLibClose(   MAC_DRIVER *        pMacDrvr,
-                            MAC_DRV_CLOSE_FLAGS cFlags
-                            )
+    void macDrvrLibClose(   MAC_DRIVER *  pMacDrvr, MAC_DRV_CLOSE_FLAGS cFlags)
   Summary:
     Aborts any transactions and disables the Ethernet controller
 
@@ -415,17 +408,11 @@ void macDrvrLibMacOpen(
     It does not free any allocated memory.
     <p>Replaces:<p><c><b>void EthClose( MAC_DRV_CLOSE_FLAGS cFlags )</b></c>
  ******************************************************************************/
-void macDrvrLibClose(
-    MAC_DRIVER *            pMacDrvr,
-    MAC_DRVR_CLOSE_FLAGS    cFlags
-    );
+void macDrvrLibClose( MAC_DRIVER *  pMacDrvr, MAC_DRVR_CLOSE_FLAGS  cFlags);
 
 /*******************************************************************************
   Function:
-    MAC_DRVR_RESULT macDrvrLibRxFilterHashCalculate(
-                                        EMAC_DRV_DRIVER *    pMacDrvr,
-                                        EMAC_DRV_HASH *      hash
-                                        )
+    MAC_DRVR_RESULT macDrvrLibRxFilterHashCalculate( EMAC_DRV_DRIVER *  pMacDrvr, EMAC_DRV_HASH *  hash)
   Summary:
     Calculates the hash for given MAC address and sets the hash register
 
@@ -450,24 +437,15 @@ void macDrvrLibClose(
 
  ******************************************************************************/
 MAC_DRVR_RESULT
-macDrvrLibRxFilterHashCalculate(
-    MAC_DRIVER *    pMacDrvr,
-    MAC_DRVR_HASH * hash
-    );
+macDrvrLibRxFilterHashCalculate( MAC_DRIVER *  pMacDrvr, MAC_DRVR_HASH * hash);
 
 /*******************************************************************************
   Function:
-    MAC_DRVR_RESULT macDrvrLibRxAllocate(   MAC_DRIVER *    pMacDrvr,
-                                            uint16_t        bufferCount,
-                                            bool            stickyFlag
-                                            );
+    MAC_DRVR_RESULT macDrvrLibRxAllocate(   MAC_DRIVER *  pMacDrvr, uint16_t  bufferCount, bool  stickyFlag);
   Summary:
     Allocates buffers for the receive process.
  ******************************************************************************/
-MAC_DRVR_RESULT macDrvrLibRxAllocate(   MAC_DRIVER *    pMacDrvr,
-                                        uint16_t        bufferCount,
-                                        bool            stickyFlag
-                                        );
+MAC_DRVR_RESULT macDrvrLibRxAllocate(   MAC_DRIVER *  pMacDrvr, uint16_t  bufferCount, bool  stickyFlag);
 
 /*******************************************************************************
   Function:
@@ -504,16 +482,12 @@ MAC_DRVR_RESULT macDrvrLibFreeDynamicBuffers( MAC_DRIVER * pMacDrvr );
 
 /*******************************************************************************
   Function:
-    void rxExpungeFrameSegments(    MAC_DRIVER *                pMacDrvr,
-                                    MAC_DRVR_RX_FRAME_INFO *    pFrameInfo
-                                    );
+    void rxExpungeFrameSegments(    MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo);
   Summary:
     Identifies removes packets from the descriptor area, marks the descriptor
     as unused, and places the segment memory back into the avaialable buffer pool.
  ******************************************************************************/
-void rxExpungeFrameSegments(    MAC_DRIVER *                pMacDrvr,
-                                MAC_DRVR_RX_FRAME_INFO *    pFrameInfo
-                                );
+void rxExpungeFrameSegments(    MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo);
 
 /*******************************************************************************
   Function:
@@ -529,11 +503,7 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr );
 
 /*******************************************************************************
   Function:
-    MAC_DRVR_RESULT macDrvrLibTxSendPacket(
-        MAC_DRIVER *        pMacDrvr
-        TCPIP_MAC_PACKET *  pMacPacket,
-        uint32_t            requiredDescCount
-        )
+    MAC_DRVR_RESULT macDrvrLibTxSendPacket( MAC_DRIVER *  pMacDrvr TCPIP_MAC_PACKET *  pMacPacket, uint32_t  requiredDescCount)
 
   Summary:
     Schedules the supplied packet for transmission.
@@ -566,7 +536,7 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr );
     ethRes = macDrvrLibTxSendPacket( pMacDrvr );
     if( ethRes != MAC_DRVR_RES_OK )
     {
-        // Transmission failed
+        - Transmission failed
     }
     </code>
 
@@ -579,11 +549,7 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr );
     The packet construction from buffers stops when a descriptor with NULL buffer
     or 0 size is retrieved or the list ends.
  ******************************************************************************/
-MAC_DRVR_RESULT macDrvrLibTxSendPacket(
-    MAC_DRIVER *        pMacDrvr,
-    TCPIP_MAC_PACKET *  pMacPacket,
-    uint32_t            requiredDescCount
-    );
+MAC_DRVR_RESULT macDrvrLibTxSendPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET *  pMacPacket, uint32_t  requiredDescCount);
 
 // -----------------------------------------------------------------------------
 // Section: Descriptors add and remove functions
@@ -592,10 +558,7 @@ void macDrvrLibDescriptorsPoolClear( void );    // clears all pool space ahead o
 
 /*******************************************************************************
   Function:
-    void macDrvrLibDescriptorsPoolAssignment(
-                        MAC_DRIVER * pMacDrvr,
-                        DRV_GMAC_DCPT_TYPE dType
-                        );
+    void macDrvrLibDescriptorsPoolAssignment( MAC_DRIVER * pMacDrvr, DRV_GMAC_DCPT_TYPE dType);
   Summary:
     Adds transmit & receive descriptors.
 
@@ -623,10 +586,7 @@ void macDrvrLibDescriptorsPoolClear( void );    // clears all pool space ahead o
     DRV_GMAC_DCPT_TYPE_ALL use is invalid. A proper descriptor type (RX or TX)
     has to be used.
  ******************************************************************************/
-void macDrvrLibDescriptorsPoolAssignment(
-    MAC_DRIVER *        pMacDrvr,
-    MAC_DRVR_DCPT_TYPE  dType
-    );
+void macDrvrLibDescriptorsPoolAssignment( MAC_DRIVER *  pMacDrvr, MAC_DRVR_DCPT_TYPE  dType);
 
 
 // -----------------------------------------------------------------------------
@@ -664,49 +624,12 @@ void macDrvrLibDescriptorsPoolAssignment(
  ******************************************************************************/
 typedef void (* MAC_DRVR_BUFF_AckF)( void * pPktBuff, int buffIx, void * param );
 
-/*******************************************************************************
-  Function:
-    void macDrvrLibTxAckPacket( MAC_DRIVER * pMacDrvr );
-
-  Summary:
-    Acknowledges a transmitted packet
-
-  Description:
-    This function acknowledges a transmitted packet.  The transmission
-    of this packet has to have been completed otherwise the call will fail.
-    The TX acknowledgment function will be called from this routine and free the
-    used TX descriptors
-
-  Precondition:
-   macDrvrLibTxSendPacket should be called before
-
-  Parameters:
-    pMacDrvr                    - driver instance.
-
-  Returns:
-    None
-
-  Example:
-    <code>
-    macDrvrLibTxAckPacket( pMacDrvr );
-    </code>
-
-  Remarks:
-    Any transmitted packet has to be acknowledged, otherwise the Ethernet library
-    will run out of memory for transmission.
- ******************************************************************************/
-void macDrvrLibTxAckPacket( MAC_DRIVER * pMacDrvr );
-
 // -----------------------------------------------------------------------------
 // Section: Packet receive functions
 
 /*******************************************************************************
   Function:
-    MAC_DRVR_RESULT rxGetPacket(
-                            MAC_DRIVER *                pMacDrvr,
-                            TCPIP_MAC_PACKET **         pPkt,
-                            MAC_DRVR_RXDCPT_STATUS *    pRxStatus
-                            )
+    MAC_DRVR_RESULT rxGetPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET **  ppRxMacPacket, MAC_DRVR_RXDCPT_STATUS *  pRxStatus);
   Summary:
     Provides the layout and the status of the next available received packet.
 
@@ -722,10 +645,10 @@ void macDrvrLibTxAckPacket( MAC_DRIVER * pMacDrvr );
 
   Parameters:
     pMacDrvr        - driver instance.
-    pPkt            - Pointer to a packet structure: a list of buffer
+    ppRxMacPacket   - Pointer to a packet structure: a list of buffer
                       segments large enough to receive the packet layout or
                       NULL.
-    pRxStat         - Address to store the pointer to the packet status or
+    pRxStatus       - Address to store the pointer to the packet status or
                       NULL.
 
   Returns:
@@ -735,7 +658,7 @@ void macDrvrLibTxAckPacket( MAC_DRIVER * pMacDrvr );
 
   Example:
     <code>
-    // Wait to receive a packet
+    - Wait to receive a packet
     ethRes = rxGetPacket(   pMacDrvr,
                             &pRxPkt,
                             &pRxPktStatus
@@ -743,17 +666,9 @@ void macDrvrLibTxAckPacket( MAC_DRIVER * pMacDrvr );
     </code>
 
   Remarks:
-    <p>Replaces:<p><c><b>MAC_DRVR_RESULT rxGetPacket(
-                                            MAC_DRIVER *                pMacDrvr,
-                                            TCPIP_MAC_PACKET **         pPkt,
-                                            MAC_DRVR_RXDCPT_STATUS *    pRxStatus
-                                            )</b></c>
+    <p>Replaces:<p><c><b>MAC_DRVR_RESULT rxGetPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET **  ppRxMacPacket, MAC_DRVR_RXDCPT_STATUS *  pRxStatus)</b></c>
  ******************************************************************************/
-MAC_DRVR_RESULT rxGetPacket(
-    MAC_DRIVER *                pMacDrvr,
-    TCPIP_MAC_PACKET **         pPkt,
-    MAC_DRVR_RXDCPT_STATUS *    pRxStatus
-    );
+MAC_DRVR_RESULT rxGetPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET **  ppRxMacPacket, MAC_DRVR_RXDCPT_STATUS *  pRxStatus);
 
 /*******************************************************************************
   Function:
@@ -798,10 +713,7 @@ MAC_DRVR_RESULT macDrvrLibSetMacAddr( MAC_DRIVER * pMacDrvr );
     MAC_DRVR_RESULT
 
  ******************************************************************************/
-MAC_DRVR_RESULT macDrvrLibGetMacAddr(
-    MAC_DRIVER *    pMacDrvr,
-    uint8_t *       pMacAddr
-    );
+MAC_DRVR_RESULT macDrvrLibGetMacAddr( MAC_DRIVER *  pMacDrvr, uint8_t *  pMacAddr);
 
 // -----------------------------------------------------------------------------
 // Section: Mutex Locks
@@ -821,22 +733,18 @@ macDrvrRxDelete( MAC_DRIVER * pMacDrvr )
 static __inline__ void __attribute__((always_inline))
 macDrvrRxLock( MAC_DRIVER * pMacDrvr )
 {
-    if( pMacDrvr->callBack.synchF )
+    if( pMacDrvr->callBack.synchF != NULL )
     {
-        pMacDrvr->callBack.synchF(  &pMacDrvr->syncRxH,
-                                    TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER
-                                    );
+        (void)pMacDrvr->callBack.synchF(  &pMacDrvr->syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
     }
 }
 
 static __inline__ void __attribute__((always_inline))
 macDrvrRxUnlock( MAC_DRIVER * pMacDrvr )
 {
-    if( pMacDrvr->callBack.synchF )
+    if( pMacDrvr->callBack.synchF != NULL )
     {
-        pMacDrvr->callBack.synchF(  &pMacDrvr->syncRxH,
-                                    TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE
-                                    );
+        (void)pMacDrvr->callBack.synchF(  &pMacDrvr->syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
     }
 }
 
@@ -855,24 +763,24 @@ macDrvrTxDelete( MAC_DRIVER * pMacDrvr )
 static __inline__ void __attribute__((always_inline))
 macDrvrTxLock( MAC_DRIVER * pMacDrvr )
 {
-    if( pMacDrvr->callBack.synchF )
+    if( pMacDrvr->callBack.synchF != NULL )
     {
-        pMacDrvr->callBack.synchF(  &pMacDrvr->syncTxH,
-                                    TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER
-                                    );
+        (void)pMacDrvr->callBack.synchF(  &pMacDrvr->syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
     }
 }
 
 static __inline__ void __attribute__((always_inline))
 macDrvrTxUnlock( MAC_DRIVER * pMacDrvr )
 {
-    if( pMacDrvr->callBack.synchF )
+    if( pMacDrvr->callBack.synchF != NULL )
     {
-        pMacDrvr->callBack.synchF(  &pMacDrvr->syncTxH,
-                                    TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE
-                                    );
+        (void)pMacDrvr->callBack.synchF(  &pMacDrvr->syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
     }
 }
+
+TCPIP_MAC_RES EmacDrvrStatisticsGet(MAC_DRIVER* pMacDrvr, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics);
+
+TCPIP_MAC_RES EmacDrvrRegisterStatisticsGet(MAC_DRIVER* pMacDrvr, TCPIP_MAC_STATISTICS_REG_ENTRY* pStatisticsEntry, size_t maxEntries, size_t* pActualNumEntries);
 
 // -----------------------------------------------------------------------------
 /** ISO/IEC 14882:2003(E) - 5.6 Multiplicative operators:
@@ -898,11 +806,11 @@ __STATIC_INLINE uint32_t getModulus( int32_t dividend, int32_t divisor )
 */
 __STATIC_INLINE uint32_t getModuloDistance( uint32_t start, uint32_t stop, uint32_t moduloDivisor )
 {
-    int32_t retval = stop - start;
+    int32_t retval = (int32_t)stop - (int32_t)start;
 
     if( retval <= 0 )
     {
-        retval = moduloDivisor + retval;
+        retval = (int32_t)moduloDivisor + retval;
     }
 
     return (uint32_t) retval;
@@ -910,13 +818,37 @@ __STATIC_INLINE uint32_t getModuloDistance( uint32_t start, uint32_t stop, uint3
 
 __STATIC_INLINE uint32_t moduloIncrement( uint32_t value, uint32_t moduloDivisor )
 {
-    return (++value >= moduloDivisor) ? 0 : value;
+    return (++value >= moduloDivisor) ? 0U : value;
 }
 
 __STATIC_INLINE uint32_t moduloDecrement( uint32_t value, uint32_t moduloDivisor )
 {
-    return !value ? (moduloDivisor - 1) : --value;
+    return value == 0U ? (moduloDivisor - 1U) : value - 1U;
 }
 
-#endif  // _DRV_EMAC_LIB_H_
+static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT* __attribute__((always_inline)) FC_U8Ptr2GapDcpt( uint8_t* u8Ptr )
+{
+    union
+    {
+        uint8_t*                    u8Ptr;
+        TCPIP_MAC_SEGMENT_GAP_DCPT* gapDcpt;
+    }U_U8_PTR_GAP_DCPT;
+
+    U_U8_PTR_GAP_DCPT.u8Ptr = u8Ptr;
+    return U_U8_PTR_GAP_DCPT.gapDcpt;
+}
+
+static __inline__ uint32_t* __attribute__((always_inline)) FC_U8Ptr2U32Ptr( uint8_t* u8Ptr )
+{
+    union
+    {
+        uint8_t*    u8Ptr;
+        uint32_t*   u32Ptr;
+    }U_U8_PTR_U32_PTR;
+
+    U_U8_PTR_U32_PTR.u8Ptr = u8Ptr;
+    return U_U8_PTR_U32_PTR.u32Ptr;
+}
+
+#endif  // H_DRV_EMAC_LIB_H_
 

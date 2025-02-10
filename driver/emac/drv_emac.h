@@ -17,7 +17,7 @@
  ******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,8 +39,8 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 //DOM-IGNORE-END
-#ifndef _DRV_EMAC_H
-#define _DRV_EMAC_H
+#ifndef H_DRV_EMAC_H_
+#define H_DRV_EMAC_H_
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,6 +56,7 @@ Microchip or any third party.
 #include "driver/ethphy/drv_ethphy.h"
 
 #include "tcpip/tcpip_mac.h"
+#include "tcpip/tcpip_mac_object.h"
 #include "tcpip/tcpip_ethernet.h"
 
 // DOM-IGNORE-BEGIN
@@ -73,39 +74,39 @@ Microchip or any third party.
 typedef struct
 {
     /*  number of OK RX packets */
-    int32_t     nRxOkPackets;
+    uint32_t    nRxOkPackets;
     /*  number of currently scheduled RX buffers in the driver queues. */
     /* These are available buffers, ready to receive data */
-    int32_t     nRxSchedBuffers;
+    uint32_t    nRxSchedBuffers;
     /*  number of RX packets with errors */
-    int32_t     nRxErrorPackets;
+    uint32_t    nRxErrorPackets;
     /*  number of RX fragmentation errors */
-    int32_t     nRxFragmentErrors;
+    uint32_t    nRxFragmentErrors;
     /*  number of occurences of 'RX Buffer Not Available' */
-    int32_t     nRxBuffNotAvailable;
-    int32_t     packetPoolBuffers;
-    int32_t     expungedSegments;
-    int32_t     macPacketsInStackHighPoint;
-    int32_t     macPacketsInStack;
-    int32_t     macSegmentsInStack;
-    int32_t     packetAllocFailures;
+    uint32_t    nRxBuffNotAvailable;
+    uint32_t    packetPoolBuffers;
+    uint32_t    expungedSegments;
+    uint32_t    macPacketsInStackHighPoint;
+    uint32_t    macPacketsInStack;
+    uint32_t    macSegmentsInStack;
+    uint32_t    packetAllocFailures;
 } TCPIP_EMAC_RX_STATISTICS;
 
 typedef struct
 {
     /*  number of OK transmitted packets */
-    int32_t     nTxOkPackets;
+    uint32_t    nTxOkPackets;
     /*  number of unacknowledged pending TX buffers in the driver queues. */
     /*  This is equal with pending TX packets when each packet */
     /*  is contained within a TX buffer. */
-    int32_t     nTxPendBuffers;
+    uint32_t    nTxPendBuffers;
     /*  number of packets that could not be transmitted */
-    int32_t     nTxErrorPackets;
+    uint32_t    nTxErrorPackets;
     /*  number of times the TX queue was full */
     /*  this may signal that the number of TX descriptors is too small */
-    int32_t     nTxQueueFull;
-    int32_t     pending;
-    int32_t     linkLossResets;
+    uint32_t    nTxQueueFull;
+    uint32_t    pending;
+    uint32_t    linkLossResets;
 } TCPIP_EMAC_TX_STATISTICS;
 
 
@@ -113,7 +114,7 @@ typedef struct
 {
     TCPIP_MAC_ADDR                  macAddress;         // instance address
     INT_SOURCE                      macIntSrc;
-    int32_t                         macRxFilters;
+    uint32_t                        macRxFilters;
     /* Configuration for MAC queues */
     uint16_t rxDeviceMaxDescriptors;/** largest descriptor count possible for the device **/
     uint16_t nRxDescCnt;            /** RX Descriptor count */
@@ -190,10 +191,7 @@ typedef struct
     PHY.  It should be called to be able to schedule any Ethernet transmit or
     receive operation.
 */
-SYS_MODULE_OBJ MAC_DRVR_Initialize(
-    const SYS_MODULE_INDEX          index,
-    const SYS_MODULE_INIT * const   init
-    );
+SYS_MODULE_OBJ MAC_DRVR_Initialize( const SYS_MODULE_INDEX  index, const SYS_MODULE_INIT * const  init);
 
 /*******************************************************************************
   Function:
@@ -230,9 +228,7 @@ void MAC_DRVR_Deinitialize( SYS_MODULE_OBJ object );
 
 /*******************************************************************************
   Function:
-    void MAC_DRVR_Reinitialize( SYS_MODULE_OBJ          object,
-                                const SYS_MODULE_INIT * const init
-                                );
+    void MAC_DRVR_Reinitialize( SYS_MODULE_OBJ  object, const SYS_MODULE_INIT * const init);
   Summary:
     Reinitializes the Ethernet MAC.
     <p><b>Implementation:</b> Dynamic</p>
@@ -257,10 +253,7 @@ void MAC_DRVR_Deinitialize( SYS_MODULE_OBJ object );
   Remarks:
     This function is not supported yet.
  ******************************************************************************/
-void MAC_DRVR_Reinitialize(
-    SYS_MODULE_OBJ                  object,
-    const SYS_MODULE_INIT * const   init
-    );
+void MAC_DRVR_Reinitialize( SYS_MODULE_OBJ  object, const SYS_MODULE_INIT * const  init);
 
 /*******************************************************************************
   Function:
@@ -461,17 +454,14 @@ bool MAC_DRVR_PowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode );
 
 /*******************************************************************************
   Function:
-        TCPIP_MAC_RES MAC_DRVR_RxFilterHashTableEntrySet(
-                DRV_HANDLE              hMac,
-                const TCPIP_MAC_ADDR *  DestMACAddr
-                )
+        TCPIP_MAC_RES MAC_DRVR_RxFilterHashTableEntrySet( DRV_HANDLE  hMac, const TCPIP_MAC_ADDR *  DestMACAddr)
   Summary:
     Sets the current MAC hash table receive filter.
     <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function sets the MAC hash table filtering to allow 
-    packets sent to DestMACAddr to be received.
+    packets sent to destMacAddr to be received.
     It calculates a CRC-32 using polynomial 0x4C11DB7 over the 6 byte MAC address
     and then, using bits 28:23 of the CRC, will set the appropriate bits in
     the hash table filter registers ( ETHHT0-ETHHT1).
@@ -484,9 +474,9 @@ bool MAC_DRVR_PowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode );
 
   Parameters:
     - hMac        -  Ethernet MAC client handle
-    - DestMACAddr - destination, 6 byte, MAC addresses to be allowed 
+    - destMacAddr - destination, 6 byte, MAC addresses to be allowed 
                     through the Hash Table Filter.
-                    If DestMACAddr is set to 00-00-00-00-00-00,
+                    If destMacAddr is set to 00-00-00-00-00-00,
                     then the hash table will be cleared of all entries
                     and the filter will be disabled.
   Return:
@@ -499,7 +489,7 @@ bool MAC_DRVR_PowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode );
     
   Remarks:
     - Sets the appropriate bit in the ETHHT0/1 registers to allow packets
-      sent to DestMACAddr to be received and enabled the Hash Table receive
+      sent to destMacAddr to be received and enabled the Hash Table receive
       filter.
     - There is no way to individually remove destination MAC 
       addresses from the hash table since it is possible to have 
@@ -513,14 +503,11 @@ bool MAC_DRVR_PowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode );
       This will allow the receive of all packets, regardless of their destination
 
  ******************************************************************************/
-TCPIP_MAC_RES MAC_DRVR_RxFilterHashTableEntrySet(
-    DRV_HANDLE              hMac,
-    const TCPIP_MAC_ADDR *  DestMACAddr
-    );
+TCPIP_MAC_RES MAC_DRVR_RxFilterHashTableEntrySet( DRV_HANDLE  hMac, const TCPIP_MAC_ADDR *  destMacAddr);
 
 /*******************************************************************************
   Function:
-        TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
+        TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket);
     
   Summary:
     MAC driver transmit function.
@@ -536,7 +523,7 @@ TCPIP_MAC_RES MAC_DRVR_RxFilterHashTableEntrySet(
 
   Parameters:
     - hMac      - Ethernet MAC client handle
-    - ptrPacket - pointer to a TCPIP_MAC_PACKET that's completely formatted
+    - pMacPacket - pointer to a TCPIP_MAC_PACKET that's completely formatted
                   and ready to be transmitted over the network
 
   Return:
@@ -561,14 +548,11 @@ TCPIP_MAC_RES MAC_DRVR_RxFilterHashTableEntrySet(
       set and the packet acknowledgment function (ackFunc) will be called.
 
  ******************************************************************************/
-TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
+TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket);
 
 /*******************************************************************************
   Function:
-    TCPIP_MAC_PACKET * MAC_DRVR_PacketRx(   DRV_HANDLE      hMac,
-                                            TCPIP_MAC_RES * pRes,
-                                            const TCPIP_MAC_PACKET_RX_STAT ** ppPktStat
-                                            );
+    TCPIP_MAC_PACKET * MAC_DRVR_PacketRx(   DRV_HANDLE  hMac, TCPIP_MAC_RES * pRes, const TCPIP_MAC_PACKET_RX_STAT * pPktStatus);
 
   Summary:
     This is the MAC receive function.
@@ -578,7 +562,7 @@ TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
     This function will return a packet if such a pending packet exists.
     
     Additional information about the packet is available by providing the pRes and
-    ppPktStat fields.
+    pPktStatus fields.
 
   Precondition:
     MAC_DRVR_Initialize() should have been called.
@@ -589,7 +573,7 @@ TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
     - pRes        - optional pointer to an address that will receive an additional
                     result associated with the operation.
                     Can be 0 if not needed.
-    - ppPktStat   - optional pointer to an address that will receive the received
+    - pPktStatus  - optional pointer to an address that will receive the received
                     packet status.
                     Note that this pointer cannot be used once the packet
                     acknowledgment function was called.
@@ -630,11 +614,7 @@ TCPIP_MAC_RES MAC_DRVR_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
     - The MAC driver may use the MAC_DRVR_Process() for obtaining new RX packets if needed.
 
  ******************************************************************************/
-TCPIP_MAC_PACKET * MAC_DRVR_PacketRx(
-    DRV_HANDLE                          hMac,
-    TCPIP_MAC_RES *                     pRes,
-    const TCPIP_MAC_PACKET_RX_STAT **   ppPktStat
-    );
+TCPIP_MAC_PACKET * MAC_DRVR_PacketRx( DRV_HANDLE  hMac, TCPIP_MAC_RES *  pRes, TCPIP_MAC_PACKET_RX_STAT *  pPktStatus);
 
 /*****************************************************************************
   Function:
@@ -720,17 +700,11 @@ TCPIP_MAC_RES MAC_DRVR_Process( DRV_HANDLE hMac );
   Remarks:
     - The reported values are info only and change dynamically.
  ******************************************************************************/
-TCPIP_MAC_RES MAC_DRVR_StatisticsGet(
-    DRV_HANDLE                  hMac,
-    TCPIP_MAC_RX_STATISTICS *   pRxStatistics,
-    TCPIP_MAC_TX_STATISTICS *   pTxStatistics
-    );
+TCPIP_MAC_RES MAC_DRVR_StatisticsGet( DRV_HANDLE  hMac, TCPIP_MAC_RX_STATISTICS *  pRxStatistics, TCPIP_MAC_TX_STATISTICS *  pTxStatistics);
     
 /*******************************************************************************
    MAC Parameter Get function
-     TCPIP_MAC_RES     MAC_DRVR_ParametersGet( DRV_HANDLE               hMac,
-                                               TCPIP_MAC_PARAMETERS *   pMacParams
-                                               );
+     TCPIP_MAC_RES     MAC_DRVR_ParametersGet( DRV_HANDLE  hMac, TCPIP_MAC_PARAMETERS *  pMacParams);
   Summary:
     MAC parameter get function.
     <p><b>Implementation:</b> Dynamic</p>
@@ -753,19 +727,11 @@ TCPIP_MAC_RES MAC_DRVR_StatisticsGet(
   Remarks:
     None.
  ******************************************************************************/
-TCPIP_MAC_RES MAC_DRVR_ParametersGet(
-    DRV_HANDLE              hMac,
-    TCPIP_MAC_PARAMETERS *  pMacParams
-    );
+TCPIP_MAC_RES MAC_DRVR_ParametersGet( DRV_HANDLE  hMac, TCPIP_MAC_PARAMETERS *  pMacParams);
 
 /*******************************************************************************
   Function:
-     TCPIP_MAC_RES MAC_DRVR_RegisterStatisticsGet(
-                         DRV_HANDLE                         hMac,
-                         TCPIP_MAC_STATISTICS_REG_ENTRY *   pRegEntries,
-                         int                                nEntries,
-                         int *                              pHwEntries
-                         );
+     TCPIP_MAC_RES MAC_DRVR_RegisterStatisticsGet( DRV_HANDLE  hMac, TCPIP_MAC_STATISTICS_REG_ENTRY *  pRegEntries, size_t  nEntries, size_t *  pHwEntries);
   Summary:
     Gets the current MAC hardware statistics registers.
     <p><b>Implementation:</b> Dynamic</p>
@@ -799,20 +765,11 @@ TCPIP_MAC_RES MAC_DRVR_ParametersGet(
   Remarks:
     - The reported values are info only and change dynamically.
  ******************************************************************************/
-TCPIP_MAC_RES MAC_DRVR_RegisterStatisticsGet(
-    DRV_HANDLE                          hMac,
-    TCPIP_MAC_STATISTICS_REG_ENTRY *    pRegEntries,
-    int                                 nEntries,
-    int *                               pHwEntries
-    );
+TCPIP_MAC_RES MAC_DRVR_RegisterStatisticsGet( DRV_HANDLE  hMac, TCPIP_MAC_STATISTICS_REG_ENTRY *  pRegEntries, size_t  nEntries, size_t *  pHwEntries);
     
 /*******************************************************************************
    Function:
-     size_t MAC_DRVR_ConfigGet( DRV_HANDLE  hMac,
-                                void *      configBuff,
-                                size_t      buffSize,
-                                size_t *    pConfigSize
-                                );
+     size_t MAC_DRVR_ConfigGet( DRV_HANDLE  hMac, void *  configBuff, size_t  buffSize, size_t *  pConfigSize);
   Summary:
     Gets the current MAC driver configuration.
     <p><b>Implementation:</b> Dynamic</p>
@@ -846,19 +803,11 @@ TCPIP_MAC_RES MAC_DRVR_RegisterStatisticsGet(
   Remarks:
     - None
  ******************************************************************************/
-size_t MAC_DRVR_ConfigGet(
-    DRV_HANDLE  hMac,
-    void *      configBuff,
-    size_t      buffSize,
-    size_t *    pConfigSize
-    );
+size_t MAC_DRVR_ConfigGet( DRV_HANDLE  hMac, void *  configBuff, size_t  buffSize, size_t *  pConfigSize);
     
 /*******************************************************************************
   Function:
-        bool MAC_DRVR_EventMaskSet( DRV_HANDLE      hMac,
-                                    TCPIP_MAC_EVENT macEvents,
-                                    bool            enable
-                                    );
+        bool MAC_DRVR_EventMaskSet( DRV_HANDLE  hMac, TCPIP_MAC_EVENT tcpMacEvents, bool  enable);
   Summary:
     Enables/disables the MAC events.
     <p><b>Implementation:</b> Dynamic</p>
@@ -909,15 +858,11 @@ size_t MAC_DRVR_ConfigGet(
       if a notification handler is in place) it will be disabled until the
       MAC_DRVR_EventAcknowledge() is called.                                                        
  ******************************************************************************/
-bool MAC_DRVR_EventMaskSet(
-    DRV_HANDLE      hMac,
-    TCPIP_MAC_EVENT macEvents,
-    bool            enable
-    );
+bool MAC_DRVR_EventMaskSet( DRV_HANDLE  hMac, TCPIP_MAC_EVENT tcpMacEvents, bool  enable);
 
 /*******************************************************************************
   Function:
-   bool    MAC_DRVR_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv);
+   bool    MAC_DRVR_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpMacEvents);
     
   Summary:
     Acknowledges and re-enables processed events.
@@ -937,7 +882,7 @@ bool MAC_DRVR_EventMaskSet(
 
   Parameters:
     - hMac      - Ethernet MAC client handle
-    - tcpAckEv  - the events that the user processed and need to be re-enabled
+    - tcpMacEvents  - the events that the user processed and need to be re-enabled
 
   Return:
     - true if events acknowledged
@@ -967,7 +912,7 @@ bool MAC_DRVR_EventMaskSet(
       Re-enabling them immediately without proper processing will have
       dramatic effects on system performance.                                                          
  ******************************************************************************/
-bool MAC_DRVR_EventAcknowledge( DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv );
+bool MAC_DRVR_EventAcknowledge( DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpMacEvents);
 
 /*******************************#***********************************************
   Function:
@@ -1022,7 +967,7 @@ TCPIP_MAC_EVENT MAC_DRVR_EventPendingGet( DRV_HANDLE hMac );
 
 /*******************************************************************************
   Function:
-      void MAC_DRVR_Tasks_ISR( SYS_MODULE_OBJ macIndex )
+      void MAC_DRVR_Tasks_ISR( SYS_MODULE_OBJ sysObjHandle )
     
   Summary:
     Ethernet MAC driver interrupt function.
@@ -1038,7 +983,7 @@ TCPIP_MAC_EVENT MAC_DRVR_EventPendingGet( DRV_HANDLE hMac );
     The TCP/IP stack event notification should be enabled.
 
   Parameters:
-    - macIndex -  parameter identifying the intended MAC client
+    - sysObjHandle -  parameter identifying the intended MAC client
 
   Return:
     None.
@@ -1046,8 +991,11 @@ TCPIP_MAC_EVENT MAC_DRVR_EventPendingGet( DRV_HANDLE hMac );
   Remarks:
     None.
  ******************************************************************************/
-void MAC_DRVR_Tasks_ISR( SYS_MODULE_OBJ macIndex );
+void MAC_DRVR_Tasks_ISR( SYS_MODULE_OBJ sysObjHandle );
 
+// supported MAC objects
+extern const TCPIP_MAC_OBJECT DRV_EMAC0_Object;
+extern const TCPIP_MAC_OBJECT DRV_EMAC1_Object;
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -1055,5 +1003,5 @@ void MAC_DRVR_Tasks_ISR( SYS_MODULE_OBJ macIndex );
 #endif
 //DOM-IGNORE-END
 
-#endif // _DRV_EMAC_H
+#endif // H_DRV_EMAC_H_
 

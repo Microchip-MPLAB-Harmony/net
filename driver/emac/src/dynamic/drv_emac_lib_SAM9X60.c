@@ -12,7 +12,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2020-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2020-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -37,22 +37,13 @@ Microchip or any third party.
 
 #include "driver/emac/src/dynamic/drv_emac_lib.h"
 
-static bool                 rxMacPacketAck(         TCPIP_MAC_PACKET *          pMacPacket,
-                                                    const void *                param
-                                                    );
-static MAC_RXFRAME_STATE    rxFindValidPacket(      MAC_DRIVER *                pMacDrvr,
-                                                    MAC_DRVR_RX_FRAME_INFO *    pFrameInfo
-                                                    );
-static bool                 rxUpdateBnaStatistics(  MAC_DRIVER *                pMacDrvr );
-static MAC_DRVR_RESULT      rxExtractPacket(        MAC_DRIVER *                pMacDrvr,
-                                                    MAC_DRVR_RX_FRAME_INFO *    pFrameInfo,
-                                                    TCPIP_MAC_PACKET **         ppRxMacPacket
-                                                    );
-static MAC_RX_FILTERS       macToEthFilter(         TCPIP_MAC_RX_FILTER_TYPE    macFilter );
-static uint64_t             macDrvrHashValueGet(    emac_registers_t *          pToMacRegs );
-static void                 macDrvrHashValueSet(    emac_registers_t *          pToMacRegs,
-                                                    uint64_t                    value
-                                                    );
+static void                 rxMacPacketAck(         TCPIP_MAC_PACKET *  pMacPacket, const void *  param);
+static MAC_RXFRAME_STATE    rxFindValidPacket(      MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo);
+static bool                 rxUpdateBnaStatistics(  MAC_DRIVER *  pMacDrvr );
+static MAC_DRVR_RESULT      rxExtractPacket(        MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo, TCPIP_MAC_PACKET **  ppRxMacPacket);
+static MAC_RX_FILTERS       macToEthFilter(         TCPIP_MAC_RX_FILTER_TYPE  macFilter );
+static uint64_t             macDrvrHashValueGet(    emac_registers_t *  pToMacRegs );
+static void                 macDrvrHashValueSet(    emac_registers_t *  pToMacRegs, uint64_t  value);
 
 // RX Buffer allocation types
 // MAC TX and RX Descriptor structure with multiple Queues
@@ -65,9 +56,9 @@ typedef struct
 
 // place the descriptors in an uncached memory region
 #if defined(__XC32)
-__attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray;
+static __attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray;
 #elif defined(__IAR_SYSTEMS_ICC__)
-__attribute__((__aligned__(4))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray @".region_nocache";
+static __attribute__((__aligned__(4))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray @".region_nocache";
 #endif
 #endif
 
@@ -79,26 +70,28 @@ typedef struct
 } EMAC1_DRVR_HW_DCPT_SPACE;
 // place the descriptors in an uncached memory region
 #if defined(__XC32)
-__attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC1_DRVR_HW_DCPT_SPACE EMAC1_DcptArray;
+static __attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC1_DRVR_HW_DCPT_SPACE EMAC1_DcptArray;
 #elif defined(__IAR_SYSTEMS_ICC__)
-__attribute__((__aligned__(4))) EMAC1_DRVR_HW_DCPT_SPACE EMAC1_DcptArray @".region_nocache";
+static __attribute__((__aligned__(4))) EMAC1_DRVR_HW_DCPT_SPACE EMAC1_DcptArray @".region_nocache";
 #endif
 #endif
 
 
 // basic level  debugging
 #if ((EMAC_DRV_DEBUG_LEVEL & EMAC_DRV_DEBUG_MASK_BASIC) != 0)
-volatile int _EMACDrvStayAssertLoop = 0;
-static void _EMACAssertCond(bool cond, const char* message, int lineNo)
+static volatile int V_EMACDrvStayAssertLoop = 0;
+static void F_EMACAssertCond(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("EMAC Drv Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(_EMACDrvStayAssertLoop != 0);
+        while(V_EMACDrvStayAssertLoop != 0)
+        {
+        }
     }
 }
 #else
-#define _EMACAssertCond(cond, message, lineNo)
+#define F_EMACAssertCond(cond, message, lineNo)
 #endif  // (EMAC_DRV_DEBUG_LEVEL)
 
 
@@ -107,22 +100,19 @@ static void _EMACAssertCond(bool cond, const char* message, int lineNo)
 void macDrvrLibDescriptorsPoolClear( void )
 {
 #if defined( DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0 ) || defined( DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0 )
-     memset( &EMAC0_DcptArray, 0, sizeof( EMAC0_DcptArray ) );
+     (void)memset( &EMAC0_DcptArray, 0, sizeof( EMAC0_DcptArray ) );
 #endif
 #if defined( DRV_EMAC1_RX_DESCRIPTORS_COUNT_QUE0 ) || defined( DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0 )
-     memset( &EMAC1_DcptArray, 0, sizeof( EMAC1_DcptArray ) );
+     (void)memset( &EMAC1_DcptArray, 0, sizeof( EMAC1_DcptArray ) );
 #endif
 }
 
-void macDrvrLibDescriptorsPoolAssignment(
-    MAC_DRIVER *        pMacDrvr,
-    MAC_DRVR_DCPT_TYPE  dType
-    )
+void macDrvrLibDescriptorsPoolAssignment( MAC_DRIVER *  pMacDrvr, MAC_DRVR_DCPT_TYPE  dType)
 {
     if( dType == MAC_DRVR_DCPT_TYPE_TX )
     {
 #ifdef DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0
-        if( TCPIP_MODULE_MAC_SAM9X60_0 == (TCPIP_MODULE_MAC_SAM9X60 + pMacDrvr->macIx) )
+        if( pMacDrvr->macIx == 0U)
         {
             int32_t ii;
             pMacDrvr->pTxDesc = EMAC0_DcptArray.txDescQueue0;
@@ -134,7 +124,7 @@ void macDrvrLibDescriptorsPoolAssignment(
         }
 #endif
 #ifdef DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0
-        if( TCPIP_MODULE_MAC_SAM9X60_1 == (TCPIP_MODULE_MAC_SAM9X60 + pMacDrvr->macIx) )
+        if( pMacDrvr->macIx == 1U)
         {
             int32_t ii;
             pMacDrvr->pTxDesc = EMAC1_DcptArray.txDescQueue0;
@@ -149,7 +139,7 @@ void macDrvrLibDescriptorsPoolAssignment(
     else if( dType == MAC_DRVR_DCPT_TYPE_RX )
     {
 #ifdef DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0
-        if( TCPIP_MODULE_MAC_SAM9X60_0 == (TCPIP_MODULE_MAC_SAM9X60 + pMacDrvr->macIx) )
+        if( pMacDrvr->macIx == 0U )
         {
             int32_t ii;
             pMacDrvr->pRxDesc = EMAC0_DcptArray.rxDescQueue0;
@@ -161,7 +151,7 @@ void macDrvrLibDescriptorsPoolAssignment(
         }
 #endif
 #ifdef DRV_EMAC1_RX_DESCRIPTORS_COUNT_QUE0
-        if( TCPIP_MODULE_MAC_SAM9X60_1 == (TCPIP_MODULE_MAC_SAM9X60 + pMacDrvr->macIx) )
+        if( pMacDrvr->macIx == 1U)
         {
             int32_t ii;
             pMacDrvr->pRxDesc = EMAC1_DcptArray.rxDescQueue0;
@@ -173,6 +163,10 @@ void macDrvrLibDescriptorsPoolAssignment(
         }
 #endif
     }
+    else
+    {
+        // do nothing
+    }
     __DSB();
 }
 
@@ -181,31 +175,28 @@ MAC_DRVR_RESULT macDrvrLibSetMacAddr( MAC_DRIVER * pMacDrvr )
     emac_registers_t *  pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     uint8_t *           pMacAddr = (uint8_t *) pMacDrvr->config.macAddress.v;
 
-    pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB = (pMacAddr[ 3 ] << 24)
-                                    | (pMacAddr[ 2 ] << 16)
-                                    | (pMacAddr[ 1 ] <<  8)
-                                    | (pMacAddr[ 0 ])
+    pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB = ((uint32_t)pMacAddr[ 3 ] << 24)
+                                    | ((uint32_t)pMacAddr[ 2 ] << 16)
+                                    | ((uint32_t)pMacAddr[ 1 ] <<  8)
+                                    | ((uint32_t)pMacAddr[ 0 ])
                                     ;
 
-    pMacRegs->EMAC_SA[ 0 ].EMAC_SAxT = (pMacAddr[ 5 ] <<  8)
-                                    | (pMacAddr[ 4 ])
+    pMacRegs->EMAC_SA[ 0 ].EMAC_SAxT = ((uint32_t)pMacAddr[ 5 ] <<  8)
+                                    | ((uint32_t)pMacAddr[ 4 ])
                                     ;
     return MAC_DRVR_RES_OK;
 }
 
-MAC_DRVR_RESULT macDrvrLibGetMacAddr(
-    MAC_DRIVER *    pMacDrvr,
-    uint8_t *       pMacAddr
-    )
+MAC_DRVR_RESULT macDrvrLibGetMacAddr( MAC_DRIVER *  pMacDrvr, uint8_t *  pMacAddr)
 {
     emac_registers_t * pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
 
-    pMacAddr[ 0 ] =  (pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB) & 0xFF;
-    pMacAddr[ 1 ] = ((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB)>>8) & 0xFF;
-    pMacAddr[ 2 ] = ((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB)>>16) & 0xFF;
-    pMacAddr[ 3 ] = ((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB)>>24) & 0xFF;
-    pMacAddr[ 4 ] =  (pMacRegs->EMAC_SA[ 0 ].EMAC_SAxT) & 0xFF;
-    pMacAddr[ 5 ] = ((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxT)>>8) & 0xFF;
+    pMacAddr[ 0 ] = (uint8_t)(pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB) & 0xFFU;
+    pMacAddr[ 1 ] = (uint8_t)((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB) >> 8) & 0xFFU;
+    pMacAddr[ 2 ] = (uint8_t)((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB) >> 16) & 0xFFU;
+    pMacAddr[ 3 ] = (uint8_t)((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxB) >> 24) & 0xFFU;
+    pMacAddr[ 4 ] = (uint8_t)(pMacRegs->EMAC_SA[ 0 ].EMAC_SAxT) & 0xFFU;
+    pMacAddr[ 5 ] = (uint8_t)((pMacRegs->EMAC_SA[ 0 ].EMAC_SAxT) >> 8) & 0xFFU;
 
     return MAC_DRVR_RES_OK;
 }
@@ -222,7 +213,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
     // must be done first
     pMacRegs->EMAC_NCR &= ~(EMAC_NCR_RE_Msk | EMAC_NCR_TE_Msk);
     // disable all MAC interrupts for QUEUE
-    pMacRegs->EMAC_IDR = MAC_EV_ALL;
+    pMacRegs->EMAC_IDR = (uint32_t)MAC_EV_ALL;
     // Clear Interrupt status
     (void) pMacRegs->EMAC_ISR;
     pMacRegs->EMAC_NCR  |=  EMAC_NCR_CLRSTAT_Msk        // Clear statistics
@@ -234,15 +225,15 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
     // Clear TX Status
     pMacRegs->EMAC_TSR = EMAC_TSR_Msk;
 
-    if( (pMacDrvr->config.macRxFilters & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT) )
+    if( (pMacDrvr->config.macRxFilters & (uint32_t)TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT) != 0U )
     {   // Receive All Multi-cast packets, so set 64-bit hash value to all ones.
         // check against DRV_EMACx_RX_FILTERS
         MAC_DRVR_HASH hash;
-        hash.value = -1;    // Set 64-bit Hash value to all 1s, to receive all multi-cast
-        hash.calculate = false;             // No hash calculation; directly set hash register
-        macDrvrLibRxFilterHashCalculate( pMacDrvr, &hash );
+        hash.value = 0xffffffffffffffffULL;    // Set 64-bit Hash value to all 1s, to receive all multi-cast
+        hash.calculate = 0U;             // No hash calculation; directly set hash register
+        (void)macDrvrLibRxFilterHashCalculate( pMacDrvr, &hash );
     }
-    if((pMacDrvr->config.pPhyInit->phyFlags) & (DRV_ETHPHY_CFG_RMII))   
+    if(((uint16_t)pMacDrvr->config.pPhyInit->phyFlags & (uint16_t)DRV_ETHPHY_CFG_RMII) != 0U)
     {
         pMacRegs->EMAC_USRIO = EMAC_USRIO_RMII( 1 ); // initial mode set as RMII
     }
@@ -253,18 +244,12 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
     pMacRegs->EMAC_USRIO |= EMAC_USRIO_CLKEN_Msk;
     // Set network configurations link speed, full duplex, copy all frames, no broadcast,
     // pause enable, remove FCS, MDC clock, and Rx Filters
-    macRxFilt = macToEthFilter( pMacDrvr->config.macRxFilters );
+    macRxFilt = macToEthFilter( (TCPIP_MAC_RX_FILTER_TYPE)pMacDrvr->config.macRxFilters );
     ncfgrPreserved = ((uint32_t)(pMacRegs->EMAC_NCFGR)) & EMAC_NCFGR_CLK_Msk;
-    pMacRegs->EMAC_NCFGR = EMAC_NCFGR_FD_Msk
-                            | EMAC_NCFGR_PAE_Msk
-                            | EMAC_NCFGR_DRFCS_Msk
-                            | ncfgrPreserved
-                            | macRxFilt
-                            | EMAC_NCFGR_RBOF( pMacDrvr->_dataOffset )
-                            | EMAC_NCFGR_SPD_Msk
-                            ;
+    pMacRegs->EMAC_NCFGR = EMAC_NCFGR_FD_Msk | EMAC_NCFGR_PAE_Msk | EMAC_NCFGR_DRFCS_Msk | ncfgrPreserved | (uint32_t)macRxFilt
+                            | EMAC_NCFGR_RBOF( pMacDrvr->dataOffset ) | EMAC_NCFGR_SPD_Msk ;
     // Set MAC address
-    macDrvrLibSetMacAddr( pMacDrvr );
+    (void)macDrvrLibSetMacAddr( pMacDrvr );
 }
 
 /****************************************************************************
@@ -281,10 +266,7 @@ void macDrvrLibTransferEnable( MAC_DRIVER * pMacDrvr )
  * Function: macDrvrLibClose
  * Summary: Disable MAC Rx, Tx and interrupts
  *****************************************************************************/
-void macDrvrLibClose(
-    MAC_DRIVER *            pMacDrvr,
-    MAC_DRVR_CLOSE_FLAGS    cFlags
-    )
+void macDrvrLibClose( MAC_DRIVER *  pMacDrvr, MAC_DRVR_CLOSE_FLAGS  cFlags)
 {
     // disable Rx, Tx
     emac_registers_t * pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
@@ -296,20 +278,14 @@ void macDrvrLibClose(
  * Function: macDrvrLibMacOpen
  * Summary : Open MAC driver
  *****************************************************************************/
-void macDrvrLibMacOpen(
-    MAC_DRIVER *            pMacDrvr,
-    TCPIP_ETH_OPEN_FLAGS    oFlags,
-    TCPIP_ETH_PAUSE_TYPE    pauseType
-    )
+void macDrvrLibMacOpen( MAC_DRIVER *  pMacDrvr, TCPIP_ETH_OPEN_FLAGS  oFlags, TCPIP_ETH_PAUSE_TYPE  pauseType)
 {
     emac_registers_t * pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     uint32_t ncfgrActual = pMacRegs->EMAC_NCFGR;
-    uint32_t negotiateMask = EMAC_NCFGR_FD_Msk
-                            | EMAC_NCFGR_SPD_Msk
-                            ;
+    uint32_t negotiateMask = EMAC_NCFGR_FD_Msk | EMAC_NCFGR_SPD_Msk ;
     uint32_t ncfgrDesired = ncfgrActual & ~negotiateMask;
 
-    if( (oFlags & TCPIP_ETH_OPEN_RMII) )
+    if( ((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_RMII) != 0U)
     {
         pMacRegs->EMAC_USRIO |= EMAC_USRIO_RMII_Msk;
     }
@@ -319,8 +295,8 @@ void macDrvrLibMacOpen(
     }
     pMacRegs->EMAC_USRIO |= EMAC_USRIO_CLKEN_Msk;
     ////
-    ncfgrDesired |= (oFlags & TCPIP_ETH_OPEN_FDUPLEX)   ? EMAC_NCFGR_FD_Msk : 0;
-    ncfgrDesired |= (oFlags & TCPIP_ETH_OPEN_100)       ? EMAC_NCFGR_SPD_Msk : 0;
+    ncfgrDesired |= ((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_FDUPLEX) != 0U ? EMAC_NCFGR_FD_Msk : 0U;
+    ncfgrDesired |= ((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_100) != 0U ? EMAC_NCFGR_SPD_Msk : 0U;
     if( ncfgrDesired != ncfgrActual )
     {
         pMacRegs->EMAC_NCR &= ~(EMAC_NCR_RE_Msk | EMAC_NCR_TE_Msk);
@@ -342,17 +318,13 @@ MAC_DRVR_RESULT macDrvrLibTxInit( MAC_DRIVER * pMacDrvr )
         pMacDrvr->pTxDesc[ ii ].bufferAddress = 0;
         pMacDrvr->pTxDesc[ ii ].status.val = DRVRnEMAC_TX_USE_BIT;
     }
-    pMacDrvr->pTxDesc[ ii - 1 ].status.val |= EMAC_TX_WRAP_BIT;
+    pMacDrvr->pTxDesc[ ii - 1U].status.val |= EMAC_TX_WRAP_BIT;
     __DSB();
     pMacRegs->EMAC_TBQP = ((uint32_t) pMacDrvr->pTxDesc) & EMAC_TBQP_ADDR_Msk;
     return MAC_DRVR_RES_OK;
 }
 
-MAC_DRVR_RESULT macDrvrLibTxSendPacket(
-    MAC_DRIVER *        pMacDrvr,
-    TCPIP_MAC_PACKET *  pMacPacket,
-    uint32_t            requiredDescCount
-    )
+MAC_DRVR_RESULT macDrvrLibTxSendPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET *  pMacPacket, uint32_t  requiredDescCount)
 {   // The descriptors are in non-Cacheable memory; but, the frame data is probably
     // in a non-Coherent state -- hence the DCACH clean calls.  The synchronization
     // barriers are necessary to keep the EMAC engine, which is running in parallel,
@@ -364,26 +336,26 @@ MAC_DRVR_RESULT macDrvrLibTxSendPacket(
     uint16_t                    newInsertPt;
 
     // we must always own the sentinel insert point
-    newInsertPt = getModulus( ii + requiredDescCount, pMacDrvr->config.nTxDescCnt );
+    newInsertPt = (uint16_t)getModulus( (int32_t)ii + (int32_t)requiredDescCount, (int32_t)pMacDrvr->config.nTxDescCnt );
     pTxDesc[ newInsertPt ].status.val |= DRVRnEMAC_TX_USE_BIT;
     // to avoid a race condition; we'll skip the first segment, update all the
     // descriptors and then come back and place the first segment.
-    while( pDSeg->next )
+    while( pDSeg->next != NULL)
     {
         pDSeg = pDSeg->next;
-        DCACHE_CLEAN_BY_ADDR( (uint32_t *) pDSeg->segLoad, pDSeg->segLen );
-        ii = moduloIncrement( ii, pMacDrvr->config.nTxDescCnt );
+        DCACHE_CLEAN_BY_ADDR( FC_U8Ptr2U32Ptr(pDSeg->segLoad), (int32_t)pDSeg->segLen );
+        ii = (uint16_t)moduloIncrement( (uint32_t)ii, pMacDrvr->config.nTxDescCnt );
         pTxDesc[ ii ].status.val &= EMAC_TX_WRAP_BIT;
-        pTxDesc[ ii ].status.val |= (EMAC_TX_DESC_LEN_MASK & pDSeg->segLen);
+        pTxDesc[ ii ].status.val |= (uint32_t)EMAC_TX_DESC_LEN_MASK & (uint32_t)pDSeg->segLen;
         pTxDesc[ ii ].bufferAddress = (uint32_t) pDSeg->segLoad;
     }
     pTxDesc[ ii ].status.val |= EMAC_TX_LAST_BUFFER_BIT;
     pDSeg = pMacPacket->pDSeg;
-    DCACHE_CLEAN_BY_ADDR( (uint32_t *) pDSeg->segLoad, pDSeg->segLen ); 
+    DCACHE_CLEAN_BY_ADDR( FC_U8Ptr2U32Ptr(pDSeg->segLoad), (int32_t)pDSeg->segLen );
     // insert the first segment -- this could be the only segment; so preserve EMAC_TX_LAST_BUFFER_BIT
     ii = pMacDrvr->txInsertPt;
     pTxDesc[ ii ].status.val &= (EMAC_TX_WRAP_BIT | EMAC_TX_LAST_BUFFER_BIT | DRVRnEMAC_TX_USE_BIT);
-    pTxDesc[ ii ].status.val |= (EMAC_TX_DESC_LEN_MASK & pDSeg->segLen);
+    pTxDesc[ ii ].status.val |= (uint32_t)EMAC_TX_DESC_LEN_MASK & (uint32_t)pDSeg->segLen;
     pTxDesc[ ii ].bufferAddress = (uint32_t) pDSeg->segLoad;
     __DSB();                                                                // insure data is placed before giving up ownership
     pTxDesc[ ii ].status.val &= ~(DRVRnEMAC_TX_USE_BIT);                    // give emac control of the descriptors
@@ -398,19 +370,19 @@ MAC_DRVR_RESULT macDrvrLibTxSendPacket(
  *****************************************************************************/
 static MAC_RX_FILTERS macToEthFilter( TCPIP_MAC_RX_FILTER_TYPE macFilter )
 {
-    MAC_RX_FILTERS rxFilter = 0;
+    uint32_t rxFilter = 0U;
 
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT)? MAC_FILT_PREAMBLE_ERR_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT) ? MAC_FILT_CRC_ERR_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT)  ? MAC_FILT_MAXFRAME_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT)? MAC_FILT_UCASTHASH_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT)     ? MAC_FILT_MCASTHASH_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT)? MAC_FILT_MCASTHASH_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT)     ? 0 : MAC_FILT_BCAST_REJECT;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT)       ? MAC_FILT_ALLFRAME_ACCEPT : 0;
-    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT)? MAC_FILT_JUMBOFRAME_ACCEPT : 0;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT) != 0U ? (uint32_t)MAC_FILT_PREAMBLE_ERR_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT) != 0U  ? (uint32_t)MAC_FILT_CRC_ERR_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT) != 0U   ? (uint32_t)MAC_FILT_MAXFRAME_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT) != 0U ? (uint32_t)MAC_FILT_UCASTHASH_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT)  != 0U     ? (uint32_t)MAC_FILT_MCASTHASH_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT) != 0U ? (uint32_t)MAC_FILT_MCASTHASH_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT)  != 0U     ? 0U : (uint32_t)MAC_FILT_BCAST_REJECT;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT)  != 0U       ? (uint32_t)MAC_FILT_ALLFRAME_ACCEPT : 0U;
+    rxFilter |= ((uint16_t)macFilter & (uint16_t)TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT) != 0U ? (uint32_t)MAC_FILT_JUMBOFRAME_ACCEPT : 0U;
 
-    return rxFilter;
+    return (MAC_RX_FILTERS)rxFilter;
 }
 
 MAC_DRVR_RESULT macDrvrLibRxInit( MAC_DRIVER * pMacDrvr )
@@ -427,7 +399,7 @@ MAC_DRVR_RESULT macDrvrLibRxInit( MAC_DRIVER * pMacDrvr )
         pMacDrvr->pRxDesc[ ii ].status.val = 0;
         pMacDrvr->pRxDesc[ ii ].bufferAddress.val = DRVRnEMAC_RX_OWNER_BIT;
     }
-    pMacDrvr->pRxDesc[ ii - 1 ].bufferAddress.val |= EMAC_RX_WRAP_BIT;
+    pMacDrvr->pRxDesc[ ii - 1U].bufferAddress.val |= EMAC_RX_WRAP_BIT;
     __DSB();
     emac_registers_t * pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     pMacRegs->EMAC_RBQP = (uint32_t) pMacDrvr->pRxDesc & EMAC_RBQP_ADDR_Msk;
@@ -435,22 +407,19 @@ MAC_DRVR_RESULT macDrvrLibRxInit( MAC_DRIVER * pMacDrvr )
     return MAC_DRVR_RES_OK;
 }
 
-MAC_DRVR_RESULT macDrvrLibRxAllocate(
-    MAC_DRIVER *    pMacDrvr,
-    uint16_t        bufferCount,
-    bool            stickyFlag
-    )
+MAC_DRVR_RESULT macDrvrLibRxAllocate( MAC_DRIVER *  pMacDrvr, uint16_t  bufferCount, bool  stickyFlag)
 {
     TCPIP_MAC_PACKET *  pMacPacket;
     MAC_DRVR_RESULT     response = MAC_DRVR_RES_OK;
     uint16_t            ii;
 
     for( ii = 0; ii < bufferCount; ++ii )
-    {
-        pMacPacket = pMacDrvr->callBack.pktAllocF(  sizeof( TCPIP_MAC_PACKET ),
-                                                    pMacDrvr->config.rxBufferSize - sizeof( TCPIP_MAC_ETHERNET_HEADER ),
-                                                    0   // indicate RX
-                                                    );
+    {   // indicate RX
+#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)
+        pMacPacket = pMacDrvr->callBack.pktAllocFDbg(sizeof( TCPIP_MAC_PACKET ), pMacDrvr->config.rxBufferSize - sizeof( TCPIP_MAC_ETHERNET_HEADER ), 0, TCPIP_THIS_MODULE_ID);
+#else
+        pMacPacket = pMacDrvr->callBack.pktAllocF(sizeof( TCPIP_MAC_PACKET ), pMacDrvr->config.rxBufferSize - sizeof( TCPIP_MAC_ETHERNET_HEADER ), 0);
+#endif
         if( NULL == pMacPacket )
         {
             pMacDrvr->rxStat.packetAllocFailures++;
@@ -458,21 +427,19 @@ MAC_DRVR_RESULT macDrvrLibRxAllocate(
             SYS_CONSOLE_PRINT( "macDrvrLibRxAllocate out of memory\r\n" );
             break;
         }
-        pMacPacket->next = 0;
+        pMacPacket->next = NULL;
         /////
         // assert seg buffer is properly aligned by the allocator function !
-        _EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0, __func__, __LINE__);
+        F_EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0U, __func__, __LINE__);
         // setup the packet acknowledgment for later use;
-        pMacPacket->ackFunc = (TCPIP_MAC_PACKET_ACK_FUNC) rxMacPacketAck;
+        pMacPacket->ackFunc = &rxMacPacketAck;
         pMacPacket->ackParam = pMacDrvr;
         if( stickyFlag )
         {
-            pMacPacket->pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_RX_STICKY;
+            pMacPacket->pDSeg->segFlags |= (uint16_t)TCPIP_MAC_SEG_FLAG_RX_STICKY;
         }
         /////
-        macDrvrPacketListTailAdd( &pMacDrvr->rxMacPacketPool,
-                                  pMacPacket
-                                  );
+        macDrvrPacketListTailAdd( &pMacDrvr->rxMacPacketPool, pMacPacket);
     }
     return response;
 }
@@ -486,13 +453,22 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr )
 
     // we hold onto ownership of a sentinel slot, rxHardStop. So, we need the
     // next slot -- for the hard stop to advance
-    ii = moduloIncrement( pMacDrvr->rxHardStop, pMacDrvr->config.nRxDescCnt );
-    while(  (DRVRnEMAC_RX_OWNER_BIT & pMacDrvr->pRxDesc[ ii ].bufferAddress.val)
-        &&  !(EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val)
-    )
-    {   // we own the descriptor and the address is marked finished -- all zeroes
+    ii = (uint16_t)moduloIncrement( (uint32_t)pMacDrvr->rxHardStop, (uint32_t)pMacDrvr->config.nRxDescCnt );
+    while(true)
+    {
+        if(((uint32_t)DRVRnEMAC_RX_OWNER_BIT & pMacDrvr->pRxDesc[ ii ].bufferAddress.val) == 0U)
+        {
+            break;
+        }
+
+        if((EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val) != 0U)
+        {
+            break;
+        }
+
+        // we own the descriptor and the address is marked finished -- all zeroes
         pMacPacket = macDrvrPacketListHeadRemove( &pMacDrvr->rxMacPacketPool );
-        if( !pMacPacket )
+        if( pMacPacket == NULL )
         {
             response = MAC_DRVR_RES_NO_RX_QUEUE;
             break;
@@ -500,9 +476,9 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr )
         //
         pMacDrvr->pRxDesc[ pMacDrvr->rxHardStop ].status.val = 0; // reset status value
         // assert seg load is properly aligned
-        _EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0, __func__, __LINE__);
+        F_EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0U, __func__, __LINE__);
         dataAddress = (uint32_t) pMacPacket->pDSeg->segBuffer;
-        if( pMacDrvr->rxHardStop == (pMacDrvr->config.nRxDescCnt - 1) )
+        if( pMacDrvr->rxHardStop == (pMacDrvr->config.nRxDescCnt - 1U) )
         {
             dataAddress |= EMAC_RX_WRAP_BIT;
         }
@@ -516,7 +492,7 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr )
         pMacDrvr->rxStat.nRxSchedBuffers++;
         pMacDrvr->rxHardStop = ii;
         //
-        ii = moduloIncrement( ii, pMacDrvr->config.nRxDescCnt );
+        ii = (uint16_t)moduloIncrement( (uint32_t)ii, (uint32_t)pMacDrvr->config.nRxDescCnt );
     }
 
     return response;
@@ -526,14 +502,10 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr )
  * Function: macDrvrHashValueSet
  * Summary:  Set Hash Value in MAC register
  ******************************************************************************/
-static __inline__ void __attribute__((always_inline))
-macDrvrHashValueSet(
-    emac_registers_t *  pToMacRegs,
-    uint64_t            value
-    )
+static __inline__ void __attribute__((always_inline)) macDrvrHashValueSet( emac_registers_t *  pToMacRegs, uint64_t  value)
 {
-    pToMacRegs->EMAC_HRB = value & 0xffffffff;
-    pToMacRegs->EMAC_HRT = (value >> 32) & 0xffffffff;
+    pToMacRegs->EMAC_HRB = (uint32_t)value & 0xffffffffU;
+    pToMacRegs->EMAC_HRT = (uint32_t)(value >> 32) & 0xffffffffU;
 }
 
 /*******************************************************************************
@@ -554,31 +526,35 @@ macDrvrHashValueGet( emac_registers_t * pToMacRegs )
  * Summary :    calculate the hash value for given mac address and set the hash
                 value in MAC register
  *****************************************************************************/
-MAC_DRVR_RESULT macDrvrLibRxFilterHashCalculate(
-    MAC_DRIVER *    pMacDrvr,
-    MAC_DRVR_HASH * hash
-    )
+MAC_DRVR_RESULT macDrvrLibRxFilterHashCalculate( MAC_DRIVER *  pMacDrvr, MAC_DRVR_HASH * hash)
 {
     uint64_t value;
     MAC_DRVR_HASH_INDEX hashIndex;
-    MAC_DRVR_ADDR_OCTET * addr;
+    const MAC_DRVR_ADDR_OCTET * addr;
     emac_registers_t * pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
 
-    if( hash->calculate == true )   // calculate hash for given MAC address
+    if( hash->calculate == 1U )   // calculate hash for given MAC address
     {
-        addr = (MAC_DRVR_ADDR_OCTET *)( hash->destMacAddr );
+        union
+        {
+            const TCPIP_MAC_ADDR *  destMacAddr;
+            const MAC_DRVR_ADDR_OCTET* addr;
+        }U_MAC_ADDR_OCTET;
+
+        U_MAC_ADDR_OCTET.destMacAddr = hash->destMacAddr;
+        addr = U_MAC_ADDR_OCTET.addr;
 
         hashIndex.index = 0;
-        hashIndex.bits.b0 = (addr[ 5 ].bits.b0)^(addr[ 5 ].bits.b6)^(addr[ 4 ].bits.b4)^(addr[ 3 ].bits.b2)^(addr[ 2 ].bits.b0)^(addr[ 2 ].bits.b6)^(addr[ 1 ].bits.b4)^(addr[ 0 ].bits.b2);
-        hashIndex.bits.b1 = (addr[ 5 ].bits.b1)^(addr[ 5 ].bits.b7)^(addr[ 4 ].bits.b5)^(addr[ 3 ].bits.b3)^(addr[ 2 ].bits.b1)^(addr[ 2 ].bits.b7)^(addr[ 1 ].bits.b5)^(addr[ 0 ].bits.b3);
-        hashIndex.bits.b2 = (addr[ 5 ].bits.b2)^(addr[ 4 ].bits.b0)^(addr[ 4 ].bits.b6)^(addr[ 3 ].bits.b4)^(addr[ 2 ].bits.b2)^(addr[ 1 ].bits.b0)^(addr[ 1 ].bits.b6)^(addr[ 0 ].bits.b4);
-        hashIndex.bits.b3 = (addr[ 5 ].bits.b3)^(addr[ 4 ].bits.b1)^(addr[ 4 ].bits.b7)^(addr[ 3 ].bits.b5)^(addr[ 2 ].bits.b3)^(addr[ 1 ].bits.b1)^(addr[ 1 ].bits.b7)^(addr[ 0 ].bits.b5);
-        hashIndex.bits.b4 = (addr[ 5 ].bits.b4)^(addr[ 4 ].bits.b2)^(addr[ 3 ].bits.b0)^(addr[ 3 ].bits.b6)^(addr[ 2 ].bits.b4)^(addr[ 1 ].bits.b2)^(addr[ 0 ].bits.b0)^(addr[ 0 ].bits.b6);
-        hashIndex.bits.b5 = (addr[ 5 ].bits.b5)^(addr[ 4 ].bits.b3)^(addr[ 3 ].bits.b1)^(addr[ 3 ].bits.b7)^(addr[ 2 ].bits.b5)^(addr[ 1 ].bits.b3)^(addr[ 0 ].bits.b1)^(addr[ 0 ].bits.b7);
+        hashIndex.bits.b0 = (uint8_t)((addr[ 5 ].bits.b0)^(addr[ 5 ].bits.b6)^(addr[ 4 ].bits.b4)^(addr[ 3 ].bits.b2)^(addr[ 2 ].bits.b0)^(addr[ 2 ].bits.b6)^(addr[ 1 ].bits.b4)^(addr[ 0 ].bits.b2));
+        hashIndex.bits.b1 = (uint8_t)((addr[ 5 ].bits.b1)^(addr[ 5 ].bits.b7)^(addr[ 4 ].bits.b5)^(addr[ 3 ].bits.b3)^(addr[ 2 ].bits.b1)^(addr[ 2 ].bits.b7)^(addr[ 1 ].bits.b5)^(addr[ 0 ].bits.b3));
+        hashIndex.bits.b2 = (uint8_t)((addr[ 5 ].bits.b2)^(addr[ 4 ].bits.b0)^(addr[ 4 ].bits.b6)^(addr[ 3 ].bits.b4)^(addr[ 2 ].bits.b2)^(addr[ 1 ].bits.b0)^(addr[ 1 ].bits.b6)^(addr[ 0 ].bits.b4));
+        hashIndex.bits.b3 = (uint8_t)((addr[ 5 ].bits.b3)^(addr[ 4 ].bits.b1)^(addr[ 4 ].bits.b7)^(addr[ 3 ].bits.b5)^(addr[ 2 ].bits.b3)^(addr[ 1 ].bits.b1)^(addr[ 1 ].bits.b7)^(addr[ 0 ].bits.b5));
+        hashIndex.bits.b4 = (uint8_t)((addr[ 5 ].bits.b4)^(addr[ 4 ].bits.b2)^(addr[ 3 ].bits.b0)^(addr[ 3 ].bits.b6)^(addr[ 2 ].bits.b4)^(addr[ 1 ].bits.b2)^(addr[ 0 ].bits.b0)^(addr[ 0 ].bits.b6));
+        hashIndex.bits.b5 = (uint8_t)((addr[ 5 ].bits.b5)^(addr[ 4 ].bits.b3)^(addr[ 3 ].bits.b1)^(addr[ 3 ].bits.b7)^(addr[ 2 ].bits.b5)^(addr[ 1 ].bits.b3)^(addr[ 0 ].bits.b1)^(addr[ 0 ].bits.b7));
 
         // read the current hash value stored in register
         value = macDrvrHashValueGet( pMacRegs );
-        value |= (1 << (hashIndex.index));
+        value |= (1ULL << (hashIndex.index));
     }
     else
     {   // Set hash value directly
@@ -593,25 +569,20 @@ MAC_DRVR_RESULT macDrvrLibRxFilterHashCalculate(
  * Function: rxGetPacket
  * Summary:  extract RX packet from the RX descriptor
  *****************************************************************************/
-MAC_DRVR_RESULT
-rxGetPacket(
-    MAC_DRIVER *                pMacDrvr,
-    TCPIP_MAC_PACKET **         ppRxMacPacket,
-    MAC_DRVR_RXDCPT_STATUS *    pRxStatus
-    )
+MAC_DRVR_RESULT rxGetPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET **  ppRxMacPacket, MAC_DRVR_RXDCPT_STATUS *  pRxStatus)
 {
     MAC_DRVR_RX_FRAME_INFO  frameInfo = { 0, 0, 0 };
     MAC_DRVR_RESULT         response = MAC_DRVR_RES_NO_PACKET;
 
-    if( ppRxMacPacket && pRxStatus )
+    if( ppRxMacPacket != NULL && pRxStatus != NULL )
     {
-        rxUpdateBnaStatistics( pMacDrvr );
+        (void)rxUpdateBnaStatistics( pMacDrvr );
         if( MAC_RX_VALID_FRAME_DETECTED_STATE == rxFindValidPacket( pMacDrvr, &frameInfo ) )
         {   // extract the packet and provide it and it's status, to the upper layer
             *pRxStatus = pMacDrvr->pRxDesc[ frameInfo.endIndex ].status;
             response = rxExtractPacket( pMacDrvr, &frameInfo, ppRxMacPacket );
             // place fresh buffers in the vacated descriptors
-            macDrvrLibRxPopulateDescriptors( pMacDrvr );
+            (void)macDrvrLibRxPopulateDescriptors( pMacDrvr );
         }
     }
 
@@ -628,7 +599,7 @@ static bool rxUpdateBnaStatistics( MAC_DRIVER * pMacDrvr )
     emac_registers_t *  pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     bool                retval = false;
 
-    if( (pMacRegs->EMAC_RSR & EMAC_RSR_BNA_Msk) ) // check for BNA error due to shortage of Rx Buffers
+    if( (pMacRegs->EMAC_RSR & EMAC_RSR_BNA_Msk) != 0U) // check for BNA error due to shortage of Rx Buffers
     {
         pMacRegs->EMAC_RSR = EMAC_RSR_BNA_Msk;  // clear 'Buffer Not Available'
         pMacDrvr->rxStat.nRxBuffNotAvailable++;
@@ -637,10 +608,7 @@ static bool rxUpdateBnaStatistics( MAC_DRIVER * pMacDrvr )
     return retval;
 }
 
-void rxExpungeFrameSegments(
-    MAC_DRIVER *                pMacDrvr,
-    MAC_DRVR_RX_FRAME_INFO *    pFrameInfo
-    )
+void rxExpungeFrameSegments( MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo)
 {
     TCPIP_MAC_PACKET *          pMacPacket;
     MAC_DRVR_RX_FRAME_INFO      tmpFrameInfo = { 0, 0, 0 };
@@ -652,10 +620,8 @@ void rxExpungeFrameSegments(
     pMacDrvr->rxStat.nRxErrorPackets++;
     for( ii = 0; ii < pFrameInfo->bufferCount; ++ii )
     {
-        jj = getModulus(    pFrameInfo->startIndex + ii,
-                            pMacDrvr->config.nRxDescCnt
-                            );
-        tmpFrameInfo.endIndex = tmpFrameInfo.startIndex = jj;
+        jj = getModulus((int32_t)pFrameInfo->startIndex + (int32_t)ii, (int32_t)pMacDrvr->config.nRxDescCnt);
+        tmpFrameInfo.endIndex = tmpFrameInfo.startIndex = (uint16_t)jj;
         tmpFrameInfo.bufferCount = 1;
         if( MAC_DRVR_RES_OK == rxExtractPacket( pMacDrvr, &tmpFrameInfo, &pMacPacket ) )
         {
@@ -671,10 +637,7 @@ void rxExpungeFrameSegments(
  *           end rx descriptor indexes of valid rx data packet
  * Return :  frame search status
  *****************************************************************************/
-static MAC_RXFRAME_STATE rxFindValidPacket(
-    MAC_DRIVER *                pMacDrvr,
-    MAC_DRVR_RX_FRAME_INFO *    pFrameInfo
-    )
+static MAC_RXFRAME_STATE rxFindValidPacket( MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo)
 {
     MAC_DRVR_HW_RXDCPT *    pRxDesc = pMacDrvr->pRxDesc;
     MAC_RXFRAME_STATE       frameState = MAC_RX_NO_FRAME_STATE;
@@ -684,7 +647,7 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
     // search the descriptors for valid data frame; search maximum of descriptor count
     while( ii != pMacDrvr->rxHardStop )
     {
-        if( !(DRVRnEMAC_RX_OWNER_BIT & pRxDesc[ ii ].bufferAddress.val) )
+        if( ((uint32_t)DRVRnEMAC_RX_OWNER_BIT & pRxDesc[ ii ].bufferAddress.val) == 0U )
         {   // we don't have ownership -- emac dma does: even when
             // (MAC_RX_SOF_DETECTED_STATE == frameState), we'll assume emac's not done
             return MAC_RX_NO_FRAME_STATE;
@@ -694,13 +657,13 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
         // look for the first descriptor of data frame
         if( MAC_RX_NO_FRAME_STATE == frameState )
         {
-            if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) )
+            if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) != 0U)
             {   // Start of Frame bit set
                 // transition the state to SOF detected
                 frameState = MAC_RX_SOF_DETECTED_STATE;
                 pFrameInfo->startIndex = ii;
                 pFrameInfo->bufferCount = 1;    // start counting number of frames from 1
-                if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) )
+                if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) != 0U)
                 {   // End of Frame in same descriptor
                     // SOF and EOF in same descriptor; transition to EOF detected
                     frameState = MAC_RX_VALID_FRAME_DETECTED_STATE;
@@ -721,16 +684,16 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
         else if( MAC_RX_SOF_DETECTED_STATE == frameState )
         {
             ++pFrameInfo->bufferCount;
-            if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) )
+            if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) != 0U)
             {   // SOF detected again; must be an error, clear the preceding descriptors
                 // and use this as the new start
-                pFrameInfo->endIndex = moduloDecrement( ii, rxDescCount );    // end of group we're expunging is one back
+                pFrameInfo->endIndex = (uint16_t)moduloDecrement( (uint32_t)ii, (uint32_t)rxDescCount );    // end of group we're expunging is one back
                 --pFrameInfo->bufferCount;
                 rxExpungeFrameSegments( pMacDrvr, pFrameInfo );
                 pFrameInfo->startIndex = ii;    // new beginning
                 pFrameInfo->bufferCount = 1;    // start counting number of frames from 1
             }
-            if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) )
+            if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) != 0U)
             {
                 frameState = MAC_RX_VALID_FRAME_DETECTED_STATE;
                 pFrameInfo->endIndex = ii;
@@ -738,7 +701,11 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
                 break;
             }
         }
-        ii = moduloIncrement( ii, rxDescCount );
+        else
+        {
+            // do nothing
+        }
+        ii = (uint16_t)moduloIncrement( (uint32_t)ii, (uint32_t)rxDescCount );
     }
     return frameState;
 }
@@ -749,11 +716,7 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
  *           Assign new Rx packet buffers to MAC
  * Return :  new buffer allocation status
  *****************************************************************************/
-static MAC_DRVR_RESULT rxExtractPacket(
-    MAC_DRIVER *                pMacDrvr,
-    MAC_DRVR_RX_FRAME_INFO *    pFrameInfo,
-    TCPIP_MAC_PACKET **         ppRxMacPacket
-    )
+static MAC_DRVR_RESULT rxExtractPacket( MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAME_INFO *  pFrameInfo, TCPIP_MAC_PACKET **  ppRxMacPacket)
 {
     TCPIP_MAC_PACKET *          pMacPacket;
     TCPIP_MAC_DATA_SEGMENT *    pDSeg;
@@ -769,22 +732,22 @@ static MAC_DRVR_RESULT rxExtractPacket(
 
     pSegBuff = (uint8_t*)(EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val);
     // get packet pointer from buffer gap descriptor
-    pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pSegBuff + pMacDrvr->_gapDcptOffset);
+    pGap = FC_U8Ptr2GapDcpt(pSegBuff + pMacDrvr->gapDcptOffset);
     pMacPacket = pGap->segmentPktPtr;
 
-    if( pMacPacket )
+    if( pMacPacket != NULL)
     {
         if( ++pMacDrvr->rxStat.macPacketsInStack > pMacDrvr->rxStat.macPacketsInStackHighPoint )
         {
             pMacDrvr->rxStat.macPacketsInStackHighPoint = pMacDrvr->rxStat.macPacketsInStack;
         }
-        pMacDrvr->rxStat.macSegmentsInStack += bufferCount;
+        pMacDrvr->rxStat.macSegmentsInStack += (uint32_t)bufferCount;
         // frame size is in the last segment and indicates the number of bytes to process
-        bytesRemaining = EMAC_RX_FRAME_LENGTH_MASK & pMacDrvr->pRxDesc[ pFrameInfo->endIndex ].status.val;
+        bytesRemaining = (uint16_t)EMAC_RX_FRAME_LENGTH_MASK & (uint16_t)pMacDrvr->pRxDesc[ pFrameInfo->endIndex ].status.val;
         // process all the frame segments
         pDSeg = pMacPacket->pDSeg;
-        pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_ACK_REQUIRED; // allow rxMacPacketAck entry
-        while( bufferCount-- )
+        pDSeg->segFlags |= (uint16_t)TCPIP_MAC_SEG_FLAG_ACK_REQUIRED; // allow rxMacPacketAck entry
+        while( bufferCount-- != 0U)
         {
             --pMacDrvr->rxStat.nRxSchedBuffers;
             // clear the buffer address bit-fields but retain EMAC_RX_WRAP_BIT and DRVRnEMAC_RX_OWNER_BIT
@@ -795,8 +758,8 @@ static MAC_DRVR_RESULT rxExtractPacket(
             extractSize = pMacDrvr->config.rxBufferSize;
             if( ii == pFrameInfo->startIndex )
             {   // adjust the segment start and size
-                pDSeg->segLoad += pMacDrvr->_dataOffset;
-                extractSize -= pMacDrvr->_dataOffset;
+                pDSeg->segLoad += pMacDrvr->dataOffset;
+                extractSize -= pMacDrvr->dataOffset;
             }
 
             if( extractSize > bytesRemaining )
@@ -806,27 +769,25 @@ static MAC_DRVR_RESULT rxExtractPacket(
             bytesRemaining -= extractSize;
             pDSeg->segLen = extractSize;
             pDSeg->segSize = pMacDrvr->config.rxBufferSize;
-            DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) pDSeg->segLoad, extractSize );
+            DCACHE_INVALIDATE_BY_ADDR( FC_U8Ptr2U32Ptr(pDSeg->segLoad), (int32_t)extractSize );
             // link the next descriptors segment to the parent packet
-            if( bytesRemaining )
+            if( bytesRemaining != 0U)
             {
                 TCPIP_MAC_PACKET * pTemp;
 
-                pMacPacket->pktFlags |= TCPIP_MAC_PKT_FLAG_SPLIT;
-                ii = moduloIncrement( ii, pMacDrvr->config.nRxDescCnt );
+                pMacPacket->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_SPLIT;
+                ii = (uint16_t)moduloIncrement( (uint32_t)ii, (uint32_t)pMacDrvr->config.nRxDescCnt );
                 // extract pMacPacket using the segLoad buffer
                 pSegBuff = (uint8_t*)(EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val);
                 // get packet pointer from buffer gap descriptor
-                pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pSegBuff + pMacDrvr->_gapDcptOffset);
+                pGap = FC_U8Ptr2GapDcpt(pSegBuff + pMacDrvr->gapDcptOffset);
                 pTemp = pGap->segmentPktPtr;
 
                 pDSeg->next = pTemp->pDSeg;
                 pDSeg = pDSeg->next;
             }
         }
-        pFrameInfo->endIndex = moduloIncrement( pFrameInfo->endIndex,
-                                                pMacDrvr->config.nRxDescCnt
-                                                );
+        pFrameInfo->endIndex = (uint16_t)moduloIncrement( (uint32_t)pFrameInfo->endIndex, (uint32_t)pMacDrvr->config.nRxDescCnt);
         pMacDrvr->rxExtractPt = pFrameInfo->endIndex;
         retval = MAC_DRVR_RES_OK;
     }
@@ -841,32 +802,32 @@ static MAC_DRVR_RESULT rxExtractPacket(
  * Function: rxMacPacketAck
  * Summary:  ACK function to free the RX packet
  *****************************************************************************/
-static bool rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
+static void rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
 {
-    MAC_DRIVER *                pMacDrvr = (MAC_DRIVER *) param;
-    TCPIP_MAC_DATA_SEGMENT *    pDSegNext;
-    bool                        response = false;
-
-    if(     pMacPacket
-        &&  pMacPacket->pDSeg
-        &&  (pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_ACK_REQUIRED)
-    )
+    union
     {
-        pMacPacket->pDSeg->segFlags &= ~TCPIP_MAC_SEG_FLAG_ACK_REQUIRED;
-        response = true;
+        const void * param;
+        MAC_DRIVER* pMacDrvr;
+    }U_PARAM_MAC_DRIVER;
+
+    U_PARAM_MAC_DRIVER.param = param;
+    MAC_DRIVER *                pMacDrvr = U_PARAM_MAC_DRIVER.pMacDrvr;
+    TCPIP_MAC_DATA_SEGMENT *    pDSegNext;
+
+    if( pMacPacket != NULL &&  pMacPacket->pDSeg != NULL && (pMacPacket->pDSeg->segFlags & (uint16_t)TCPIP_MAC_SEG_FLAG_ACK_REQUIRED) != 0U)
+    {
+        pMacPacket->pDSeg->segFlags &= ~(uint16_t)TCPIP_MAC_SEG_FLAG_ACK_REQUIRED;
         pMacDrvr->rxStat.macPacketsInStack--;
-        while( pMacPacket->pDSeg )
+        while( pMacPacket->pDSeg != NULL)
         {
             pMacDrvr->rxStat.macSegmentsInStack--;
             pDSegNext = pMacPacket->pDSeg->next;
             // prep to recycle packet into rxMacPacketPool; buffer offset
-            // assert seg buffer is properly aligned 
-            _EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0, __func__, __LINE__);
-            pMacPacket->pDSeg->next = 0;
+            // assert seg buffer is properly aligned
+            F_EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0U, __func__, __LINE__);
+            pMacPacket->pDSeg->next = NULL;
             // recycle the packet
-            if(     pMacDrvr->rxDynamicRelease
-                &&  !(pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY)
-            )
+            if(pMacDrvr->rxDynamicRelease != 0U &&  (pMacPacket->pDSeg->segFlags & (uint16_t)TCPIP_MAC_SEG_FLAG_RX_STICKY) == 0U)
             {
                 --pMacDrvr->rxDynamicRelease;
                 macDrvrPacketListTailAdd( &pMacDrvr->rxDynamicReleasePool, pMacPacket );
@@ -876,57 +837,48 @@ static bool rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
                 macDrvrPacketListTailAdd( &pMacDrvr->rxMacPacketPool, pMacPacket );
             }
 
-            if( !pDSegNext )
+            if( pDSegNext == NULL)
             {   // packet handling is now complete
                 break;
             }
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
             // extract the packet pointer using the segment gap descriptor
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrvr->_gapDcptOffset);
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_U8Ptr2GapDcpt(pDSegNext->segBuffer + pMacDrvr->gapDcptOffset);
             pMacPacket = pGap->segmentPktPtr;
-            
         }
     }
     else
     {   // double release ????
-        _EMACAssertCond(false, __func__, __LINE__);
+        F_EMACAssertCond(false, __func__, __LINE__);
     }
-
-    return response;
 }
 
 MAC_DRVR_RESULT macDrvrLibGetDynamicBuffers( MAC_DRIVER * pMacDrvr )
 {
     MAC_DRVR_RESULT retval = MAC_DRVR_RES_OK;
     int32_t         buffersRequired = 0;
-    int32_t         poolLevel = pMacDrvr->config.nRxStaticBufferCnt
-                                - pMacDrvr->config.nRxDescCnt
-                                ;
+    int32_t         poolLevel = (int32_t)pMacDrvr->config.nRxStaticBufferCnt - (int32_t)pMacDrvr->config.nRxDescCnt;
     // setup for exponential moving average
     // to avoid floating math we'll scale alpha and oneMinusAlpha and use integers
     // instead of percentages
     // accumulation = ((alpha * newValue) + (1-alpha)(accumulation)) / scale
     pMacDrvr->rxPoolLevelEma.scale = 10000;
-    pMacDrvr->rxPoolLevelEma.alpha = pMacDrvr->config.nRxBuffAllocCnt;
+    pMacDrvr->rxPoolLevelEma.alpha = (int32_t)pMacDrvr->config.nRxBuffAllocCnt;
     pMacDrvr->rxPoolLevelEma.alpha *= pMacDrvr->rxPoolLevelEma.scale;
-    pMacDrvr->rxPoolLevelEma.alpha /= pMacDrvr->config.rxDeviceMaxDescriptors;
+    pMacDrvr->rxPoolLevelEma.alpha /= (int32_t)pMacDrvr->config.rxDeviceMaxDescriptors;
     //
     pMacDrvr->rxPoolLevelEma.oneMinusAlpha = pMacDrvr->rxPoolLevelEma.scale - pMacDrvr->rxPoolLevelEma.alpha;
     pMacDrvr->rxPoolLevelEma.setPoint = poolLevel;
-    if( pMacDrvr->config.nRxBuffAllocCnt && pMacDrvr->config.nRxBuffCntThres )
+    if( pMacDrvr->config.nRxBuffAllocCnt != 0U && pMacDrvr->config.nRxBuffCntThres != 0U)
     {   // assign the set point to be (allocStepSize + 1)/2 greater than
         // the available threshold
-        pMacDrvr->rxPoolLevelEma.setPoint = pMacDrvr->config.nRxBuffCntThres
-                                            + ((pMacDrvr->config.nRxBuffAllocCnt + 1) >> 1)
-                                            ;
+        uint32_t nAlloc = ((uint32_t)pMacDrvr->config.nRxBuffAllocCnt + 1UL) >> 1;
+        pMacDrvr->rxPoolLevelEma.setPoint = (int32_t)pMacDrvr->config.nRxBuffCntThres + (int32_t)nAlloc;
         if( poolLevel < pMacDrvr->rxPoolLevelEma.setPoint )
         {
             buffersRequired = pMacDrvr->rxPoolLevelEma.setPoint - poolLevel;
-            retval = macDrvrLibRxAllocate(  pMacDrvr,
-                                            buffersRequired,
-                                            MAC_RX_DYNAMIC_BUFFERS
-                                            );
+            retval = macDrvrLibRxAllocate(  pMacDrvr, (uint16_t)buffersRequired, MAC_RX_DYNAMIC_BUFFERS);
             if( MAC_DRVR_RES_OK != retval )
             {
                 buffersRequired = 0;
@@ -936,8 +888,8 @@ MAC_DRVR_RESULT macDrvrLibGetDynamicBuffers( MAC_DRIVER * pMacDrvr )
     }
     pMacDrvr->rxPoolLevelEma.accumulation = poolLevel;
     //
-    pMacDrvr->rxDynamicAllocation = buffersRequired;
-    pMacDrvr->rxDynamicRelease = 0;
+    pMacDrvr->rxDynamicAllocation = (uint16_t)buffersRequired;
+    pMacDrvr->rxDynamicRelease = 0U;
 
     return retval;
 }
@@ -948,45 +900,39 @@ MAC_DRVR_RESULT macDrvrLibManageDynamicBuffers( MAC_DRIVER * pMacDrvr )
     int32_t         nNodes;
     MAC_DRVR_RESULT retval = MAC_DRVR_RES_OK;
 
-    if( pMacDrvr->config.nRxBuffAllocCnt && pMacDrvr->config.nRxBuffCntThres )
+    if( pMacDrvr->config.nRxBuffAllocCnt != 0U && pMacDrvr->config.nRxBuffCntThres != 0U)
     {
         ema = pMacDrvr->rxPoolLevelEma.accumulation;
-        ema = (pMacDrvr->rxMacPacketPool.nNodes * pMacDrvr->rxPoolLevelEma.alpha)
-            + (ema * pMacDrvr->rxPoolLevelEma.oneMinusAlpha);
+        ema = ((int32_t)pMacDrvr->rxMacPacketPool.nNodes * pMacDrvr->rxPoolLevelEma.alpha) + (ema * pMacDrvr->rxPoolLevelEma.oneMinusAlpha);
         ema /= pMacDrvr->rxPoolLevelEma.scale;
 
-        if( ema > pMacDrvr->config.nRxBuffCntThres )
+        if( ema > (int32_t)pMacDrvr->config.nRxBuffCntThres )
         {
             if( ema > pMacDrvr->rxPoolLevelEma.setPoint )
             {   // only ask for 1 packet at a time to be added to the dynamic release list
                 pMacDrvr->rxDynamicRelease = 1;
                 ema = pMacDrvr->rxPoolLevelEma.setPoint;
             }
-            macDrvrLibFreeDynamicBuffers( pMacDrvr );
+            (void)macDrvrLibFreeDynamicBuffers( pMacDrvr );
         }
         else
         {
             nNodes = 0;
-            while( pMacDrvr->rxDynamicReleasePool.nNodes )
+            while( pMacDrvr->rxDynamicReleasePool.nNodes != 0U)
             {   // reuse anything waiting for release
-                if( ++nNodes >= pMacDrvr->config.nRxBuffAllocCnt )
+                if( ++nNodes >= (int32_t)pMacDrvr->config.nRxBuffAllocCnt )
                 {
                     break;
                 }
-                macDrvrPacketListTailAdd( &pMacDrvr->rxMacPacketPool,
-                                          macDrvrPacketListHeadRemove( &pMacDrvr->rxDynamicReleasePool )
-                                          );
+                macDrvrPacketListTailAdd( &pMacDrvr->rxMacPacketPool, macDrvrPacketListHeadRemove( &pMacDrvr->rxDynamicReleasePool ));
             }
-            if( nNodes < pMacDrvr->config.nRxBuffAllocCnt )
+            if( nNodes < (int32_t)pMacDrvr->config.nRxBuffAllocCnt )
             {   // not enough so get more
-                nNodes = pMacDrvr->config.nRxBuffAllocCnt - nNodes;
-                retval = macDrvrLibRxAllocate(  pMacDrvr,
-                                                nNodes,
-                                                MAC_RX_DYNAMIC_BUFFERS
-                                                );
+                nNodes = (int32_t)pMacDrvr->config.nRxBuffAllocCnt - nNodes;
+                retval = macDrvrLibRxAllocate(  pMacDrvr, (uint16_t)nNodes, MAC_RX_DYNAMIC_BUFFERS);
                 if( MAC_DRVR_RES_OK == retval )
                 {
-                    pMacDrvr->rxDynamicAllocation += nNodes;
+                    pMacDrvr->rxDynamicAllocation += (uint16_t)nNodes;
                     ema = pMacDrvr->rxPoolLevelEma.setPoint;
                 }
             }
@@ -1001,14 +947,18 @@ MAC_DRVR_RESULT macDrvrLibFreeDynamicBuffers( MAC_DRIVER * pMacDrvr )
 {
     TCPIP_MAC_PACKET * pMacPacket;
 
-    while( pMacDrvr->rxDynamicReleasePool.nNodes )
+    while( pMacDrvr->rxDynamicReleasePool.nNodes != 0U)
     {   // free items in the release pool
         pMacPacket = macDrvrPacketListHeadRemove( &pMacDrvr->rxDynamicReleasePool );
-        if( pMacPacket)
+        if( pMacPacket != NULL)
         {
             --pMacDrvr->rxDynamicAllocation;
+#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)
+            pMacDrvr->callBack.pktFreeFDbg( pMacPacket, TCPIP_THIS_MODULE_ID);
+#else
             pMacDrvr->callBack.pktFreeF( pMacPacket );
-            pMacDrvr->callBack.freeF( pMacDrvr->allocH, pMacPacket );
+#endif
+            (void)pMacDrvr->callBack.freeF( pMacDrvr->allocH, pMacPacket );
         }
     }
 
@@ -1016,36 +966,32 @@ MAC_DRVR_RESULT macDrvrLibFreeDynamicBuffers( MAC_DRIVER * pMacDrvr )
 }
 
 /* Generic Single Linked List Manipulation ************************************/
-TCPIP_MAC_PACKET * macDrvrPacketListHeadRemove(
-    MAC_DRVR_PACKET_LIST * pList
-    )
+TCPIP_MAC_PACKET * macDrvrPacketListHeadRemove( MAC_DRVR_PACKET_LIST * pList)
 {
     TCPIP_MAC_PACKET * pMacPacket = pList->head;
-    if( pMacPacket )
+    if( pMacPacket  != NULL)
     {
         if( pList->head == pList->tail )
         {
-            pList->head = pList->tail = 0;
+            pList->head = pList->tail = NULL;
         }
         else
         {
             pList->head = pMacPacket->next;
         }
         --pList->nNodes;
-        pMacPacket->next = 0;
+        pMacPacket->next = NULL;
     }
     return pMacPacket;
 }
 
-void macDrvrPacketListTailAdd(
-    MAC_DRVR_PACKET_LIST *  pList,
-    TCPIP_MAC_PACKET *      pMacPacket
+void macDrvrPacketListTailAdd( MAC_DRVR_PACKET_LIST *  pList, TCPIP_MAC_PACKET *  pMacPacket
     )
 {
-    if( pMacPacket )
+    if( pMacPacket  != NULL)
     {
-        pMacPacket->next = 0;
-        if( pList->tail )
+        pMacPacket->next = NULL;
+        if( pList->tail  != NULL)
         {
             pList->tail->next = pMacPacket;
             pList->tail = pMacPacket;
@@ -1058,14 +1004,11 @@ void macDrvrPacketListTailAdd(
     }
 }
 
-void macDrvrPacketListHeadAdd(
-    MAC_DRVR_PACKET_LIST *  pList,
-    TCPIP_MAC_PACKET *      pMacPacket
-    )
+void macDrvrPacketListHeadAdd( MAC_DRVR_PACKET_LIST *  pList, TCPIP_MAC_PACKET *  pMacPacket)
 {
-    if( pMacPacket )
+    if( pMacPacket  != NULL)
     {
-        if( pList->head )
+        if( pList->head  != NULL)
         {
             pMacPacket->next = pList->head;
             pList->head = pMacPacket;
@@ -1073,7 +1016,7 @@ void macDrvrPacketListHeadAdd(
         else
         {
             pList->head = pList->tail = pMacPacket;
-            pMacPacket->next = 0;
+            pMacPacket->next = NULL;
         }
         ++pList->nNodes;
     }
