@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2017-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2017-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -28,7 +28,8 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_ksz8091.h"
+#include "driver/ethphy/drv_extphy_ksz8091.h"
+#include "drv_extphy_ksz8091_priv.h"
 
 /****************************************************************************
  *                 interface functions
@@ -59,7 +60,7 @@ Microchip or any third party.
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-    return (cFlags & DRV_ETHPHY_CFG_RMII) ? DRV_ETHPHY_RES_OK : DRV_ETHPHY_RES_CFG_ERR;
+    return (((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_RMII) != 0U) ? DRV_ETHPHY_RES_OK : DRV_ETHPHY_RES_CFG_ERR;
 }
 
 
@@ -97,96 +98,106 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
         };
     } vendorData = { 0 };
 
-    __KSZ8091_PhyControl2Bits_t phyCtrl2;
+    KSZ8091_PhyControl2Bits_t phyCtrl2;
     uint16_t    phyReg = 0;
     uint16_t    mdixConfPhase = 0;
     int         phyAddress = 0;
 
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &vendorData.w);
+    DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &vendorData.w);
 
-    if(res < 0)
+    if((int)res < 0)
     {   // some error occurred
         return res;
     }
 
     mdixConfPhase = vendorData.low;
 
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    (void)pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch(mdixConfPhase)
     {
-        case 0:
-            res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_PHY_CONTROL_2, phyAddress);
-            if(res < 0)
+        case 0U:
+            res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_REG_PHY_CONTROL_2, phyAddress);
+            if((int)res < 0)
             {   // some error
-                return res;
+                // abort
             }
             else if(res == DRV_ETHPHY_RES_PENDING)
             {   // retry
-                return DRV_ETHPHY_RES_PENDING;
-            }
-
-            // advance to the next phase
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++mdixConfPhase);
-            return DRV_ETHPHY_RES_PENDING;
-
-
-        case 1:
-            res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-            if(res < 0)
-            {   // some error
-                return res;
-            }
-            else if(res == DRV_ETHPHY_RES_PENDING)
-            {   // retry
-                return DRV_ETHPHY_RES_PENDING;
-            }
-
-            // got PHY_REG_PHY_CONTROL_2 result
-            phyCtrl2.w = phyReg;
-            if(oFlags & TCPIP_ETH_OPEN_MDIX_AUTO)
-            {   // enable Auto-MDIX
-                phyCtrl2.PAIR_SWAP_DISABLE = 0;
+                // Do nothing
             }
             else
-            {   // no Auto-MDIX
-                phyCtrl2.PAIR_SWAP_DISABLE = 1;  // disable Auto-MDIX
-                if(oFlags & TCPIP_ETH_OPEN_MDIX_SWAP)
-                {
-                    phyCtrl2.MDI_X_SELECT = 1;    // swap
-                }
-                else
-                {
-                    phyCtrl2.MDI_X_SELECT = 0;  // normal   
-                }
+            {                
+                // advance to the next phase
+                mdixConfPhase++;
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, mdixConfPhase);
+                res = DRV_ETHPHY_RES_PENDING;
             }
-
-            vendorData.low = mdixConfPhase + 1;
-            vendorData.high = phyCtrl2.w;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
-            return DRV_ETHPHY_RES_PENDING;
- 
-        case 2:
-            phyReg = vendorData.high;
-            // update the PHY_REG_PHY_CONTROL_2 Register
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_PHY_CONTROL_2, phyReg, phyAddress);
-            if(res < 0)
+            break;
+            
+        case 1U:
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if((int)res < 0)
             {   // some error
-                return res;
+                // abort
             }
             else if(res == DRV_ETHPHY_RES_PENDING)
             {   // retry
-                return DRV_ETHPHY_RES_PENDING;
+                // Do nothing
             }
+            else
+            {
+                // got PHY_REG_PHY_CONTROL_2 result
+                phyCtrl2.w = phyReg;
+                if(((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_MDIX_AUTO) != 0U)
+                {   // enable Auto-MDIX
+                    phyCtrl2.PAIR_SWAP_DISABLE = 0;
+                }
+                else
+                {   // no Auto-MDIX
+                    phyCtrl2.PAIR_SWAP_DISABLE = 1;  // disable Auto-MDIX
+                    if(((uint32_t)oFlags & (uint32_t)TCPIP_ETH_OPEN_MDIX_SWAP) != 0U)
+                    {
+                        phyCtrl2.MDI_X_SELECT = 1;    // swap
+                    }
+                    else
+                    {
+                        phyCtrl2.MDI_X_SELECT = 0;  // normal   
+                    }
+                }
 
-            // done    
-            return DRV_ETHPHY_RES_OK;
-
-
+                vendorData.low = mdixConfPhase + 1U;
+                vendorData.high = phyCtrl2.w;
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
+                res = DRV_ETHPHY_RES_PENDING;
+            }
+            break;
+            
+        case 2U:
+            phyReg = vendorData.high;
+            // update the PHY_REG_PHY_CONTROL_2 Register
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_PHY_CONTROL_2, phyReg, phyAddress);
+            if((int)res < 0)
+            {   // some error
+                // abort
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                // Do nothing
+            }
+            else
+            {
+                // done    
+                res = DRV_ETHPHY_RES_OK;
+            }
+            break;
+            
         default:
             // shouldn't happen
-            return DRV_ETHPHY_RES_OPERATION_ERR; 
+            res = DRV_ETHPHY_RES_OPERATION_ERR; 
+            break;
     }
+    return res;
 }
 
 
@@ -215,9 +226,9 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8091 = 
 {
-    .miiConfigure = DRV_EXTPHY_MIIConfigure,
-    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
-    .smiClockGet = DRV_EXTPHY_SMIClockGet,
+    .miiConfigure = &DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = &DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = &DRV_EXTPHY_SMIClockGet,
     .wolConfigure = 0,                      // no WOL functionality yet
     .phyDetect = 0,                         // default detection performed
     .bmconDetectMask = 0,                   // standard detection mask

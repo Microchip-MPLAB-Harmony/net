@@ -1,21 +1,21 @@
 /*******************************************************************************
-  KSZ8863 definitions
+  KSZ8863 public definitions
 
   Company:
     Microchip Technology Inc.
     
   File Name:
-    eth_pic32_ext_phy_ksz8863.h
+    drv_extphy_ksz8863.h
 
   Summary:
-    KSZ8863 definitions
+    KSZ8863 public definitions
 
   Description:
-    This file provides the KSZ8863 definitions.
+    This file provides the KSZ8863 public definitions.
  *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2017-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2017-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,11 +39,14 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _KSZ_8863_H_
+#ifndef H_KSZ_8863_H_
 
-#define _KSZ_8863_H_
+#define H_KSZ_8863_H_
 
+// the PHY object
+extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_KSZ8863;
+extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8863;
 
-#endif  // _KSZ_8863_H_
+#endif  // H_KSZ_8863_H_
 
 

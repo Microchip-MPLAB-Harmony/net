@@ -1,22 +1,21 @@
 /*******************************************************************************
-  LAN8770 public definitions
+  KSZ8863 private definitions
 
   Company:
     Microchip Technology Inc.
     
   File Name:
-    drv_extphy_lan8770.h
+    drv_extphy_ksz8863_priv.h
 
   Summary:
-    LAN8770 public definitions
+    KSZ8863 private definitions
 
   Description:
-    This file provides the LAN8770 public definitions.
-
-*******************************************************************************/
+    This file provides the KSZ8863 private definitions.
+ *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2024-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2017-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,13 +39,11 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef H_LAN_8770_H_
+#ifndef H_KSZ_8863_PRIV_H_
 
-#define H_LAN_8770_H_
+#define H_KSZ_8863_PRIV_H_
 
 
-// the PHY object
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8770;
+#endif  // H_KSZ_8863_PRIV_H_
 
-#endif  // H_LAN_8770_H_
 

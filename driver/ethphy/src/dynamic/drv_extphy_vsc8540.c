@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2022-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2022-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -26,7 +26,8 @@ Microchip or any third party.
 */
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
-#include "driver/ethphy/src/dynamic/drv_extphy_vsc8540.h"
+#include "driver/ethphy/drv_extphy_vsc8540.h"
+#include "drv_extphy_vsc8540_priv.h"
 #include "configuration.h"
 
 /****************************************************************************
@@ -70,410 +71,507 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *p
         };
     } vendorData = {};
 
-    __PHY_REG_EXTEND_PHY_CONTROL_1_bits_t phyCtrl1;
-    __BMCONbits_t phyBMCON;
-    __PHY_EXT2_RGMII_CTRL_bits_t phyEXT2CTRL;
-    __PHY_EXT_GP_CLKOUT_CTRL_bits_t phyCLKOUTCTRL;
+    VSC8540_PHY_REG_EXT_PHY_CTRL_1_bits_t phyCtrl1;
+    BMCONbits_t phyBMCON;
+    VSC8540_PHY_EXT2_RGMII_CTRL_bits_t phyEXT2CTRL;
+    VSC8540_PHY_EXT_GP_CLKOUT_CTRL_bits_t phyCLKOUTCTRL;
     uint16_t phyReg = 0;
 
     
     VSC8540_CONF_PHASE configPhase;
     int phyAddress = 0;
 
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &vendorData.w);
+    DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &vendorData.w);
 
-    if (res < 0)
+    if ((int)res < 0)
     { // some error occurred
         return res;
     }
 
     configPhase = vendorData.low;
 
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    (void)pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch (configPhase)
     {
-    case  MAIN_REG_SEL1:
-        // RMII_BYPASS is in page 0; select page 0
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 0, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case  MAIN_REG_SEL1:
+            // RMII_BYPASS is in page 0; select page 0
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 0, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case PHYCTRL1_READ:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_EXTEND_PHY_CONTROL_1, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case PHYCTRL1_READ:
+            res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_REG_EXTEND_PHY_CONTROL_1, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case PHYCTRL1_MODIFY:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case PHYCTRL1_MODIFY:
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // got PHY_REG_EXTEND_PHY_CONTROL_1 result
-        phyCtrl1.w = phyReg;
-        if (cFlags & DRV_ETHPHY_CFG_RMII)
-        {
-            phyCtrl1.MAC_INTERFACE_SEL = 1; // RMII
-        }
-        else
-        {
-            phyCtrl1.MAC_INTERFACE_SEL = 0; // MII
-        }
+            // got PHY_REG_EXTEND_PHY_CONTROL_1 result
+            phyCtrl1.w = phyReg;
+            if ((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_RMII)
+            {
+                phyCtrl1.MAC_INTERFACE_SEL = 1; // RMII
+            }
+            else
+            {
+                phyCtrl1.MAC_INTERFACE_SEL = 0; // MII
+            }
 
-        // save the phyReg for the next state
-        vendorData.high = phyCtrl1.w;
-        vendorData.low = configPhase + 1;
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
-        return DRV_ETHPHY_RES_PENDING;
+            // save the phyReg for the next state
+            vendorData.high = phyCtrl1.w;
+            vendorData.low = configPhase + 1U;
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case PHYCTRL1_WRITE:
-        phyReg = vendorData.high;
-        // now update PHY_REG_EXTEND_PHY_CONTROL_1 Register
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_EXTEND_PHY_CONTROL_1, phyReg, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case PHYCTRL1_WRITE:
+            phyReg = vendorData.high;
+            // now update PHY_REG_EXTEND_PHY_CONTROL_1 Register
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_EXTEND_PHY_CONTROL_1, phyReg, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case BMCON_RST_READ:
-        // read the register for software reset
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+        case BMCON_RST_READ:
+            // read the register for software reset
+            res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case BMCON_RST_MODIFY:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
-        phyBMCON.w = phyReg;
-        // overwrite the register to activate
-        phyBMCON.RESET = 1;
+        case BMCON_RST_MODIFY:
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
+            phyBMCON.w = phyReg;
+            // overwrite the register to activate
+            phyBMCON.RESET = 1;
 
-        // save the phyReg for the next state
-        vendorData.high = phyBMCON.w;
-        vendorData.low = configPhase + 1;
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
-        return DRV_ETHPHY_RES_PENDING;
+            // save the phyReg for the next state
+            vendorData.high = phyBMCON.w;
+            vendorData.low = configPhase + 1U;
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case BMCON_RST_WRITE:
-        phyReg = vendorData.high;
-        // now update PHY_REG_BMCON Register
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, phyReg, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case BMCON_RST_WRITE:
+            phyReg = vendorData.high;
+            // now update PHY_REG_BMCON Register
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, phyReg, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case BMCON_CONFIG_READ:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case BMCON_CONFIG_READ:
+            res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case BMCON_CONFIG_MODIFY:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case BMCON_CONFIG_MODIFY:
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        phyBMCON.w = phyReg;
-        if (TCPIP_INTMAC_PHY_CONFIG_FORCE_SPD_SEL)
-        {
-            // modify force 100Mbps
-            phyBMCON.SPEED = 1;
-            phyBMCON.SPEED1000 = 0;
-        }
-        else
-        {
-            // modify force 10Mbps
-            phyBMCON.SPEED = 0;
-            phyBMCON.SPEED1000 = 0;
-        }
+            phyBMCON.w = phyReg;
+            if (TCPIP_INTMAC_PHY_CONFIG_FORCE_SPD_SEL)
+            {
+                // modify force 100Mbps
+                phyBMCON.SPEED = 1;
+                phyBMCON.SPEED1000 = 0;
+            }
+            else
+            {
+                // modify force 10Mbps
+                phyBMCON.SPEED = 0;
+                phyBMCON.SPEED1000 = 0;
+            }
 
-        if (TCPIP_INTMAC_PHY_CONFIG_DUPLEX_SEL)
-        {
-            // Mode full duplex
-            phyBMCON.DUPLEX = 1;
-        }
-        else
-        {
-            // mode half duplex
-            phyBMCON.DUPLEX = 0;
-        }
+            if (TCPIP_INTMAC_PHY_CONFIG_DUPLEX_SEL)
+            {
+                // Mode full duplex
+                phyBMCON.DUPLEX = 1;
+            }
+            else
+            {
+                // mode half duplex
+                phyBMCON.DUPLEX = 0;
+            }
 
-        if (TCPIP_INTMAC_PHY_CONFIG_AUTONEG_EN)
-        {
-            // Enable autoneg
-            phyBMCON.AN_ENABLE = 1;
-        }
-        else
-        {
-            // Disable autoneg
-            phyBMCON.AN_ENABLE = 0;
-        }
+            if (TCPIP_INTMAC_PHY_CONFIG_AUTONEG_EN)
+            {
+                // Enable autoneg
+                phyBMCON.AN_ENABLE = 1;
+            }
+            else
+            {
+                // Disable autoneg
+                phyBMCON.AN_ENABLE = 0;
+            }
 
-        vendorData.low = configPhase + 1;
-        vendorData.high = phyBMCON.w;
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            vendorData.low = configPhase + 1U;
+            vendorData.high = phyBMCON.w;
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
+            break;
 
-    case BMCON_CONFIG_WRITE:
-        phyReg = vendorData.high;
-        // update the PHY_REG_BMCON Register
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, phyReg, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case BMCON_CONFIG_WRITE:
+            phyReg = vendorData.high;
+            // update the PHY_REG_BMCON Register
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, phyReg, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case EXT_PAGE_2_SEL:
-        // PHY_EXT2_RGMII_CTRL is in page 2; select page 2
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 2, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case EXT_PAGE_2_SEL:
+            // PHY_EXT2_RGMII_CTRL is in page 2; select page 2
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 2, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case RGMII_CTRL_READ:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_EXT2_RGMII_CTRL, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case RGMII_CTRL_READ:
+            res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_EXT2_RGMII_CTRL, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case RGMII_CTRL_MODIFY:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case RGMII_CTRL_MODIFY:
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        phyEXT2CTRL.w = phyReg;
-        // modify RX_CLK_Delay register
-        phyEXT2CTRL.RX_CLK_DELAY = TCPIP_INTMAC_PHY_CONFIG_RX_CLK_DELAY;
+            phyEXT2CTRL.w = phyReg;
+            // modify RX_CLK_Delay register
+            phyEXT2CTRL.RX_CLK_DELAY = TCPIP_INTMAC_PHY_CONFIG_RX_CLK_DELAY;
 
-        //  modify RX_CLK_Delay register
-        phyEXT2CTRL.TX_CLK_DELAY = TCPIP_INTMAC_PHY_CONFIG_TX_CLK_DELAY;
+            //  modify RX_CLK_Delay register
+            phyEXT2CTRL.TX_CLK_DELAY = TCPIP_INTMAC_PHY_CONFIG_TX_CLK_DELAY;
 
-        vendorData.low = configPhase + 1;
-        vendorData.high = phyEXT2CTRL.w;
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            vendorData.low = configPhase + 1U;
+            vendorData.high = phyEXT2CTRL.w;
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
+            break;
 
-    case RGMII_CTRL_WRITE:
-        phyReg = vendorData.high;
-        // update the PHY_EXT2_RGMII_CTRL Register
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_EXT2_RGMII_CTRL, phyReg, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case RGMII_CTRL_WRITE:
+            phyReg = vendorData.high;
+            // update the PHY_EXT2_RGMII_CTRL Register
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_EXT2_RGMII_CTRL, phyReg, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case GP_REG_SEL:
-        // PHY_EXT_GP_CLKOUT_CTRL is in page 16; select page 16
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 16, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case GP_REG_SEL:
+            // PHY_EXT_GP_CLKOUT_CTRL is in page 16; select page 16
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 16, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case CLKOUT_CTRL_READ:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_EXT_GP_CLKOUT_CTRL, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case CLKOUT_CTRL_READ:
+            res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_EXT_GP_CLKOUT_CTRL, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case CLKOUT_CTRL_MODIFY:
-        res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case CLKOUT_CTRL_MODIFY:
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        phyCLKOUTCTRL.w = phyReg;
+            phyCLKOUTCTRL.w = phyReg;
 
-        if (TCPIP_INTMAC_PHY_CONFIG_CLKOUT_EN)
-        {
-            // Enable CLKOUT
-            phyCLKOUTCTRL.CLKOUT_EN = 1;
+            if (TCPIP_INTMAC_PHY_CONFIG_CLKOUT_EN)
+            {
+                // Enable CLKOUT
+                phyCLKOUTCTRL.CLKOUT_EN = 1;
 
-            // Enable CLKOUT
-            phyCLKOUTCTRL.CLKOUT_FREQ_SELECT = TCPIP_INTMAC_PHY_CONFIG_CLKOUT_FREQ;
-        }
-        else
-        {
-            // Disable CLKOUT
-            phyCLKOUTCTRL.CLKOUT_EN = 0;
-        }
+                // Enable CLKOUT
+                phyCLKOUTCTRL.CLKOUT_FREQ_SELECT = TCPIP_INTMAC_PHY_CONFIG_CLKOUT_FREQ;
+            }
+            else
+            {
+                // Disable CLKOUT
+                phyCLKOUTCTRL.CLKOUT_EN = 0;
+            }
 
-        vendorData.low = configPhase + 1;
-        vendorData.high = phyCLKOUTCTRL.w;
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            vendorData.low = configPhase + 1U;
+            vendorData.high = phyCLKOUTCTRL.w;
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
+            break;
 
-    case CLKOUT_CTRL_WRITE:
-        phyReg = vendorData.high;
-        // update the PHY_EXT_GP_CLKOUT_CTRL Register
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_EXT_GP_CLKOUT_CTRL, phyReg, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case CLKOUT_CTRL_WRITE:
+            phyReg = vendorData.high;
+            // update the PHY_EXT_GP_CLKOUT_CTRL Register
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_EXT_GP_CLKOUT_CTRL, phyReg, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // advance to the next phase
-        pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++configPhase);
-        return DRV_ETHPHY_RES_PENDING;
+            // advance to the next phase
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
 
-    case MAIN_REG_SEL2:
-        // Come back to the main register page
-        res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 0, phyAddress);
-        if (res < 0)
-        { // some error
-            return res;
-        }
-        else if (res == DRV_ETHPHY_RES_PENDING)
-        { // retry
-            return DRV_ETHPHY_RES_PENDING;
-        }
+        case MAIN_REG_SEL2:
+            // Come back to the main register page
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_EXTENDED_PAGE_ACCESS, 0, phyAddress);
+            if ((int)res < 0)
+            { // some error
+                break;
+            }
+            else if (res == DRV_ETHPHY_RES_PENDING)
+            { // retry
+                break;
+            }
+            else
+            {
+                // OK
+            }
 
-        // done
-        return DRV_ETHPHY_RES_OK;
+            // done
+            res = DRV_ETHPHY_RES_OK;
+            break;
 
-    default:
-        // shouldn't happen
-        return DRV_ETHPHY_RES_OPERATION_ERR;
+        default:
+            // shouldn't happen
+            res = DRV_ETHPHY_RES_OPERATION_ERR;
+            break;
     }
+    return res;
 #else 
-    return (cFlags & DRV_ETHPHY_CFG_RMII) ? DRV_ETHPHY_RES_OK : DRV_ETHPHY_RES_CFG_ERR;
+    return (((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_RMII) != 0U) ? DRV_ETHPHY_RES_OK : DRV_ETHPHY_RES_CFG_ERR;
 #endif
 }
 
@@ -527,11 +625,11 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE *pBaseOb
 
 const DRV_ETHPHY_OBJECT DRV_ETHPHY_OBJECT_VSC8540 =
 {
-    .miiConfigure = DRV_EXTPHY_MIIConfigure,
-    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
-    .smiClockGet = DRV_EXTPHY_SMIClockGet,
-    .wolConfigure = 0,
-    .phyDetect = 0, // default detection performed
-    .bmconDetectMask = 0,                   // standard detection mask
-    .bmstatCpblMask = 0,                    // standard capabilities mask
+    .miiConfigure = &DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = &DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = &DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = NULL,       // no WOL functionality yet
+    .phyDetect = NULL,          // default detection performed
+    .bmconDetectMask = 0,       // standard detection mask
+    .bmstatCpblMask = 0,        // standard capabilities mask
 };

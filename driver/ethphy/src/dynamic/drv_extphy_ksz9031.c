@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2022-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2022-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -28,11 +28,12 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_ksz9031.h"
+#include "driver/ethphy/drv_extphy_ksz9031.h"
+#include "drv_extphy_ksz9031_priv.h"
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
-static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj);
+static DRV_ETHPHY_RESULT F_DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj);
 
 /******************************************************************************
  * Definitions
@@ -79,7 +80,7 @@ typedef enum
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-    return _DRV_KSZ9031_LinkupErrata(pBaseObj, hClientObj);
+    return F_DRV_KSZ9031_LinkupErrata(pBaseObj, hClientObj);
 }
 
 
@@ -136,197 +137,233 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ9031 = 
 {
-    .miiConfigure = DRV_EXTPHY_MIIConfigure,
-    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
-    .smiClockGet = DRV_EXTPHY_SMIClockGet,
-    .wolConfigure = 0,                      // no WOL functionality yet
-    .phyDetect = 0,                         // default detection performed
+    .miiConfigure = &DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = &DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = &DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = NULL,                   // no WOL functionality yet
+    .phyDetect = NULL,                      // default detection performed
     .bmconDetectMask = 0,                   // standard detection mask
     .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
-static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj)
+static DRV_ETHPHY_RESULT F_DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj)
 {
     uint32_t errataState = 0;
     int phyAddress = 0;
     
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &errataState);
-    if(res < 0)
+    DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &errataState);
+    if((int)res < 0)
     {   // some error occurred
         return res;
     }
     
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    (void)pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
     
     switch (errataState)
     {
-        case DRV_KSZ9031_LINKUP_ERRATA_1:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_1:
             //Write to MMD Control register to set MMD Device Address : 00
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00), phyAddress);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00U), phyAddress);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             errataState++;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case DRV_KSZ9031_LINKUP_ERRATA_2:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_2:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_HI_REG), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_HI_REG), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
 
-        case DRV_KSZ9031_LINKUP_ERRATA_3:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_3:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00U), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
             
-        case DRV_KSZ9031_LINKUP_ERRATA_4:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_4:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register to write data to register 
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x0006, phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x0006, phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
             }
+            else
+            {
+                // OK
+            }
             break;
-        case DRV_KSZ9031_LINKUP_ERRATA_5:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_5:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {
                 //Write to MMD Control register to set MMD Device Address : 00
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00U), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
             }            
+            else
+            {
+                // OK
+            }
             break;
-        case DRV_KSZ9031_LINKUP_ERRATA_6:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_6:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access : Clock Pad Skew Register
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_LO_REG), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_LO_REG), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
 
-        case DRV_KSZ9031_LINKUP_ERRATA_7:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_7:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00U), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
             
-        case DRV_KSZ9031_LINKUP_ERRATA_8:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_8:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register to write data to register 
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x1A80, phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x1A80, phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 errataState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, errataState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, errataState);
                 res = DRV_ETHPHY_RES_PENDING;
             }
+            else
+            {
+                // OK
+            }
             break;            
-        case DRV_KSZ9031_LINKUP_ERRATA_9:
+        case (uint32_t)DRV_KSZ9031_LINKUP_ERRATA_9:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res != DRV_ETHPHY_RES_OK)
             { 
                 res = DRV_ETHPHY_RES_PENDING;
             }
+            else
+            {
+                // OK
+            }
+            break;
+
+        default:
+            res = DRV_ETHPHY_RES_OPERATION_ERR;
             break;
     }
     return res;    

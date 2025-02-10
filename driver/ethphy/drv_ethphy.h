@@ -19,7 +19,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,8 +43,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_ETHPHY_H
-#define _DRV_ETHPHY_H
+#ifndef H_DRV_ETHPHY_H
+#define H_DRV_ETHPHY_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -546,7 +546,7 @@ typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY
     It is meant just for short I/O operations, not for lengthy processing.
 */
 
-typedef void (* DRV_ETHPHY_RESET_FUNCTION) (const struct DRV_ETHPHY_OBJECT_BASE_TYPE*, DRV_HANDLE handle);
+typedef void (* DRV_ETHPHY_RESET_FUNCTION) (const struct DRV_ETHPHY_OBJECT_BASE_TYPE* basetype, DRV_HANDLE handle);
 
 
 // *****************************************************************************
@@ -649,7 +649,7 @@ typedef enum
     A pointer to a structure of this format containing the desired
     initialization data must be passed into the DRV_ETHPHY_Initialize routine.
 */
-typedef struct _DRV_ETHPHY_TMO
+typedef struct S_DRV_ETHPHY_TMO
 {
     //ETH PHY Reset Clear Time-out (mSec)
     uint32_t                    resetTmo;
@@ -697,11 +697,11 @@ typedef struct DRV_ETHPHY_INIT
 
     /* Non-volatile pointer to the DRV_MIIM object providing MIIM access for this PHY */
     /* Could be NULL if the MIIM driver is not used */
-    const struct DRV_MIIM_OBJECT_BASE* pMiimObject; 
+    const struct S_DRV_MIIM_OBJECT_BASE* pMiimObject; 
 
     /* Non-volatile pointer to the DRV_MIIM initialization data */
     /* Could be NULL if the MIIM driver is not used */
-    const struct DRV_MIIM_INIT* pMiimInit;
+    const struct S_DRV_MIIM_INIT* pMiimInit;
 
     /* MIIM module index to be used */
     /* Not needed if the MIIM driver is not used */
@@ -814,7 +814,7 @@ typedef struct
 
 /*****************************************************************************************
   Function:
-       SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX        index,
+       SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX        iModule,
                                              const SYS_MODULE_INIT * const init )
     
   Summary:
@@ -829,7 +829,7 @@ typedef struct
     None.
 
   Parameters:
-    - drvIndex  - Index for the driver instance to be initialized
+    - iModule  - Index for the driver instance to be initialized
     - init      - Pointer to a data structure containing any data necessary to
                   initialize the driver. This pointer may be null if no data
                   is required because static overrides have been provided.
@@ -843,19 +843,19 @@ typedef struct
     DRV_ETHPHY_INIT    init;
     SYS_MODULE_OBJ  objectHandle;
     
-    // Populate the Ethernet PHY initialization structure
+    # Populate the Ethernet PHY initialization structure
     init.phyId  = ETHPHY_ID_0;
     
-    // Populate the Ethernet PHY initialization structure
+    # Populate the Ethernet PHY initialization structure
     init.phyId  = ETHPHY_ID_2;
     init.pPhyObject  = &DRV_ETHPHY_OBJECT_LAN8720;
     
-    // Do something
+    # Do something
     
     objectHandle = DRV_ETHPHY_Initialize(0, (SYS_MODULE_INIT*)&init);
     if (SYS_MODULE_OBJ_INVALID == objectHandle)
     {
-        // Handle error
+        # Handle error
     }
     </code>
 
@@ -870,7 +870,7 @@ typedef struct
 
   *****************************************************************************************/
 
-SYS_MODULE_OBJ DRV_ETHPHY_Initialize ( const SYS_MODULE_INDEX        index,
+SYS_MODULE_OBJ DRV_ETHPHY_Initialize ( const SYS_MODULE_INDEX        iModule,
                                        const SYS_MODULE_INIT * const init );
 
 
@@ -905,7 +905,7 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize ( const SYS_MODULE_INDEX        index,
     DRV_ETHPHY_INIT    init;
     SYS_MODULE_OBJ  objectHandle;
 
-    // Populate the Ethernet PHY initialization structure
+    # Populate the Ethernet PHY initialization structure
     init.phyId  = ETHPHY_ID_2;
     init.pPhyObject  = &DRV_ETHPHY_OBJECT_LAN8720;
 
@@ -914,11 +914,11 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize ( const SYS_MODULE_INDEX        index,
     phyStatus = DRV_ETHPHY_Status(objectHandle);
     if (SYS_STATUS_BUSY == phyStatus)
     {
-        // Check again later to ensure the driver is ready
+        # Check again later to ensure the driver is ready
     }
     else if (SYS_STATUS_ERROR >= phyStatus)
     {
-        // Handle error
+        # Handle error
     }
     </code>
 
@@ -958,7 +958,7 @@ void DRV_ETHPHY_Reinitialize ( SYS_MODULE_OBJ               object,
 
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     //  Returned from DRV_ETHPHY_Initialize
+    SYS_MODULE_OBJ      object;     #  Returned from DRV_ETHPHY_Initialize
     SYS_STATUS          status;
 
     DRV_ETHPHY_Deinitialize(object);
@@ -966,8 +966,8 @@ void DRV_ETHPHY_Reinitialize ( SYS_MODULE_OBJ               object,
     status = DRV_ETHPHY_Status(object);
     if (SYS_MODULE_DEINITIALIZED != status)
     {
-        // Check again later if you need to know
-        // when the driver is deinitialized.
+        # Check again later if you need to know
+        # when the driver is deinitialized.
     }
     </code>
 
@@ -1007,13 +1007,13 @@ void DRV_ETHPHY_Deinitialize ( SYS_MODULE_OBJ object );
 
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from DRV_ETHPHY_Initialize
+    SYS_MODULE_OBJ      object;     # Returned from DRV_ETHPHY_Initialize
     SYS_STATUS          status;
     
     status = DRV_ETHPHY_Status(object);
     if (SYS_STATUS_ERROR >= status)
     {
-        // Handle error
+        # Handle error
     }
     </code>
 
@@ -1066,13 +1066,13 @@ SYS_STATUS DRV_ETHPHY_Status ( SYS_MODULE_OBJ object );
     None
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from DRV_ETHPHY_Initialize
+    SYS_MODULE_OBJ      object;     # Returned from DRV_ETHPHY_Initialize
     
     while (true)
     {
         DRV_ETHPHY_Tasks (object);
     
-        // Do other tasks
+        # Do other tasks
     }
     </code>
 
@@ -1094,8 +1094,8 @@ void DRV_ETHPHY_Tasks( SYS_MODULE_OBJ object );
 
 // *****************************************************************************
 /* Function:
-    DRV_HANDLE DRV_ETHPHY_Open( const SYS_MODULE_INDEX drvIndex,
-                                const DRV_IO_INTENT    intent )
+    DRV_HANDLE DRV_ETHPHY_Open( const SYS_MODULE_INDEX iModule,
+                                const DRV_IO_INTENT    ioIntent )
 
   Summary:
     Opens the specified Ethernet PHY driver instance and returns a handle to it.
@@ -1128,7 +1128,7 @@ void DRV_ETHPHY_Tasks( SYS_MODULE_OBJ object );
     handle = DRV_ETHPHY_Open(0, 0);
     if (DRV_HANDLE_INVALID == handle)
     {
-        // Unable to open the driver
+        # Unable to open the driver
     }
     </code>
 
@@ -1141,8 +1141,8 @@ void DRV_ETHPHY_Tasks( SYS_MODULE_OBJ object );
     behavior.
 */
 
-DRV_HANDLE DRV_ETHPHY_Open( const SYS_MODULE_INDEX drvIndex,
-                            const DRV_IO_INTENT    intent  );
+DRV_HANDLE DRV_ETHPHY_Open( const SYS_MODULE_INDEX iModule,
+                            const DRV_IO_INTENT    ioIntent  );
 
 
 // *****************************************************************************
@@ -1172,7 +1172,7 @@ DRV_HANDLE DRV_ETHPHY_Open( const SYS_MODULE_INDEX drvIndex,
 
   Example:
     <code>
-    DRV_HANDLE handle;  // Returned from DRV_ETHPHY_Open
+    DRV_HANDLE handle;  # Returned from DRV_ETHPHY_Open
 
     DRV_ETHPHY_Close(handle);
     </code>
@@ -1214,13 +1214,13 @@ void DRV_ETHPHY_Close( DRV_HANDLE handle );
 
   Example:
     <code>
-    DRV_HANDLE phyHandle;  // Returned from DRV_ETHPHY_Open
+    DRV_HANDLE phyHandle;  # Returned from DRV_ETHPHY_Open
     DRV_ETHPHY_CLIENT_STATUS phyClientStatus;
     
     phyClientStatus = DRV_ETHPHY_ClientStatus(phyHandle);
     if(DRV_ETHPHY_CLIENT_STATUS_ERROR >= phyClientStatus)
     {
-        // Handle the error
+        # Handle the error
     }
     </code>
 
@@ -1416,7 +1416,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp
 
 // *****************************************************************************
 /* Function:
-    DRV_ETHPHY_RESULT DRV_ETHPHY_RestartNegotiation( DRV_HANDLE handle )
+    DRV_ETHPHY_RESULT DRV_ETHPHY_RestartNegotiation( DRV_HANDLE hClient )
 
   Summary:
     Restarts auto-negotiation of the Ethernet PHY link.
@@ -1432,7 +1432,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp
     - DRV_ETHPHY_Setup must have been called to properly configure the PHY
 
   Parameters:
-    - handle  - Client's driver handle (returned from DRV_ETHPHY_Open)
+    - hClient  - Client's driver handle (returned from DRV_ETHPHY_Open)
 
   Returns:
     - DRV_ETHPHY_RES_PENDING operation has been scheduled successfully
@@ -1447,7 +1447,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp
     when the operation was completed and its outcome. 
 */
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex );
+DRV_ETHPHY_RESULT DRV_ETHPHY_RestartNegotiation( DRV_HANDLE hClient, DRV_ETHPHY_INTERFACE_INDEX portIndex );
 
 
 // *****************************************************************************
@@ -1490,7 +1490,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 
 // *****************************************************************************
 /* Function:
-    DRV_ETHPHY_RESULT DRV_ETHPHY_NegotiationIsComplete( DRV_HANDLE handle, bool waitComplete )
+    DRV_ETHPHY_RESULT DRV_ETHPHY_NegotiationIsComplete( DRV_HANDLE hClient, bool waitComplete )
 
   Summary:
     Returns the results of a previously initiated Ethernet PHY negotiation.
@@ -1508,7 +1508,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
     - DRV_ETHPHY_RestartNegotiation should have been called.
 
   Parameters:
-    - handle  - Client's driver handle (returned from DRV_ETHPHY_Open)
+    - hClient  - Client's driver handle (returned from DRV_ETHPHY_Open)
     - waitComplete - boolean: wait for negotiation to complete or return immediately
 
   Returns:
@@ -1536,7 +1536,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
     See also DRV_ETHPHY_NegotiationResultGet.
 */
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
+DRV_ETHPHY_RESULT DRV_ETHPHY_NegotiationIsComplete( DRV_HANDLE hClient, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
 
 
 // *****************************************************************************
@@ -2063,55 +2063,55 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIOperationIsComplete(DRV_HANDLE handle);
 
 typedef struct DRV_ETHPHY_OBJECT_BASE_TYPE
 {
-    SYS_MODULE_OBJ           (*DRV_ETHPHY_Initialize) ( const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init );
+    SYS_MODULE_OBJ           (*phy_Initialize) ( const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init );
 
-    void                     (*DRV_ETHPHY_Reinitialize) ( SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init );
+    void                     (*phy_Reinitialize) ( SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init );
 
-    void                     (*DRV_ETHPHY_Deinitialize) ( SYS_MODULE_OBJ object );
+    void                     (*phy_Deinitialize) ( SYS_MODULE_OBJ object );
 
-    SYS_STATUS               (*DRV_ETHPHY_Status) ( SYS_MODULE_OBJ object );
+    SYS_STATUS               (*phy_Status) ( SYS_MODULE_OBJ object );
 
-    void                     (*DRV_ETHPHY_Tasks)( SYS_MODULE_OBJ object );
+    void                     (*phy_Tasks)( SYS_MODULE_OBJ object );
 
-    DRV_HANDLE               (*DRV_ETHPHY_Open)( const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT    intent  );
+    DRV_HANDLE               (*phy_Open)( const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT    intent  );
 
-    void                     (*DRV_ETHPHY_Close)( DRV_HANDLE handle );
+    void                     (*phy_Close)( DRV_HANDLE handle );
 
-    DRV_ETHPHY_CLIENT_STATUS (*DRV_ETHPHY_ClientStatus)( DRV_HANDLE handle );
+    DRV_ETHPHY_CLIENT_STATUS (*phy_ClientStatus)( DRV_HANDLE handle );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_ClientOperationResult)( DRV_HANDLE handle);  
+    DRV_ETHPHY_RESULT        (*phy_ClientOperationResult)( DRV_HANDLE handle);  
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_ClientOperationAbort)( DRV_HANDLE handle);  
+    DRV_ETHPHY_RESULT        (*phy_ClientOperationAbort)( DRV_HANDLE handle);  
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_PhyAddressGet)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
+    DRV_ETHPHY_RESULT        (*phy_PhyAddressGet)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_Setup)( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags);
+    DRV_ETHPHY_RESULT        (*phy_Setup)( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags);
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_RestartNegotiation)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex );
+    DRV_ETHPHY_RESULT        (*phy_RestartNegotiation)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_HWConfigFlagsGet)( DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags );
+    DRV_ETHPHY_RESULT        (*phy_HWConfigFlagsGet)( DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_NegotiationIsComplete)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
+    DRV_ETHPHY_RESULT        (*phy_NegotiationIsComplete)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_NegotiationResultGet)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_NEGOTIATION_RESULT* pNegResult);
+    DRV_ETHPHY_RESULT        (*phy_NegotiationResultGet)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_NEGOTIATION_RESULT* pNegResult);
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_LinkStatusGet)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh );
+    DRV_ETHPHY_RESULT        (*phy_LinkStatusGet)( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_Reset)( DRV_HANDLE handle, bool waitComplete );
+    DRV_ETHPHY_RESULT        (*phy_Reset)( DRV_HANDLE handle, bool waitComplete );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorDataGet)( DRV_HANDLE handle, uint32_t* pVendorData );
+    DRV_ETHPHY_RESULT        (*phy_VendorDataGet)( DRV_HANDLE handle, uint32_t* pVendorData );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorDataSet)( DRV_HANDLE handle, uint32_t vendorData );
+    DRV_ETHPHY_RESULT        (*phy_VendorDataSet)( DRV_HANDLE handle, uint32_t vendorData );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIReadStart)( DRV_HANDLE handle, uint16_t rIx,  int phyAddress );
+    DRV_ETHPHY_RESULT        (*phy_VendorSMIReadStart)( DRV_HANDLE handle, uint16_t rIx,  int phyAddress );
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIReadResultGet)( DRV_HANDLE handle, uint16_t* pSmiRes);
+    DRV_ETHPHY_RESULT        (*phy_VendorSMIReadResultGet)( DRV_HANDLE handle, uint16_t* pSmiRes);
 
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIWriteStart)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
+    DRV_ETHPHY_RESULT        (*phy_VendorSMIWriteStart)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
     
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIWriteWaitComplete)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
+    DRV_ETHPHY_RESULT        (*phy_VendorSMIWriteWaitComplete)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
     
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIOperationIsComplete)( DRV_HANDLE handle);
+    DRV_ETHPHY_RESULT        (*phy_VendorSMIOperationIsComplete)( DRV_HANDLE handle);
     
 
 }DRV_ETHPHY_OBJECT_BASE;
@@ -2124,37 +2124,6 @@ typedef struct DRV_ETHPHY_OBJECT_BASE_TYPE
 
 */
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Default;
-extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303;
-extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_ksz8863;
-extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9354;
-extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Dummy;
-
-
-// *****************************************************************************
-/* List of supported PHY drivers (vendor DRV_ETHPHY_OBJECT)
-   
-*/
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_DP83640;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_DP83848;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_IP101GR;
-
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8700;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8720;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8740;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9303;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8061;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ9031;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ9131;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8081;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8091;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8041;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8863;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN867x;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8742A;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_VSC8540;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9354;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8770;
-extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8840;
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -2163,7 +2132,7 @@ extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8840;
 //DOM-IGNORE-END
 
 
-#endif // #ifndef _DRV_ETHPHY_H
+#endif // #ifndef H_DRV_ETHPHY_H
 
 /*******************************************************************************
  End of File

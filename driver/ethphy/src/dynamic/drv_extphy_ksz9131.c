@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2022-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2022-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -28,12 +28,13 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_ksz9131.h"
+#include "driver/ethphy/drv_extphy_ksz9131.h"
+#include "drv_extphy_ksz9131_priv.h"
 
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
-static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj);
+static DRV_ETHPHY_RESULT F_DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj);
 
 /******************************************************************************
  * Definitions
@@ -77,7 +78,7 @@ typedef enum
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-    return _DRV_KSZ9131_Skew_Setting(pBaseObj, hClientObj);
+    return F_DRV_KSZ9131_Skew_Setting(pBaseObj, hClientObj);
 }
 
 /****************************************************************************
@@ -133,117 +134,137 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ9131 = 
 {
-    .miiConfigure = DRV_EXTPHY_MIIConfigure,
-    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
-    .smiClockGet = DRV_EXTPHY_SMIClockGet,
-    .wolConfigure = 0,                      // no WOL functionality yet
-    .phyDetect = 0,                         // default detection performed
+    .miiConfigure = &DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = &DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = &DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = NULL,                   // no WOL functionality yet
+    .phyDetect = NULL,                      // default detection performed
     .bmconDetectMask = 0,                   // standard detection mask
     .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
 
-static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj)
+static DRV_ETHPHY_RESULT F_DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj)
 {
     uint32_t skewState = 0;
     int phyAddress = 0;
     
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &skewState);
-    if(res < 0)
+    DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &skewState);
+    if((int)res < 0)
     {   // some error occurred
         return res;
     }
     
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    (void)pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
     
     switch (skewState)
     {
-        case DRV_KSZ9131_SKEW_CLK_1:
+        case (uint32_t)DRV_KSZ9131_SKEW_CLK_1:
             //Write to MMD Control register to set MMD Device Address : 02
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x02), phyAddress);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x02U), phyAddress);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             skewState++;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, skewState);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case DRV_KSZ9131_SKEW_CLK_2:
+        case (uint32_t)DRV_KSZ9131_SKEW_CLK_2:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access : Clock Pad Skew Register
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_CLK_SKEW_REG), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_CLK_SKEW_REG), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 skewState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, skewState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
 
-        case DRV_KSZ9131_SKEW_CLK_3:
+        case (uint32_t)DRV_KSZ9131_SKEW_CLK_3:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x02), phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x02U), phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 skewState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, skewState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
             
-        case DRV_KSZ9131_SKEW_CLK_4:
+        case (uint32_t)DRV_KSZ9131_SKEW_CLK_4:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register to write data to register : Set Rx/Tx Clock pad skew to maximum
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x3FF, phyAddress);
-                if(res < 0)
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x3FF, phyAddress);
+                if((int)res < 0)
                 {   // some error
-                    return res;
+                    break;
                 }
                 skewState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+                (void)pBaseObj->phy_VendorDataSet(hClientObj, skewState);
                 res = DRV_ETHPHY_RES_PENDING;
+            }
+            else
+            {
+                // OK
             }
             break;
             
-        case DRV_KSZ9131_SKEW_CLK_5:
+        case (uint32_t)DRV_KSZ9131_SKEW_CLK_5:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
-            if(res < 0)
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
+            if((int)res < 0)
             {   // some error
-                return res;
+                break;
             }
             else if(res != DRV_ETHPHY_RES_OK)
             { 
                 res = DRV_ETHPHY_RES_PENDING;
             }
+            else
+            {
+                // OK
+            }
+            break;
+
+        default:
+            res = DRV_ETHPHY_RES_OPERATION_ERR;
             break;
     }
     return res;

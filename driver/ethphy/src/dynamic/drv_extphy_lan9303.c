@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -27,7 +27,8 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "drv_extphy_lan9303.h"
+#include "driver/ethphy/drv_extphy_lan9303.h"
+#include "drv_extphy_lan9303_priv.h"
 #include "driver/miim/drv_miim.h"
 
 /****************************************************************************
@@ -42,29 +43,29 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DR
 
 const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303 = 
 {
-    DRV_ETHPHY_Initialize,
-    DRV_ETHPHY_Reinitialize,
-    DRV_ETHPHY_Deinitialize,
-    DRV_ETHPHY_Status,
-    DRV_ETHPHY_Tasks,
-    DRV_ETHPHY_Open,
-    DRV_ETHPHY_Close,
-    DRV_ETHPHY_ClientStatus,
-    DRV_ETHPHY_ClientOperationResult,
-    DRV_ETHPHY_ClientOperationAbort,
-    DRV_ETHPHY_Lan9303PhyAddressGet,
-    DRV_ETHPHY_Setup,
-    DRV_ETHPHY_Lan9303RestartNegotiation,
-    DRV_ETHPHY_HWConfigFlagsGet,
-    DRV_ETHPHY_Lan9303NegotiationIsComplete,
-    DRV_ETHPHY_NegotiationResultGet,
-    DRV_ETHPHY_Lan9303LinkStatusGet,
-    DRV_ETHPHY_Reset,
-    DRV_ETHPHY_VendorDataGet,
-    DRV_ETHPHY_VendorDataSet,
-    DRV_ETHPHY_VendorSMIReadStart,
-    DRV_ETHPHY_VendorSMIReadResultGet,
-    DRV_ETHPHY_VendorSMIWriteStart,
+         .phy_Initialize =             &DRV_ETHPHY_Initialize,
+         .phy_Reinitialize =           &DRV_ETHPHY_Reinitialize,
+         .phy_Deinitialize =           &DRV_ETHPHY_Deinitialize,
+         .phy_Status =                 &DRV_ETHPHY_Status,
+         .phy_Tasks =                  &DRV_ETHPHY_Tasks,
+         .phy_Open =                   &DRV_ETHPHY_Open,
+         .phy_Close =                  &DRV_ETHPHY_Close,
+         .phy_ClientStatus =           &DRV_ETHPHY_ClientStatus,
+         .phy_ClientOperationResult =  &DRV_ETHPHY_ClientOperationResult,
+         .phy_ClientOperationAbort =   &DRV_ETHPHY_ClientOperationAbort,
+         .phy_PhyAddressGet =          &DRV_ETHPHY_Lan9303PhyAddressGet,
+         .phy_Setup =                  &DRV_ETHPHY_Setup,
+         .phy_RestartNegotiation =     &DRV_ETHPHY_Lan9303RestartNegotiation,
+         .phy_HWConfigFlagsGet =       &DRV_ETHPHY_HWConfigFlagsGet,
+         .phy_NegotiationIsComplete =  &DRV_ETHPHY_Lan9303NegotiationIsComplete,
+         .phy_NegotiationResultGet =   &DRV_ETHPHY_NegotiationResultGet,
+         .phy_LinkStatusGet =          &DRV_ETHPHY_Lan9303LinkStatusGet,
+         .phy_Reset =                  &DRV_ETHPHY_Reset,
+         .phy_VendorDataGet =          &DRV_ETHPHY_VendorDataGet,
+         .phy_VendorDataSet =          &DRV_ETHPHY_VendorDataSet,
+         .phy_VendorSMIReadStart =     &DRV_ETHPHY_VendorSMIReadStart,
+         .phy_VendorSMIReadResultGet = &DRV_ETHPHY_VendorSMIReadResultGet,
+         .phy_VendorSMIWriteStart =    &DRV_ETHPHY_VendorSMIWriteStart,
 };
 
 #define LAND9303_LINK_STATUS_INDEX 0
@@ -79,11 +80,7 @@ static uint16_t lan9303OperationResults[3] = {0};
  *                 interface functions
  ****************************************************************************/
 
-uint32_t DRV_ETHPHY_SMC9303_SMIExtRead(DRV_HANDLE handle, uint16_t rIx);
-uint16_t DRV_ETHPHY_SMC9303_SMIRead(DRV_HANDLE handle, uint8_t addr, uint16_t rIx);
-void DRV_ETHPHY_SMC9303_SMIExtWrite(DRV_HANDLE handle, uint16_t rIx, uint32_t val);
-
-static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, uint16_t rIx, uint32_t val);
+static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle, uint16_t rIx, uint16_t val);
 
 /****************************************************************************
  * Function:        DRV_EXTPHY_MIIConfigure
@@ -107,11 +104,11 @@ static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_O
 
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj,DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-#if LAN9303_CMD_PROCESSOR
+#if defined(LAN9303_CMD_PROCESSOR) && (LAN9303_CMD_PROCESSOR != 0)
     sHClientObj = hClientObj;
 #endif
-        __LAN9303_LED_CFG_t led;
-        led.d = 0;
+        LAN9303_LED_CFG_t led;
+        led.w = 0;
         led.LED_EN0 = 1;
         led.LED_EN1 = 1;
         led.LED_EN2 = 0;
@@ -121,9 +118,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* p
 
         led.LED_FUN = 2;
 
-        //DRV_ETHPHY_SMC9303_SMIExtWrite(hClientObj, PHY_REG_LED_CFG, led.d);
-
-        return DRV_ETHPHY_SMC9303_VendorSMIExtWrite(pBaseObj, hClientObj, PHY_REG_LED_CFG, led.d);
+        return DRV_ETHPHY_SMC9303_VendorSMIExtWrite(pBaseObj, hClientObj, (uint16_t)PHY_REG_LED_CFG, (uint16_t)led.w);
         
         
         
@@ -178,24 +173,24 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 // the DRV_ETHPHY_OBJECT
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9303 = 
 {
-    .miiConfigure = DRV_EXTPHY_MIIConfigure,
-    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
-    .smiClockGet = DRV_EXTPHY_SMIClockGet,
-    .wolConfigure = 0,                      // no WOL functionality yet
-    .phyDetect = 0,                         // default detection performed
+    .miiConfigure = &DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = &DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = &DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = NULL,                   // no WOL functionality yet
+    .phyDetect = NULL,                      // default detection performed
     .bmconDetectMask = 0,                   // standard detection mask
     .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
-#define DRV_ETHPHY_SMC32_PhyAddr(reg) (((reg >> 6) & 0xf) | 0x10)
-#define DRV_ETHPHY_SMC32_RegAddr(reg) ((reg >> 1) & 0x1f)
+#define DRV_ETHPHY_SMC32_PhyAddr(reg) ((((reg) >> 6) & 0xfU) | 0x10U)
+#define DRV_ETHPHY_SMC32_RegAddr(reg) (((reg) >> 1) & 0x1fU)
 
-static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle, uint16_t rIx, uint32_t val)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle, uint16_t rIx, uint16_t val)
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
 
-    DRV_MIIM_Write(hClientObj->miimHandle, DRV_ETHPHY_SMC32_RegAddr(rIx), DRV_ETHPHY_SMC32_PhyAddr(rIx), val & 0xffff, DRV_MIIM_OPERATION_FLAG_DISCARD, 0);       
-    DRV_MIIM_Write(hClientObj->miimHandle, DRV_ETHPHY_SMC32_RegAddr(rIx), DRV_ETHPHY_SMC32_PhyAddr(rIx), val & 0xffff, DRV_MIIM_OPERATION_FLAG_DISCARD, 0);       
+    (void)DRV_MIIM_Write(hClientObj->miimHandle, DRV_ETHPHY_SMC32_RegAddr(rIx), DRV_ETHPHY_SMC32_PhyAddr(rIx), val & 0xffffU, DRV_MIIM_OPERATION_FLAG_DISCARD, NULL);       
+    (void)DRV_MIIM_Write(hClientObj->miimHandle, DRV_ETHPHY_SMC32_RegAddr(rIx), DRV_ETHPHY_SMC32_PhyAddr(rIx), val & 0xffffU, DRV_MIIM_OPERATION_FLAG_DISCARD, NULL);       
     
     return DRV_ETHPHY_RES_OK;
 }
@@ -212,7 +207,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY
     }
     
     /* Check for the Client validity */
-    if(hClientObj == 0)
+    if(hClientObj == NULL)
     {
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
@@ -220,39 +215,41 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY
     int x = 0;
     for (x = 0; x < 3; x++)
     {
-        if (lan9303OperationsHandles[x] != 0)
+        if (lan9303OperationsHandles[x] != NULL)
         {
             uint32_t opResults;
             DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303OperationsHandles[x], &opResults);
             if (mmiRes == DRV_MIIM_RES_OK)
             {
                 lan9303OperationResults[x] = (uint16_t)opResults;
-                lan9303OperationsHandles[x] = 0;
+                lan9303OperationsHandles[x] = NULL;
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
             {
-                DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
-                lan9303OperationsHandles[x] = 0;              
+                (void)DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
+                lan9303OperationsHandles[x] = NULL;              
+            }
+            else
+            {
+                // OK
             }
         }
     }
     
-    DRV_MIIM_RESULT res;
     if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
-        DRV_MIIM_RESULT res;
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] == 0)
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] == NULL)
         {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_1 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_1 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
         }
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] == 0)
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] == NULL)
         {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_2 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_2 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
         }
-        __BMSTATbits_t b1, b2;
-        b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
-        b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
-        if (b1.LINK_STAT || b2.LINK_STAT)
+        BMSTATbits_t b1, b2;
+        b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
+        b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
+        if (b1.LINK_STAT != 0U || b2.LINK_STAT != 0U)
         {
             *pLinkStat = DRV_ETHPHY_LINK_ST_UP;
         }
@@ -260,19 +257,21 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY
         {
             *pLinkStat = DRV_ETHPHY_LINK_ST_DOWN;
         }
-        if (b1.REM_FAULT || b2.REM_FAULT)
+        if (b1.REM_FAULT != 0U || b2.REM_FAULT != 0U)
         {
-            *pLinkStat |= DRV_ETHPHY_LINK_ST_REMOTE_FAULT;
+            uint32_t linkStat = (uint32_t)*pLinkStat;
+            linkStat |= (uint32_t)DRV_ETHPHY_LINK_ST_REMOTE_FAULT; 
+            *pLinkStat = (DRV_ETHPHY_LINK_STATUS)linkStat;
         }
         return DRV_ETHPHY_RES_PENDING;        
     }
-    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] == 0)
+    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] == NULL)
     {
-        lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + portIndex - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+        lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)portIndex - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
     }
-    __BMSTATbits_t b1;
-    b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + portIndex - 1];
-    if (b1.LINK_STAT)
+    BMSTATbits_t b1;
+    b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1];
+    if (b1.LINK_STAT != 0U)
     {
         *pLinkStat = DRV_ETHPHY_LINK_ST_UP;
     }
@@ -280,9 +279,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY
     {
         *pLinkStat = DRV_ETHPHY_LINK_ST_DOWN;
     }
-    if (b1.REM_FAULT)
+    if (b1.REM_FAULT != 0U)
     {
-        *pLinkStat |= DRV_ETHPHY_LINK_ST_REMOTE_FAULT;
+        uint32_t linkStat = (uint32_t)*pLinkStat;
+        linkStat |= (uint32_t)DRV_ETHPHY_LINK_ST_REMOTE_FAULT; 
+        *pLinkStat = (DRV_ETHPHY_LINK_STATUS)linkStat;
     }    
     return DRV_ETHPHY_RES_PENDING;            
 }
@@ -297,44 +298,44 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY
     }
     
     /* Check for the Client validity */
-    if(hClientObj == 0)
+    if(hClientObj == NULL)
     {
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
     if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
-        *pPhyAddress = hClientObj->smiPhyAddress;
+        *pPhyAddress = (int)hClientObj->smiPhyAddress;
         return DRV_ETHPHY_RES_OK;
     }
     
     
-    *pPhyAddress = hClientObj->smiPhyAddress + portIndex - 1;
+    *pPhyAddress = (int)hClientObj->smiPhyAddress + (int)portIndex - 1;
     return DRV_ETHPHY_RES_OK; 
 }
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex )
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-    __BMSTATbits_t b1, b2;
-    b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
-    b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
+    BMSTATbits_t b1, b2;
+    b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
+    b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
     
 
     if (portIndex == DRV_ETHPHY_INF_IDX_PORT_1 || portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
-        if (b1.AN_ABLE == 0)
+        if (b1.AN_ABLE == 0U)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR;
         }
-        DRV_MIIM_Write(hClientObj->miimHandle, PHY_REG_BMCON, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_1 - 1, _BMCON_AN_ENABLE_MASK | _BMCON_AN_RESTART_MASK, DRV_MIIM_OPERATION_FLAG_DISCARD, 0);       
+        (void)DRV_MIIM_Write(hClientObj->miimHandle, (uint16_t)PHY_REG_BMCON, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_1 - 1U, BMCON_AN_ENABLE_MASK | BMCON_AN_RESTART_MASK, DRV_MIIM_OPERATION_FLAG_DISCARD, NULL);       
     }
     if (portIndex == DRV_ETHPHY_INF_IDX_PORT_2 || portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
-        if (b2.AN_ABLE == 0)
+        if (b2.AN_ABLE == 0U)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR;
         }
-        DRV_MIIM_Write(hClientObj->miimHandle, PHY_REG_BMCON, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_2 - 1, _BMCON_AN_ENABLE_MASK | _BMCON_AN_RESTART_MASK, DRV_MIIM_OPERATION_FLAG_DISCARD, 0);       
+        (void)DRV_MIIM_Write(hClientObj->miimHandle, (uint16_t)PHY_REG_BMCON, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_2 - 1U, BMCON_AN_ENABLE_MASK | BMCON_AN_RESTART_MASK, DRV_MIIM_OPERATION_FLAG_DISCARD, NULL);       
     }
     
     return DRV_ETHPHY_RES_PENDING;
@@ -349,7 +350,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DR
     }
     
     /* Check for the Client validity */
-    if(hClientObj == 0)
+    if(hClientObj == NULL)
     {
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
@@ -357,62 +358,64 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DR
     int x = 0;
     for (x = 0; x < 3; x++)
     {
-        if (lan9303OperationsHandles[x] != 0)
+        if (lan9303OperationsHandles[x] != NULL)
         {
             uint32_t opResults;
             DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303OperationsHandles[x], &opResults);
             if (mmiRes == DRV_MIIM_RES_OK)
             {
                 lan9303OperationResults[x] = (uint16_t)opResults;
-                lan9303OperationsHandles[x] = 0;
+                lan9303OperationsHandles[x] = NULL;
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
             {
-                DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
-                lan9303OperationsHandles[x] = 0;                
+                (void)DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
+                lan9303OperationsHandles[x] = NULL;                
+            }
+            else
+            {
+                // OK
             }
         }
     }
     if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
-        DRV_MIIM_RESULT res;
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] == 0)
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] == NULL)
         {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_1 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_1 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
         }
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] == 0)
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] == NULL)
         {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_2 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_2 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
         }
-        __BMSTATbits_t b1, b2;
-        b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
-        b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
-        if (b1.LINK_STAT)
+        BMSTATbits_t b1, b2;
+        b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
+        b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
+        if (b1.LINK_STAT != 0U)
         {
-            if (b1.AN_COMPLETE == 0)
+            if (b1.AN_COMPLETE == 0U)
             {
                 return DRV_ETHPHY_RES_PENDING;
             }
         }
-        if (b2.LINK_STAT)
+        if (b2.LINK_STAT != 0U)
         {
-            if (b2.AN_COMPLETE == 0)
+            if (b2.AN_COMPLETE == 0U)
             {
                 return DRV_ETHPHY_RES_PENDING;
             }            
         }
         return DRV_ETHPHY_RES_OK;
     }
-    DRV_MIIM_RESULT res;
-    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] == 0)
+    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] == NULL)
     {
-        lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + portIndex - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+        lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)portIndex - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
     }
-    __BMSTATbits_t b1;
-    b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + portIndex - 1];
-    if (b1.LINK_STAT)
+    BMSTATbits_t b1;
+    b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1];
+    if (b1.LINK_STAT != 0U)
     {
-        if (b1.AN_COMPLETE == 0)
+        if (b1.AN_COMPLETE == 0U)
         {
             return DRV_ETHPHY_RES_PENDING;
         }
