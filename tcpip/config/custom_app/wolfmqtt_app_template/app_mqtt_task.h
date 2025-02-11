@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -41,8 +41,8 @@ Microchip or any third party.
     are defined here for convenience.
 *******************************************************************************/
 
-#ifndef _APP_MQTT_TASK_H_
-#define _APP_MQTT_TASK_H_
+#ifndef H_APP_MQTT_TASK_H_
+#define H_APP_MQTT_TASK_H_
 
 // *****************************************************************************
 // *****************************************************************************
@@ -279,7 +279,7 @@ APP_MQTT_CONTEXT*    APP_MQTT_GetContext(void);
 
 const char* APP_MQTT_GetStateString(void);
 
-#endif /* _APP_MQTT_TASK_H_ */
+#endif /* H_APP_MQTT_TASK_H_ */
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

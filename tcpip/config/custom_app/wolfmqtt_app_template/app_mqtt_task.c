@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -141,8 +141,8 @@ APP_MQTT_CONTEXT* APP_MQTT_GetContext(void)
 
 const char* APP_MQTT_GetStateString(void)
 {
-    APP_MQTT_CONTEXT_STATE ctxtState = appMqttCtx.currState;
-    if(0 <= ctxtState && ctxtState < sizeof(APP_MQTT_StateStrTbl) / sizeof(*APP_MQTT_StateStrTbl))
+    int ctxtState = (int)appMqttCtx.currState;
+    if(0 <= (int)ctxtState && (size_t)ctxtState < sizeof(APP_MQTT_StateStrTbl) / sizeof(*APP_MQTT_StateStrTbl))
     {
         return APP_MQTT_StateStrTbl[ctxtState];
     }
@@ -151,23 +151,33 @@ const char* APP_MQTT_GetStateString(void)
 }
 
 // Local functions implementation
+static __inline__ size_t __attribute__((always_inline)) FC_MinSize(size_t a, size_t b)
+{
+    return (a < b) ? a : b;
+}
 
+/* MISRA C-2012 Rule 21.3 deviated:4 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+/* MISRA C-2012 Directive 4.12 deviated:2 Deviation record ID -  H3_MISRAC_2012_D_4_12_NET_DR_18 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Directive 4.12" "H3_MISRAC_2012_D_4_12_NET_DR_18" 
 static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
 {
-    memset(mqttCtx, 0, sizeof(APP_MQTT_CONTEXT));
+    (void)memset(mqttCtx, 0, sizeof(APP_MQTT_CONTEXT));
 
-    strncpy(mqttCtx->broker, APP_MQTT_DEFAULT_BROKER, sizeof(mqttCtx->broker) - 1);
-    strncpy(mqttCtx->clientId, APP_MQTT_DEFAULT_CLIENT_ID, sizeof(mqttCtx->clientId) - 1);
-    strncpy(mqttCtx->subscribeTopicName, APP_MQTT_DEFAULT_SUBSCRIBE_TOPIC, sizeof(mqttCtx->subscribeTopicName) - 1);
-    strncpy(mqttCtx->publishTopicName, APP_MQTT_DEFAULT_PUBLISH_TOPIC, sizeof(mqttCtx->publishTopicName) - 1);
-    strncpy(mqttCtx->appName, APP_MQTT_DEFAULT_APP_NAME, sizeof(mqttCtx->appName) - 1);
-    strncpy(mqttCtx->publishMessage, APP_MQTT_DEFAULT_PUBLISH_MESSAGE, sizeof(mqttCtx->publishMessage) - 1);
-    strncpy(mqttCtx->lastWill, APP_MQTT_DEFAULT_LWT_TOPIC_NAME, sizeof(mqttCtx->lastWill) - 1);
-    strncpy(mqttCtx->userName, APP_MQTT_DEFAULT_USER, sizeof(mqttCtx->userName) - 1);
-    strncpy(mqttCtx->password, APP_MQTT_DEFAULT_PASS, sizeof(mqttCtx->password) - 1);
+    (void)strncpy(mqttCtx->broker, APP_MQTT_DEFAULT_BROKER, FC_MinSize(sizeof(mqttCtx->broker) - 1U, strlen(APP_MQTT_DEFAULT_BROKER)));
+    (void)strncpy(mqttCtx->clientId, APP_MQTT_DEFAULT_CLIENT_ID, FC_MinSize(sizeof(mqttCtx->clientId) - 1U, strlen(APP_MQTT_DEFAULT_CLIENT_ID)));
+    (void)strncpy(mqttCtx->subscribeTopicName, APP_MQTT_DEFAULT_SUBSCRIBE_TOPIC, FC_MinSize(sizeof(mqttCtx->subscribeTopicName) - 1U, strlen(APP_MQTT_DEFAULT_CLIENT_ID)));
+    (void)strncpy(mqttCtx->publishTopicName, APP_MQTT_DEFAULT_PUBLISH_TOPIC, FC_MinSize(sizeof(mqttCtx->publishTopicName) - 1U, strlen(APP_MQTT_DEFAULT_PUBLISH_TOPIC)));
+    (void)strncpy(mqttCtx->appName, APP_MQTT_DEFAULT_APP_NAME, FC_MinSize(sizeof(mqttCtx->appName) - 1U, strlen(APP_MQTT_DEFAULT_APP_NAME)));
+    (void)strncpy(mqttCtx->publishMessage, APP_MQTT_DEFAULT_PUBLISH_MESSAGE, FC_MinSize(sizeof(mqttCtx->publishMessage) - 1U, strlen(APP_MQTT_DEFAULT_PUBLISH_MESSAGE)));
+    (void)strncpy(mqttCtx->lastWill, APP_MQTT_DEFAULT_LWT_TOPIC_NAME, FC_MinSize(sizeof(mqttCtx->lastWill) - 1U, strlen(APP_MQTT_DEFAULT_LWT_TOPIC_NAME)));
+    (void)strncpy(mqttCtx->userName, APP_MQTT_DEFAULT_USER, FC_MinSize(sizeof(mqttCtx->userName) - 1U, strlen(APP_MQTT_DEFAULT_USER)));
+    (void)strncpy(mqttCtx->password, APP_MQTT_DEFAULT_PASS, FC_MinSize(sizeof(mqttCtx->password) - 1U, strlen(APP_MQTT_DEFAULT_PASS)));
 
     mqttCtx->brokerPort = APP_MQTT_DEFAULT_BROKER_PORT;
-    mqttCtx->qos = APP_MQTT_DEFAULT_QOS;
+    mqttCtx->qos = (uint8_t)APP_MQTT_DEFAULT_QOS;
     mqttCtx->keepAliveSec = APP_MQTT_DEFAULT_KEEP_ALIVE;
     mqttCtx->cmdTimeout = APP_MQTT_DEFAULT_CMD_TIMEOUT_MS;
     mqttCtx->connTimeout = APP_MQTT_DEFAULT_CON_TIMEOUT;
@@ -177,7 +187,7 @@ static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
     mqttCtx->cleanSession = 1;
 
     mqttCtx->forceTls = 0;    // NET_PRES enables TLS, as needed
-    mqttCtx->enableAuth = APP_MQTT_DEFAULT_AUTH; 
+    mqttCtx->enableAuth = (uint8_t)APP_MQTT_DEFAULT_AUTH; 
 
 #ifdef WOLFMQTT_V5
     mqttCtx->maxPktSize = APP_MQTT_MAX_CTRL_PKT_SIZE;
@@ -186,35 +196,45 @@ static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
 #endif
 
     // setup the tx/rx buffers
-    mqttCtx->txBuffSize = APP_MQTT_TX_BUFF_SIZE;
-    mqttCtx->rxBuffSize = APP_MQTT_RX_BUFF_SIZE;
+    mqttCtx->txBuffSize = (uint16_t)APP_MQTT_TX_BUFF_SIZE;
+    mqttCtx->rxBuffSize = (uint16_t)APP_MQTT_RX_BUFF_SIZE;
     mqttCtx->txBuff = (uint8_t*)malloc(mqttCtx->txBuffSize);
     mqttCtx->rxBuff = (uint8_t*)malloc(mqttCtx->rxBuffSize);
 
-    return (mqttCtx->txBuff != 0 && mqttCtx->rxBuff != 0);
+    return (mqttCtx->txBuff != NULL && mqttCtx->rxBuff != NULL);
 }
 
 static void APP_MQTT_DeinitContext(APP_MQTT_CONTEXT* mqttCtx)
 {
-    if(mqttCtx->txBuff != 0)
+    if(mqttCtx->txBuff != NULL)
     {
         free(mqttCtx->txBuff);
-        mqttCtx->txBuff = 0;
+        mqttCtx->txBuff = NULL;
     }
 
-    if(mqttCtx->rxBuff != 0)
+    if(mqttCtx->rxBuff != NULL)
     {
         free(mqttCtx->rxBuff);
-        mqttCtx->rxBuff = 0;
+        mqttCtx->rxBuff = NULL;
     }
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2012 Directive 4.12"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
+
+/* MISRA C-2012 Rule 21.6 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_6_NET_DR_3 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_NET_DR_3" 
 void APP_MQTT_Task(void)
 {
     APP_MQTT_CONTEXT* mqttCtx = &appMqttCtx;
 #ifdef WOLFMQTT_V5
     MqttProp* mqttProp;
 #endif  // WOLFMQTT_V5
+    MqttTopic* pTopic;
     char ping_res_buff[40];
 
 
@@ -222,71 +242,71 @@ void APP_MQTT_Task(void)
 
     switch (mqttCtx->currState)
     {
-        case APP_MQTT_STATE_IDLE:
+        case (uint16_t)APP_MQTT_STATE_IDLE:
             break;
 
-        case APP_MQTT_STATE_BEGIN:
+        case (uint16_t)APP_MQTT_STATE_BEGIN:
             SYS_CONSOLE_PRINT("MQTT Task - Client Start: QoS %d, broker %s\r\n", mqttCtx->qos, mqttCtx->broker);
-            mqttCtx->currState = APP_MQTT_STATE_NET_INIT;
-            mqttCtx->errorCode = MQTT_CODE_SUCCESS;
-            mqttCtx->errorState = APP_MQTT_STATE_IDLE;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_INIT;
+            mqttCtx->errorCode = (int)MQTT_CODE_SUCCESS;
+            mqttCtx->errorState = (uint16_t)APP_MQTT_STATE_IDLE;
             break;
 
-        case APP_MQTT_STATE_NET_INIT:
+        case (uint16_t)APP_MQTT_STATE_NET_INIT:
             // Initialize Net glue layer
             resCode = WMQTT_NETGlue_Initialize(&mqttCtx->mqttNet);
             APP_MQTT_ClientResult(mqttCtx, "WMQTT_NETGlue_Initialize", resCode) ;
-            mqttCtx->currState = resCode < 0 ? APP_MQTT_STATE_DONE : APP_MQTT_STATE_INIT;
+            mqttCtx->currState = resCode < 0 ? (uint16_t)APP_MQTT_STATE_DONE : (uint16_t)APP_MQTT_STATE_INIT;
             break;
 
 #ifdef WOLFMQTT_SN
-        case APP_MQTT_STATE_BEGIN_SN:
+        case (uint16_t)APP_MQTT_STATE_BEGIN_SN:
             SYS_CONSOLE_PRINT("MQTT-SN Task - Client Start: QoS %d, broker %s\r\n", mqttCtx->qos, mqttCtx->broker);
-            mqttCtx->currState = APP_MQTT_STATE_NET_SN_INIT;
-            mqttCtx->errorCode = MQTT_CODE_SUCCESS;
-            mqttCtx->errorState = APP_MQTT_STATE_IDLE;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_SN_INIT;
+            mqttCtx->errorCode = (int)MQTT_CODE_SUCCESS;
+            mqttCtx->(int)errorState = APP_MQTT_STATE_IDLE;
             break;
 
-        case APP_MQTT_STATE_NET_SN_INIT:
+        case (uint16_t)APP_MQTT_STATE_NET_SN_INIT:
             // Initialize Net glue layer
             resCode = WMQTT_NETGlue_SNInitialize(&mqttCtx->mqttNet);
             APP_MQTT_ClientResult(mqttCtx, "WMQTT_NETGlue_SNInitialize", resCode) ;
-            mqttCtx->currState = resCode < 0 ? APP_MQTT_STATE_DONE : APP_MQTT_STATE_INIT;
+            mqttCtx->currState = resCode < 0 ? (uint16_t)APP_MQTT_STATE_DONE : (uint16_t)APP_MQTT_STATE_INIT;
             break;
 #endif  // WOLFMQTT_SN
 
-        case APP_MQTT_STATE_INIT:
+        case (uint16_t)APP_MQTT_STATE_INIT:
             mqttCtx->pClientId = mqttCtx->clientId;
 #ifdef WOLFMQTT_V5
             mqttCtx->propList = 0;
 #endif  // WOLFMQTT_V5
 
             // Initialize MqttClient structure
-            resCode = MqttClient_Init(&mqttCtx->mqttClient, &mqttCtx->mqttNet, APP_MQTT_MessageHandler,
-                    mqttCtx->txBuff, mqttCtx->txBuffSize, mqttCtx->rxBuff, mqttCtx->rxBuffSize,
-                    mqttCtx->cmdTimeout);
+            resCode = MqttClient_Init(&mqttCtx->mqttClient, &mqttCtx->mqttNet, &APP_MQTT_MessageHandler,
+                    mqttCtx->txBuff, (int)mqttCtx->txBuffSize, mqttCtx->rxBuff, (int)mqttCtx->rxBuffSize,
+                    (int)mqttCtx->cmdTimeout);
 
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {   // wait some more
                 break;
             }
 
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_Init", resCode) ;
 
-            if (resCode != MQTT_CODE_SUCCESS)
+            if (resCode != (int)MQTT_CODE_SUCCESS)
             {
-                mqttCtx->currState = APP_MQTT_STATE_DONE;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_DONE;
                 break;
             }
             mqttCtx->mqttClient.ctx = mqttCtx;
 
 #ifdef WOLFMQTT_DISCONNECT_CB
             /* setup disconnect callback */
-            resCode = MqttClient_SetDisconnectCallback(&mqttCtx->mqttClient, APP_MQTT_DisconnectHandler, 0);
+            resCode = MqttClient_SetDisconnectCallback(&mqttCtx->mqttClient, &APP_MQTT_DisconnectHandler, NULL);
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_SetDisconnectCallback", resCode) ;
             if(resCode < 0)
             {
-                mqttCtx->currState = APP_MQTT_STATE_DONE;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_DONE;
                 break;
             }
 #endif  // WOLFMQTT_DISCONNECT_CB
@@ -296,50 +316,50 @@ void APP_MQTT_Task(void)
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_SetPropertyCallback", resCode);
             if(resCode < 0)
             {
-                mqttCtx->currState = APP_MQTT_STATE_DONE;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_DONE;
                 break;
             }
 #endif  //  defined(WOLFMQTT_V5) && defined(WOLFMQTT_PROPERTY_CB)
 
-            mqttCtx->currState = APP_MQTT_STATE_NET_CONNECT;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_CONNECT;
             break;
 
-        case APP_MQTT_STATE_NET_CONNECT:
+        case (uint16_t)APP_MQTT_STATE_NET_CONNECT:
             // Connect to broker
             resCode = MqttClient_NetConnect(&mqttCtx->mqttClient, mqttCtx->broker, mqttCtx->brokerPort,
-                    mqttCtx->connTimeout, mqttCtx->forceTls, APP_MQTT_TLSHandler);
-            if (resCode == MQTT_CODE_CONTINUE)
+                    (int)mqttCtx->connTimeout, (int)mqttCtx->forceTls, &APP_MQTT_TLSHandler);
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {
                 break;
             }
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_NetConnect", resCode) ;
-            if (resCode != MQTT_CODE_SUCCESS)
+            if (resCode != (int)MQTT_CODE_SUCCESS)
             {
-                mqttCtx->currState = APP_MQTT_STATE_DONE;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_DONE;
                 break;
             }
 
             /* Build connect packet */
-            memset(&mqttCtx->mqttConnect, 0, sizeof(mqttCtx->mqttConnect));
+            (void)memset(&mqttCtx->mqttConnect, 0, sizeof(mqttCtx->mqttConnect));
             mqttCtx->mqttConnect.keep_alive_sec = mqttCtx->keepAliveSec;
             mqttCtx->mqttConnect.clean_session = mqttCtx->cleanSession;
             mqttCtx->mqttConnect.client_id = mqttCtx->pClientId;
 
             /* Last will and testament sent by broker to subscribers
                of topic when broker connection is lost */
-            memset(&mqttCtx->mqttLwtMsg, 0, sizeof(mqttCtx->mqttLwtMsg));
+            (void)memset(&mqttCtx->mqttLwtMsg, 0, sizeof(mqttCtx->mqttLwtMsg));
             mqttCtx->mqttConnect.lwt_msg = &mqttCtx->mqttLwtMsg;
             mqttCtx->mqttConnect.enable_lwt = mqttCtx->enableLwt;
-            if (mqttCtx->enableLwt)
+            if (mqttCtx->enableLwt != 0U)
             {   // Send client id in LWT payload
-                mqttCtx->mqttLwtMsg.qos = mqttCtx->qos;
+                mqttCtx->mqttLwtMsg.qos = (MqttQoS)mqttCtx->qos;
                 mqttCtx->mqttLwtMsg.retain = 0;
                 mqttCtx->mqttLwtMsg.topic_name = mqttCtx->lastWill;
                 mqttCtx->mqttLwtMsg.buffer = (uint8_t*)mqttCtx->pClientId;
                 mqttCtx->mqttLwtMsg.total_len = (uint16_t)strlen(mqttCtx->pClientId);
             }
 
-            if(mqttCtx->enableAuth)
+            if(mqttCtx->enableAuth != 0U)
             {   // Optional authentication
                 mqttCtx->mqttConnect.username = mqttCtx->userName;
                 mqttCtx->mqttConnect.password = mqttCtx->password;
@@ -390,27 +410,27 @@ void APP_MQTT_Task(void)
 
             mqttCtx->propList = mqttCtx->mqttConnect.props; 
 #endif
-            mqttCtx->currState = APP_MQTT_STATE_CLIENT_CONNECT;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_CLIENT_CONNECT;
             break;
 
-        case APP_MQTT_STATE_CLIENT_CONNECT:
+        case (uint16_t)APP_MQTT_STATE_CLIENT_CONNECT:
             // Send Connect and wait for Connect Ack
             resCode = MqttClient_Connect(&mqttCtx->mqttClient, &mqttCtx->mqttConnect);
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {
                 break;
             }
 
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_Connect", resCode) ;
-            if (resCode != MQTT_CODE_SUCCESS)
+            if (resCode != (int)MQTT_CODE_SUCCESS)
             {
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 break;
             }
 
             // Validate Connect Ack
             SYS_CONSOLE_PRINT("MQTT Task - Connect Ack: Return Code %u, Session Present %s\r\n", mqttCtx->mqttConnect.ack.return_code,
-                    (mqttCtx->mqttConnect.ack.flags & MQTT_CONNECT_ACK_FLAG_SESSION_PRESENT) ? "Yes" : "No");
+                    (mqttCtx->mqttConnect.ack.flags & (uint8_t)MQTT_CONNECT_ACK_FLAG_SESSION_PRESENT) != 0U ? "Yes" : "No");
 
 #if defined(WOLFMQTT_V5) && defined(WOLFMQTT_PROPERTY_CB)
             // print the acquired client ID
@@ -418,15 +438,15 @@ void APP_MQTT_Task(void)
 #endif  //  defined(WOLFMQTT_V5) && defined(WOLFMQTT_PROPERTY_CB)
 
             mqttCtx->pingCount = 0; 
-            if(mqttCtx->mqttCommand == APP_MQTT_COMMAND_PING)
+            if(mqttCtx->mqttCommand == (uint8_t)APP_MQTT_COMMAND_PING)
             {   // skip the pub/subscribe; jump to ping
-                mqttCtx->currState = APP_MQTT_STATE_INIT_PING;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_INIT_PING;
                 break;
             } 
             // set the topic list
-            memset(&mqttCtx->mqttSubscribe, 0, sizeof(mqttCtx->mqttSubscribe));
+            (void)memset(&mqttCtx->mqttSubscribe, 0, sizeof(mqttCtx->mqttSubscribe));
             mqttCtx->mqttTopic.topic_filter = mqttCtx->subscribeTopicName;
-            mqttCtx->mqttTopic.qos = mqttCtx->qos;
+            mqttCtx->mqttTopic.qos = (MqttQoS)mqttCtx->qos;
 
 #ifdef WOLFMQTT_V5
             if (mqttCtx->subIdAvailable)
@@ -447,32 +467,32 @@ void APP_MQTT_Task(void)
             mqttCtx->mqttSubscribe.topic_count = 1;
             mqttCtx->mqttSubscribe.topics = &mqttCtx->mqttTopic;
 
-            mqttCtx->currState = APP_MQTT_STATE_SUBSCRIBE;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_SUBSCRIBE;
             break;
 
-        case APP_MQTT_STATE_SUBSCRIBE:
+        case (uint16_t)APP_MQTT_STATE_SUBSCRIBE:
 
             resCode = MqttClient_Subscribe(&mqttCtx->mqttClient, &mqttCtx->mqttSubscribe);
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {   // wait some more
                 break;
             }
 
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_Subscribe", resCode) ;
-            if (resCode != MQTT_CODE_SUCCESS)
+            if (resCode != (int)MQTT_CODE_SUCCESS)
             {
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 break;
             }
 
             // show the successful subscribed topic
-            MqttTopic* pTopic = &mqttCtx->mqttSubscribe.topics[0];
+            pTopic = &mqttCtx->mqttSubscribe.topics[0];
             SYS_CONSOLE_PRINT("MQTT Task - Subscribed Topic %s, Qos %u\r\n", pTopic->topic_filter, pTopic->qos);
 
             // publish the topic
-            memset(&mqttCtx->mqttPublish, 0, sizeof(MqttPublish));
+            (void)memset(&mqttCtx->mqttPublish, 0, sizeof(MqttPublish));
             mqttCtx->mqttPublish.retain = 0;
-            mqttCtx->mqttPublish.qos = mqttCtx->qos;
+            mqttCtx->mqttPublish.qos = (MqttQoS)mqttCtx->qos;
             mqttCtx->mqttPublish.duplicate = 0;
             mqttCtx->mqttPublish.topic_name = mqttCtx->publishTopicName;
             mqttCtx->mqttPublish.packet_id = APP_MQTT_NewPacketId(mqttCtx);
@@ -507,45 +527,49 @@ void APP_MQTT_Task(void)
             mqttCtx->propList = mqttCtx->mqttPublish.props; 
 #endif
             
-            mqttCtx->requestStop = false;
-            mqttCtx->msgReceived = false;
-            mqttCtx->waitMsgRetries = APP_MQTT_WAIT_MESSAGE_RETRIES;
-            mqttCtx->currState = APP_MQTT_STATE_PUBLISH;
+            mqttCtx->requestStop = 0U;
+            mqttCtx->msgReceived = 0U;
+            mqttCtx->waitMsgRetries = (uint16_t)APP_MQTT_WAIT_MESSAGE_RETRIES;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_PUBLISH;
             break;
 
-        case APP_MQTT_STATE_PUBLISH:
-            resCode = MqttClient_Publish(&mqttCtx->mqttClient, &mqttCtx->mqttPublish);
-            if (resCode == MQTT_CODE_CONTINUE)
+        case (uint16_t)APP_MQTT_STATE_PUBLISH:
+        case (uint16_t)APP_MQTT_STATE_START_WAIT:
+            if(mqttCtx->currState == (uint16_t)APP_MQTT_STATE_PUBLISH)
             {
-                break;
-            }
+                resCode = MqttClient_Publish(&mqttCtx->mqttClient, &mqttCtx->mqttPublish);
+                if (resCode == (int)MQTT_CODE_CONTINUE)
+                {
+                    break;
+                }
 
-            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Publish", resCode) ;
+                APP_MQTT_ClientResult(mqttCtx, "MqttClient_Publish", resCode) ;
 
-            if (resCode != MQTT_CODE_SUCCESS)
-            {
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
-                break;
-            }
-            else
-            {
-                SYS_CONSOLE_PRINT("MQTT Task - Published Topic: %s\r\n", mqttCtx->mqttPublish.topic_name);
-            }
+                if (resCode != (int)MQTT_CODE_SUCCESS)
+                {
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
+                    break;
+                }
+                else
+                {
+                    SYS_CONSOLE_PRINT("MQTT Task - Published Topic: %s\r\n", mqttCtx->mqttPublish.topic_name);
+                }
 
-            mqttCtx->currState = APP_MQTT_STATE_START_WAIT;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_START_WAIT;
+            }
+            // case (uint16_t)APP_MQTT_STATE_START_WAIT:
             // fall through
 
-        case APP_MQTT_STATE_START_WAIT:
-            SYS_CONSOLE_PRINT("MQTT Task - Waiting for message. Retry: %d\r\n", APP_MQTT_WAIT_MESSAGE_RETRIES - mqttCtx->waitMsgRetries + 1);
+            SYS_CONSOLE_PRINT("MQTT Task - Waiting for message. Retry: %d\r\n", (uint16_t)APP_MQTT_WAIT_MESSAGE_RETRIES - mqttCtx->waitMsgRetries + 1U);
             APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-            mqttCtx->currState = APP_MQTT_STATE_WAIT_MSG;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_WAIT_MSG;
             break;
 
-        case APP_MQTT_STATE_WAIT_MSG:
+        case (uint16_t)APP_MQTT_STATE_WAIT_MSG:
             // check if stop requested
-            if(mqttCtx->requestStop || mqttCtx->msgReceived)
+            if(mqttCtx->requestStop != 0U || mqttCtx->msgReceived != 0U)
             {
-                if(mqttCtx->requestStop)
+                if(mqttCtx->requestStop != 0U )
                 {
                     SYS_CONSOLE_MESSAGE("MQTT Task - requested to stop. Exiting...\r\n");
                 }
@@ -553,111 +577,120 @@ void APP_MQTT_Task(void)
                 {
                     SYS_CONSOLE_MESSAGE("MQTT Task - published message was received. Exiting...\r\n");
                 }
-                mqttCtx->currState = APP_MQTT_STATE_START_UNSUBSCRIBE;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_START_UNSUBSCRIBE;
                 break;
             }
 
             // read the receiving packets
-            resCode = MqttClient_WaitMessage(&mqttCtx->mqttClient, mqttCtx->cmdTimeout);
-            if(resCode == MQTT_CODE_CONTINUE)
+            resCode = MqttClient_WaitMessage(&mqttCtx->mqttClient, (int)mqttCtx->cmdTimeout);
+            if(resCode == (int)MQTT_CODE_CONTINUE)
             {   // check for timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage timeout", MQTT_CODE_ERROR_TIMEOUT);
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage timeout", (int)MQTT_CODE_ERROR_TIMEOUT);
                     APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-                    mqttCtx->currState = APP_MQTT_STATE_START_SUB_PING;
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_START_SUB_PING;
                 }
             }
             else if(resCode < 0)
             {   // some error occurred
                 APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage error", resCode) ;
                 // try to ping the broker
-                mqttCtx->currState = APP_MQTT_STATE_START_SUB_PING;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_START_SUB_PING;
             }
-            // else wait some more to receive the message
+            else
+            {
+                // else wait some more to receive the message
+            }
             break;
 
-        case APP_MQTT_STATE_START_SUB_PING:
-            SYS_CONSOLE_PRINT("MQTT Task - sub pinging the broker: %d\r\n", mqttCtx->waitMsgRetries);
-            APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-            mqttCtx->currState = APP_MQTT_STATE_SUB_PING;
-
-        case APP_MQTT_STATE_SUB_PING:
+        case (uint16_t)APP_MQTT_STATE_START_SUB_PING:
+        case (uint16_t)APP_MQTT_STATE_SUB_PING:
+            if(mqttCtx->currState == (uint16_t)APP_MQTT_STATE_START_SUB_PING)
+            {
+                SYS_CONSOLE_PRINT("MQTT Task - sub pinging the broker: %d\r\n", mqttCtx->waitMsgRetries);
+                APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_SUB_PING;
+            }
+            // fall through
+            // case (uint16_t)APP_MQTT_STATE_SUB_PING:
             resCode = MqttClient_Ping(&mqttCtx->mqttClient);
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {   // check the timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", MQTT_CODE_ERROR_TIMEOUT);
-                    mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", (int)MQTT_CODE_ERROR_TIMEOUT);
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 }
                 break;
             }
 
             // done with ping
-            sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
+            (void)sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
             APP_MQTT_ClientResult(mqttCtx, ping_res_buff, resCode);
             if (resCode < 0)
             {   // error occurred
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
             }
             else
             {   // ping was successful; but still timeout for our message; retry
-                if(mqttCtx->waitMsgRetries != 0)
+                if(mqttCtx->waitMsgRetries != 0U)
                 {
                     mqttCtx->waitMsgRetries--;
-                    mqttCtx->currState = APP_MQTT_STATE_START_WAIT;
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_START_WAIT;
                     SYS_CONSOLE_PRINT("MQTT Task - ping retrying: %d\r\n", mqttCtx->waitMsgRetries);
                 }
                 else
                 {   // retries exhausted
                     SYS_CONSOLE_MESSAGE("MQTT Task - ping retries exhausted, but no message received! Aborting...\r\n");
-                    mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 }
             }
             break;
 
-        case APP_MQTT_STATE_START_UNSUBSCRIBE:
-            // prepare to unsubscribe the topic
-            memset(&mqttCtx->mqttUnsubscribe, 0, sizeof(mqttCtx->mqttUnsubscribe));
-            mqttCtx->mqttUnsubscribe.packet_id = APP_MQTT_NewPacketId(mqttCtx);
-            mqttCtx->mqttUnsubscribe.topic_count = 1;
-            mqttCtx->mqttUnsubscribe.topics = &mqttCtx->mqttTopic;
+        case (uint16_t)APP_MQTT_STATE_START_UNSUBSCRIBE:
+        case (uint16_t)APP_MQTT_STATE_UNSUBSCRIBE:
+            if(mqttCtx->currState == (uint16_t)APP_MQTT_STATE_START_UNSUBSCRIBE)
+            {   // prepare to unsubscribe the topic
+                (void)memset(&mqttCtx->mqttUnsubscribe, 0, sizeof(mqttCtx->mqttUnsubscribe));
+                mqttCtx->mqttUnsubscribe.packet_id = APP_MQTT_NewPacketId(mqttCtx);
+                mqttCtx->mqttUnsubscribe.topic_count = 1;
+                mqttCtx->mqttUnsubscribe.topics = &mqttCtx->mqttTopic;
 
-            APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-            mqttCtx->currState = APP_MQTT_STATE_UNSUBSCRIBE;
+                APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_UNSUBSCRIBE;
+            }
             // no break; fall through
-
-        case APP_MQTT_STATE_UNSUBSCRIBE:
+            // case (uint16_t)APP_MQTT_STATE_UNSUBSCRIBE:
             // unsubscribe the topics
             resCode = MqttClient_Unsubscribe(&mqttCtx->mqttClient, &mqttCtx->mqttUnsubscribe);
 
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {   // check timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Unsubscribe", MQTT_CODE_ERROR_TIMEOUT);
-                    mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Unsubscribe", (int)MQTT_CODE_ERROR_TIMEOUT);
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 }
                 break;
             }
 
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_Unsubscribe", resCode);
-            mqttCtx->currState = resCode < 0 ? APP_MQTT_STATE_NET_DISCONNECT : APP_MQTT_STATE_CLIENT_DISCONNECT;
+            mqttCtx->currState = resCode < 0 ? (uint16_t)APP_MQTT_STATE_NET_DISCONNECT : (uint16_t)APP_MQTT_STATE_CLIENT_DISCONNECT;
             break;
 
-        case APP_MQTT_STATE_INIT_PING:
+        case (uint16_t)APP_MQTT_STATE_INIT_PING:
             SYS_CONSOLE_MESSAGE("MQTT Task - init pinging the broker\r\n");
             APP_MQTT_StartTimeout(mqttCtx, 1);  // start pinging immediately
-            mqttCtx->requestStop = 0; 
-            mqttCtx->currState = APP_MQTT_STATE_WAIT_TO_PING;
+            mqttCtx->requestStop = 0U; 
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_WAIT_TO_PING;
             break;
             
-        case APP_MQTT_STATE_WAIT_TO_PING:
-            if(mqttCtx->requestStop)
+        case (uint16_t)APP_MQTT_STATE_WAIT_TO_PING:
+            if(mqttCtx->requestStop != 0U)
             {
                 SYS_CONSOLE_MESSAGE("MQTT Task - requested to stop. Exiting...\r\n");
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 break;
             }
 
@@ -665,63 +698,67 @@ void APP_MQTT_Task(void)
             if(APP_MQTT_CheckTimeout(mqttCtx))
             {   // time to ping
                 APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-                mqttCtx->currState = APP_MQTT_STATE_PING;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_PING;
             }
             break;
 
-        case APP_MQTT_STATE_PING:
+        case (uint16_t)APP_MQTT_STATE_PING:
             resCode = MqttClient_Ping(&mqttCtx->mqttClient);
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {   // check the timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", MQTT_CODE_ERROR_TIMEOUT);
-                    mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", (int)MQTT_CODE_ERROR_TIMEOUT);
+                    mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
                 }
                 break;
             }
 
             // done with ping
-            sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
+            (void)sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
             APP_MQTT_ClientResult(mqttCtx, ping_res_buff, resCode);
             if (resCode < 0)
             {   // error occurred
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
             }
             else
             {   // ping was successful; keep pinging
                 APP_MQTT_StartTimeout(mqttCtx, APP_MQTT_DEFAULT_PING_WAIT_MS);
-                mqttCtx->currState = APP_MQTT_STATE_WAIT_TO_PING;
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_WAIT_TO_PING;
             }
             break;
 
-        case APP_MQTT_STATE_CLIENT_DISCONNECT:
-            resCode = MqttClient_Disconnect_ex(&mqttCtx->mqttClient, &mqttCtx->mqttDisconnect);
-            if (resCode == MQTT_CODE_CONTINUE)
-            {   // wait some more
-                break;
+        case (uint16_t)APP_MQTT_STATE_CLIENT_DISCONNECT:
+        case (uint16_t)APP_MQTT_STATE_NET_DISCONNECT:
+            if(mqttCtx->currState == (uint16_t)APP_MQTT_STATE_CLIENT_DISCONNECT)
+            {
+                resCode = MqttClient_Disconnect_ex(&mqttCtx->mqttClient, &mqttCtx->mqttDisconnect);
+                if (resCode == (int)MQTT_CODE_CONTINUE)
+                {   // wait some more
+                    break;
+                }
+
+                APP_MQTT_ClientResult(mqttCtx, "MqttClient_Disconnect_ex", resCode);
+                mqttCtx->currState = (uint16_t)APP_MQTT_STATE_NET_DISCONNECT;
             }
-
-            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Disconnect_ex", resCode);
-            mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
             // fall through; no break
+            // case (uint16_t)APP_MQTT_STATE_NET_DISCONNECT:
 
-        case APP_MQTT_STATE_NET_DISCONNECT:
             resCode = MqttClient_NetDisconnect(&mqttCtx->mqttClient);
-            if (resCode == MQTT_CODE_CONTINUE)
+            if (resCode == (int)MQTT_CODE_CONTINUE)
             {   // wait some more
                 break;
             }
 
             APP_MQTT_ClientResult(mqttCtx, "MqttClient_NetDisconnect", resCode);
-            mqttCtx->currState = APP_MQTT_STATE_DONE;
-            // fall through; no break
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_DONE;
+            break;
 
-        case APP_MQTT_STATE_DONE:
+        case (uint16_t)APP_MQTT_STATE_DONE:
             // connection cycle ended; clean up
-            WMQTT_NETGlue_Deinitialize(&mqttCtx->mqttNet);
-            mqttCtx->mqttCommand = APP_MQTT_COMMAND_NONE;
-            mqttCtx->currState = APP_MQTT_STATE_IDLE;
+            (void)WMQTT_NETGlue_Deinitialize(&mqttCtx->mqttNet);
+            mqttCtx->mqttCommand = (uint8_t)APP_MQTT_COMMAND_NONE;
+            mqttCtx->currState = (uint16_t)APP_MQTT_STATE_IDLE;
             // print the result
             if(mqttCtx->errorCode == 0)
             {
@@ -744,6 +781,10 @@ void APP_MQTT_Task(void)
             break;
     }
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
+
 
 static void APP_MQTT_ClientResult(APP_MQTT_CONTEXT* mqttCtx, const char* message, int resCode)
 {
@@ -774,48 +815,53 @@ if (mqttCtx->propList != 0)
 
 static int APP_MQTT_MessageHandler(MqttClient* mqttClient, MqttMessage *msg, uint8_t msg_new, uint8_t msg_done)
 {
-    uint8_t printBuff[APP_MQTT_CB_MESSAGE_BUFFER_SIZE + 1];
+    union
+    {
+        uint8_t u8[APP_MQTT_CB_MESSAGE_BUFFER_SIZE + 1];
+        char    c8[APP_MQTT_CB_MESSAGE_BUFFER_SIZE + 1];
+    }uprintBuff;
+
     uint32_t len;
     APP_MQTT_CONTEXT* mqttCtx = (APP_MQTT_CONTEXT*)mqttClient->ctx;
 
 
-    if (msg_new)
+    if (msg_new != 0U)
     {   // print the topic
         len = msg->topic_name_len;
-        if (len > sizeof(printBuff) - 1)
+        if (len > sizeof(uprintBuff) - 1U)
         {
-            len = sizeof(printBuff) - 1;
+            len = sizeof(uprintBuff) - 1U;
         }
-        memcpy(printBuff, msg->topic_name, len);
-        printBuff[len] = '\0';
+        (void)memcpy(uprintBuff.c8, msg->topic_name, len);
+        uprintBuff.c8[len] = '\0';
 
-        SYS_CONSOLE_PRINT("MQTT Task - Received Topic: %s, Qos %d, Len %u\r\n", printBuff, msg->qos, msg->total_len);
+        SYS_CONSOLE_PRINT("MQTT Task - Received Topic: %s, Qos %d, Len %u\r\n", uprintBuff.c8, msg->qos, msg->total_len);
 
         /* check that the published message was received */
         if (strncmp(mqttCtx->publishMessage, (char*)msg->buffer, msg->buffer_len) == 0)
         {   // signal that the expected message was received
-            mqttCtx->msgReceived = true;
+            mqttCtx->msgReceived = 1U;
         }
     }
 
     // print the message payload
     len = msg->buffer_len;
-    if (len > sizeof(printBuff) - 1)
+    if (len > sizeof(uprintBuff) - 1U)
     {
-        len = sizeof(printBuff) - 1;
+        len = sizeof(uprintBuff) - 1U;
     }
-    memcpy(printBuff, msg->buffer, len);
-    printBuff[len] = '\0';
+    (void)memcpy(uprintBuff.u8, msg->buffer, len);
+    uprintBuff.u8[len] = 0;
 
-    SYS_CONSOLE_PRINT("MQTT Task - Payload (%d - %d): %s\r\n", msg->buffer_pos, msg->buffer_pos + len, printBuff);
+    SYS_CONSOLE_PRINT("MQTT Task - Payload (%d - %d): %s\r\n", msg->buffer_pos, msg->buffer_pos + len, uprintBuff.c8);
 
-    if (msg_done)
+    if (msg_done != 0U)
     {
         SYS_CONSOLE_MESSAGE("MQTT Task - Message: Done\r\n");
     }
 
     // Return negative to terminate publish processing
-    return MQTT_CODE_SUCCESS;
+    return (int)MQTT_CODE_SUCCESS;
 }
 
 #if defined(WOLFMQTT_V5) && defined(WOLFMQTT_PROPERTY_CB)
@@ -856,7 +902,7 @@ static int APP_MQTT_ProcessProperty(MqttClient* mqttClient, APP_MQTT_CONTEXT* mq
         case MQTT_PROP_ASSIGNED_CLIENT_ID:
             // store the assigned client ID
             mqttCtx->pClientId = mqttCtx->mqttPropClientId;
-            strncpy(mqttCtx->pClientId, mqttProp->data_str.str, APP_MQTT_MAX_PROP_CLIENT_ID_LEN);
+            (void)strncpy(mqttCtx->pClientId, mqttProp->data_str.str, APP_MQTT_MAX_PROP_CLIENT_ID_LEN);
             break;
 
         case MQTT_PROP_SUBSCRIPTION_ID_AVAIL:
@@ -952,7 +998,7 @@ static int APP_MQTT_DisconnectHandler(MqttClient* mqttClient, int error_code, vo
 static uint16_t APP_MQTT_NewPacketId(APP_MQTT_CONTEXT* mqttCtx)
 {
     mqttCtx->currPacketId++;
-    if((uint16_t)mqttCtx->currPacketId == 0)
+    if((uint16_t)mqttCtx->currPacketId == 0U)
     {
         mqttCtx->currPacketId++;
     }
@@ -963,14 +1009,15 @@ static uint16_t APP_MQTT_NewPacketId(APP_MQTT_CONTEXT* mqttCtx)
 static void APP_MQTT_StartTimeout(APP_MQTT_CONTEXT* mqttCtx, uint32_t tmoMs)
 {
     uint32_t currTick = SYS_TMR_TickCountGet();
-    mqttCtx->tmoTick = currTick + (tmoMs * SYS_TMR_TickCounterFrequencyGet()) / 1000;
+    uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
+    mqttCtx->tmoTick = currTick + (tmoMs * sysFreq) / 1000U;
 }
 // returns true if timeout...
 static bool APP_MQTT_CheckTimeout(APP_MQTT_CONTEXT* mqttCtx)
 {
     uint32_t currTick = SYS_TMR_TickCountGet();
 
-    return ((int32_t)(currTick - mqttCtx->tmoTick) >= 0);
+    return ((int32_t)currTick - (int32_t)mqttCtx->tmoTick) >= 0;
 }
 
 /*******************************************************************************

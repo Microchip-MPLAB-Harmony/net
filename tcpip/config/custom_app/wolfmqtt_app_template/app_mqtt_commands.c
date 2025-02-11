@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -51,6 +51,7 @@ Microchip or any third party.
 // *****************************************************************************
 
 #include "app_mqtt_task.h"
+#include <errno.h>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -99,7 +100,7 @@ static void     MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char
 // local data
 static const SYS_CMD_DESCRIPTOR    mqttCmdTbl[]=
 {
-    {"mqtt",     Command_Mqtt,    "MQTT commands"},
+    {"mqtt",     &Command_Mqtt,    "MQTT commands"},
 };
 
 typedef void    (*command_mqtt_fnc)(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
@@ -143,35 +144,35 @@ typedef struct
 static const CMD_MQTT_PROC_DCPT cmd_mqtt_proc_dcpt_tbl[] =
 {
     // string               // fnc              // minParams    // maxParams    // cmdHelp
-    {"start",               CmdMqttStart,        2,              3,             CMD_MQTT_HELP_START },
-    {"ping",                CmdMqttPing,         2,              2,             CMD_MQTT_HELP_PING },
-    {"stop",                CmdMqttStop,         2,              2,             CMD_MQTT_HELP_STOP  },
-    {"stat",                CmdMqttStat,         2,              2,             CMD_MQTT_HELP_STAT  },
-    {"port",                CmdMqttPort,         2,              3,             CMD_MQTT_HELP_PORT  },
-    {"qos",                 CmdMqttQos,          2,              3,             CMD_MQTT_HELP_QOS   },
-    {"kalive",              CmdMqttKalive,       2,              3,             CMD_MQTT_HELP_KALIVE},
-    {"id",                  CmdMqttId,           2,              3,             CMD_MQTT_HELP_ID    },
-    {"lwtmsg",              CmdMqttLwtMessage,   2,              3,             CMD_MQTT_HELP_LWT_MESSAGE},
-    {"message",             CmdMqttMessage,      2,              3,             CMD_MQTT_HELP_MESSAGE},
-    {"user",                CmdMqttUser,         2,              3,             CMD_MQTT_HELP_USER  },
-    {"pass",                CmdMqttPass,         2,              3,             CMD_MQTT_HELP_PASS  },
-    {"subscribe",           CmdMqttSubsTopic,    2,              3,             CMD_MQTT_HELP_SUBSCRIBE },
-    {"publish",             CmdMqttPublishTopic, 2,              3,             CMD_MQTT_HELP_PUBLISH },
-    {"broker",              CmdMqttBroker,       2,              3,             CMD_MQTT_HELP_BROKER},
-    {"name",                CmdMqttName,         2,              3,             CMD_MQTT_HELP_NAME},
-    {"tmo",                 CmdMqttTmo,          2,              3,             CMD_MQTT_HELP_TMO   },
-    {"tls",                 CmdMqttTls,          2,              3,             CMD_MQTT_HELP_TLS   },
-    {"auth",                CmdMqttAuth,         2,              3,             CMD_MQTT_HELP_AUTH  },
-    {"lwt",                 CmdMqttLwt,          2,              3,             CMD_MQTT_HELP_LWT   },
-    {"txbuf",               CmdMqttTxSize,       2,              3,             CMD_MQTT_HELP_TX_SIZE},
-    {"rxbuf",               CmdMqttRxSize,       2,              3,             CMD_MQTT_HELP_RX_SIZE},
-    {"clean",               CmdMqttClean,        2,              3,             CMD_MQTT_HELP_CLEAN},
+    {"start",               &CmdMqttStart,        2,              3,             CMD_MQTT_HELP_START },
+    {"ping",                &CmdMqttPing,         2,              2,             CMD_MQTT_HELP_PING },
+    {"stop",                &CmdMqttStop,         2,              2,             CMD_MQTT_HELP_STOP  },
+    {"stat",                &CmdMqttStat,         2,              2,             CMD_MQTT_HELP_STAT  },
+    {"port",                &CmdMqttPort,         2,              3,             CMD_MQTT_HELP_PORT  },
+    {"qos",                 &CmdMqttQos,          2,              3,             CMD_MQTT_HELP_QOS   },
+    {"kalive",              &CmdMqttKalive,       2,              3,             CMD_MQTT_HELP_KALIVE},
+    {"id",                  &CmdMqttId,           2,              3,             CMD_MQTT_HELP_ID    },
+    {"lwtmsg",              &CmdMqttLwtMessage,   2,              3,             CMD_MQTT_HELP_LWT_MESSAGE},
+    {"message",             &CmdMqttMessage,      2,              3,             CMD_MQTT_HELP_MESSAGE},
+    {"user",                &CmdMqttUser,         2,              3,             CMD_MQTT_HELP_USER  },
+    {"pass",                &CmdMqttPass,         2,              3,             CMD_MQTT_HELP_PASS  },
+    {"subscribe",           &CmdMqttSubsTopic,    2,              3,             CMD_MQTT_HELP_SUBSCRIBE },
+    {"publish",             &CmdMqttPublishTopic, 2,              3,             CMD_MQTT_HELP_PUBLISH },
+    {"broker",              &CmdMqttBroker,       2,              3,             CMD_MQTT_HELP_BROKER},
+    {"name",                &CmdMqttName,         2,              3,             CMD_MQTT_HELP_NAME},
+    {"tmo",                 &CmdMqttTmo,          2,              3,             CMD_MQTT_HELP_TMO   },
+    {"tls",                 &CmdMqttTls,          2,              3,             CMD_MQTT_HELP_TLS   },
+    {"auth",                &CmdMqttAuth,         2,              3,             CMD_MQTT_HELP_AUTH  },
+    {"lwt",                 &CmdMqttLwt,          2,              3,             CMD_MQTT_HELP_LWT   },
+    {"txbuf",               &CmdMqttTxSize,       2,              3,             CMD_MQTT_HELP_TX_SIZE},
+    {"rxbuf",               &CmdMqttRxSize,       2,              3,             CMD_MQTT_HELP_RX_SIZE},
+    {"clean",               &CmdMqttClean,        2,              3,             CMD_MQTT_HELP_CLEAN},
 #ifdef WOLFMQTT_V5
-    {"ctrlsize",            CmdMqttCtrlSize,     2,              3,             CMD_MQTT_HELP_CTRL_SIZE},
-    {"eauth",               CmdMqttEAuth,        2,              3,             CMD_MQTT_HELP_EAUTH  },
+    {"ctrlsize",            &CmdMqttCtrlSize,     2,              3,             CMD_MQTT_HELP_CTRL_SIZE},
+    {"eauth",               &CmdMqttEAuth,        2,              3,             CMD_MQTT_HELP_EAUTH  },
 #endif  //  WOLFMQTT_V5
-    {"help",                CmdMqttHelp,         2,              2,             CMD_MQTT_HELP_HELP  },
-    {"time",                CmdMqttTime,         2,              2,             CMD_MQTT_HELP_TIME  },
+    {"help",                &CmdMqttHelp,         2,              2,             CMD_MQTT_HELP_HELP  },
+    {"time",                &CmdMqttTime,         2,              2,             CMD_MQTT_HELP_TIME  },
 };
 
 
@@ -180,7 +181,7 @@ static const CMD_MQTT_PROC_DCPT cmd_mqtt_proc_dcpt_tbl[] =
 bool APP_MQTT_CommandsInit(void)
 {
     // create MQTT command group
-    if (!SYS_CMD_ADDGRP(mqttCmdTbl, sizeof(mqttCmdTbl) / sizeof(*mqttCmdTbl), "mqtt", ": mqtt commands"))
+    if (!SYS_CMD_ADDGRP(mqttCmdTbl, (int)(sizeof(mqttCmdTbl) / sizeof(*mqttCmdTbl)), "mqtt", ": mqtt commands"))
     {
         SYS_CONSOLE_MESSAGE("Failed to create mqtt Commands\r\n");
         return false;
@@ -202,14 +203,14 @@ static void Command_Mqtt(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         return;
     }
 
-    int ix;
+    size_t ix;
     const CMD_MQTT_PROC_DCPT* procDcpt = cmd_mqtt_proc_dcpt_tbl;
 
-    for(ix = 0; ix < sizeof(cmd_mqtt_proc_dcpt_tbl) / sizeof(*cmd_mqtt_proc_dcpt_tbl); ix++, procDcpt++)
+    for(ix = 0; ix < sizeof(cmd_mqtt_proc_dcpt_tbl) / sizeof(*cmd_mqtt_proc_dcpt_tbl); ix++)
     {
         if(strcmp(argv[1], procDcpt->cmdString) == 0)
         {   // found command
-            if(argc < procDcpt->minParams || argc > procDcpt->maxParams)
+            if((uint16_t)argc < procDcpt->minParams || (uint16_t)argc > procDcpt->maxParams)
             {
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: command %s takes min %d and max %d parameters.\r\n", procDcpt->cmdString, procDcpt->minParams, procDcpt->maxParams);
             }
@@ -220,6 +221,7 @@ static void Command_Mqtt(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             }
             return;
         }
+        procDcpt++;
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: command %s unknown. Try 'mqtt help'\r\n", argv[1]);
@@ -230,7 +232,7 @@ static void CmdMqttStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    if(pMqttCtx->currState != APP_MQTT_STATE_IDLE)
+    if(pMqttCtx->currState != (uint16_t)APP_MQTT_STATE_IDLE)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT demo is already running\r\n");
         return;
@@ -253,12 +255,12 @@ static void CmdMqttStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP
         }
     }
 
-    pMqttCtx->mqttCommand = APP_MQTT_COMMAND_SUBSCRIBE;
-    pMqttCtx->currState = useSN ? APP_MQTT_STATE_BEGIN_SN : APP_MQTT_STATE_BEGIN;
+    pMqttCtx->mqttCommand = (uint8_t)APP_MQTT_COMMAND_SUBSCRIBE;
+    pMqttCtx->currState = useSN ? (uint16_t)APP_MQTT_STATE_BEGIN_SN : (uint16_t)APP_MQTT_STATE_BEGIN;
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "MQTT%sdemo has been started\r\n", useSN ? "-SN " : " ");
 #else
-    pMqttCtx->mqttCommand = APP_MQTT_COMMAND_SUBSCRIBE;
-    pMqttCtx->currState = APP_MQTT_STATE_BEGIN;
+    pMqttCtx->mqttCommand = (uint8_t)APP_MQTT_COMMAND_SUBSCRIBE;
+    pMqttCtx->currState = (uint16_t)APP_MQTT_STATE_BEGIN;
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT pub/sub demo has been started\r\n");
 #endif  // WOLFMQTT_SN
 }
@@ -267,15 +269,15 @@ static void CmdMqttPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    if(pMqttCtx->currState != APP_MQTT_STATE_IDLE)
+    if(pMqttCtx->currState != (uint16_t)APP_MQTT_STATE_IDLE)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT demo is already running\r\n");
         return;
     }
 
     // restart the test
-    pMqttCtx->mqttCommand = APP_MQTT_COMMAND_PING;
-    pMqttCtx->currState = APP_MQTT_STATE_BEGIN;
+    pMqttCtx->mqttCommand = (uint8_t)APP_MQTT_COMMAND_PING;
+    pMqttCtx->currState = (uint16_t)APP_MQTT_STATE_BEGIN;
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT ping demo has been started\r\n");
 }
 
@@ -283,13 +285,13 @@ static void CmdMqttStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    if(pMqttCtx->currState == APP_MQTT_STATE_IDLE)
+    if(pMqttCtx->currState == (uint16_t)APP_MQTT_STATE_IDLE)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT demo is already stopped\r\n");
     }
     else
     {
-        pMqttCtx->requestStop = true;
+        pMqttCtx->requestStop = 1U;
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT demo has been requested to stop\r\n");
     }
 }
@@ -316,7 +318,7 @@ static void CmdMqttPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
             return;
         }
 
-        pMqttCtx->brokerPort = portNo; 
+        pMqttCtx->brokerPort = (uint16_t)portNo; 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: broker port is: %d\r\n", pMqttCtx->brokerPort);
@@ -329,13 +331,13 @@ static void CmdMqttQos(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_M
     if(argc == 3)
     {
         int qos;
-        bool res = ConvStringtoInt(argv[2], &qos, MQTT_QOS_0, MQTT_QOS_2);
+        bool res = ConvStringtoInt(argv[2], &qos, (int)MQTT_QOS_0, (int)MQTT_QOS_2);
         if(res == false)
         {
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid QoS: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->qos = (MqttQoS)qos; 
+        pMqttCtx->qos = (uint8_t)qos; 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Qos is: %d\r\n", pMqttCtx->qos);
@@ -355,7 +357,7 @@ static void CmdMqttKalive(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, AP
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid Keep_Alive timeout: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->keepAliveSec = keepAlive; 
+        pMqttCtx->keepAliveSec = (uint16_t)keepAlive; 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Keep_Alive timeout is: %d\r\n", pMqttCtx->keepAliveSec);
@@ -367,7 +369,7 @@ static void CmdMqttId(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQ
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->clientId, argv[2], sizeof(pMqttCtx->clientId) - 1); 
+        (void)strncpy(pMqttCtx->clientId, argv[2], sizeof(pMqttCtx->clientId) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Client id is: %s\r\n", pMqttCtx->clientId);
@@ -380,9 +382,9 @@ static void CmdMqttLwtMessage(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     int currIx = 2;
     argc -= 2;
 
-    while(argc)
+    while(argc != 0)
     {
-        strncat(pMqttCtx->lastWill, argv[currIx], sizeof(pMqttCtx->lastWill) - 1 - strlen(pMqttCtx->lastWill));
+        (void)strncat(pMqttCtx->lastWill, argv[currIx], sizeof(pMqttCtx->lastWill) - 1U - strlen(pMqttCtx->lastWill));
         argc--;
         currIx++;
     }
@@ -397,9 +399,9 @@ static void CmdMqttMessage(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, A
     int currIx = 2;
     argc -= 2;
 
-    while(argc)
+    while(argc != 0)
     {
-        strncat(pMqttCtx->publishMessage, argv[currIx], sizeof(pMqttCtx->publishMessage) - 1 - strlen(pMqttCtx->publishMessage));
+        (void)strncat(pMqttCtx->publishMessage, argv[currIx], sizeof(pMqttCtx->publishMessage) - 1U - strlen(pMqttCtx->publishMessage));
         argc--;
         currIx++;
     }
@@ -413,7 +415,7 @@ static void CmdMqttUser(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->userName, argv[2], sizeof(pMqttCtx->userName) - 1); 
+        (void)strncpy(pMqttCtx->userName, argv[2], sizeof(pMqttCtx->userName) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: User is: %s\r\n", pMqttCtx->userName);
@@ -425,7 +427,7 @@ static void CmdMqttPass(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->password, argv[2], sizeof(pMqttCtx->password) - 1); 
+        (void)strncpy(pMqttCtx->password, argv[2], sizeof(pMqttCtx->password) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Password is: %s\r\n", pMqttCtx->password);
@@ -437,7 +439,7 @@ static void CmdMqttSubsTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv,
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->subscribeTopicName, argv[2], sizeof(pMqttCtx->subscribeTopicName) - 1); 
+        (void)strncpy(pMqttCtx->subscribeTopicName, argv[2], sizeof(pMqttCtx->subscribeTopicName) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Subscribe Topic is: %s\r\n", pMqttCtx->subscribeTopicName);
@@ -449,7 +451,7 @@ static void CmdMqttPublishTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->publishTopicName, argv[2], sizeof(pMqttCtx->publishTopicName) - 1); 
+        (void)strncpy(pMqttCtx->publishTopicName, argv[2], sizeof(pMqttCtx->publishTopicName) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Publish Topic is: %s\r\n", pMqttCtx->publishTopicName);
@@ -461,7 +463,7 @@ static void CmdMqttBroker(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, AP
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->broker, argv[2], sizeof(pMqttCtx->broker) - 1); 
+        (void)strncpy(pMqttCtx->broker, argv[2], sizeof(pMqttCtx->broker) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Broker is: %s\r\n", pMqttCtx->broker);
@@ -473,7 +475,7 @@ static void CmdMqttName(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->appName, argv[2], sizeof(pMqttCtx->appName) - 1); 
+        (void)strncpy(pMqttCtx->appName, argv[2], sizeof(pMqttCtx->appName) - 1U); 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: App name is: %s\r\n", pMqttCtx->appName);
@@ -493,7 +495,7 @@ static void CmdMqttTmo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_M
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid Wait timeout: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->cmdTimeout = timeout; 
+        pMqttCtx->cmdTimeout = (uint32_t)timeout; 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Keep_Alive timeout is: %d ms\r\n", pMqttCtx->cmdTimeout);
@@ -513,7 +515,7 @@ static void CmdMqttTls(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_M
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid TLS selection: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->forceTls = forceTls; 
+        pMqttCtx->forceTls = (uint8_t)forceTls; 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: force TLS is: %d\r\n", pMqttCtx->forceTls);
@@ -533,10 +535,10 @@ static void CmdMqttAuth(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid Auth selection: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->enableAuth = enableAuth; 
+        pMqttCtx->enableAuth = (uint8_t)enableAuth; 
     }
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Authentication is: %s\r\n", pMqttCtx->enableAuth ? "enabled" : "disabled");
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Authentication is: %s\r\n", pMqttCtx->enableAuth != 0U ? "enabled" : "disabled");
 }
 
 static void CmdMqttLwt(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
@@ -553,10 +555,10 @@ static void CmdMqttLwt(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_M
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid LWT selection: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->enableLwt = enableLwt; 
+        pMqttCtx->enableLwt = (uint8_t)enableLwt; 
     }
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: LWT is: %s\r\n", pMqttCtx->enableLwt ? "enabled" : "disabled");
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: LWT is: %s\r\n", pMqttCtx->enableLwt != 0U ? "enabled" : "disabled");
 }
 
 static void CmdMqttTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
@@ -569,13 +571,19 @@ static void CmdMqttRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, AP
     MqttChangeBufferSize(pCmdIO, argc, argv, pMqttCtx, false);
 }
 
+/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+/* MISRA C-2012 Directive 4.12 deviated:1 Deviation record ID -  H3_MISRAC_2012_D_4_12_NET_DR_18 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Directive 4.12" "H3_MISRAC_2012_D_4_12_NET_DR_18" 
 static void MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx, bool isTx)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     if(argc == 3)
     {
-        if(pMqttCtx->currState != APP_MQTT_STATE_IDLE)
+        if(pMqttCtx->currState != (uint16_t)APP_MQTT_STATE_IDLE)
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "mqtt: cannot change buffer size while running!\r\n");
         }
@@ -595,14 +603,14 @@ static void MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 
             if(isTx)
             {
-                oldBuffSize = pMqttCtx->txBuffSize;
+                oldBuffSize = (int)pMqttCtx->txBuffSize;
                 oldAllocBuff = pMqttCtx->txBuff;
                 ppNewBuff = &pMqttCtx->txBuff;
                 pNewSize = &pMqttCtx->txBuffSize;
             }
             else
             {
-                oldBuffSize = pMqttCtx->rxBuffSize;
+                oldBuffSize = (int)pMqttCtx->rxBuffSize;
                 oldAllocBuff = pMqttCtx->rxBuff;
                 ppNewBuff = &pMqttCtx->rxBuff;
                 pNewSize = &pMqttCtx->rxBuffSize;
@@ -610,11 +618,11 @@ static void MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 
             if(newBuffSize != oldBuffSize)
             {
-                newAllocBuff = (uint8_t*)malloc(newBuffSize);
-                if(newAllocBuff != 0)
+                newAllocBuff = (uint8_t*)malloc((size_t)newBuffSize);
+                if(newAllocBuff != NULL)
                 {
                     *ppNewBuff = newAllocBuff;
-                    *pNewSize = newBuffSize; 
+                    *pNewSize = (uint16_t)newBuffSize; 
                     free(oldAllocBuff);
                 }
                 else
@@ -627,6 +635,10 @@ static void MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: %s buffer size is: %d\r\n", isTx? "TX" : "RX", pMqttCtx->txBuffSize);
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2012 Directive 4.12"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 
 static void CmdMqttClean(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
@@ -643,7 +655,7 @@ static void CmdMqttClean(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: invalid Clean selection: %s\r\n", argv[2]);
             return;
         }
-        pMqttCtx->cleanSession = cleanSession; 
+        pMqttCtx->cleanSession = (uint8_t)cleanSession; 
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Clean session is: %d\r\n", pMqttCtx->cleanSession);
@@ -695,12 +707,13 @@ static void CmdMqttEAuth(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP
 static void CmdMqttHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-    int ix;
+    size_t ix;
     const CMD_MQTT_PROC_DCPT* procDcpt = cmd_mqtt_proc_dcpt_tbl;
 
-    for(ix = 0; ix < sizeof(cmd_mqtt_proc_dcpt_tbl) / sizeof(*cmd_mqtt_proc_dcpt_tbl); ix++, procDcpt++)
+    for(ix = 0; ix < sizeof(cmd_mqtt_proc_dcpt_tbl) / sizeof(*cmd_mqtt_proc_dcpt_tbl); ix++)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s: %s\r\n", procDcpt->cmdString, procDcpt->cmdHelp);
+        procDcpt++;
     }
 }
 
@@ -710,9 +723,9 @@ static void CmdMqttTime(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
     uint32_t utc_seconds;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    TCPIP_SNTP_RESULT res = TCPIP_SNTP_TimeGet(&utc_seconds, 0);
+    TCPIP_SNTP_RESULT res = TCPIP_SNTP_TimeGet(&utc_seconds, NULL);
 
-    if(res == 0)
+    if(res == SNTP_RES_OK)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Current Unix Timestamp is: %ld\r\n", utc_seconds);
     }
@@ -726,40 +739,34 @@ static void CmdMqttTime(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
 
 static bool ConvStringtoInt(char* str, int* pRes, int lim_low, int lim_high)
 {
-    while(str)
+    char*    endPtr;
+    
+    while(str != NULL)
     {
-        int len = strlen(str);
-        if(len == 0)
-        {
-            break;
-        }
-        bool incr = false;
-        if(str[len - 1] == '0')
-        {
-            str[len - 1]++;
-            incr = true;
-        }
-        int conv = atoi(str);
-        if(conv == 0)
-        {
-            break;
-        }
-        if(incr)
-        {
-            conv--;
-        }
-
-        if(conv <lim_low || conv > lim_high)
+        size_t len = strlen(str);
+        if(len == 0U)
         {
             break;
         }
 
-        *pRes = conv;
+        errno = 0;
+        int lVal = strtol(str, &endPtr, 10);
+
+        if(errno != 0 || (endPtr - str) != (ssize_t)len)
+        {   // range error or not all was converted
+            break;
+        }
+
+        if(lVal < lim_low || lVal > lim_high)
+        {
+            break;
+        }
+
+        *pRes = lVal;
         return true;
     }
 
     return false;
-
 }
 
 
