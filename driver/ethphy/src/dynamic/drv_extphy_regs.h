@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,8 +39,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DRV_EXTPHY_REGS_H_
-#define _DRV_EXTPHY_REGS_H_
+#ifndef H_DRV_EXTPHY_REGS_H
+#define H_DRV_EXTPHY_REGS_H
 
 // This file contains common definitions (accross all PHY's)
 //
@@ -84,90 +84,90 @@ typedef enum
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t             :6;
-        uint16_t SPEED1000   :1;
-        uint16_t COLTEST     :1;
-        uint16_t DUPLEX      :1;
-        uint16_t AN_RESTART  :1;
-        uint16_t ISOLATE     :1;
-        uint16_t PDWN        :1;
-        uint16_t AN_ENABLE   :1;
-        uint16_t SPEED       :1;
-        uint16_t LOOPBACK    :1;
-        uint16_t RESET       :1;
+        unsigned             :6;
+        unsigned SPEED1000   :1;
+        unsigned COLTEST     :1;
+        unsigned DUPLEX      :1;
+        unsigned AN_RESTART  :1;
+        unsigned ISOLATE     :1;
+        unsigned PDWN        :1;
+        unsigned AN_ENABLE   :1;
+        unsigned SPEED       :1;
+        unsigned LOOPBACK    :1;
+        unsigned RESET       :1;
     };
-} __BMCONbits_t;    // reg 0: PHY_REG_BMCON
+} BMCONbits_t;    // reg 0: PHY_REG_BMCON
 
 
-#define _BMCON_SPEED1000_MASK   0x0040
-#define _BMCON_COLTEST_MASK     0x0080
-#define _BMCON_DUPLEX_MASK      0x0100
-#define _BMCON_AN_RESTART_MASK  0x0200
-#define _BMCON_ISOLATE_MASK     0x0400
-#define _BMCON_PDWN_MASK        0x0800
-#define _BMCON_AN_ENABLE_MASK   0x1000
-#define _BMCON_SPEED100_MASK    0x2000
-#define _BMCON_LOOPBACK_MASK    0x4000
-#define _BMCON_RESET_MASK       0x8000
+#define BMCON_SPEED1000_MASK   0x0040U
+#define BMCON_COLTEST_MASK     0x0080U
+#define BMCON_DUPLEX_MASK      0x0100U
+#define BMCON_AN_RESTART_MASK  0x0200U
+#define BMCON_ISOLATE_MASK     0x0400U
+#define BMCON_PDWN_MASK        0x0800U
+#define BMCON_AN_ENABLE_MASK   0x1000U
+#define BMCON_SPEED100_MASK    0x2000U
+#define BMCON_LOOPBACK_MASK    0x4000U
+#define BMCON_RESET_MASK       0x8000U
 
 
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t EXTEND_ABLE        :1;
-        uint16_t JABBER_DET         :1;
-        uint16_t LINK_STAT          :1;
-        uint16_t AN_ABLE            :1;
-        uint16_t REM_FAULT          :1;
-        uint16_t AN_COMPLETE        :1;
-        uint16_t PREAMBLE_SUPPRESS  :1;
-        uint16_t                    :1;
-        uint16_t EXTENDED_STAT      :1;
-        uint16_t                    :2;
-        uint16_t BASE10T_HDX        :1;
-        uint16_t BASE10T_FDX        :1;
-        uint16_t BASE100TX_HDX      :1;
-        uint16_t BASE100TX_FDX      :1;
-        uint16_t BASE100T4          :1;
+        unsigned EXTEND_ABLE        :1;
+        unsigned JABBER_DET         :1;
+        unsigned LINK_STAT          :1;
+        unsigned AN_ABLE            :1;
+        unsigned REM_FAULT          :1;
+        unsigned AN_COMPLETE        :1;
+        unsigned PREAMBLE_SUPPRESS  :1;
+        unsigned                    :1;
+        unsigned EXTENDED_STAT      :1;
+        unsigned                    :2;
+        unsigned BASE10T_HDX        :1;
+        unsigned BASE10T_FDX        :1;
+        unsigned BASE100TX_HDX      :1;
+        unsigned BASE100TX_FDX      :1;
+        unsigned BASE100T4          :1;
     };
-} __BMSTATbits_t;   // reg 1: PHY_REG_BMSTAT
+} BMSTATbits_t;   // reg 1: PHY_REG_BMSTAT
 
-#define _BMSTAT_EXTEND_ABLE_MASK        0x0001
-#define _BMSTAT_JABBER_DET_MASK         0x0002
-#define _BMSTAT_LINK_STAT_MASK          0x0004
-#define _BMSTAT_AN_ABLE_MASK            0x0008
-#define _BMSTAT_REM_FAULT_MASK          0x0010
-#define _BMSTAT_AN_COMPLETE_MASK        0x0020
-#define _BMSTAT_PREAMBLE_SUPPRESS_MASK  0x0040
-#define _BMSTAT_EXTSTAT_MASK            0x0100
-#define _BMSTAT_BASE10T_HDX_MASK        0x0800
-#define _BMSTAT_BASE10T_FDX_MASK        0x1000
-#define _BMSTAT_BASE100TX_HDX_MASK      0x2000
-#define _BMSTAT_BASE100TX_FDX_MASK      0x4000
-#define _BMSTAT_BASE100T4_MASK          0x8000
+#define BMSTAT_EXTEND_ABLE_MASK        0x0001
+#define BMSTAT_JABBER_DET_MASK         0x0002U
+#define BMSTAT_LINK_STAT_MASK          0x0004U
+#define BMSTAT_AN_ABLE_MASK            0x0008U
+#define BMSTAT_REM_FAULT_MASK          0x0010U
+#define BMSTAT_AN_COMPLETE_MASK        0x0020U
+#define BMSTAT_PREAMBLE_SUPPRESS_MASK  0x0040U
+#define BMSTAT_EXTSTAT_MASK            0x0100U
+#define BMSTAT_BASE10T_HDX_MASK        0x0800U
+#define BMSTAT_BASE10T_FDX_MASK        0x1000U
+#define BMSTAT_BASE100TX_HDX_MASK      0x2000U
+#define BMSTAT_BASE100TX_FDX_MASK      0x4000U
+#define BMSTAT_BASE100T4_MASK          0x8000U
 
-#define _EXTSTAT_1000BASEX_FDX_MASK     0x8000
-#define _EXTSTAT_1000BASEX_HDX_MASK     0x4000
-#define _EXTSTAT_1000BASET_FDX_MASK     0x2000
-#define _EXTSTAT_1000BASET_HDX_MASK     0x1000
-
-
-#define _BASE1000X_FDX_MASK 0x0400
-#define _BASE1000X_HDX_MASK 0x0200
-#define _BASE1000T_FDX_MASK 0x0100
-#define _BASE1000T_HDX_MASK 0x0080
+#define EXTSTAT_1000BASEX_FDX_MASK     0x8000U
+#define EXTSTAT_1000BASEX_HDX_MASK     0x4000U
+#define EXTSTAT_1000BASET_FDX_MASK     0x2000U
+#define EXTSTAT_1000BASET_HDX_MASK     0x1000U
 
 
-#define _BMSTAT_NEGOTIATION_MASK    (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK| \
-                                    _BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | \
-                                    _BMSTAT_BASE100T4_MASK)       // negotiation field mask
-#define _BMSTAT_CAPABILITY_POS      11  // capability field position in basic status register
-#define _BMSTAT_NEGOTIATION_LENGTH  5   // negotiation field length
+#define BASE1000X_FDX_MASK 0x0400U
+#define BASE1000X_HDX_MASK 0x0200U
+#define BASE1000T_FDX_MASK 0x0100U
+#define BASE1000T_HDX_MASK 0x0080U
+
+
+#define BMSTAT_NEGOTIATION_MASK    (BMSTAT_BASE10T_HDX_MASK | BMSTAT_BASE10T_FDX_MASK| \
+                                    BMSTAT_BASE100TX_HDX_MASK | BMSTAT_BASE100TX_FDX_MASK | \
+                                    BMSTAT_BASE100T4_MASK)       // negotiation field mask
+#define BMSTAT_CAPABILITY_POS      11U  // capability field position in basic status register
+#define BMSTAT_NEGOTIATION_LENGTH  5U   // negotiation field length
 
 
 // extended registers
@@ -176,197 +176,197 @@ typedef union
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t OUI_MSB  :16;
+        unsigned OUI_MSB  :16;
     };
-} __PHYID1bits_t;   // reg 2: PHY_REG_PHYID1
+} PHYID1bits_t;   // reg 2: PHY_REG_PHYID1
 
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t MNF_REV    :4;
-        uint16_t MNF_MODEL  :6;
-        uint16_t OUI_LSB    :6;
+        unsigned MNF_REV    :4;
+        unsigned MNF_MODEL  :6;
+        unsigned OUI_LSB    :6;
     };
-} __PHYID2bits_t;   // reg 3: PHY_REG_PHYID2
+} PHYID2bits_t;   // reg 3: PHY_REG_PHYID2
 
-#define _PHYID2_MNF_REV_MASK    0x000F
-#define _PHYID2_MNF_MODEL_MASK  0x03F0
-#define _PHYID2_OUI_LSB_MASK    0xFC00
+#define PHYID2_MNF_REV_MASK    0x000FU
+#define PHYID2_MNF_MODEL_MASK  0x03F0U
+#define PHYID2_OUI_LSB_MASK    0xFC00U
 
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t PROT_SEL       :5;
-        uint16_t BASE10T        :1;
-        uint16_t BASE10T_FDX    :1;
-        uint16_t BASE100TX      :1;
-        uint16_t BASE100TX_FDX  :1;
-        uint16_t BASE100T4      :1;
-        uint16_t PAUSE          :1; // NOTE: the PAUSE fields coding LAN8xxx PHYs may be reversed!
-        uint16_t ASM_DIR        :1; // typo in the data sheet?
-        uint16_t                :1;
-        uint16_t REM_FAULT      :1;
-        uint16_t                :1;
-        uint16_t NP_ABLE        :1;
+        unsigned PROT_SEL       :5;
+        unsigned BASE10T        :1;
+        unsigned BASE10T_FDX    :1;
+        unsigned BASE100TX      :1;
+        unsigned BASE100TX_FDX  :1;
+        unsigned BASE100T4      :1;
+        unsigned PAUSE          :1; // NOTE: the PAUSE fields coding LAN8xxx PHYs may be reversed!
+        unsigned ASM_DIR        :1; // typo in the data sheet?
+        unsigned                :1;
+        unsigned REM_FAULT      :1;
+        unsigned                :1;
+        unsigned NP_ABLE        :1;
     };
-} __ANADbits_t;     // reg 4: PHY_REG_ANAD
+} ANADbits_t;     // reg 4: PHY_REG_ANAD
 
-#define _ANAD_PROT_SEL_MASK       0x001F
-#define _ANAD_BASE10T_MASK        0x0020
-#define _ANAD_BASE10T_FDX_MASK    0x0040
-#define _ANAD_BASE100TX_MASK      0x0080
-#define _ANAD_BASE100TX_FDX_MASK  0x0100
-#define _ANAD_BASE100T4_MASK      0x0200
-#define _ANAD_PAUSE_MASK          0x0400
-#define _ANAD_ASM_DIR_MASK        0x0800
-#define _ANAD_REM_FAULT_MASK      0x2000
-#define _ANAD_NP_ABLE_MASK        0x8000
+#define ANAD_PROT_SEL_MASK       0x001FU
+#define ANAD_BASE10T_MASK        0x0020U
+#define ANAD_BASE10T_FDX_MASK    0x0040U
+#define ANAD_BASE100TX_MASK      0x0080U
+#define ANAD_BASE100TX_FDX_MASK  0x0100U
+#define ANAD_BASE100T4_MASK      0x0200U
+#define ANAD_PAUSE_MASK          0x0400U
+#define ANAD_ASM_DIR_MASK        0x0800U
+#define ANAD_REM_FAULT_MASK      0x2000U
+#define ANAD_NP_ABLE_MASK        0x8000U
 
-#define _ANAD_NEGOTIATION_MASK      (_ANAD_BASE10T_MASK | _ANAD_BASE10T_FDX_MASK | \
-                                    _ANAD_BASE100TX_MASK|_ANAD_BASE100TX_FDX_MASK| \
-                                    _ANAD_BASE100T4_MASK)   // negotiation field mask
-#define _ANAD_CAPABLITY_POS         5 // capability field position in Auto-Neg Adv register
-#define _ANAD_NEGOTIATION_LENGTH    5 // negotiation field length
+#define ANAD_NEGOTIATION_MASK      ((uint16_t)ANAD_BASE10T_MASK | (uint16_t)ANAD_BASE10T_FDX_MASK | \
+                                    (uint16_t)ANAD_BASE100TX_MASK|(uint16_t)ANAD_BASE100TX_FDX_MASK| \
+                                    (uint16_t)ANAD_BASE100T4_MASK)   // negotiation field mask
+#define ANAD_CAPABLITY_POS         5U // capability field position in Auto-Neg Adv register
+#define ANAD_NEGOTIATION_LENGTH    5U // negotiation field length
 
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t PROT_SEL       :5;
-        uint16_t BASE10T        :1;
-        uint16_t BASE10T_FDX    :1;
-        uint16_t BASE100TX      :1;
-        uint16_t BASE100TX_FDX  :1;
-        uint16_t BASE100T4      :1;
-        uint16_t PAUSE          :1;
-        uint16_t ASM_DIR        :1;
-        uint16_t                :1;
-        uint16_t REM_FAULT      :1;
-        uint16_t ACK            :1;
-        uint16_t NP_ABLE        :1;
+        unsigned PROT_SEL       :5;
+        unsigned BASE10T        :1;
+        unsigned BASE10T_FDX    :1;
+        unsigned BASE100TX      :1;
+        unsigned BASE100TX_FDX  :1;
+        unsigned BASE100T4      :1;
+        unsigned PAUSE          :1;
+        unsigned ASM_DIR        :1;
+        unsigned                :1;
+        unsigned REM_FAULT      :1;
+        unsigned ACK            :1;
+        unsigned NP_ABLE        :1;
     };
-} __ANLPADbits_t;   // reg 5: PHY_REG_ANLPAD
+} ANLPADbits_t;   // reg 5: PHY_REG_ANLPAD
 
-#define _ANLPAD_PROT_SEL_MASK       0x001F
-#define _ANLPAD_BASE10T_MASK        0x0020
-#define _ANLPAD_BASE10T_FDX_MASK    0x0040
-#define _ANLPAD_BASE100TX_MASK      0x0080
-#define _ANLPAD_BASE100TX_FDX_MASK  0x0100
-#define _ANLPAD_BASE100T4_MASK      0x0200
-#define _ANLPAD_PAUSE_MASK          0x0400
-#define _ANLPAD_ASM_DIR_MASK        0x0800
-#define _ANLPAD_REM_FAULT_MASK      0x2000
-#define _ANLPAD_ACK_MASK            0x4000
-#define _ANLPAD_NP_ABLE_MASK        0x8000
+#define ANLPAD_PROT_SEL_MASK       0x001FU
+#define ANLPAD_BASE10T_MASK        0x0020U
+#define ANLPAD_BASE10T_FDX_MASK    0x0040U
+#define ANLPAD_BASE100TX_MASK      0x0080U
+#define ANLPAD_BASE100TX_FDX_MASK  0x0100U
+#define ANLPAD_BASE100T4_MASK      0x0200U
+#define ANLPAD_PAUSE_MASK          0x0400U
+#define ANLPAD_ASM_DIR_MASK        0x0800U
+#define ANLPAD_REM_FAULT_MASK      0x2000U
+#define ANLPAD_ACK_MASK            0x4000U
+#define ANLPAD_NP_ABLE_MASK        0x8000U
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {    
-        uint16_t MESSAGE:11;
-        uint16_t TOGGLE:1;      
-        uint16_t ACK2:1;
-        uint16_t MSGP:1;
-        uint16_t ACK:1;
-        uint16_t NP:1;
+        unsigned MESSAGE:11;
+        unsigned TOGGLE:1;      
+        unsigned ACK2:1;
+        unsigned MSGP:1;
+        unsigned ACK:1;
+        unsigned NP:1;
     };
-} __ANLPADNPbits_t; // reg 5: PHY_REG_ANLPADNP: next page
+} ANLPADNPbits_t; // reg 5: PHY_REG_ANLPADNP: next page
 
-#define _ANLPADNP_MESSAGE_MASK  0x07FF
-#define _ANLPADNP_TOGGLE_MASK   0x0800
-#define _ANLPADNP_ACK2_MASK     0x1000
-#define _ANLPADNP_MSGP_MASK     0x2000
-#define _ANLPADNP_ACK_MASK      0x4000
-#define _ANLPADNP_NP_MASK       0x8000
+#define ANLPADNP_MESSAGE_MASK  0x07FFU
+#define ANLPADNP_TOGGLE_MASK   0x0800U
+#define ANLPADNP_ACK2_MASK     0x1000U
+#define ANLPADNP_MSGP_MASK     0x2000U
+#define ANLPADNP_ACK_MASK      0x4000U
+#define ANLPADNP_NP_MASK       0x8000U
 
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t LP_AN_ABLE  :1;
-        uint16_t PAGE_RX     :1;
-        uint16_t NP_ABLE     :1;
-        uint16_t LP_NP_ABLE  :1;
-        uint16_t PDF         :1;
-        uint16_t             :11;
+        unsigned LP_AN_ABLE  :1;
+        unsigned PAGE_RX     :1;
+        unsigned NP_ABLE     :1;
+        unsigned LP_NP_ABLE  :1;
+        unsigned PDF         :1;
+        unsigned             :11;
     };
-} __ANEXPbits_t;    // reg 6: PHY_REG_ANEXP
+} ANEXPbits_t;    // reg 6: PHY_REG_ANEXP
 
-#define _ANEXP_LP_AN_ABLE_MASK  0x0001
-#define _ANEXP_PAGE_RX_MASK     0x0002
-#define _ANEXP_NP_ABLE_MASK     0x0004
-#define _ANEXP_LP_NP_ABLE_MASK  0x0008
-#define _ANEXP_PDF_MASK         0x0010
+#define ANEXP_LP_AN_ABLE_MASK  0x0001U
+#define ANEXP_PAGE_RX_MASK     0x0002U
+#define ANEXP_NP_ABLE_MASK     0x0004U
+#define ANEXP_LP_NP_ABLE_MASK  0x0008U
+#define ANEXP_PDF_MASK         0x0010U
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t MESSAGE  :11;
-        uint16_t TOGGLE   :1;
-        uint16_t ACK2     :1;
-        uint16_t MSGP     :1;
-        uint16_t          :1;
-        uint16_t NP       :1;
+        unsigned MESSAGE  :11;
+        unsigned TOGGLE   :1;
+        unsigned ACK2     :1;
+        unsigned MSGP     :1;
+        unsigned          :1;
+        unsigned NP       :1;
     };
-} __ANNPTRbits_t;   // reg 7: PHY_REG_ANNPTR
+} ANNPTRbits_t;   // reg 7: PHY_REG_ANNPTR
 
-#define _ANNPTR_MESSAGE_MASK  0x07FF
-#define _ANNPTR_TOGGLE_MASK   0x0800
-#define _ANNPTR_ACK2_MASK     0x1000
-#define _ANNPTR_MSGP_MASK     0x2000
-#define _ANNPTR_NP_MASK       0x8000
+#define ANNPTR_MESSAGE_MASK  0x07FFU
+#define ANNPTR_TOGGLE_MASK   0x0800U
+#define ANNPTR_ACK2_MASK     0x1000U
+#define ANNPTR_MSGP_MASK     0x2000U
+#define ANNPTR_NP_MASK       0x8000U
 
 typedef union
 {
     uint16_t    w;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t MESSAGE  :11;
-        uint16_t TOGGLE   :1;
-        uint16_t ACK2     :1;
-        uint16_t MSGP     :1;
-        uint16_t ACK      :1;
-        uint16_t NP       :1;
+        unsigned MESSAGE  :11;
+        unsigned TOGGLE   :1;
+        unsigned ACK2     :1;
+        unsigned MSGP     :1;
+        unsigned ACK      :1;
+        unsigned NP       :1;
     };
-} __ANLPRNPbits_t;  // reg 8: PHY_REG_ANLPRNP
+} ANLPRNPbits_t;  // reg 8: PHY_REG_ANLPRNP
 
-#define _ANLPRNP_MESSAGE_MASK  0x07FF
-#define _ANLPRNP_TOGGLE_MASK   0x0800
-#define _ANLPRNP_ACK2_MASK     0x1000
-#define _ANLPRNP_MSGP_MASK     0x2000
-#define _ANLPRNP_ACK_MASK      0x4000
-#define _ANLPRNP_NP_MASK       0x8000
+#define ANLPRNP_MESSAGE_MASK  0x07FFU
+#define ANLPRNP_TOGGLE_MASK   0x0800U
+#define ANLPRNP_ACK2_MASK     0x1000U
+#define ANLPRNP_MSGP_MASK     0x2000U
+#define ANLPRNP_ACK_MASK      0x4000U
+#define ANLPRNP_NP_MASK       0x8000U
 
-#define _EXTSTAT_BASE1000X_FDX_MASK 0x8000
-#define _EXTSTAT_BASE1000X_HDX_MASK 0x4000
-#define _EXTSTAT_BASE1000T_FDX_MASK 0x2000
-#define _EXTSTAT_BASE1000T_HDX_MASK 0x1000
+#define EXTSTAT_BASE1000X_FDX_MASK 0x8000U
+#define EXTSTAT_BASE1000X_HDX_MASK 0x4000U
+#define EXTSTAT_BASE1000T_FDX_MASK 0x2000U
+#define EXTSTAT_BASE1000T_HDX_MASK 0x1000U
 
-#define _1000BASE_TCTRL_TFDX_MASK 0x0200
-#define _1000BASE_TCTRL_THDX_MASK 0x0100
+#define TCTRL_1000BASE_TFDX_MASK 0x0200U
+#define TCTRL_1000BASE_THDX_MASK 0x0100U
 
-#define _1000BSTAT_1000T_FDX_MASK      0x0800
-#define _1000BSTAT_1000T_HDX_MASK      0x0400
+#define STAT1000B_1000T_FDX_MASK      0x0800U
+#define STAT1000B_1000T_HDX_MASK      0x0400U
 
 
-#define KSZ9031_PHYID1          (0x0022)
-#define KSZ9031_PHYID2_ID_NUM   (0x1400)
-#define KSZ9031_PHYID2_MOD_NUM  (0x0220)
-#define KSZ9031_PHYID2          (KSZ9031_PHYID2_ID_NUM | KSZ9031_PHYID2_MOD_NUM)
+#define KSZ9031_PHYID1          (0x0022U)
+#define KSZ9031_PHYID2_ID_NUM   (0x1400U)
+#define KSZ9031_PHYID2_MOD_NUM  (0x0220U)
+#define KSZ9031_PHYID2          ((uint16_t)KSZ9031_PHYID2_ID_NUM | (uint16_t)KSZ9031_PHYID2_MOD_NUM)
 
-#endif  // _DRV_EXTPHY_REGS_H_
+#endif  // H_DRV_EXTPHY_REGS_H

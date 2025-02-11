@@ -1,5 +1,5 @@
 """
-Copyright (C) 2022-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2022-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -252,6 +252,13 @@ def instantiateComponent(drvExtPhyVsc8540Component):
     drvExtPhyVsc8540HeaderFtl.setMarkup(True)
     drvExtPhyVsc8540HeaderFtl.setType("STRING")
         
+    #Add to definitions.h
+    drvExtPhyVsc8540SysdefFtl = drvExtPhyVsc8540Component.createFileSymbol(None, None)
+    drvExtPhyVsc8540SysdefFtl.setSourcePath("driver/ethphy/templates/system/system_definitions.h.ftl")
+    drvExtPhyVsc8540SysdefFtl.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    drvExtPhyVsc8540SysdefFtl.setMarkup(True)
+    drvExtPhyVsc8540SysdefFtl.setType("STRING")
+
     # file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
     # Add drv_ethphy.h file to project
     drvExtPhyHeaderFile = drvExtPhyVsc8540Component.createFileSymbol(None, None)
@@ -292,11 +299,21 @@ def instantiateComponent(drvExtPhyVsc8540Component):
     drvExtPhyVsc8540HeaderFile = drvExtPhyVsc8540Component.createFileSymbol(None, None)
     drvExtPhyVsc8540HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_vsc8540.h")
     drvExtPhyVsc8540HeaderFile.setOutputName("drv_extphy_vsc8540.h")
-    drvExtPhyVsc8540HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
-    drvExtPhyVsc8540HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyVsc8540HeaderFile.setDestPath("driver/ethphy/")
+    drvExtPhyVsc8540HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/")
     drvExtPhyVsc8540HeaderFile.setType("HEADER")
     drvExtPhyVsc8540HeaderFile.setOverwrite(True)
     drvExtPhyVsc8540HeaderFile.setEnabled(True)
+
+    # Add drv_extphy_Vsc8540_priv.h file to project
+    drvExtPhyVsc8540PrivFile = drvExtPhyVsc8540Component.createFileSymbol(None, None)
+    drvExtPhyVsc8540PrivFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_vsc8540_priv.h")
+    drvExtPhyVsc8540PrivFile.setOutputName("drv_extphy_vsc8540_priv.h")
+    drvExtPhyVsc8540PrivFile.setDestPath("driver/ethphy/src/dynamic/")
+    drvExtPhyVsc8540PrivFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyVsc8540PrivFile.setType("HEADER")
+    drvExtPhyVsc8540PrivFile.setOverwrite(True)
+    drvExtPhyVsc8540PrivFile.setEnabled(True)
 
 
 

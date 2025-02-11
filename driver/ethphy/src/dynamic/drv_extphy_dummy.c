@@ -39,7 +39,7 @@ Notes:
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2024-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -69,12 +69,14 @@ Microchip or any third party.
 
 #include "system_config.h"
 #include "driver/ethphy/drv_ethphy.h"
+#include "driver/ethphy/drv_extphy_dummy.h"
+#include "drv_extphy_dummy_priv.h"
 
 // Local Definitions
 //
 
 // specific definition for the dummy PHY instance
-typedef struct _DRV_ETHPHY_DUMMY_INSTANCE
+typedef struct S_DRV_ETHPHY_DUMMY_INSTANCE
 {
     uint8_t                     instanceInit;   // True if instance initialized
     uint8_t                     clientInUse;    // True if in use
@@ -88,13 +90,13 @@ typedef struct _DRV_ETHPHY_DUMMY_INSTANCE
 
 // the number of dummy PHY drivers
 // probably just one should suffice
-#define DRV_ETHPHY_DUMMY_INSTANCES    1
+#define DRV_ETHPHY_DUMMY_INSTANCES    1U
 
 static DRV_ETHPHY_DUMMY_INSTANCE              gPhyDrvInst[DRV_ETHPHY_DUMMY_INSTANCES];
 
 
-#if (DRV_ETHPHY_DUMMY_INSTANCES == 1)
-static DRV_ETHPHY_DUMMY_INSTANCE* _DRV_DUMMY_HandleToInst(uintptr_t handle)
+#if (DRV_ETHPHY_DUMMY_INSTANCES == 1U)
+static DRV_ETHPHY_DUMMY_INSTANCE* F_DRV_DUMMY_HandleToInst(uintptr_t handle)
 {
     DRV_ETHPHY_DUMMY_INSTANCE* pPhyInst = (DRV_ETHPHY_DUMMY_INSTANCE*)handle;
     if(pPhyInst == gPhyDrvInst && pPhyInst->pBaseObj == &DRV_ETHPHY_OBJECT_BASE_Dummy)
@@ -108,11 +110,11 @@ static DRV_ETHPHY_DUMMY_INSTANCE* _DRV_DUMMY_HandleToInst(uintptr_t handle)
 #else
 // multiple instances version
 // could be refined more
-static DRV_ETHPHY_DUMMY_INSTANCE* _DRV_DUMMY_HandleToInst(uintptr_t handle)
+static DRV_ETHPHY_DUMMY_INSTANCE* F_DRV_DUMMY_HandleToInst(uintptr_t handle)
 {
     DRV_ETHPHY_DUMMY_INSTANCE* pPhyInst = (DRV_ETHPHY_DUMMY_INSTANCE*)handle;
-    int phyIx = (int)(pPhyInst - gPhyDrvInst);
-    if(phyIx >= 0 && phyIx < sizeof(gPhyDrvInst) / sizeof(*gPhyDrvInst))
+    int phyIx = pPhyInst - gPhyDrvInst;
+    if(phyIx >= 0 && phyIx < (int)sizeof(gPhyDrvInst) / (int)sizeof(*gPhyDrvInst))
     {
         if(pPhyInst == gPhyDrvInst + phyIx)
         {
@@ -123,66 +125,66 @@ static DRV_ETHPHY_DUMMY_INSTANCE* _DRV_DUMMY_HandleToInst(uintptr_t handle)
         }
     }
 
-    return 0;
+    return NULL;
 }
-#endif  // (DRV_ETHPHY_DUMMY_INSTANCES == 1)
+#endif  // (DRV_ETHPHY_DUMMY_INSTANCES == 1U)
 
 // The dummy PHY driver object functions 
 //
-SYS_MODULE_OBJ              DRV_ETHPHY_DummyInitialize (const SYS_MODULE_INDEX index, const SYS_MODULE_INIT* const init);
-void                        DRV_ETHPHY_DummyReinitialize (SYS_MODULE_OBJ object, const SYS_MODULE_INIT* const init);
-void                        DRV_ETHPHY_DummyDeinitialize (SYS_MODULE_OBJ object);
-SYS_STATUS                  DRV_ETHPHY_DummyStatus (SYS_MODULE_OBJ object);
-void                        DRV_ETHPHY_DummyTasks(SYS_MODULE_OBJ object);
-DRV_HANDLE                  DRV_ETHPHY_DummyOpen(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT intent);
-void                        DRV_ETHPHY_DummyClose(DRV_HANDLE handle);
-DRV_ETHPHY_CLIENT_STATUS    DRV_ETHPHY_DummyClientStatus(DRV_HANDLE handle);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyClientOperationResult(DRV_HANDLE handle);  
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyClientOperationAbort(DRV_HANDLE handle);  
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyPhyAddressGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummySetup(DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyRestartNegotiation(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyHWConfigFlagsGet(DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyNegotiationIsComplete(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyNegotiationResultGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_NEGOTIATION_RESULT* pNegResult);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyLinkStatusGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh);
-DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyReset(DRV_HANDLE handle, bool waitComplete);
+static SYS_MODULE_OBJ              DRV_ETHPHY_DummyInitialize(const SYS_MODULE_INDEX iModule, const SYS_MODULE_INIT* const init);
+static void                        DRV_ETHPHY_DummyReinitialize (SYS_MODULE_OBJ object, const SYS_MODULE_INIT* const init);
+static void                        DRV_ETHPHY_DummyDeinitialize (SYS_MODULE_OBJ object);
+static SYS_STATUS                  DRV_ETHPHY_DummyStatus (SYS_MODULE_OBJ object);
+static void                        DRV_ETHPHY_DummyTasks(SYS_MODULE_OBJ object);
+static DRV_HANDLE                  DRV_ETHPHY_DummyOpen(const SYS_MODULE_INDEX iModule, const DRV_IO_INTENT ioIntent);
+static void                        DRV_ETHPHY_DummyClose(DRV_HANDLE handle);
+static DRV_ETHPHY_CLIENT_STATUS    DRV_ETHPHY_DummyClientStatus(DRV_HANDLE handle);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyClientOpResult(DRV_HANDLE handle);  
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyClientOpAbort(DRV_HANDLE handle);  
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyPhyAddressGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummySetup(DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyRestartNegotiation(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyHWConfigFlagsGet(DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyNegotiationIsComplete(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyNegotiationResultGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_NEGOTIATION_RESULT* pNegResult);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyLinkStatusGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh);
+static DRV_ETHPHY_RESULT           DRV_ETHPHY_DummyReset(DRV_HANDLE handle, bool waitComplete);
 
 // The dummy PHY driver object
 //
 const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Dummy = 
 {
-     .DRV_ETHPHY_Initialize =             DRV_ETHPHY_DummyInitialize,
-     .DRV_ETHPHY_Reinitialize =           DRV_ETHPHY_DummyReinitialize,
-     .DRV_ETHPHY_Deinitialize =           DRV_ETHPHY_DummyDeinitialize,
-     .DRV_ETHPHY_Status =                 DRV_ETHPHY_DummyStatus,
-     .DRV_ETHPHY_Tasks =                  DRV_ETHPHY_DummyTasks,
-     .DRV_ETHPHY_Open =                   DRV_ETHPHY_DummyOpen,
-     .DRV_ETHPHY_Close =                  DRV_ETHPHY_DummyClose,
-     .DRV_ETHPHY_ClientStatus =           DRV_ETHPHY_DummyClientStatus,
-     .DRV_ETHPHY_ClientOperationResult =  DRV_ETHPHY_DummyClientOperationResult,
-     .DRV_ETHPHY_ClientOperationAbort =   DRV_ETHPHY_DummyClientOperationAbort,
-     .DRV_ETHPHY_PhyAddressGet =          DRV_ETHPHY_DummyPhyAddressGet,
-     .DRV_ETHPHY_Setup =                  DRV_ETHPHY_DummySetup,
-     .DRV_ETHPHY_RestartNegotiation =     DRV_ETHPHY_DummyRestartNegotiation,
-     .DRV_ETHPHY_HWConfigFlagsGet =       DRV_ETHPHY_DummyHWConfigFlagsGet,
-     .DRV_ETHPHY_NegotiationIsComplete =  DRV_ETHPHY_DummyNegotiationIsComplete,
-     .DRV_ETHPHY_NegotiationResultGet =   DRV_ETHPHY_DummyNegotiationResultGet,
-     .DRV_ETHPHY_LinkStatusGet =          DRV_ETHPHY_DummyLinkStatusGet,
-     .DRV_ETHPHY_Reset =                  DRV_ETHPHY_DummyReset,
-     .DRV_ETHPHY_VendorDataGet =          NULL,         // should never be called!
-     .DRV_ETHPHY_VendorDataSet =          NULL,         // should never be called!
-     .DRV_ETHPHY_VendorSMIReadStart =     NULL,         // should never be called!
-     .DRV_ETHPHY_VendorSMIReadResultGet = NULL,         // should never be called!
-     .DRV_ETHPHY_VendorSMIWriteStart =    NULL,         // should never be called!
-     .DRV_ETHPHY_VendorSMIWriteWaitComplete = NULL,     // should never be called!
-     .DRV_ETHPHY_VendorSMIOperationIsComplete = NULL,   // should never be called!
+     .phy_Initialize =             &DRV_ETHPHY_DummyInitialize,
+     .phy_Reinitialize =           &DRV_ETHPHY_DummyReinitialize,
+     .phy_Deinitialize =           &DRV_ETHPHY_DummyDeinitialize,
+     .phy_Status =                 &DRV_ETHPHY_DummyStatus,
+     .phy_Tasks =                  &DRV_ETHPHY_DummyTasks,
+     .phy_Open =                   &DRV_ETHPHY_DummyOpen,
+     .phy_Close =                  &DRV_ETHPHY_DummyClose,
+     .phy_ClientStatus =           &DRV_ETHPHY_DummyClientStatus,
+     .phy_ClientOperationResult =  &DRV_ETHPHY_DummyClientOpResult,
+     .phy_ClientOperationAbort =   &DRV_ETHPHY_DummyClientOpAbort,
+     .phy_PhyAddressGet =          &DRV_ETHPHY_DummyPhyAddressGet,
+     .phy_Setup =                  &DRV_ETHPHY_DummySetup,
+     .phy_RestartNegotiation =     &DRV_ETHPHY_DummyRestartNegotiation,
+     .phy_HWConfigFlagsGet =       &DRV_ETHPHY_DummyHWConfigFlagsGet,
+     .phy_NegotiationIsComplete =  &DRV_ETHPHY_DummyNegotiationIsComplete,
+     .phy_NegotiationResultGet =   &DRV_ETHPHY_DummyNegotiationResultGet,
+     .phy_LinkStatusGet =          &DRV_ETHPHY_DummyLinkStatusGet,
+     .phy_Reset =                  &DRV_ETHPHY_DummyReset,
+     .phy_VendorDataGet =          NULL,         // should never be called!
+     .phy_VendorDataSet =          NULL,         // should never be called!
+     .phy_VendorSMIReadStart =     NULL,         // should never be called!
+     .phy_VendorSMIReadResultGet = NULL,         // should never be called!
+     .phy_VendorSMIWriteStart =    NULL,         // should never be called!
+     .phy_VendorSMIWriteWaitComplete = NULL,     // should never be called!
+     .phy_VendorSMIOperationIsComplete = NULL,   // should never be called!
 };
 
 
 
 // just state update
-SYS_MODULE_OBJ DRV_ETHPHY_DummyInitialize(const SYS_MODULE_INDEX iModule, const SYS_MODULE_INIT* const init)
+static SYS_MODULE_OBJ DRV_ETHPHY_DummyInitialize(const SYS_MODULE_INDEX iModule, const SYS_MODULE_INIT* const init)
 {
     DRV_ETHPHY_DUMMY_INSTANCE * phyInst; 
 
@@ -192,13 +194,13 @@ SYS_MODULE_OBJ DRV_ETHPHY_DummyInitialize(const SYS_MODULE_INDEX iModule, const 
     }
 
     phyInst = gPhyDrvInst + iModule;
-    if(phyInst->instanceInit == true)
+    if(phyInst->instanceInit == 1U)
     {   // already initalized
         return (SYS_MODULE_OBJ)phyInst ;
     }
 
-    phyInst->instanceInit = true;      // Set object to be in use
-    phyInst->instanceStatus = SYS_STATUS_READY; // Set instance state
+    phyInst->instanceInit = 1U;      // Set object to be in use
+    phyInst->instanceStatus = (int16_t)SYS_STATUS_READY; // Set instance state
     phyInst->pBaseObj = &DRV_ETHPHY_OBJECT_BASE_Dummy;
     /* Return the driver handle */
     return (SYS_MODULE_OBJ)phyInst ;
@@ -206,41 +208,41 @@ SYS_MODULE_OBJ DRV_ETHPHY_DummyInitialize(const SYS_MODULE_INDEX iModule, const 
 }
 
 // just state update
-void DRV_ETHPHY_DummyReinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT* const init)
+static void DRV_ETHPHY_DummyReinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT* const init)
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(object);
-    if(phyInst != 0)
+    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(object);
+    if(phyInst != NULL)
     {
-        phyInst->instanceStatus = SYS_STATUS_READY; // Set instance state
+        phyInst->instanceStatus = (int16_t)SYS_STATUS_READY; // Set instance state
     }
 }
 
 
 // just state update
-void DRV_ETHPHY_DummyDeinitialize(SYS_MODULE_OBJ object)
+static void DRV_ETHPHY_DummyDeinitialize(SYS_MODULE_OBJ object)
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(object);
-    if(phyInst != 0)
+    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(object);
+    if(phyInst != NULL)
     {
         /* Set the Device Status */
-        phyInst->instanceStatus  = SYS_STATUS_UNINITIALIZED;
+        phyInst->instanceStatus  = (int16_t)SYS_STATUS_UNINITIALIZED;
 
         /* Remove the driver usage */
-        phyInst->instanceInit  = false;
+        phyInst->instanceInit  = 0U;
     }
 } 
 
 
-SYS_STATUS DRV_ETHPHY_DummyStatus(SYS_MODULE_OBJ object)
+static SYS_STATUS DRV_ETHPHY_DummyStatus(SYS_MODULE_OBJ object)
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(object);
-    if(phyInst != 0)
+    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(object);
+    if(phyInst != NULL)
     {
         /* Return the status associated with the driver handle */
-        return phyInst->instanceStatus;
+        return (SYS_STATUS)phyInst->instanceStatus;
     }
 
     return SYS_STATUS_ERROR;
@@ -248,18 +250,18 @@ SYS_STATUS DRV_ETHPHY_DummyStatus(SYS_MODULE_OBJ object)
 
 
 // no action
-void DRV_ETHPHY_DummyTasks(SYS_MODULE_OBJ object)
+static void DRV_ETHPHY_DummyTasks(SYS_MODULE_OBJ object)
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(object);
-    if(phyInst != 0)
+    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(object);
+    if(phyInst != NULL)
     {
     }
 } 
 
 
 // just state update
-DRV_HANDLE  DRV_ETHPHY_DummyOpen (const SYS_MODULE_INDEX iModule, const DRV_IO_INTENT ioIntent)
+static DRV_HANDLE  DRV_ETHPHY_DummyOpen (const SYS_MODULE_INDEX iModule, const DRV_IO_INTENT ioIntent)
 {
     /* Multi client variables are removed from single client builds. */
     DRV_ETHPHY_DUMMY_INSTANCE * phyInst;
@@ -274,7 +276,7 @@ DRV_HANDLE  DRV_ETHPHY_DummyOpen (const SYS_MODULE_INDEX iModule, const DRV_IO_I
     }
 
     phyInst = gPhyDrvInst + iModule; 
-    if(phyInst->instanceInit == false)
+    if(phyInst->instanceInit == 0U)
     {   // not opened
         return DRV_HANDLE_INVALID;
     }
@@ -283,33 +285,33 @@ DRV_HANDLE  DRV_ETHPHY_DummyOpen (const SYS_MODULE_INDEX iModule, const DRV_IO_I
 
     // Allocate the client object and set the flag as in use
     // there's only one client: the MAC
-    if(phyInst->clientInUse != 0)
+    if(phyInst->clientInUse != 0U)
     {   // already in use
         return DRV_HANDLE_INVALID;
     }
 
-    phyInst->clientInUse    = true;
+    phyInst->clientInUse = 1U;
 
     /* Update the Client Status */
-    phyInst->clientStatus = DRV_ETHPHY_CLIENT_STATUS_READY;
+    phyInst->clientStatus = (int16_t)DRV_ETHPHY_CLIENT_STATUS_READY;
 
     /* Return the client object */
     return ((DRV_HANDLE)phyInst);
 }
 
 // just state update
-void DRV_ETHPHY_DummyClose(DRV_HANDLE handle)
+static void DRV_ETHPHY_DummyClose(DRV_HANDLE handle)
 {
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             /* Free the Client Instance */
-            phyInst->clientInUse = false ;
+            phyInst->clientInUse = 0U ;
 
             /* Update the Client Status */
-            phyInst->clientStatus = DRV_ETHPHY_CLIENT_STATUS_CLOSED;
+            phyInst->clientStatus = (int16_t)DRV_ETHPHY_CLIENT_STATUS_CLOSED;
         }
     }
 }
@@ -317,22 +319,22 @@ void DRV_ETHPHY_DummyClose(DRV_HANDLE handle)
 // no setup occurs
 // just state update
 // Note: needs to setup the pSetupFlags for the MAC!
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummySetup(DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummySetup(DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags)
 {
 
     /* Check for the Client validity */
-    if(handle == 0)
+    if(handle == 0U)
     {
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
 
-    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-    if(phyInst == 0)
+    DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+    if(phyInst == NULL)
     {
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
 
-    if(phyInst->clientStatus != DRV_ETHPHY_CLIENT_STATUS_READY)
+    if(phyInst->clientStatus != (int16_t)DRV_ETHPHY_CLIENT_STATUS_READY)
     {   // not ready or another op going on; 
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }
@@ -354,16 +356,16 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummySetup(DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSe
 }
 
 
-DRV_ETHPHY_CLIENT_STATUS DRV_ETHPHY_DummyClientStatus(DRV_HANDLE handle)
+static DRV_ETHPHY_CLIENT_STATUS DRV_ETHPHY_DummyClientStatus(DRV_HANDLE handle)
 {
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             /* Return the client status associated with the handle passed */
-            return phyInst->clientStatus;
+            return (DRV_ETHPHY_CLIENT_STATUS)phyInst->clientStatus;
         }
     }
 
@@ -371,13 +373,13 @@ DRV_ETHPHY_CLIENT_STATUS DRV_ETHPHY_DummyClientStatus(DRV_HANDLE handle)
 }
 
 // just state update
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyClientOperationResult(DRV_HANDLE handle)  
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyClientOpResult(DRV_HANDLE handle)  
 {
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OK;
         }
@@ -387,13 +389,13 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyClientOperationResult(DRV_HANDLE handle)
 }
 
 // just state update
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyClientOperationAbort(DRV_HANDLE handle)  
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyClientOpAbort(DRV_HANDLE handle)  
 {
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OK;
         }
@@ -403,13 +405,13 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyClientOperationAbort(DRV_HANDLE handle)
 }
 
 // not suported
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyPhyAddressGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyPhyAddressGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
 {
     (void)portIndex;
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR;
         }
@@ -421,15 +423,15 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyPhyAddressGet(DRV_HANDLE handle, DRV_ETHPHY_IN
 
 
 // not suported
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyRestartNegotiation(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyRestartNegotiation(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex)
 {
     (void)portIndex;
 
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR;
         }
@@ -441,12 +443,12 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyRestartNegotiation(DRV_HANDLE handle, DRV_ETHP
 
 
 // not supported
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyHWConfigFlagsGet(DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyHWConfigFlagsGet(DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags)
 {
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR; 
         }
@@ -457,15 +459,15 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyHWConfigFlagsGet(DRV_HANDLE handle, DRV_ETHPHY
 
 
 // not supported
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyNegotiationIsComplete(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyNegotiationIsComplete(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete)
 {
     (void)portIndex;
 
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR;
         }
@@ -476,15 +478,15 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyNegotiationIsComplete(DRV_HANDLE handle, DRV_E
 
 
 // not supported
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyNegotiationResultGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_NEGOTIATION_RESULT* pNegResult)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyNegotiationResultGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_NEGOTIATION_RESULT* pNegResult)
 {
     (void)portIndex;
 
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
             return DRV_ETHPHY_RES_OPERATION_ERR;
         }
@@ -494,23 +496,23 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyNegotiationResultGet(DRV_HANDLE handle, DRV_ET
 }
 
 // always up
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyLinkStatusGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyLinkStatusGet(DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh)
 {
     (void)portIndex;
 
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
-            if(phyInst->clientStatus != DRV_ETHPHY_CLIENT_STATUS_READY)
+            if(phyInst->clientStatus != (int16_t)DRV_ETHPHY_CLIENT_STATUS_READY)
             {   // another op going on
                 return DRV_ETHPHY_RES_NOT_READY_ERR;
             }
 
             // basic sanity check
-            if(pLinkStat == 0)
+            if(pLinkStat == NULL)
             {
                 return DRV_ETHPHY_RES_OPERATION_ERR;
             }
@@ -524,17 +526,17 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_DummyLinkStatusGet(DRV_HANDLE handle, DRV_ETHPHY_IN
 }
  
 // just state update
-DRV_ETHPHY_RESULT DRV_ETHPHY_DummyReset(DRV_HANDLE handle, bool waitComplete)
+static DRV_ETHPHY_RESULT DRV_ETHPHY_DummyReset(DRV_HANDLE handle, bool waitComplete)
 {
 
     /* Check for the Client validity */
-    if(handle != 0)
+    if(handle != 0U)
     {
-        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = _DRV_DUMMY_HandleToInst(handle);
-        if(phyInst != 0)
+        DRV_ETHPHY_DUMMY_INSTANCE * phyInst = F_DRV_DUMMY_HandleToInst(handle);
+        if(phyInst != NULL)
         {
 
-            if(phyInst->clientStatus != DRV_ETHPHY_CLIENT_STATUS_READY)
+            if(phyInst->clientStatus != (int16_t)DRV_ETHPHY_CLIENT_STATUS_READY)
             {   // another op going on
                 return DRV_ETHPHY_RES_NOT_READY_ERR;
             }

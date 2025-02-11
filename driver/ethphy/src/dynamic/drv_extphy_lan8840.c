@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2024-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -27,7 +27,8 @@ Microchip or any third party.
 
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
-#include "driver/ethphy/src/dynamic/drv_extphy_lan8840.h"
+#include "driver/ethphy/drv_extphy_lan8840.h"
+#include "drv_extphy_lan8840_priv.h"
 
 /******************************************************************************
  * Prototypes
@@ -125,6 +126,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
 {
     return DRV_ETHPHY_RES_OK;
 }
+
 
 /****************************************************************************
  * Function:        DRV_EXTPHY_SMIClockGet

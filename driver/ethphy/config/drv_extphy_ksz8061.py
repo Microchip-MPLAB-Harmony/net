@@ -1,5 +1,5 @@
 """
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -193,6 +193,13 @@ def instantiateComponent(drvExtPhyKsz8061Component):
     drvExtPhyKsz8061HeaderFtl.setMarkup(True)
     drvExtPhyKsz8061HeaderFtl.setType("STRING")
         
+    #Add to definitions.h
+    drvExtPhyKsz8061SysdefFtl = drvExtPhyKsz8061Component.createFileSymbol(None, None)
+    drvExtPhyKsz8061SysdefFtl.setSourcePath("driver/ethphy/templates/system/system_definitions.h.ftl")
+    drvExtPhyKsz8061SysdefFtl.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    drvExtPhyKsz8061SysdefFtl.setMarkup(True)
+    drvExtPhyKsz8061SysdefFtl.setType("STRING")
+
     # file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
     # Add drv_ethphy.h file to project
     drvExtPhyHeaderFile = drvExtPhyKsz8061Component.createFileSymbol(None, None)
@@ -233,13 +240,21 @@ def instantiateComponent(drvExtPhyKsz8061Component):
     drvExtPhyKsz8061HeaderFile = drvExtPhyKsz8061Component.createFileSymbol(None, None)
     drvExtPhyKsz8061HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_ksz8061.h")
     drvExtPhyKsz8061HeaderFile.setOutputName("drv_extphy_ksz8061.h")
-    drvExtPhyKsz8061HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
-    drvExtPhyKsz8061HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyKsz8061HeaderFile.setDestPath("driver/ethphy/")
+    drvExtPhyKsz8061HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/")
     drvExtPhyKsz8061HeaderFile.setType("HEADER")
     drvExtPhyKsz8061HeaderFile.setOverwrite(True)
     drvExtPhyKsz8061HeaderFile.setEnabled(True)
 
-
+    # Add drv_extphy_ksz8061_priv.h file to project
+    drvExtPhyKsz8061PrivFile = drvExtPhyKsz8061Component.createFileSymbol(None, None)
+    drvExtPhyKsz8061PrivFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_ksz8061_priv.h")
+    drvExtPhyKsz8061PrivFile.setOutputName("drv_extphy_ksz8061_priv.h")
+    drvExtPhyKsz8061PrivFile.setDestPath("driver/ethphy/src/dynamic/")
+    drvExtPhyKsz8061PrivFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyKsz8061PrivFile.setType("HEADER")
+    drvExtPhyKsz8061PrivFile.setOverwrite(True)
+    drvExtPhyKsz8061PrivFile.setEnabled(True)
 
     # file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
     # Add drv_ethphy.c file

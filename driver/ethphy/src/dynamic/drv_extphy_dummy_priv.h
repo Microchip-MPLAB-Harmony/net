@@ -1,23 +1,22 @@
-<#--
 /*******************************************************************************
-  TCPIP MAC Freemarker Template File
+  Dummy PHY private definitions
 
   Company:
     Microchip Technology Inc.
-
+    
   File Name:
-    drv_extphy_dummy.h.ftl
+    drv_extphy_dummy_priv.h
 
   Summary:
-    TCPIP MAC Freemarker Template File
+    Dummy PHY private definitions
 
   Description:
+    This file provides the Dummy PHY private definitions.
 
 *******************************************************************************/
--->
-
-<#--
-Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+// DOM-IGNORE-BEGIN
+/*
+Copyright (C) 2024-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -37,11 +36,15 @@ for any third-party software incorporated in the software and any applicable ope
 source software license terms, no license or other rights, whether express or
 implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
--->
-<#assign emac_phy_type = TCPIP_EMAC_PHY_TYPE>
-#define DRV_${emac_phy_type}_PHY_LINK_INIT_DELAY            ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
-<#--
-/*******************************************************************************
- End of File
 */
--->
+
+// DOM-IGNORE-END
+
+#ifndef H_LAN_DUMMY_PRIV_H_
+
+#define H_LAN_DUMMY_PRIV_H_
+
+
+
+#endif  // H_LAN_DUMMY_PRIV_H_
+

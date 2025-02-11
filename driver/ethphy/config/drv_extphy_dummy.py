@@ -1,5 +1,5 @@
 """
-Copyright (C) 2019-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -136,6 +136,13 @@ def instantiateComponent(drvExtPhyDummyComponent):
     drvExtPhyDummyHeaderFtl.setMarkup(True)
     drvExtPhyDummyHeaderFtl.setType("STRING") 
     
+    #Add to definitions.h
+    drvExtPhyDummySysdefFtl = drvExtPhyDummyComponent.createFileSymbol(None, None)
+    drvExtPhyDummySysdefFtl.setSourcePath("driver/ethphy/templates/system/system_definitions.h.ftl")
+    drvExtPhyDummySysdefFtl.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    drvExtPhyDummySysdefFtl.setMarkup(True)
+    drvExtPhyDummySysdefFtl.setType("STRING")
+
     # file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
     # Add drv_ethphy.h file to project
     drvExtPhyHeaderFile = drvExtPhyDummyComponent.createFileSymbol(None, None)
@@ -152,12 +159,21 @@ def instantiateComponent(drvExtPhyDummyComponent):
     drvExtPhyDummyHeaderFile = drvExtPhyDummyComponent.createFileSymbol(None, None)
     drvExtPhyDummyHeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_dummy.h")
     drvExtPhyDummyHeaderFile.setOutputName("drv_extphy_dummy.h")
-    drvExtPhyDummyHeaderFile.setDestPath("driver/ethphy/src/dynamic/")
-    drvExtPhyDummyHeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyDummyHeaderFile.setDestPath("driver/ethphy/")
+    drvExtPhyDummyHeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/")
     drvExtPhyDummyHeaderFile.setType("HEADER")
     drvExtPhyDummyHeaderFile.setOverwrite(True)
     drvExtPhyDummyHeaderFile.setEnabled(True)
 
+    # Add drv_extphy_dummy_priv.h file to project
+    drvExtPhyDummyPrivFile = drvExtPhyDummyComponent.createFileSymbol(None, None)
+    drvExtPhyDummyPrivFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_dummy_priv.h")
+    drvExtPhyDummyPrivFile.setOutputName("drv_extphy_dummy_priv.h")
+    drvExtPhyDummyPrivFile.setDestPath("driver/ethphy/src/dynamic/")
+    drvExtPhyDummyPrivFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyDummyPrivFile.setType("HEADER")
+    drvExtPhyDummyPrivFile.setOverwrite(True)
+    drvExtPhyDummyPrivFile.setEnabled(True)
 
     # file drv_extphy_dummy.c "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dummy.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_dummy.c"
     # Add drv_extphy_dummy.c file

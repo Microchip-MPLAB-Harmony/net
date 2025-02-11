@@ -1,5 +1,5 @@
 """
-Copyright (C) 2023 , Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2024-2025 , Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -168,6 +168,13 @@ def instantiateComponent(drvExtPhyLan9354Component):
     drvExtPhyLan9354HeaderFtl.setMarkup(True)
     drvExtPhyLan9354HeaderFtl.setType("STRING") 
     
+    #Add to definitions.h
+    drvExtPhyLan9354SysdefFtl = drvExtPhyLan9354Component.createFileSymbol(None, None)
+    drvExtPhyLan9354SysdefFtl.setSourcePath("driver/ethphy/templates/system/system_definitions.h.ftl")
+    drvExtPhyLan9354SysdefFtl.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    drvExtPhyLan9354SysdefFtl.setMarkup(True)
+    drvExtPhyLan9354SysdefFtl.setType("STRING")
+
     # file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
     # Add drv_ethphy.h file to project
     drvExtPhyHeaderFile = drvExtPhyLan9354Component.createFileSymbol(None, None)
@@ -206,11 +213,21 @@ def instantiateComponent(drvExtPhyLan9354Component):
     drvExtPhyLan9354HeaderFile = drvExtPhyLan9354Component.createFileSymbol(None, None)
     drvExtPhyLan9354HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan9354.h")
     drvExtPhyLan9354HeaderFile.setOutputName("drv_extphy_lan9354.h")
-    drvExtPhyLan9354HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
-    drvExtPhyLan9354HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyLan9354HeaderFile.setDestPath("driver/ethphy/")
+    drvExtPhyLan9354HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/")
     drvExtPhyLan9354HeaderFile.setType("HEADER")
     drvExtPhyLan9354HeaderFile.setOverwrite(True)
     drvExtPhyLan9354HeaderFile.setEnabled(True)
+
+    # Add drv_extphy_lan9354_priv.h file to project
+    drvExtPhyLan9354PrivFile = drvExtPhyLan9354Component.createFileSymbol(None, None)
+    drvExtPhyLan9354PrivFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan9354_priv.h")
+    drvExtPhyLan9354PrivFile.setOutputName("drv_extphy_lan9354_priv.h")
+    drvExtPhyLan9354PrivFile.setDestPath("driver/ethphy/src/dynamic/")
+    drvExtPhyLan9354PrivFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyLan9354PrivFile.setType("HEADER")
+    drvExtPhyLan9354PrivFile.setOverwrite(True)
+    drvExtPhyLan9354PrivFile.setEnabled(True)
 
 
     # file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
