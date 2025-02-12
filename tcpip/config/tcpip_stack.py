@@ -369,7 +369,6 @@ def instantiateComponent(tcpipStackComponent):
                                 "tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER", "tcpipDhcps.TCPIP_DHCP_SERVER_HEAP_SIZE", 
                                 "tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2", "tcpipDhcpServer.TCPIP_DHCP_SERVER_V2_HEAP_SIZE", 
                                 "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipFtps.TCPIP_FTPS_HEAP_SIZE", 
-                                "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipHttp.TCPIP_HTTP_HEAP_SIZE",
                                 "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttpNet.TCPIP_HTTP_NET_HEAP_SIZE",
                                 "tcpipIPv6.TCPIP_STACK_USE_IPV6", "tcpipIPv6.TCPIP_IPV6_HEAP_SIZE",
                                 "tcpipSnmpv3.TCPIP_USE_SNMPv3", "tcpipSnmpv3.TCPIP_SNMPV3_HEAP_SIZE",
@@ -1404,33 +1403,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSntpManagerHeaderFile.setType("HEADER")
     tcpipStackSntpManagerHeaderFile.setOverwrite(True)
     
-    # Add http.h file to project
-    tcpipStackHttpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackHttpHeaderFile.setSourcePath("tcpip/http.h")
-    tcpipStackHttpHeaderFile.setOutputName("http.h")
-    tcpipStackHttpHeaderFile.setDestPath("library/tcpip/")
-    tcpipStackHttpHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
-    tcpipStackHttpHeaderFile.setType("HEADER")
-    tcpipStackHttpHeaderFile.setOverwrite(True)
-
-    # Add http_manager.h file to project
-    tcpipStackHttpManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackHttpManagerHeaderFile.setSourcePath("tcpip/src/http_manager.h")
-    tcpipStackHttpManagerHeaderFile.setOutputName("http_manager.h")
-    tcpipStackHttpManagerHeaderFile.setDestPath("library/tcpip/src/")
-    tcpipStackHttpManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipStackHttpManagerHeaderFile.setType("HEADER")
-    tcpipStackHttpManagerHeaderFile.setOverwrite(True)
-
-    # Add http_private.h file to project
-    tcpipStackHttpPrivateHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackHttpPrivateHeaderFile.setSourcePath("tcpip/src/http_private.h")
-    tcpipStackHttpPrivateHeaderFile.setOutputName("http_private.h")
-    tcpipStackHttpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-    tcpipStackHttpPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipStackHttpPrivateHeaderFile.setType("HEADER")
-    tcpipStackHttpPrivateHeaderFile.setOverwrite(True)
-    
     # Add http_net.h file to project
     tcpipStackHttpNetHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackHttpNetHeaderFile.setSourcePath("tcpip/http_net.h")
@@ -1887,7 +1859,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackFtpsEn = Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE")
     tcpipStackFtpcEn = Database.getSymbolValue("tcpipFtpc","TCPIP_STACK_USE_FTP_CLIENT")
     tcpipStackHttpNetEn = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
-    tcpipStackHttpEn = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
     tcpipStackSmtpcEn = Database.getSymbolValue("tcpipSmtpc","TCPIP_USE_SMTPC_CLIENT")
     tcpipStackSnmpEn = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
     tcpipStackTftpcEn = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
@@ -1902,8 +1873,8 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysFsShellSourceFile.setDestPath("library/tcpip/src/common/")
     tcpipStackSysFsShellSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
     tcpipStackSysFsShellSourceFile.setType("SOURCE")  
-    tcpipStackSysFsShellSourceFile.setEnabled((tcpipStackFtpsEn == True) or (tcpipStackFtpcEn == True) or (tcpipStackHttpNetEn == True) or (tcpipStackHttpEn == True) or (tcpipStackSmtpcEn == True) or (tcpipStackSnmpEn == True) or (tcpipStackTftpcEn == True) or (tcpipStackTftpsEn == True))
-    tcpipStackSysFsShellSourceFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
+    tcpipStackSysFsShellSourceFile.setEnabled((tcpipStackFtpsEn == True) or (tcpipStackFtpcEn == True) or (tcpipStackHttpNetEn == True) or (tcpipStackSmtpcEn == True) or (tcpipStackSnmpEn == True) or (tcpipStackTftpcEn == True) or (tcpipStackTftpsEn == True))
+    tcpipStackSysFsShellSourceFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
     
     # Add sys_fs_shell.h file to project
     tcpipStackSysFsShellHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -1913,7 +1884,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysFsShellHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
     tcpipStackSysFsShellHeaderFile.setType("HEADER")
     tcpipStackSysFsShellHeaderFile.setOverwrite(True)
-    tcpipStackSysFsShellHeaderFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
+    tcpipStackSysFsShellHeaderFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
 
     # file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
     tcpipStackNetPresHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -2252,13 +2223,12 @@ def tcpipStackSysFsShellSourceFileEnable(sourceFile, event):
     tcpipStackFtpsEn = Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE")
     tcpipStackFtpcEn = Database.getSymbolValue("tcpipFtpc","TCPIP_STACK_USE_FTP_CLIENT")
     tcpipStackHttpNetEn = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
-    tcpipStackHttpEn = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
     tcpipStackSmtpcEn = Database.getSymbolValue("tcpipSmtpc","TCPIP_USE_SMTPC_CLIENT")
     tcpipStackSnmpEn = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
     tcpipStackTftpcEn = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
     tcpipStackTftpsEn = Database.getSymbolValue("tcpipTftps","TCPIP_USE_TFTPS_MODULE")
     
-    if (tcpipStackFtpsEn or tcpipStackFtpcEn or tcpipStackHttpNetEn or tcpipStackHttpEn or tcpipStackSmtpcEn or tcpipStackSnmpEn or tcpipStackTftpcEn or tcpipStackTftpsEn):
+    if (tcpipStackFtpsEn or tcpipStackFtpcEn or tcpipStackHttpNetEn or tcpipStackSmtpcEn or tcpipStackSnmpEn or tcpipStackTftpcEn or tcpipStackTftpsEn):
         sourceFile.setEnabled(True)
     else:
         sourceFile.setEnabled(False)
@@ -2382,11 +2352,6 @@ def tcpipHeapCalc():
     if((Database.getSymbolValue("tcpipFtps", "TCPIP_USE_FTP_MODULE") == True)): 
         if(Database.getSymbolValue("tcpipFtps","TCPIP_FTPS_HEAP_SIZE") != None):
             heapsize = heapsize + Database.getSymbolValue("tcpipFtps","TCPIP_FTPS_HEAP_SIZE")  
-
-    # HTTP Server
-    if((Database.getSymbolValue("tcpipHttp", "TCPIP_STACK_USE_HTTP_SERVER") == True)): 
-        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_HEAP_SIZE") != None):
-            heapsize = heapsize + Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_HEAP_SIZE")  
 
     # HTTP NET Server
     if((Database.getSymbolValue("tcpipHttpNet", "TCPIP_STACK_USE_HTTP_NET_SERVER") == True)): 

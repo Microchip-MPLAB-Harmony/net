@@ -614,15 +614,11 @@ def instantiateComponent(tcpipHttpNetComponent):
 
 # make Http Net Server option visible
 def tcpipHttpNetSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):    
-    tcpipHttp = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
     tcpipTcp = Database.getSymbolValue("tcpipTcp","TCPIP_USE_TCP")
 
     if(tcpipTcp):
         tcpipDependentSymbol.setVisible(True)
-        if(tcpipHttp):
-            tcpipDependentSymbol.setReadOnly(True)
-        else:           
-            tcpipDependentSymbol.setReadOnly(False)
+        tcpipDependentSymbol.setReadOnly(False)
     else:
         tcpipDependentSymbol.setVisible(False)
 

@@ -646,9 +646,6 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
     {.moduleId = (uint16_t)TCPIP_MODULE_BERKELEY,      .initFunc = &BerkeleySocketInitialize,   .deInitFunc = &BerkeleySocketDeinitialize},       // TCPIP_MODULE_BERKELEY
 #endif
-#if defined(TCPIP_STACK_USE_HTTP_SERVER)
-    {.moduleId = (uint16_t)TCPIP_MODULE_HTTP_SERVER,   .initFunc = &TCPIP_HTTP_Initialize,      .deInitFunc = &TCPIP_HTTP_Deinitialize},           // TCPIP_MODULE_HTTP_SERVER
-#endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
     {.moduleId = (uint16_t)TCPIP_MODULE_HTTP_NET_SERVER, .initFunc = &TCPIP_HTTP_NET_Initialize, .deInitFunc = &TCPIP_HTTP_NET_Deinitialize},      // TCPIP_MODULE_HTTP_NET_SERVER
 #endif
@@ -755,9 +752,6 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #endif
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
     {.moduleId = (uint16_t)TCPIP_MODULE_BERKELEY,      .initFunc = &BerkeleySocketInitialize},        // TCPIP_MODULE_BERKELEY
-#endif
-#if defined(TCPIP_STACK_USE_HTTP_SERVER)
-    {.moduleId = (uint16_t)TCPIP_MODULE_HTTP_SERVER,   .initFunc = &TCPIP_HTTP_Initialize},           // TCPIP_MODULE_HTTP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
     {.moduleId = (uint16_t)TCPIP_MODULE_HTTP_NET_SERVER, .initFunc = &TCPIP_HTTP_NET_Initialize},      // TCPIP_MODULE_HTTP_NET_SERVER

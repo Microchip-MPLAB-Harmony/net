@@ -91,7 +91,6 @@ Microchip or any third party.
 #define TCPIP_STACK_USE_TFTP_CLIENT         // TFTP client functionality
 #define TCPIP_STACK_COMMAND_ENABLE          // TCP/IP commands support - requires the system console and the command processor
 
-//#define TCPIP_STACK_USE_HTTP_SERVER        // obsolete HTTP server with POST, Cookies, Authentication, etc.
 //#define TCPIP_STACK_USE_DYNAMICDNS_CLIENT  // Dynamic DNS client updater module
 
 // =======================================================================

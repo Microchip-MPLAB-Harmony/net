@@ -150,9 +150,6 @@ void TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName,
 <#if (tcpipNbns.TCPIP_USE_NBNS)?has_content &&  (tcpipNbns.TCPIP_USE_NBNS) == true>
 #include "tcpip/src/nbns_manager.h"
 </#if>
-<#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content &&  (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
-#include "tcpip/src/http_manager.h"
-</#if>
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content &&  (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 #include "tcpip/src/http_net_manager.h"
 </#if>

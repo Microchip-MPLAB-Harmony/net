@@ -614,7 +614,7 @@ def instantiateComponent(tcpipHttpSrvV2Component):
 
 # make Http Server option visible
 def tcpipHttpSrvV2Visible(tcpipDependentSymbol, tcpipIPSymbol):    
-    tcpipHttp = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
+    tcpipHttp = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER_V2")
     tcpipHttpNetSrv = Database.getSymbolValue("tcpipHttpNetSrv","TCPIP_STACK_USE_HTTP_NET_SERVER")
     tcpipTcp = Database.getSymbolValue("tcpipTcp","TCPIP_USE_TCP")
 

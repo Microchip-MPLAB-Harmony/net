@@ -2368,7 +2368,7 @@ bool    TCPIP_STACK_HandlerDeregister(TCPIP_EVENT_HANDLE hEvent);
         - process incoming signal for the incoming module
     }
 
-    TCPIP_MODULE_SIGNAL_HANDLE signalH = TCPIP_MODULE_SignalFunctionRegister( TCPIP_MODULE_HTTP_SERVER, appSignalFunc);
+    TCPIP_MODULE_SIGNAL_HANDLE signalH = TCPIP_MODULE_SignalFunctionRegister( TCPIP_MODULE_HTTP_NET_SERVER, appSignalFunc);
     </code>
 
   Remarks:
@@ -2422,7 +2422,7 @@ TCPIP_MODULE_SIGNAL_HANDLE    TCPIP_MODULE_SignalFunctionRegister(TCPIP_STACK_MO
         - process incoming signal for the incoming module
     }
 
-    TCPIP_MODULE_SIGNAL_HANDLE signalH = TCPIP_MODULE_SignalFunctionRegister( TCPIP_MODULE_HTTP_SERVER, appSignalFunc);
+    TCPIP_MODULE_SIGNAL_HANDLE signalH = TCPIP_MODULE_SignalFunctionRegister( TCPIP_MODULE_HTTP_NET_SERVER, appSignalFunc);
 
     - when done with this signal notification
     TCPIP_MODULE_SignalFunctionDeregister(signalH);
@@ -2457,7 +2457,7 @@ bool    TCPIP_MODULE_SignalFunctionDeregister(TCPIP_MODULE_SIGNAL_HANDLE signalH
 
   Example:
     <code>
-    TCPIP_MODULE_SIGNAL currSignal = TCPIP_MODULE_SignalGet(TCPIP_MODULE_HTTP_SERVER);
+    TCPIP_MODULE_SIGNAL currSignal = TCPIP_MODULE_SignalGet(TCPIP_MODULE_HTTP_NET_SERVER);
     </code>
 
   Remarks:
@@ -2493,7 +2493,7 @@ TCPIP_MODULE_SIGNAL    TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE moduleId);
 
   Example:
     <code>
-    bool res = TCPIP_MODULE_Deinitialize(TCPIP_MODULE_HTTP_SERVER);
+    bool res = TCPIP_MODULE_Deinitialize(TCPIP_MODULE_HTTP_NET_SERVER);
     </code>
 
   Remarks:
@@ -2536,7 +2536,7 @@ bool    TCPIP_MODULE_Deinitialize(TCPIP_STACK_MODULE moduleId);
 
   Example:
     <code>
-    bool res = TCPIP_MODULE_IsRunning(TCPIP_MODULE_HTTP_SERVER);
+    bool res = TCPIP_MODULE_IsRunning(TCPIP_MODULE_HTTP_NET_SERVER);
     </code>
 
   Remarks:

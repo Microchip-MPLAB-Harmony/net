@@ -219,8 +219,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpheapdependency = [  "TCPIP_TCP_MAX_SOCKETS", "TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE", "TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE", 
                                 "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttpNet.TCPIP_HTTP_NET_MAX_CONNECTIONS", 
                                 "tcpipHttpNet.TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE", "tcpipHttpNet.TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE",
-                                "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipHttp.TCPIP_HTTP_MAX_CONNECTIONS", 
-                                "tcpipHttp.TCPIP_HTTP_SKT_TX_BUFF_SIZE", "tcpipHttp.TCPIP_HTTP_SKT_RX_BUFF_SIZE",
                                 "tcpipTelnet.TCPIP_USE_TELNET", "tcpipTelnet.TCPIP_TELNET_MAX_CONNECTIONS", 
                                 "tcpipTelnet.TCPIP_TELNET_SKT_TX_BUFF_SIZE", "tcpipTelnet.TCPIP_TELNET_SKT_RX_BUFF_SIZE",
                                 "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSmtpc.TCPIP_SMTPC_MAIL_CONNECTIONS", 
@@ -295,18 +293,6 @@ def tcpipTcpHeapCalc():
             sktRxBuffSize_HTTPNET = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE")
             if(sktRxBuffSize_HTTPNET == 0):
                 sktRxBuffSize_HTTPNET = sktRxBuffSize
-    
-    if(Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER") == True):    
-        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_MAX_CONNECTIONS") != None):
-            nHTTP_Connections = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_MAX_CONNECTIONS")
-        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_TX_BUFF_SIZE")!= None):    
-            sktTxBuffSize_HTTP = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_TX_BUFF_SIZE")
-            if(sktTxBuffSize_HTTP == 0):
-                sktTxBuffSize_HTTP = sktTxBuffSize
-        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_RX_BUFF_SIZE")!= None):
-            sktRxBuffSize_HTTP = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_RX_BUFF_SIZE")
-            if(sktRxBuffSize_HTTP == 0):
-                sktRxBuffSize_HTTP = sktRxBuffSize
     
     if(Database.getSymbolValue("tcpipTelnet","TCPIP_USE_TELNET") == True):  
         if(Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_MAX_CONNECTIONS") != None):

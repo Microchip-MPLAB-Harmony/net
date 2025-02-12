@@ -89,21 +89,6 @@ const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
 };
 </#if>
 
-<#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
-/*** HTTP Server Initialization Data ***/
-const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
-{
-    .nConnections   = TCPIP_HTTP_MAX_CONNECTIONS,
-    .dataLen        = TCPIP_HTTP_MAX_DATA_LEN,
-    .sktTxBuffSize  = TCPIP_HTTP_SKT_TX_BUFF_SIZE,
-    .sktRxBuffSize  = TCPIP_HTTP_SKT_RX_BUFF_SIZE,
-    .configFlags    = TCPIP_HTTP_CONFIG_FLAGS,
-    .http_malloc_fnc    = TCPIP_HTTP_MALLOC_FUNC,
-    .http_free_fnc      = TCPIP_HTTP_FREE_FUNC,
-    .web_dir            = TCPIP_HTTP_WEB_DIR, 
-};
-</#if>
-
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content && (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 /*** HTTP_NET Server Initialization Data ***/
 const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
@@ -889,9 +874,6 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 </#if>
 <#if (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT)?has_content && (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT) == true>
     {TCPIP_MODULE_FTP_CLIENT,       &tcpipFTPClientInitData},       // TCPIP_MODULE_FTP_CLIENT
-</#if>
-<#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
-    {TCPIP_MODULE_HTTP_SERVER,      &tcpipHTTPInitData},            // TCPIP_MODULE_HTTP_SERVER
 </#if>
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content && (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
     {TCPIP_MODULE_HTTP_NET_SERVER,  &tcpipHTTPNetInitData},         // TCPIP_MODULE_HTTP_NET_SERVER

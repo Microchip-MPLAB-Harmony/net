@@ -336,7 +336,6 @@ typedef enum
     // 3rd layer modules: 20 - 29
     TCPIP_MODULE_SNTP,
     TCPIP_MODULE_FTP_SERVER,
-    TCPIP_MODULE_HTTP_SERVER,
     TCPIP_MODULE_HTTP_NET_SERVER,
     TCPIP_MODULE_HTTP_SERVER_V2,    /* new HTTP server v2 module */
     TCPIP_MODULE_TELNET_SERVER,
@@ -344,9 +343,9 @@ typedef enum
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
     TCPIP_MODULE_BERKELEY,
-
-    // 3rd layer modules: 30 - 38
     TCPIP_MODULE_REBOOT_SERVER,
+
+    // 3rd layer modules: 30 - 37
     TCPIP_MODULE_COMMAND,
     TCPIP_MODULE_IPERF,
     TCPIP_MODULE_TFTP_CLIENT,       /* TFTP client module */
@@ -783,9 +782,6 @@ typedef struct TCPIP_STACK_INIT
 </#if>
 <#if (tcpipSntp.TCPIP_USE_SNTP_CLIENT)?has_content &&  (tcpipSntp.TCPIP_USE_SNTP_CLIENT) == true>
 #include "tcpip/sntp.h"
-</#if>
-<#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content &&  (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
-#include "tcpip/http.h"
 </#if>
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content &&  (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 #include "tcpip/http_net.h"

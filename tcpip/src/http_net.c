@@ -1430,7 +1430,7 @@ static bool F_HTTP_HeaderParseLookup(TCPIP_HTTP_NET_CONN* pHttpCon, size_t reqIx
     Parses the "Authorization:" header for a request.  For example, 
     "BASIC YWRtaW46cGFzc3dvcmQ=" is decoded to a user name of "admin" and
     a password of "password".  Once read, TCPIP_HTTP_NET_ConnectionUserAuthenticate is called from
-    custom_http_app.c to determine if the credentials are acceptable.
+    custom_http_net_app.c to determine if the credentials are acceptable.
 
     The return value of TCPIP_HTTP_NET_ConnectionUserAuthenticate is saved in pHttpCon->isAuthorized for
     later use by the application.
