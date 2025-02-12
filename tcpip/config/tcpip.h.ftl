@@ -334,7 +334,6 @@ typedef enum
     TCPIP_MODULE_NBNS,
 
     // 3rd layer modules: 20 - 29
-    TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
     TCPIP_MODULE_SNTP,
     TCPIP_MODULE_FTP_SERVER,
     TCPIP_MODULE_HTTP_SERVER,
@@ -344,9 +343,9 @@ typedef enum
     TCPIP_MODULE_SNMP_SERVER,
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
-
-    // 3rd layer modules: 30 - 39
     TCPIP_MODULE_BERKELEY,
+
+    // 3rd layer modules: 30 - 38
     TCPIP_MODULE_REBOOT_SERVER,
     TCPIP_MODULE_COMMAND,
     TCPIP_MODULE_IPERF,

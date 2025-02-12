@@ -1386,24 +1386,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTelnetManagerHeaderFile.setType("HEADER")
     tcpipStackTelnetManagerHeaderFile.setOverwrite(True)
     
-    # Add smtp.h file to project
-    tcpipStackSmtpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSmtpHeaderFile.setSourcePath("tcpip/smtp.h")
-    tcpipStackSmtpHeaderFile.setOutputName("smtp.h")
-    tcpipStackSmtpHeaderFile.setDestPath("library/tcpip/")
-    tcpipStackSmtpHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
-    tcpipStackSmtpHeaderFile.setType("HEADER")
-    tcpipStackSmtpHeaderFile.setOverwrite(True)
-
-    # Add smtp_manager.h file to project
-    tcpipStackSmtpManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSmtpManagerHeaderFile.setSourcePath("tcpip/src/smtp_manager.h")
-    tcpipStackSmtpManagerHeaderFile.setOutputName("smtp_manager.h")
-    tcpipStackSmtpManagerHeaderFile.setDestPath("library/tcpip/src/")
-    tcpipStackSmtpManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipStackSmtpManagerHeaderFile.setType("HEADER")
-    tcpipStackSmtpManagerHeaderFile.setOverwrite(True)
-    
     # Add sntp.h file to project
     tcpipStackSntpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSntpHeaderFile.setSourcePath("tcpip/sntp.h")

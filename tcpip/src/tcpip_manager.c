@@ -637,9 +637,6 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
     {.moduleId = (uint16_t)TCPIP_MODULE_IGMP,          .initFunc = &TCPIP_IGMP_Initialize,      .deInitFunc = &TCPIP_IGMP_Deinitialize},          // TCPIP_MODULE_IGMP
 #endif
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
-    {.moduleId = (uint16_t)TCPIP_MODULE_SMTP_CLIENT,   .initFunc = &TCPIP_SMTP_ClientInitialize, .deInitFunc = &TCPIP_SMTP_ClientDeinitialize},     // TCPIP_MODULE_SMTP_CLIENT
-#endif
 #if defined(TCPIP_STACK_USE_SNTP_CLIENT)
     {.moduleId = (uint16_t)TCPIP_MODULE_SNTP,          .initFunc = &TCPIP_SNTP_Initialize,      .deInitFunc = &TCPIP_SNTP_Deinitialize},           // TCPIP_MODULE_SNTP
 #endif
@@ -750,9 +747,6 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
     {.moduleId = (uint16_t)TCPIP_MODULE_IGMP,          .initFunc = &TCPIP_IGMP_Initialize},          // TCPIP_MODULE_IGMP
 #endif
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
-    {.moduleId = (uint16_t)TCPIP_MODULE_SMTP_CLIENT,   .initFunc = &TCPIP_SMTP_ClientInitialize},     // TCPIP_MODULE_SMTP_CLIENT
-#endif
 #if defined(TCPIP_STACK_USE_SNTP_CLIENT)
     {.moduleId = (uint16_t)TCPIP_MODULE_SNTP,          .initFunc = &TCPIP_SNTP_Initialize},           // TCPIP_MODULE_SNTP
 #endif

@@ -151,13 +151,6 @@ const TCPIP_SNTP_MODULE_CONFIG tcpipSNTPInitData =
 };
 </#if>
 
-<#if (tcpipSmtp.TCPIP_USE_SMTP_CLIENT)?has_content && (tcpipSmtp.TCPIP_USE_SMTP_CLIENT) == true>
-/*** SMTP client Initialization Data ***/
-const TCPIP_SMTP_CLIENT_MODULE_CONFIG tcpipSMTPInitData =
-{ 
-    0
-};
-</#if>
 
 <#if (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT)?has_content && (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT) == true>
 /*** SMTPC client Initialization Data ***/
