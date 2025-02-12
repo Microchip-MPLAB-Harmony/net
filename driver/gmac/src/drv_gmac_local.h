@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,8 +40,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_GMAC_LOCAL_H
-#define _DRV_GMAC_LOCAL_H
+#ifndef H_DRV_GMAC_LOCAL_H
+#define H_DRV_GMAC_LOCAL_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -81,11 +81,11 @@ Microchip or any third party.
 #define   DRV_GMAC_USE_TX_SEMAPHORE_LOCK
 
 
-#define DRV_GMAC_MIN_RX_SIZE            64      // minimum RX buffer size
+#define DRV_GMAC_MIN_RX_SIZE            64U      // minimum RX buffer size
                                                 // less than this creates excessive fragmentation
                                                 // Keep it always multiple of 64!
-#define DRV_GMAC_RX_MAX_FRAME           1536    // Maximum RX Frame Size for GMAC
-#define DRV_GMAC_MIN_TX_DESCRIPTORS     1       // minimum number of TX descriptors
+#define DRV_GMAC_RX_MAX_FRAME           1536U    // Maximum RX Frame Size for GMAC
+#define DRV_GMAC_MIN_TX_DESCRIPTORS     1U       // minimum number of TX descriptors
                                                  // needed to accommodate zero copy and TCP traffic
 
 // Maximum RX frame selection
@@ -128,15 +128,15 @@ typedef struct
     /** Pointer to Rx TDs (must be 8-byte aligned) */
     DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc;
     // Rx queues for RX packet buffers
-    DRV_PIC32CGMAC_SGL_LIST _RxQueue;   
+    DRV_PIC32CGMAC_SGL_LIST RxQueue;   
     /** Pointer to Tx TDs (must be 8-byte aligned) */
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc;
     //Queue list of packets for transmission
-    DRV_PIC32CGMAC_SGL_LIST _TxQueue;   
+    DRV_PIC32CGMAC_SGL_LIST TxQueue;   
     //Queue for Unacknowledged Transmit Descriptors
-    DRV_PIC32CGMAC_SGL_LIST _TxDescUnAckQueue;  
+    DRV_PIC32CGMAC_SGL_LIST TxDescUnAckQueue;  
     //Pool of unused nodes for Transmit packet acknowledgment
-    DRV_PIC32CGMAC_SGL_LIST _TxDescAckPoolQueue;  
+    DRV_PIC32CGMAC_SGL_LIST TxDescAckPoolQueue;  
     /** RX index of current processing Descriptor */
     uint16_t nRxDescIndex;
     /** Circular buffer head pointer by upper layer (buffer to send) */
@@ -154,30 +154,30 @@ typedef struct
 */
 typedef struct {    
     
-    unsigned int        _macIx;             // index of the MAC, for multiple MAC's support
-    unsigned int        _phyIx;             // index of the associated PHY
+    unsigned int        macIdx;             // index of the MAC, for multiple MAC's support
+    uint32_t            phyIdx;             // index of the associated PHY
     SYS_MODULE_OBJ      hPhySysObject;      // PHY object handle
     SYS_MODULE_OBJ      hPhyClient;         // PHY handle
     SYS_STATUS          sysStat;            // driver status
     union
     {
-        uint16_t        val;
+        unsigned int        val;
         struct
         {
-            uint16_t    _init               : 1;    // the corresponding MAC is initialized
-            uint16_t    _open               : 1;    // the corresponding MAC is opened
-            uint16_t    _linkPresent        : 1;    // lif connection to the PHY properly detected : on/off
-            uint16_t    _linkNegotiation    : 1;    // if an auto-negotiation is in effect : on/off
-            uint16_t    _linkPrev           : 1;    // last value of the link status: on/off
-            uint16_t    _linkUpDone         : 1;    // the link up sequence done
+            unsigned int    macInit             : 1;    // the corresponding MAC is initialized
+            unsigned int    macOpen             : 1;    // the corresponding MAC is opened
+            unsigned int    linkPresent         : 1;    // lif connection to the PHY properly detected : on/off
+            unsigned int    linkNegotiation     : 1;    // if an auto-negotiation is in effect : on/off
+            unsigned int    linkPrev            : 1;    // last value of the link status: on/off
+            unsigned int    linkUpDone          : 1;    // the link up sequence done
             // add another flags here
         };
-    }_macFlags;                                     // corresponding MAC flags
+    }macFlags;                                     // corresponding MAC flags
         
     // general stuff
-    const void*                     _AllocH ;        // allocation handle
-    TCPIP_MAC_HEAP_CallocF          _callocF;        // allocation functions
-    TCPIP_MAC_HEAP_FreeF            _freeF;
+    const void*                     mac_AllocH ;        // allocation handle
+    TCPIP_MAC_HEAP_CallocF          mac_callocF;        // allocation functions
+    TCPIP_MAC_HEAP_FreeF            mac_freeF;
     
     // packet allocation functions
     TCPIP_MAC_PKT_AllocF            pktAllocF;
@@ -185,24 +185,24 @@ typedef struct {
     TCPIP_MAC_PKT_AckF              pktAckF;
     
     // synchronization
-    TCPIP_MAC_SynchReqF             _synchF;
+    TCPIP_MAC_SynchReqF             macSynchF;
     // timing and link status maintenance
-    TCPIP_ETH_OPEN_FLAGS            _linkResFlags;        // resulted link flags
-    uint32_t                        _linkUpTick;                // tick value when the link up sequence was started
-    uint32_t                        _linkWaitTick;              // tick value to wait for
-    DRV_ETHPHY_NEGOTIATION_RESULT   _negResult;     // negotiation result storage
-    DRV_GMAC_LINK_CHECK_STATE       _linkCheckState;    // link state machine current status
-    INT_SOURCE                      _macIntSrc;         // this MAC interrupt source
+    TCPIP_ETH_OPEN_FLAGS            linkResFlags;   // resulted link flags
+    uint32_t                        linkUpTick;     // tick value when the link up sequence was started
+    uint32_t                        linkWaitTick;   // tick value to wait for
+    DRV_ETHPHY_NEGOTIATION_RESULT   negResult;      // negotiation result storage
+    DRV_GMAC_LINK_CHECK_STATE       linkCheckState; // link state machine current status
+    INT_SOURCE                      macIntSrc;      // this MAC interrupt source
     
-    DRV_GMAC_EVENT_DCPT             _gmac_event_group_dcpt;
+    DRV_GMAC_EVENT_DCPT             gmac_event_group_dcpt;
     // synch object handle for RX operations
-    uintptr_t                       _syncRxH;          
+    uintptr_t                       syncRxH;          
     // synch object handle for TX operations
-    uintptr_t                       _syncTxH;          
+    uintptr_t                       syncTxH;          
     
     // debug: run time statistics
-    TCPIP_MAC_RX_STATISTICS         _rxStat;
-    TCPIP_MAC_TX_STATISTICS         _txStat;
+    TCPIP_MAC_RX_STATISTICS         rxStat;
+    TCPIP_MAC_TX_STATISTICS         txStat;
                
     // GMAC queues
     DRV_GMAC_QUEUE                  * gmac_queue;
@@ -210,18 +210,18 @@ typedef struct {
     TCPIP_MODULE_MAC_PIC32C_CONFIG  gmacConfig;  
     
     // gap descriptor offset
-    int16_t                        _dcptOffset;
+    int16_t                         dcptOffset;
     // control flags from the stack
 
-    // mask corresponding to _dataOffset
-    uint32_t                        _dataOffsetMask;
+    // mask corresponding to dataOffset
+    uint32_t                        dataOffsetMask;
 
     // TCPIP_MAC_CONTROL_FLAGS
-    uint16_t                        _controlFlags;
+    uint16_t                        mac_controlFlags;
     // data payload offset required    
-    uint8_t                         _dataOffset;
+    uint8_t                         dataOffset;
     // flag to discard tx packets and reinitialize Tx    
-    uint8_t                         _txDiscard;
+    uint8_t                         txDiscard;
     
 } DRV_GMAC_INSTANCE;
 
@@ -241,7 +241,7 @@ typedef struct
 } DRV_GMAC_DRIVER;
 
 /* Function prototype for accessing Statistics registers */
-typedef uint32_t (*DRV_PIC32CGMAC_HW_REG_FUNC)(DRV_GMAC_DRIVER*);
+typedef uint32_t (*DRV_PIC32CGMAC_HW_REG_FUNC)(DRV_GMAC_DRIVER* pMACDrv);
 
 // *****************************************************************************
 /* PIC32 MAC Hardware statistics register access structure
@@ -282,33 +282,33 @@ typedef struct
 
 typedef union
   {
-      uint8_t index;
+      unsigned int index;
       struct __attribute__((packed))
       {
-          uint8_t b0:1;
-          uint8_t b1:1;
-          uint8_t b2:1;
-          uint8_t b3:1;
-          uint8_t b4:1;
-          uint8_t b5:1;
-          uint8_t b6:1;
-          uint8_t b7:1;
+          unsigned int b0:1;
+          unsigned int b1:1;
+          unsigned int b2:1;
+          unsigned int b3:1;
+          unsigned int b4:1;
+          unsigned int b5:1;
+          unsigned int b6:1;
+          unsigned int b7:1;
       } bits;
   }DRV_GMAC_HASH_INDEX;  
 
   typedef union
   {
-      uint8_t addr_val;
+      unsigned int addr_val;
       struct __attribute__((packed))
       {
-          uint8_t b0:1;
-          uint8_t b1:1;
-          uint8_t b2:1;
-          uint8_t b3:1;
-          uint8_t b4:1;
-          uint8_t b5:1;
-          uint8_t b6:1;
-          uint8_t b7:1;
+          unsigned int b0:1;
+          unsigned int b1:1;
+          unsigned int b2:1;
+          unsigned int b3:1;
+          unsigned int b4:1;
+          unsigned int b5:1;
+          unsigned int b6:1;
+          unsigned int b7:1;
       } bits;
   }DRV_GMAC_MAC_ADDR;
   
@@ -349,8 +349,8 @@ typedef enum
 */
 
 
-#define DRV_GMAC_DUMMY_PRIORITY (0xFF)
-#define DRV_GMAC_NO_ACTIVE_QUEUE (0xFF)
+#define DRV_GMAC_DUMMY_PRIORITY (0xFFU)
+#define DRV_GMAC_NO_ACTIVE_QUEUE (0xFFU)
 // *****************************************************************************
 
 /**************************************************************************
@@ -469,9 +469,9 @@ typedef struct
     uint16_t buffer_count;  
 } DRV_GMAC_TX_FRAME_INFO; 
 
-typedef struct
+typedef struct S_TAG_GMAC_TX_DESC_INDEX
 {
-    struct DRV_GMAC_TX_DESC_INDEX*   next;
+    struct S_TAG_GMAC_TX_DESC_INDEX*   next;
     uint16_t startIndex;
     uint16_t endIndex;
     uint16_t buffer_count;  
@@ -503,59 +503,59 @@ typedef enum
 // *****************************************************************************
 // RX lock functions
 #if defined(DRV_GMAC_USE_RX_SEMAPHORE_LOCK)
-static __inline__ bool __attribute__((always_inline)) _DRV_GMAC_RxCreate(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ bool __attribute__((always_inline)) F_DRV_GMAC_RxCreate(DRV_GMAC_DRIVER * pMACDrv)
 {
-    return (pMACDrv->sGmacData._synchF == 0) ? true : (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
+    return (pMACDrv->sGmacData.macSynchF == NULL) ? true : (*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxDelete(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_RxDelete(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxLock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_RxLock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxUnlock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_RxUnlock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
     }
 }
 
 #else
 // use critical sections
-static __inline__ bool __attribute__((always_inline)) _DRV_GMAC_RxCreate(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ bool __attribute__((always_inline)) F_DRV_GMAC_RxCreate(DRV_GMAC_DRIVER * pMACDrv)
 {
     return true;
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxDelete(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_RxDelete(DRV_GMAC_DRIVER * pMACDrv)
 {
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxLock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_RxLock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxUnlock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_RxUnlock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
     }
 }
 #endif  // defined(DRV_GMAC_USE_RX_SEMAPHORE_LOCK)
@@ -563,60 +563,60 @@ static __inline__ void __attribute__((always_inline)) _DRV_GMAC_RxUnlock(DRV_GMA
 
 // TX lock functions
 #if defined(DRV_GMAC_USE_TX_SEMAPHORE_LOCK)
-static __inline__ bool __attribute__((always_inline)) _DRV_GMAC_TxCreate(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ bool __attribute__((always_inline)) F_DRV_GMAC_TxCreate(DRV_GMAC_DRIVER * pMACDrv)
 {
-    return (pMACDrv->sGmacData._synchF == 0) ? true : (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
+    return (pMACDrv->sGmacData.macSynchF == NULL) ? true : (*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxDelete(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_TxDelete(DRV_GMAC_DRIVER * pMACDrv)
 {
 
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxLock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_TxLock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxUnlock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_TxUnlock(DRV_GMAC_DRIVER * pMACDrv)
 {
 
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
     }
 }
 #else
 // use critical sections
-static __inline__ bool __attribute__((always_inline)) _DRV_GMAC_TxCreate(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ bool __attribute__((always_inline)) F_DRV_GMAC_TxCreate(DRV_GMAC_DRIVER * pMACDrv)
 {
     return true;
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxDelete(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_TxDelete(DRV_GMAC_DRIVER * pMACDrv)
 {
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxLock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_TxLock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
     }
 }
 
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxUnlock(DRV_GMAC_DRIVER * pMACDrv)
+static __inline__ void __attribute__((always_inline)) F_DRV_GMAC_TxUnlock(DRV_GMAC_DRIVER * pMACDrv)
 {
-    if(pMACDrv->sGmacData._synchF != 0)
+    if(pMACDrv->sGmacData.macSynchF != NULL)
     {
-        (*pMACDrv->sGmacData._synchF)(&pMACDrv->sGmacData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
+        (void)(*pMACDrv->sGmacData.macSynchF)(&pMACDrv->sGmacData.syncTxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
     }
 }
 #endif  // defined(DRV_GMAC_USE_TX_SEMAPHORE_LOCK)
@@ -630,10 +630,10 @@ static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxUnlock(DRV_GMA
 // *****************************************************************************
 
 /****************************************************************************
- * Function: _DRV_GMAC_DescSpace
+ * Function: F_DRV_GMAC_DescSpace
  * Summary:  Returns number of available GMAC descriptors
  *****************************************************************************/
-static __inline__ uint16_t __attribute__((always_inline)) _DRV_GMAC_DescSpace(uint16_t head, uint16_t tail, uint16_t size)
+static __inline__ uint16_t __attribute__((always_inline)) F_DRV_GMAC_DescSpace(uint16_t head, uint16_t tail, uint16_t size)
 {
     return (tail > head)? (tail - head) : (size - head + tail);
 }
@@ -651,7 +651,9 @@ __STATIC_INLINE int fixed_mod(int a, int b)
     int rem = a % b;
 
     while (rem < 0)
+    {
         rem += b;
+    }
 
     return rem;
 }
@@ -680,21 +682,37 @@ __STATIC_INLINE int fixed_mod(int a, int b)
 
 /** Increment head or tail */
 #define GCIRC_INC(headortail,size) \
-    headortail++;             \
-    if (headortail >= size) {  \
-        headortail = 0;       \
+    (headortail)++;             \
+    if ((headortail) >= (size)) {  \
+        (headortail) = (0U);       \
     }
 
 /** Decrement head or tail */
-#define GCIRC_DEC(headortail,size) \
-    headortail = headortail;    \
-    if(headortail == 0) {           \
-        headortail = size - 1;  \
-    }                   \
-    else                \
-    {                   \
-        headortail--;   \
-    }
+/*
+#define GCIRC_DEC(headortail,size)          \
+    do{                                     \
+        (headortail) = (headortail);        \
+        if((headortail) == (0U))              \
+        {                                   \
+            (headortail) = (size) - (1U);   \
+        }                                   \
+        else                                \
+        {                                   \
+            (headortail)--;                 \
+        }                                   \
+    }while(0U)
+
+*/
+#define GCIRC_DEC(headortail,size)          \
+        (headortail) = (headortail);        \
+        if((headortail) == (0U))              \
+        {                                   \
+            (headortail) = (size) - (1U);   \
+        }                                   \
+        else                                \
+        {                                   \
+            (headortail)--;                 \
+        }                                   
 
 /** Circular buffer is empty ? */
 #define GCIRC_EMPTY(head, tail)     (head == tail)
@@ -707,4 +725,4 @@ __STATIC_INLINE int fixed_mod(int a, int b)
  End of File
 */
 
-#endif //#ifndef _DRV_GMAC_LOCAL_H 
+#endif //#ifndef H_DRV_GMAC_LOCAL_H 

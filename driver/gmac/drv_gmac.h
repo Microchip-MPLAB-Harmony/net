@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _DRV_GMAC_H
-#define _DRV_GMAC_H
+#ifndef H_DRV_GMAC_H
+#define H_DRV_GMAC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -887,7 +887,7 @@ TCPIP_MAC_RES     DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* 
     - The reported values are info only and change dynamically.
 
 */
-TCPIP_MAC_RES       DRV_GMAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+TCPIP_MAC_RES       DRV_GMAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, size_t nEntries, size_t* pHwEntries);
     
 // *****************************************************************************
 /*  Function:
@@ -1125,13 +1125,24 @@ TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac);
 void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex, uint32_t  currEthEvents);
 
 
+// supported MAC objects
+#if defined(DRV_GMAC) || defined(DRV_ETH)
+extern const TCPIP_MAC_OBJECT DRV_GMAC_Object;
+#endif
+#if defined(DRV_GMAC0)           
+extern const TCPIP_MAC_OBJECT DRV_GMAC0_Object;
+#endif
+#if defined(DRV_GMAC1)           
+extern const TCPIP_MAC_OBJECT DRV_GMAC1_Object;
+#endif
+
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }
 #endif
 //DOM-IGNORE-END
 
-#endif // #ifndef _DRV_GMAC_H
+#endif // #ifndef H_DRV_GMAC_H
 
 /*******************************************************************************
  End of File

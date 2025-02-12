@@ -20,7 +20,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2017-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2017-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,8 +45,8 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#ifndef _DRV_PIC32CGMAC_LIB_SAM_H_
-#define _DRV_PIC32CGMAC_LIB_SAM_H_
+#ifndef H_DRV_PIC32CGMAC_LIB_SAM_H
+#define H_DRV_PIC32CGMAC_LIB_SAM_H
 
 #include <stdlib.h>
 
@@ -61,7 +61,8 @@ Microchip or any third party.
     This enumeration defines flags for the possible Ethernet events that can
     cause interrupts.
 */
-typedef enum{
+typedef enum
+{
     // All events
     GMAC_EV_NONE
     /*DOM-IGNORE-BEGIN*/ = 0 /*DOM-IGNORE-END*/,
@@ -143,37 +144,37 @@ typedef enum{
 */
 typedef struct
 {
-    TCPIP_MAC_EVENT             _TcpEnabledEvents;          // group enabled notification events
-    volatile TCPIP_MAC_EVENT    _TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
-    GMAC_EVENTS                 _EthEnabledEvents;          // copy in GMAC_EVENTS space
-    volatile GMAC_EVENTS        _EthPendingEvents;          // copy in GMAC_EVENTS space
-    TCPIP_MAC_EventF            _TcpNotifyFnc;              // group notification handler
-    const void*                 _TcpNotifyParam;            // notification parameter
+    TCPIP_MAC_EVENT             TcpEnabledEvents;          // group enabled notification events
+    volatile TCPIP_MAC_EVENT    TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
+    GMAC_EVENTS                 EthEnabledEvents;          // copy in GMAC_EVENTS space
+    volatile GMAC_EVENTS        EthPendingEvents;          // copy in GMAC_EVENTS space
+    TCPIP_MAC_EventF            TcpNotifyFnc;              // group notification handler
+    const void*                 TcpNotifyParam;            // notification parameter
 }DRV_GMAC_EVENT_DCPT;   // event descriptor per group
 
 /// The buffer addresses written into the descriptors must be aligned so the
 /// last few bits are zero.  These bits have special meaning for the GMAC
 /// peripheral and cannot be used as part of the address.
-#define GMAC_RX_ADDRESS_MASK    ((unsigned int)0xFFFFFFFC)
-#define GMAC_LENGTH_FRAME       ((unsigned int)0x3FFF)    /// Length of frame mask
+#define GMAC_RX_ADDRESS_MASK    ((unsigned int)0xFFFFFFFCU)
+#define GMAC_LENGTH_FRAME       ((unsigned int)0x3FFFU)    /// Length of frame mask
 #define GMAC_RX_CHECKSUM_OFFLOAD_STATUS     ((unsigned int)0x00C00000)
 #define GMAC_RX_CHECKSUM_IP_OFFLOAD         ((unsigned int)0x00400000)
 #define GMAC_RX_CHECKSUM_IP_TCP_OFFLOAD     ((unsigned int)0x00800000)
 #define GMAC_RX_CHECKSUM_IP_UDP_OFFLOAD     ((unsigned int)0x00C00000)
 
 // receive buffer descriptor bits
-#define GMAC_RX_OWNERSHIP_BIT   (1u <<  0)
-#define GMAC_RX_WRAP_BIT        (1u <<  1)
-#define GMAC_RX_SOF_BIT         (1u << 14)
-#define GMAC_RX_EOF_BIT         (1u << 15)
+#define GMAC_RX_OWNERSHIP_BIT   (1UL <<  0)
+#define GMAC_RX_WRAP_BIT        (1UL <<  1)
+#define GMAC_RX_SOF_BIT         (1UL << 14)
+#define GMAC_RX_EOF_BIT         (1UL << 15)
 
 // Transmit buffer descriptor bits
-#define GMAC_TX_LAST_BUFFER_BIT (1u << 15)
-#define GMAC_TX_WRAP_BIT        (1u << 30)
-#define GMAC_TX_USED_BIT        (1u << 31)
-#define GMAC_TX_RLE_BIT         (1u << 29) /// Retry Limit Exceeded
-#define GMAC_TX_LCOL_BIT        (1u << 28) /// Tx error due to late collision
-#define GMAC_TX_AHB_ERR_BIT     (1u << 27) /// Frame corruption due to AHB Error
+#define GMAC_TX_LAST_BUFFER_BIT (1UL << 15)
+#define GMAC_TX_WRAP_BIT        (1UL << 30)
+#define GMAC_TX_USED_BIT        (1UL << 31)
+#define GMAC_TX_RLE_BIT         (1UL << 29) /// Retry Limit Exceeded
+#define GMAC_TX_LCOL_BIT        (1UL << 28) /// Tx error due to late collision
+#define GMAC_TX_AHB_ERR_BIT     (1UL << 27) /// Frame corruption due to AHB Error
 #define GMAC_TX_ERR_BITS        (GMAC_TX_RLE_BIT | GMAC_TX_LCOL_BIT | GMAC_TX_AHB_ERR_BIT)
 
 /* Ethernet Receive Filter Flags
@@ -193,7 +194,8 @@ typedef struct
     If a packet isn't rejected/accepted after all filters are tried, it will be rejected by
     default!
 */
-typedef enum{
+typedef enum
+{
     // Frames with wrong Preamble are accepted
     GMAC_FILT_PREAMBLE_ERR_ACCEPT
     /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_RXBP_Msk /*DOM-IGNORE-END*/,
@@ -237,7 +239,7 @@ typedef enum{
 
 // Interrupt bits
 // All interrupts
-#define GMAC_INT_ALL 0xFFFFFFFF
+#define GMAC_INT_ALL 0xFFFFFFFFU
 // RX Interrupts
 #define GMAC_INT_RX_BITS (GMAC_IER_RCOMP_Msk  | GMAC_IER_RXUBR_Msk  | GMAC_IER_ROVR_Msk )
 // TX err interrupts
@@ -248,5 +250,5 @@ typedef enum{
 #define GMAC_INT_RX_STATUS_BITS  (GMAC_ISR_RCOMP_Msk  | GMAC_ISR_RXUBR_Msk  | GMAC_ISR_ROVR_Msk )
 #define GMAC_INT_TX_STATUS_ERR_BITS  (GMAC_ISR_TUR_Msk  | GMAC_ISR_RLEX_Msk  | GMAC_ISR_TFC_Msk  | GMAC_ISR_HRESP_Msk )
 
-#endif  // _DRV_PIC32CGMAC_LIB_H_
+#endif  // H_DRV_PIC32CGMAC_LIB_SAM_H
 

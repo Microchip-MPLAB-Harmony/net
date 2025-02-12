@@ -20,7 +20,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2017-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2017-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,8 +45,8 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#ifndef _DRV_PIC32CGMAC_LIB_H_
-#define _DRV_PIC32CGMAC_LIB_H_
+#ifndef H_DRV_PIC32CGMAC_LIB_H
+#define H_DRV_PIC32CGMAC_LIB_H
 
 #include <stdlib.h>
 #include "system_config.h"
@@ -70,7 +70,7 @@ Microchip or any third party.
 #endif
 #include "driver/gmac/src/drv_gmac_local.h"
 #include "device.h"
-
+#include "interrupts.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Ethernet Peripheral Library Interface Routines
@@ -137,7 +137,7 @@ void DRV_PIC32CGMAC_LibInit (DRV_GMAC_DRIVER* pMACDrv);
     ethRes = DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GMAC_QUE_LIST queueIdx);
     if ( ethRes != DRV_PIC32CGMAC_RES_OK )
     {
-        // Handle error
+         #Handle error
     }
     </code>
   Remarks:
@@ -176,7 +176,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
     ethRes = DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv,GMAC_QUE_LIST queueIdx);
     if ( ethRes != DRV_PIC32CGMAC_RES_OK )
     {
-        // Handle error
+         #Handle error
     }
     </code>
   Remarks:
@@ -210,7 +210,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv);
     <code>
     if(DRV_PIC32CGMAC_LibRxQueFilterInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
     {
-        // Handle error
+         #Handle error
     }
     </code>
   Remarks:
@@ -247,7 +247,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
     ethRes = DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv,GMAC_QUE_LIST queueIdx);
     if ( ethRes != DRV_PIC32CGMAC_RES_OK )
     {
-        // Handle error
+         #Handle error
     }
     </code>
   Remarks:
@@ -600,10 +600,10 @@ void DRV_PIC32CGMAC_LibDisableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST 
 
   Example:
     <code>
-    // Open and configure the MAC.
-    //
-    // Since we're not connected to an external PHY there's no negotiation
-    // going on and we know all our opening flags
+     Open and configure the MAC.
+    
+     Since we're not connected to an external PHY there's no negotiation
+     going on and we know all our opening flags
     DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, oFlags, pauseType);
     </code>
 
@@ -719,7 +719,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxFilterHash_Calculate(DRV_GMAC_DRIVER* 
     ethRes = DRV_PIC32CGMAC_LibRxBuffersAppend(pMACDrv, queueIdx,cstart_index,cnDscCnt);
     if ( ethRes != DRV_PIC32CGMAC_RES_OK )
     {
-        // Handle error
+        #Handle error
     }
     </code>
 
@@ -782,7 +782,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
     ethRes = DRV_PIC32CGMAC_LibTxSendPacket (pMACDrv,queueIdx);
     if ( ethRes != DRV_PIC32CGMAC_RES_OK )
     {
-        // Transmission failed
+        #Transmission failed
     }
     </code>
 
@@ -1038,7 +1038,7 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
 
 /*******************************************************************************
   Function:
-    DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, 
+    DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pRxPkt, int *pnBuffs, 
  *                          TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx )
 
   Summary:
@@ -1081,7 +1081,7 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
 
   Example:
     <code>
-    // Wait to receive a packet
+     Wait to receive a packet
     ethRes = DRV_PIC32CGMAC_LibRxGetPacket (pMACDrv, &pRxPkt, &buffsPerRxPkt, &pRxPktStat, GMAC_QUE_0);    
     </code>
 
@@ -1089,7 +1089,7 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
     <p>Replaces:<p><c><b>DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx )</b></c>
  *****************************************************************************/
 
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx );
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pRxPkt, int *pnBuffs, TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx );
 
 
 /*******************************************************************************
@@ -1138,7 +1138,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, ui
 
 /*******************************************************************************
   Function:
-      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs)
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, uint32_t* pendBuffs, uint32_t* schedBuffs)
 
   Summary:
     Returns the number of pending RX buffers and scheduled buffers in the GMAC queues.
@@ -1158,7 +1158,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, ui
     DRV_PIC32CGMAC_RESULT
 
   ************************************************************************/
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs);
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, uint32_t* pendBuffs, uint32_t* schedBuffs);
 
 /****************************************************************************
   Function: 
@@ -1329,5 +1329,5 @@ uint32_t DRV_PIC32CGMAC_LibGetRxIPHdrCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv)
 uint32_t DRV_PIC32CGMAC_LibGetRxTCPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
 uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
 // *****************************************************************************
-#endif  // _DRV_PIC32CGMAC_LIB_H_
+#endif  // H_DRV_PIC32CGMAC_LIB_H
 

@@ -6,14 +6,14 @@
 
   Description:
     This library provides a low-level abstraction of the Ethernet module
-    on Microchip PIC32MX family microcontrollers with a convenient C language
+    on Microchip SAMA7 family microcontrollers with a convenient C language
     interface.  It can be used to simplify low-level access to the module
     without the necessity of interacting directly with the module's registers,
     thus hiding differences from one microcontroller variant to another.
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2008-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2008-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,17 +46,17 @@ Microchip or any third party.
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
-static void _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
-static bool _IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv);
-static GMAC_RXFRAME_STATE _SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,
+static void F_MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
+static bool F_IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv);
+static GMAC_RXFRAME_STATE F_SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,
             DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, GMAC_QUE_LIST queueIdx);
-static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,
+static DRV_PIC32CGMAC_RESULT F_GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,
             DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, TCPIP_MAC_PACKET** pRxPkt, GMAC_QUE_LIST queueIdx);
-static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, 
+static DRV_PIC32CGMAC_RESULT F_AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, 
             uint16_t buffer_count, GMAC_QUE_LIST queue_idx, bool sticky_flag);
-static uint16_t _GetPktSegCount(TCPIP_MAC_DATA_SEGMENT * pktHead);
-static void _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value);
-static  uint64_t  _DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv);
+static uint16_t F_GetPktSegCount(TCPIP_MAC_DATA_SEGMENT * pktHead);
+static void F_DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value);
+static  uint64_t  F_DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv);
 
 //GMAC TX and RX Descriptor structure with multiple Queues
 typedef struct
@@ -156,7 +156,7 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     // pause enable, remove FCS, MDC clock
     pGmacRegs->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_DBW(1) | 
                             GMAC_NCFGR_CLK(5)  |    GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1) |
-                            GMAC_NCFGR_RXBUFO(pMACDrv->sGmacData._dataOffset);
+                            GMAC_NCFGR_RXBUFO(pMACDrv->sGmacData.dataOffset);
     
     if((pMACDrv->sGmacData.gmacConfig.checksumOffloadRx) != TCPIP_MAC_CHECKSUM_NONE)
     {
@@ -377,21 +377,21 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
     while (nDesc_Cnt--)
     {
         //dynamically allocate new rx packets, if number of rx packets are less than threshold
-        if((pMACDrv->sGmacData.gmac_queue[queueIdx]._RxQueue.nNodes) < (pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffCntThres))
+        if((pMACDrv->sGmacData.gmac_queue[queueIdx].RxQueue.nNodes) < (pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffCntThres))
         {      
-            gmacRes = _AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffAllocCnt, queueIdx, GMAC_RX_DYNAMIC_BUFFERS);
+            gmacRes = F_AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffAllocCnt, queueIdx, GMAC_RX_DYNAMIC_BUFFERS);
             if(gmacRes == DRV_PIC32CGMAC_RES_OUT_OF_MEMORY)
             {
-                pMACDrv->sGmacData._rxStat.nRxBuffNotAvailable++;           
+                pMACDrv->sGmacData.rxStat.nRxBuffNotAvailable++;           
                 break; 
             }
         }
         
         if(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[desc_idx] == 0)
         {
-            _DRV_GMAC_RxLock(pMACDrv);
-            pPacket = (TCPIP_MAC_PACKET *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._RxQueue);
-            _DRV_GMAC_RxUnlock(pMACDrv);
+            F_DRV_GMAC_RxLock(pMACDrv);
+            pPacket = (TCPIP_MAC_PACKET *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx].RxQueue);
+            F_DRV_GMAC_RxUnlock(pMACDrv);
             
             if(pPacket != NULL)
             {
@@ -400,7 +400,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
                 // 'segBuffer' is a Cache Aligned address
                 DCACHE_INVALIDATE_BY_ADDR((uint32_t *)segBuffer, (CACHE_LINE_SIZE));
                 
-                _DRV_GMAC_RxLock(pMACDrv);
+                F_DRV_GMAC_RxLock(pMACDrv);
                 /* Reset status value. */
                 pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_status.val = 0;
                 
@@ -412,10 +412,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
                 {
                     pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_buffaddr.val =  segBuffer;
                 }
-                _DRV_GMAC_RxUnlock(pMACDrv);
+                F_DRV_GMAC_RxUnlock(pMACDrv);
 
                 // set the packet acknowledgment
-                pPacket->ackFunc = (TCPIP_MAC_PACKET_ACK_FUNC)_MacRxPacketAck;
+                pPacket->ackFunc = (TCPIP_MAC_PACKET_ACK_FUNC)F_MacRxPacketAck;
                 pPacket->ackParam = pMACDrv;
                 //Clear the packet flags
                 pPacket->pktFlags = 0;        
@@ -447,10 +447,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv)
 
     for(queue_idx=0; queue_idx < pMACDrv->sGmacData.gmacConfig.macQueNum; queue_idx++)
     {
-        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx]._RxQueue);
+        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx].RxQueue);
         
         //allocate array of rxpckt pointer
-        pRxPcktAlloc = (*pMACDrv->sGmacData._callocF)(pMACDrv->sGmacData._AllocH,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDescCnt, sizeof(TCPIP_MAC_PACKET *));
+        pRxPcktAlloc = (*pMACDrv->sGmacData.mac_callocF)(pMACDrv->sGmacData.mac_AllocH,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDescCnt, sizeof(TCPIP_MAC_PACKET *));
         if(pRxPcktAlloc == NULL)
         {   
             // failed
@@ -470,13 +470,13 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv)
         
         if (pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].queueRxEnable == true)
         {
-            gmacRes = _AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDedicatedBuffers, queue_idx, GMAC_RX_STICKY_BUFFERS);    
+            gmacRes = F_AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDedicatedBuffers, queue_idx, GMAC_RX_STICKY_BUFFERS);    
             if(gmacRes != DRV_PIC32CGMAC_RES_OK)
             {
                 break;
             }
 
-            gmacRes = _AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxAddlBuffCount, queue_idx, GMAC_RX_DYNAMIC_BUFFERS);  
+            gmacRes = F_AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxAddlBuffCount, queue_idx, GMAC_RX_DYNAMIC_BUFFERS);  
             if(gmacRes != DRV_PIC32CGMAC_RES_OK)
             {
                 break;
@@ -607,11 +607,11 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
     for(queue_idx=0; queue_idx < pMACDrv->sGmacData.gmacConfig.macQueNum; queue_idx++)
     {
         //initialize Tx Queue
-        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx]._TxQueue);        
+        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx].TxQueue);        
         //initialize Queue for Pool of unused nodes for Transmit packet acknowledgment
-        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx]._TxDescAckPoolQueue);
+        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx].TxDescAckPoolQueue);
         //initialize Queue for Unacknowledged Transmit Descriptors
-        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx]._TxDescUnAckQueue);
+        DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx].TxDescUnAckQueue);
         
         for(desc_idx=0; desc_idx < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nTxDescCnt; desc_idx++)
         {
@@ -620,8 +620,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
             pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc[desc_idx].tx_desc_buffaddr = 0;
             pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc[desc_idx].tx_desc_status.val = GMAC_TX_USED_BIT | GMAC_TX_LAST_BUFFER_BIT;
             //Allocate memory for nodes to store Tx Descriptor Index used for transmission
-            queue_node = (*pMACDrv->sGmacData._callocF)(pMACDrv->sGmacData._AllocH,1, sizeof(DRV_GMAC_TX_DESC_INDEX));
-            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)queue_node); 
+            queue_node = (*pMACDrv->sGmacData.mac_callocF)(pMACDrv->sGmacData.mac_AllocH,1, sizeof(DRV_GMAC_TX_DESC_INDEX));
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx].TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)queue_node); 
                         
         }
         pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc[desc_idx-1].tx_desc_status.val |= GMAC_TX_WRAP_BIT;
@@ -657,8 +657,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
     DRV_GMAC_TX_DESC_INDEX * queue_node;
     uint16_t wStartTxIndex = wTxIndex;
     
-    txDesc_free = _DRV_GMAC_DescSpace(wTxIndex, pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail, wTxDescCount);
-    pktSegCnt = _GetPktSegCount(pPktDSeg);
+    txDesc_free = F_DRV_GMAC_DescSpace(wTxIndex, pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail, wTxDescCount);
+    pktSegCnt = F_GetPktSegCount(pPktDSeg);
     
     if (txDesc_free >= pktSegCnt)
     {       
@@ -694,7 +694,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
         GCIRC_DEC(wTxIndex,wTxDescCount);
         pTxDesc[wTxIndex].tx_desc_status.val |= GMAC_TX_LAST_BUFFER_BIT;
 
-        pTxQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue);
+        pTxQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue);
         queue_node = (DRV_GMAC_TX_DESC_INDEX *)pTxQueueNode;
         queue_node->buffer_count = nLoopCnt;
         queue_node->endIndex = wTxIndex;
@@ -706,7 +706,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
             GCIRC_DEC(wTxIndex,wTxDescCount);
             nLoopCnt--;
         }
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxQueueNode);
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxQueueNode);
         //memory barrier to ensure all the memories updated before enabling transmission
         __DMB();
         //Enable Transmission
@@ -752,16 +752,16 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
         
     while(true)    
     {
-        _DRV_GMAC_TxLock(pMACDrv); 
-        pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue);
-        _DRV_GMAC_TxUnlock(pMACDrv);
+        F_DRV_GMAC_TxLock(pMACDrv); 
+        pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue);
+        F_DRV_GMAC_TxUnlock(pMACDrv);
         
         if(pTxAckQueueNode == NULL )
         {
             break;
         }
-        //remove head of _TxDescUnAckQueue queue if USED bit is set.        
-        //Check head of _TxDescUnAckQueue queue start index descriptor 'USED' bit is set?
+        //remove head of TxDescUnAckQueue queue if USED bit is set.        
+        //Check head of TxDescUnAckQueue queue start index descriptor 'USED' bit is set?
         if(((pTxDesc[pTxAckQueueNode->startIndex].tx_desc_status.val) & GMAC_TX_USED_BIT) && (pTxDesc[pTxAckQueueNode->startIndex].tx_desc_buffaddr != 0))
         {            
             //get buffer count
@@ -773,9 +773,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
 
             //get pPkt from descriptor with start index
             // get aligned buffer address from Tx Descriptor Buffer Address
-            pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
+            pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
             // get packet address from buffer address
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData.dcptOffset);
             // keep this packet address for acknowledgment as first buffer of frame has parent pkt address
             pPkt = pGap->segmentPktPtr;
 
@@ -793,7 +793,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
             // Tx Callback
             (pMACDrv->sGmacData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_THIS_MODULE_ID);              
-            pMACDrv->sGmacData._txStat.nTxOkPackets++;
+            pMACDrv->sGmacData.txStat.nTxOkPackets++;
             // Clear 'Last Buffer' bit
             pTxDesc[buffer_end_index].tx_desc_status.val &= ~GMAC_TX_LAST_BUFFER_BIT;
             // save tailIndex
@@ -806,16 +806,16 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             pTxAckQueueNode->buffer_count = 0;
             pTxAckQueueNode->startIndex = pTxAckQueueNode->endIndex = 0;  
             
-            _DRV_GMAC_TxLock(pMACDrv); 
-            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
-            _DRV_GMAC_TxUnlock(pMACDrv);
+            F_DRV_GMAC_TxLock(pMACDrv); 
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
+            F_DRV_GMAC_TxUnlock(pMACDrv);
         }
         else
         {
-            _DRV_GMAC_TxLock(pMACDrv); 
+            F_DRV_GMAC_TxLock(pMACDrv); 
             // add the node back to queue as transmit not yet completed
-            DRV_PIC32CGMAC_SingleListHeadAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
-            _DRV_GMAC_TxUnlock(pMACDrv);
+            DRV_PIC32CGMAC_SingleListHeadAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
+            F_DRV_GMAC_TxUnlock(pMACDrv);
             break;
         }    
         
@@ -834,9 +834,9 @@ void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST
     //packet in queue for transmission
     while(true)
     {
-        _DRV_GMAC_TxLock(pMACDrv); 
-        pPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxQueue);
-        _DRV_GMAC_TxUnlock(pMACDrv);
+        F_DRV_GMAC_TxLock(pMACDrv); 
+        pPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxQueue);
+        F_DRV_GMAC_TxUnlock(pMACDrv);
         if(pPkt == 0)
         {
             break;
@@ -865,9 +865,9 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
     while(tailIndex != headIndex)
     {
         // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
+        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
         // get packet address from buffer address
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData.dcptOffset);
         pPkt = pGap->segmentPktPtr;
         
         pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
@@ -899,9 +899,9 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
     
     while(true)    
     {        
-        _DRV_GMAC_TxLock(pMACDrv);
-        pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue);
-        _DRV_GMAC_TxUnlock(pMACDrv);
+        F_DRV_GMAC_TxLock(pMACDrv);
+        pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue);
+        F_DRV_GMAC_TxUnlock(pMACDrv);
         
         if(pTxAckQueueNode == NULL )
         {
@@ -916,9 +916,9 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
 
         //get pPkt from descriptor with start index
         // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
+        pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
         // get packet address from buffer address
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData.dcptOffset);
         // keep this packet address for acknowledgment as first buffer of frame has parent pkt address
         pPkt = pGap->segmentPktPtr;
 
@@ -936,7 +936,7 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
         pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
         // Tx Callback
         (pMACDrv->sGmacData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);               
-        pMACDrv->sGmacData._txStat.nTxErrorPackets++;
+        pMACDrv->sGmacData.txStat.nTxErrorPackets++;
         // Clear 'Last Buffer' bit
         pTxDesc[buffer_end_index].tx_desc_status.val &= ~GMAC_TX_LAST_BUFFER_BIT;
         // save tailIndex
@@ -947,9 +947,9 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
         // add the node to unused queue after clearing the values
         pTxAckQueueNode->buffer_count = 0;
         pTxAckQueueNode->startIndex = pTxAckQueueNode->endIndex = 0;  
-        _DRV_GMAC_TxLock(pMACDrv); 
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
-        _DRV_GMAC_TxUnlock(pMACDrv);
+        F_DRV_GMAC_TxLock(pMACDrv); 
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
+        F_DRV_GMAC_TxUnlock(pMACDrv);
             
     }
         
@@ -967,7 +967,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
     bool bna_flag = 0;  
     
     //Check for BNA error due to shortage of Rx Buffers
-    bna_flag = _IsBufferNotAvailable(pMACDrv);
+    bna_flag = F_IsBufferNotAvailable(pMACDrv);
     
     if(!pRxPkt)
     {
@@ -976,7 +976,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
     }
     
     //Search all Rx descriptors for a valid rx packet
-    frameState = _SearchRxPacket(pMACDrv, &rx_frame_state, queueIdx);
+    frameState = F_SearchRxPacket(pMACDrv, &rx_frame_state, queueIdx);
     
     //Valid packet detected with SOF and EOF
     if (frameState == GMAC_RX_VALID_FRAME_DETECTED_STATE)
@@ -986,7 +986,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
         //number of buffers to return
         *pnBuffs = rx_frame_state.buffer_count;     
         // extract Rx packet and pass it to upper layer
-        res = _GetRxPacket(pMACDrv, &rx_frame_state, pRxPkt, queueIdx);     
+        res = F_GetRxPacket(pMACDrv, &rx_frame_state, pRxPkt, queueIdx);     
     }
     
     if(bna_flag == true)
@@ -1152,14 +1152,14 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxFilterHash_Calculate(DRV_GMAC_DRIVER* 
         hash_Index.bits.b5 = (mac_addr[5].bits.b5)^(mac_addr[4].bits.b3)^(mac_addr[3].bits.b1)^(mac_addr[3].bits.b7)^(mac_addr[2].bits.b5)^(mac_addr[1].bits.b3)^(mac_addr[0].bits.b1)^(mac_addr[0].bits.b7);
 
         // read the current hash value stored in register
-        hash_value = _DRV_GMAC_HashValueGet(pMACDrv);
+        hash_value = F_DRV_GMAC_HashValueGet(pMACDrv);
         hash_value  |= (1 << (hash_Index.index));
     }
     else
     {   // Set hash value directly
         hash_value = hash->hash_value;
     }
-    _DRV_GMAC_HashValueSet(pMACDrv, hash_value);
+    F_DRV_GMAC_HashValueSet(pMACDrv, hash_value);
 
     return DRV_PIC32CGMAC_RES_OK;
 }
@@ -1205,10 +1205,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, ui
  * Function:    DRV_PIC32CGMAC_LibRxBuffersCountGet
  * Summary :    Returns the number of pending RX buffers and scheduled buffers in the GMAC queues.
  *****************************************************************************/
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs)
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, uint32_t* pendBuffs, uint32_t* schedBuffs)
 {
-    int pend_buffer_cnt = 0;
-    int sched_buffer_cnt = 0;
+    uint32_t pend_buffer_cnt = 0;
+    uint32_t sched_buffer_cnt = 0;
 
     for(uint16_t queue_idx=0; queue_idx < pMACDrv->sGmacData.gmacConfig.macQueNum; queue_idx++)
     {
@@ -1231,11 +1231,11 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACD
         }
     }
     
-    if(pendBuffs)
+    if(pendBuffs != NULL)
     {
         *pendBuffs = pend_buffer_cnt;
     }
-    if(schedBuffs)
+    if(schedBuffs != NULL)
     {
         *schedBuffs = sched_buffer_cnt;
     }
@@ -1669,10 +1669,10 @@ void GMAC1_Q5_Handler(void)
 }
 #endif
 /****************************************************************************
- * Function:        _MacRxPacketAck
+ * Function:        F_MacRxPacketAck
  * Summary: ACK function to free the RX packet
  *****************************************************************************/
-static void _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param) 
+static void F_MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param) 
 {
     TCPIP_MAC_DATA_SEGMENT *    pDSegNext;
     DRV_GMAC_DRIVER * pMacDrv = (DRV_GMAC_DRIVER *)param;   
@@ -1689,18 +1689,18 @@ static void _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // always free if NO_SMART_ALLOC flag is set
             // free if RX packets greater than the defined threshold
             if((pPkt->pDSeg->segFlags  & TCPIP_MAC_SEG_FLAG_RX_STICKY) == 0 && 
-                (((pMacDrv->sGmacData._controlFlags & TCPIP_MAC_CONTROL_NO_SMART_ALLOC) != 0) ||
-                    (pMacDrv->sGmacData.gmac_queue[queueIdx]._RxQueue.nNodes > 
+                (((pMacDrv->sGmacData.mac_controlFlags & TCPIP_MAC_CONTROL_NO_SMART_ALLOC) != 0) ||
+                    (pMacDrv->sGmacData.gmac_queue[queueIdx].RxQueue.nNodes > 
                         pMacDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffCntThres)))
             {            
                 (*pMacDrv->sGmacData.pktFreeF)(pPkt);          
             }       
             else
             {
-                _DRV_GMAC_RxLock(pMacDrv); 
+                F_DRV_GMAC_RxLock(pMacDrv); 
                 // add the packet to new queue for re-use
-                DRV_PIC32CGMAC_SingleListTailAdd(&pMacDrv->sGmacData.gmac_queue[queueIdx]._RxQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pPkt);
-                _DRV_GMAC_RxUnlock(pMacDrv);
+                DRV_PIC32CGMAC_SingleListTailAdd(&pMacDrv->sGmacData.gmac_queue[queueIdx].RxQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pPkt);
+                F_DRV_GMAC_RxUnlock(pMacDrv);
             }
    
             if( !pDSegNext )
@@ -1710,18 +1710,18 @@ static void _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
             // extract the packet pointer using the segment load buffer
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData._dcptOffset);
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData.dcptOffset);
             pPkt = pGap->segmentPktPtr;
         }   
     }
 }
 
 /****************************************************************************
- * Function:        _IsBufferNotAvailable
+ * Function:        F_IsBufferNotAvailable
  * Summary: Check if 'Buffer Not Available' set by GMAC; if set, clear the BNA status bit
  * Return : True if BNA is set; False for no BNA status
  *****************************************************************************/
-static bool _IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv)
+static bool F_IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv)
 {
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     if(pGmacRegs->GMAC_RSR & GMAC_RSR_BNA_Msk ) //Check for BNA error due to shortage of Rx Buffers
@@ -1739,12 +1739,12 @@ static bool _IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv)
 }
 
 /****************************************************************************
- * Function:        _SearchRxPacket
+ * Function:        F_SearchRxPacket
  * Summary: Search Rx descriptors for valid Rx data packet; identify start and 
  * end rx descriptor indexes of valid rx data packet  
  * Return : frame search status
  *****************************************************************************/
-static GMAC_RXFRAME_STATE _SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, GMAC_QUE_LIST queueIdx)  
+static GMAC_RXFRAME_STATE F_SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, GMAC_QUE_LIST queueIdx)  
 {
     DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc;
     TCPIP_MAC_PACKET* pRxPkt;
@@ -1812,10 +1812,10 @@ static GMAC_RXFRAME_STATE _SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
                             (pRxPkt->ackFunc)(pRxPkt, pRxPkt->ackParam);
                             //remove rx packet from rx desc
                             pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[rx_index] = 0; 
-                            _DRV_GMAC_RxLock(pMACDrv);
+                            F_DRV_GMAC_RxLock(pMACDrv);
                             //clear the buffer address bitfields
                             pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_index].rx_desc_buffaddr.val &= ~GMAC_RX_ADDRESS_MASK; 
-                            _DRV_GMAC_RxUnlock(pMACDrv);
+                            F_DRV_GMAC_RxUnlock(pMACDrv);
                             //decrement index
                             GCIRC_DEC(rx_index, nRxDscCnt); 
 
@@ -1872,12 +1872,12 @@ static GMAC_RXFRAME_STATE _SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
 }
 
 /****************************************************************************
- * Function:        _GetRxPacket
+ * Function:        F_GetRxPacket
  * Summary: Get Rx packet buffer from GMAC and transfer to TCP/IP stack. 
  * Assign new Rx buffers to GMAC
  * Return : new buffer allocation status
  *****************************************************************************/
-static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, TCPIP_MAC_PACKET** pRxPkt, GMAC_QUE_LIST queueIdx)  
+static DRV_PIC32CGMAC_RESULT F_GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, TCPIP_MAC_PACKET** pRxPkt, GMAC_QUE_LIST queueIdx)  
 {   
     TCPIP_MAC_DATA_SEGMENT *pDseg;
     DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc;
@@ -1946,10 +1946,10 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
             //release the rx packets from GMAC queue
             gmac_queue.pRxPckt[rx_index] = 0; 
             
-            _DRV_GMAC_RxLock(pMACDrv);
+            F_DRV_GMAC_RxLock(pMACDrv);
             //clear the buffer address bit-fields
             gmac_queue.pRxDesc[rx_index].rx_desc_buffaddr.val &= ~GMAC_RX_ADDRESS_MASK; 
-            _DRV_GMAC_RxUnlock(pMACDrv);
+            F_DRV_GMAC_RxUnlock(pMACDrv);
         
             // Invalidate Cache : at address 'segload' and for length 'seglen'
             // 'segload' need not be Cache Aligned; the cache maintenance routine will take care of it.            
@@ -1982,12 +1982,12 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
 }
 
 /****************************************************************************
- * Function:        _AllocateRxPacket
+ * Function:        F_AllocateRxPacket
  * Summary: Dynamically allocate Rx packet
  * Allocate new Rx buffers to GMAC
  * Return : new buffer allocation status
  *****************************************************************************/
-static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16_t buffer_count, GMAC_QUE_LIST queue_idx, bool sticky_flag)
+static DRV_PIC32CGMAC_RESULT F_AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16_t buffer_count, GMAC_QUE_LIST queue_idx, bool sticky_flag)
 {
     TCPIP_MAC_PACKET* pRxPkt;
     DRV_PIC32CGMAC_RESULT gmacAllocRes = DRV_PIC32CGMAC_RES_OK;
@@ -2008,9 +2008,9 @@ static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16
         {
             pRxPkt->pDSeg->segFlags |=  TCPIP_MAC_SEG_FLAG_RX_STICKY;
         }
-        _DRV_GMAC_RxLock(pMACDrv); 
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx]._RxQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pRxPkt);
-        _DRV_GMAC_RxUnlock(pMACDrv);
+        F_DRV_GMAC_RxLock(pMACDrv); 
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx].RxQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pRxPkt);
+        F_DRV_GMAC_RxUnlock(pMACDrv);
     }
     return gmacAllocRes;
 }   
@@ -2072,11 +2072,11 @@ void  DRV_PIC32CGMAC_LibClearTxIndex(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST que
 }
 
 /****************************************************************************
- * Function:        _GetPktSegCount
+ * Function:        F_GetPktSegCount
  * Summary: Counts no. of packet segments in MAC packet
  * Return : Number of packet segments
  *****************************************************************************/
-static uint16_t _GetPktSegCount(TCPIP_MAC_DATA_SEGMENT * pktHead)
+static uint16_t F_GetPktSegCount(TCPIP_MAC_DATA_SEGMENT * pktHead)
 {
     // Initialize count
     uint16_t count = 0; 
@@ -2367,10 +2367,10 @@ uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv)
 
 
 /****************************************************************************
- * Function:        _DRV_GMAC_HashValueSet
+ * Function:        F_DRV_GMAC_HashValueSet
  * Summary: Set Hash Value in GMAC register
  *****************************************************************************/
-static void _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value)
+static void F_DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value)
 {
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     pGmacRegs->GMAC_HRB = hash_value & 0xffffffff;
@@ -2378,10 +2378,10 @@ static void _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value
 }
 
 /****************************************************************************
- * Function:        _DRV_GMAC_HashValueGet
+ * Function:        F_DRV_GMAC_HashValueGet
  * Summary: Read Hash Value in GMAC register
  *****************************************************************************/
-static  uint64_t  _DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv)
+static  uint64_t  F_DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv)
 {
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     uint64_t hash_value = 0;    

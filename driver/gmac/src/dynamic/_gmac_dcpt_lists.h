@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2008-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2008-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -23,8 +23,8 @@ Microchip or any third party.
 
 
 
-#ifndef __GMAC_DCPT_LISTS_H_
-#define __GMAC_DCPT_LISTS_H_
+#ifndef H_GMAC_DCPT_LISTS_H
+#define H_GMAC_DCPT_LISTS_H
 #include "tcpip/tcpip_mac.h"
 // *****************************************************************************
 /*  GMAC Queue List
@@ -41,12 +41,12 @@ typedef enum
     GMAC_QUE_5 = 5
 } GMAC_QUE_LIST;
 
-#define GMAC_QUE0_MASK      (1<<GMAC_QUE_0)
-#define GMAC_QUE1_MASK      (1<<GMAC_QUE_1)
-#define GMAC_QUE2_MASK      (1<<GMAC_QUE_2)
-#define GMAC_QUE3_MASK      (1<<GMAC_QUE_3)
-#define GMAC_QUE4_MASK      (1<<GMAC_QUE_4)
-#define GMAC_QUE5_MASK      (1<<GMAC_QUE_5)
+#define GMAC_QUE0_MASK      (1U<<GMAC_QUE_0)
+#define GMAC_QUE1_MASK      (1U<<GMAC_QUE_1)
+#define GMAC_QUE2_MASK      (1U<<GMAC_QUE_2)
+#define GMAC_QUE3_MASK      (1U<<GMAC_QUE_3)
+#define GMAC_QUE4_MASK      (1U<<GMAC_QUE_4)
+#define GMAC_QUE5_MASK      (1U<<GMAC_QUE_5)
 
 #define GMAC_ALL_QUE_MASK (GMAC_QUE0_MASK | GMAC_QUE1_MASK | GMAC_QUE2_MASK     \
                             | GMAC_QUE3_MASK | GMAC_QUE4_MASK | GMAC_QUE5_MASK)
@@ -65,18 +65,18 @@ typedef enum
 typedef union
 {
     uint32_t val;                   /**< 32-Bit access */
-    struct _GmacTxStatusBM 
+    struct __attribute__((packed))        
     {
-        uint32_t len: 11,           /**< Length of buffer */
-                    reserved: 4,
-                    bLastBuffer: 1, /**< Last buffer (in the current frame) */
-                    bNoCRC: 1,      /**< No CRC */
-                    reserved1: 10,
-                    bExhausted: 1,  /**< Buffer exhausted in mid frame */
-                    bUnderrun: 1,   /**< Transmit under run */
-                    bError: 1,      /**< Retry limit exceeded, error detected */
-                    bWrap: 1,       /**< Marks last descriptor in TD list */
-                    bUsed: 1;       /**< User clear, GMAC sets this once a frame
+        unsigned    len: 11;           /**< Length of buffer */
+        unsigned    reserved: 4;
+        unsigned    bLastBuffer: 1; /**< Last buffer (in the current frame) */
+        unsigned    bNoCRC: 1;      /**< No CRC */
+        unsigned    reserved1: 10;
+        unsigned    bExhausted: 1;  /**< Buffer exhausted in mid frame */
+        unsigned    bUnderrun: 1;   /**< Transmit under run */
+        unsigned    bError: 1;      /**< Retry limit exceeded, error detected */
+        unsigned    bWrap: 1;       /**< Marks last descriptor in TD list */
+        unsigned    bUsed: 1;       /**< User clear, GMAC sets this once a frame
                                         has been successfully transmitted */
     } bm;
 } DRV_GMAC_TXDCPT_STATUS;
@@ -95,13 +95,12 @@ typedef union
 typedef union
 {
     uint32_t val;
-    struct _GmacRxAddrBM 
+    struct __attribute__((packed))        
     {
-        uint32_t    bOwnership: 1, /**< User clear, GMAC set this to one once
-                                    it has successfully written a frame to
-                                        memory */
-                    bWrap: 1,       /**< Marks last descriptor in receive buffer */
-                    addrDW: 30;     /**< Address in number of DW */
+        unsigned    bOwnership: 1;  /**< User clear, GMAC set this to one once
+                                        it has successfully written a frame to memory */
+        unsigned    bWrap: 1;       /**< Marks last descriptor in receive buffer */
+        unsigned    addrDW: 30;     /**< Address in number of DW */
     } bm;
 } DRV_GMAC_RXDCPT_ADDR;             /**< Address, Wrap & Ownership */
 
@@ -142,10 +141,10 @@ typedef struct
 ////////////////////////////////////////////////////////////////////////////////
 //////////////  GMAC Single linked lists manipulation //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-typedef struct _TAG_DRV_PIC32CGMAC_SGL_LIST_NODE
+typedef struct S_TAG_DRV_PIC32CGMAC_SGL_LIST_NODE
 {
-    struct _TAG_DRV_PIC32CGMAC_SGL_LIST_NODE*   next;       /**< next linked list  */      
-    void*                                       data[];     /**< generic payload */
+    struct S_TAG_DRV_PIC32CGMAC_SGL_LIST_NODE*   next;       /**< next linked list  */      
+    void*                                       data;       /**< generic payload */
 }DRV_PIC32CGMAC_SGL_LIST_NODE;                  /**< Single list for GMAC packet */ 
 
 
@@ -153,19 +152,19 @@ typedef struct
 {
     DRV_PIC32CGMAC_SGL_LIST_NODE*   head;   /**< Linked list head  */ 
     DRV_PIC32CGMAC_SGL_LIST_NODE*   tail;   /**< Linked list tail  */ 
-    int             nNodes;                 /**< number of nodes in the list */ 
+    uint32_t                        nNodes; /**< number of nodes in the list */ 
 
 }DRV_PIC32CGMAC_SGL_LIST;   // single linked list
 
 //Initialize Single List
 static  __inline__ void  __attribute__((always_inline)) DRV_PIC32CGMAC_SingleListInitialize(DRV_PIC32CGMAC_SGL_LIST* pL)
 {
-    pL->head = pL->tail = 0;
+    pL->head = pL->tail = NULL;
     pL->nNodes = 0;
 }
 
 // Return number of nodes in list
-static  __inline__ int __attribute__((always_inline)) DRV_PIC32CGMAC_SingleListCount(DRV_PIC32CGMAC_SGL_LIST* pL)
+static  __inline__ uint32_t __attribute__((always_inline)) DRV_PIC32CGMAC_SingleListCount(DRV_PIC32CGMAC_SGL_LIST* pL)
 {
     return pL->nNodes;
 }
@@ -178,4 +177,4 @@ void  DRV_PIC32CGMAC_SingleListTailAdd(DRV_PIC32CGMAC_SGL_LIST* pL, DRV_PIC32CGM
 
 // Add a node to the head of list
 void  DRV_PIC32CGMAC_SingleListHeadAdd(DRV_PIC32CGMAC_SGL_LIST* pL, DRV_PIC32CGMAC_SGL_LIST_NODE* pN);
-#endif //  __GMAC_DCPT_LISTS_H_
+#endif //  H_GMAC_DCPT_LISTS_H
