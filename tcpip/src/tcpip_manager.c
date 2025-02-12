@@ -258,7 +258,7 @@ static const TCPIP_FRAME_PROCESS_ENTRY TCPIP_FRAME_PROCESS_TBL [] =
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_UNKNOWN,   .moduleId = (uint16_t)TCPIP_MODULE_IPV6,    .pktTypeFlags = 0U},                       // IPv6 not processed
 #endif // defined(TCPIP_STACK_USE_IPV6)                                             
                                                                                     
-#if defined(TCPIP_STACK_USE_LLDP)                                                   
+#if 0   // defined(TCPIP_STACK_USE_LLDP) - no LLDP support
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_LLDP,      .moduleId = (uint16_t)TCPIP_MODULE_LLDP,    .pktTypeFlags = (uint32_t)TCPIP_MAC_PKT_FLAG_LLDP}, // LLDP entry
 #else                                                                               
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_UNKNOWN,   .moduleId = (uint16_t)TCPIP_MODULE_LLDP,    .pktTypeFlags = 0U},                       // LLDP not processed
@@ -593,9 +593,6 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
     {.moduleId = (uint16_t)TCPIP_MODULE_ICMPV6,         .initFunc = &TCPIP_ICMPV6_Initialize,   .deInitFunc = &TCPIP_ICMPV6_Deinitialize},         // TCPIP_MODULE_ICMPV6
     {.moduleId = (uint16_t)TCPIP_MODULE_NDP,            .initFunc = &TCPIP_NDP_Initialize,      .deInitFunc = &TCPIP_NDP_Deinitialize},            // TCPIP_MODULE_NDP
 #endif
-#if defined(TCPIP_STACK_USE_LLDP)
-    {.moduleId = (uint16_t)TCPIP_MODULE_LLDP,           .initFunc = &TCPIP_LLDP_Initialize,     .deInitFunc = &TCPIP_LLDP_Deinitialize},           // TCPIP_MODULE_LLDP
-#endif    
 #if defined(TCPIP_STACK_USE_IPV4) && (defined(TCPIP_STACK_USE_ICMP_CLIENT) || defined(TCPIP_STACK_USE_ICMP_SERVER))
     {.moduleId = (uint16_t)TCPIP_MODULE_ICMP,           .initFunc = &TCPIP_ICMP_Initialize,     .deInitFunc = &TCPIP_ICMP_Deinitialize},           // TCPIP_MODULE_ICMP
 #endif
@@ -709,9 +706,6 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
     {.moduleId = (uint16_t)TCPIP_MODULE_ICMPV6,        .initFunc = &TCPIP_ICMPV6_Initialize},         // TCPIP_MODULE_ICMPV6
     {.moduleId = (uint16_t)TCPIP_MODULE_NDP,           .initFunc = &TCPIP_NDP_Initialize},            // TCPIP_MODULE_NDP
 #endif
-#if defined(TCPIP_STACK_USE_LLDP)
-    {.moduleId = (uint16_t)TCPIP_MODULE_LLDP,          .initFunc = &TCPIP_LLDP_Initialize},           // TCPIP_MODULE_LLDP
-#endif    
 #if defined(TCPIP_STACK_USE_IPV4) && (defined(TCPIP_STACK_USE_ICMP_CLIENT) || defined(TCPIP_STACK_USE_ICMP_SERVER))
     {.moduleId = (uint16_t)TCPIP_MODULE_ICMP,          .initFunc = &TCPIP_ICMP_Initialize},           // TCPIP_MODULE_ICMP
 #endif

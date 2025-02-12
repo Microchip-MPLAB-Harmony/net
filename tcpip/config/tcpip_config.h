@@ -94,7 +94,6 @@ Microchip or any third party.
 //#define TCPIP_STACK_USE_HTTP_SERVER        // obsolete HTTP server with POST, Cookies, Authentication, etc.
 //#define TCPIP_STACK_USE_SMTP_CLIENT       // obsolete Simple Mail Transfer Protocol for sending email
 //#define TCPIP_STACK_USE_DYNAMICDNS_CLIENT  // Dynamic DNS client updater module
-#define TCPIP_STACK_USE_LLDP                // LLDP limited beta functionality - not supported through MHC configuration
 
 // =======================================================================
 //   Dynamic memory allocation Options

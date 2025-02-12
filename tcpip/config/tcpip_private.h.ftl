@@ -193,7 +193,6 @@ void TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName,
 <#if (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG)?has_content &&  (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG) == true>
 #include "tcpip/src/zero_conf_manager.h"
 </#if>
-#include "tcpip/src/lldp_manager.h"
 <#if (tcpipTftpc.TCPIP_USE_TFTPC_MODULE)?has_content &&  (tcpipTftpc.TCPIP_USE_TFTPC_MODULE) == true>
 #include "tcpip/src/tftpc_manager.h"
 </#if>

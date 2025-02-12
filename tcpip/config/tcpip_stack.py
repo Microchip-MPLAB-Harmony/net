@@ -1539,16 +1539,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackAnnounceManagerHeaderFile.setType("HEADER")
     tcpipStackAnnounceManagerHeaderFile.setOverwrite(True)
 
-
-    # file LLDP_H "$HARMONY_VERSION_PATH/framework/tcpip/lldp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/lldp.h"
-    tcpipStackLldpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackLldpHeaderFile.setSourcePath("tcpip/lldp.h")
-    tcpipStackLldpHeaderFile.setOutputName("lldp.h")
-    tcpipStackLldpHeaderFile.setDestPath("library/tcpip/")
-    tcpipStackLldpHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
-    tcpipStackLldpHeaderFile.setType("HEADER")
-    tcpipStackLldpHeaderFile.setOverwrite(True)
-    
     # Add smtpc.h file to project
     tcpipStackSmtpcHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSmtpcHeaderFile.setSourcePath("tcpip/smtpc.h")
@@ -1848,33 +1838,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackDhcpv6PrivHeaderFile.setType("HEADER")
     tcpipStackDhcpv6PrivHeaderFile.setOverwrite(True)
                 
-    # file LLDP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/lldp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/lldp_manager.h"
-    tcpipStackLldpMngrHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackLldpMngrHeaderFile.setSourcePath("tcpip/src/lldp_manager.h")
-    tcpipStackLldpMngrHeaderFile.setOutputName("lldp_manager.h")
-    tcpipStackLldpMngrHeaderFile.setDestPath("library/tcpip/src/")
-    tcpipStackLldpMngrHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipStackLldpMngrHeaderFile.setType("HEADER")
-    tcpipStackLldpMngrHeaderFile.setOverwrite(True)
-            
-    # file LLDP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/lldp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/lldp_private.h"
-    tcpipStackLldpPrivHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackLldpPrivHeaderFile.setSourcePath("tcpip/src/lldp_private.h")
-    tcpipStackLldpPrivHeaderFile.setOutputName("lldp_private.h")
-    tcpipStackLldpPrivHeaderFile.setDestPath("library/tcpip/src/")
-    tcpipStackLldpPrivHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipStackLldpPrivHeaderFile.setType("HEADER")
-    tcpipStackLldpPrivHeaderFile.setOverwrite(True)
-            
-    # file LLDP_TLV_H "$HARMONY_VERSION_PATH/framework/tcpip/src/lldp_tlv.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/lldp_tlv.h"
-    tcpipStackLldpTlvHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackLldpTlvHeaderFile.setSourcePath("tcpip/src/lldp_tlv.h")
-    tcpipStackLldpTlvHeaderFile.setOutputName("lldp_tlv.h")
-    tcpipStackLldpTlvHeaderFile.setDestPath("library/tcpip/src/")
-    tcpipStackLldpTlvHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipStackLldpTlvHeaderFile.setType("HEADER")
-    tcpipStackLldpTlvHeaderFile.setOverwrite(True)
-
     # Add wsc.h file to project
     tcpipStackWscHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackWscHeaderFile.setSourcePath("tcpip/wsc.h")

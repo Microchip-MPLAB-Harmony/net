@@ -802,7 +802,6 @@ typedef struct TCPIP_STACK_INIT
 <#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content &&  (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>
 #include "tcpip/tcpip_announce.h"
 </#if>
-#include "tcpip/lldp.h"
 <#if (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT)?has_content &&  (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT) == true>
 #include "tcpip/smtpc.h"
 </#if>
