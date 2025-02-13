@@ -17,7 +17,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2024-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#ifndef _DRV_PIC32CGMAC_LIB_PIC32CXBZ6_H_
-#define _DRV_PIC32CGMAC_LIB_PIC32CXBZ6_H_
+#ifndef H_DRV_PIC32CGMAC_LIB_PIC32CXBZ6_H_
+#define H_DRV_PIC32CGMAC_LIB_PIC32CXBZ6_H_
 
 #include <stdlib.h>
 
@@ -140,19 +140,19 @@ typedef enum{
 */
 typedef struct
 {
-    TCPIP_MAC_EVENT             _TcpEnabledEvents;          // group enabled notification events
-    volatile TCPIP_MAC_EVENT    _TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
-    GMAC_EVENTS                 _EthEnabledEvents;          // copy in GMAC_EVENTS space
-    volatile GMAC_EVENTS        _EthPendingEvents;          // copy in GMAC_EVENTS space
-    TCPIP_MAC_EventF            _TcpNotifyFnc;              // group notification handler
-    const void*                 _TcpNotifyParam;            // notification parameter
+    TCPIP_MAC_EVENT             TcpEnabledEvents;          // group enabled notification events
+    volatile TCPIP_MAC_EVENT    TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
+    GMAC_EVENTS                 EthEnabledEvents;          // copy in GMAC_EVENTS space
+    volatile GMAC_EVENTS        EthPendingEvents;          // copy in GMAC_EVENTS space
+    TCPIP_MAC_EventF            TcpNotifyFnc;              // group notification handler
+    const void*                 TcpNotifyParam;            // notification parameter
 }DRV_GMAC_EVENT_DCPT;   // event descriptor per group
 
 /// The buffer addresses written into the descriptors must be aligned so the
 /// last few bits are zero.  These bits have special meaning for the GMAC
 /// peripheral and cannot be used as part of the address.
-#define GMAC_RX_ADDRESS_MASK    ((unsigned int)0xFFFFFFFC)
-#define GMAC_LENGTH_FRAME       ((unsigned int)0x3FFF)    /// Length of frame mask
+#define GMAC_RX_ADDRESS_MASK    ((unsigned int)0xFFFFFFFCU)
+#define GMAC_LENGTH_FRAME       ((unsigned int)0x3FFFU)    /// Length of frame mask
 #define GMAC_RX_CHECKSUM_OFFLOAD_STATUS     ((unsigned int)0x00C00000)
 #define GMAC_RX_CHECKSUM_IP_OFFLOAD         ((unsigned int)0x00400000)
 #define GMAC_RX_CHECKSUM_IP_TCP_OFFLOAD     ((unsigned int)0x00800000)
@@ -234,7 +234,7 @@ typedef enum{
 
 // Interrupt bits
 // All interrupts
-#define GMAC_INT_ALL 0xFFFFFFFF
+#define GMAC_INT_ALL 0xFFFFFFFFU
 // RX Interrupts
 #define GMAC_INT_RX_BITS (ETH_IER_RCOMP_Msk  | ETH_IER_RXUBR_Msk  | ETH_IER_ROVR_Msk )
 // TX err interrupts
@@ -244,5 +244,5 @@ typedef enum{
 // Interrupt Status bits
 #define GMAC_INT_RX_STATUS_BITS  (ETH_ISR_RCOMP_Msk  | ETH_ISR_RXUBR_Msk  | ETH_ISR_ROVR_Msk )
 #define GMAC_INT_TX_STATUS_ERR_BITS  (ETH_ISR_TUR_Msk  | ETH_ISR_RLEX_Msk  | ETH_ISR_TFC_Msk  | ETH_ISR_HRESP_Msk )
-#endif  // _DRV_PIC32CGMAC_LIB_PIC32CXBZ6_H_
+#endif  // H_DRV_PIC32CGMAC_LIB_PIC32CXBZ6_H_
 

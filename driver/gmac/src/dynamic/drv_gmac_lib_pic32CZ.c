@@ -793,7 +793,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
             GCIRC_DEC((wTxIndex),(wTxDescCount));
             nLoopCnt--;
         }
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxQueueNode);
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, FC_MacPkt2LstNode(pTxQueueNode));
         //memory barrier to ensure all the memories updated before enabling transmission
         __DMB();
         //Enable Transmission
@@ -929,7 +929,7 @@ void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST
             break;
         }
         // release pending list packets
-        if(*pMACDrv->sGmacData.pktAckF != NULL)
+        if(pMACDrv->sGmacData.pktAckF != NULL)
         {   // Tx Callback
             (*pMACDrv->sGmacData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
         }
@@ -1936,7 +1936,7 @@ static DRV_PIC32CGMAC_RESULT GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGMA
 
             // Invalidate Cache : at address 'segload' and for length 'seglen'
             // 'segload' need not be Cache Aligned; the cache maintenance routine will take care of it.
-            DCACHE_INVALIDATE_BY_ADDR((*pRxPkt)->pDSeg->segLoad, (int32_t)(*pRxPkt)->pDSeg->segLen);
+            DCACHE_INVALIDATE_BY_ADDR((uint32_t*)(*pRxPkt)->pDSeg->segLoad, (int32_t)(*pRxPkt)->pDSeg->segLen);
 
             //more Rx buffers needed for Rx packet
             if((frameSize) != 0U) 
@@ -2027,7 +2027,7 @@ void DRV_PIC32CGMAC_LibClearTxComplete(DRV_GMAC_DRIVER* pMACDrv)
 bool DRV_PIC32CGMAC_LibIsTxComplete(DRV_GMAC_DRIVER* pMACDrv)
 {
     eth_registers_t *  pGmacRegs = (eth_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
-    return ((pGmacRegs->ETH_TSR & ETH_TSR_TXCOMP_Msk) != 0U)? true:false;
+    return ((pGmacRegs->ETH_TSR & ETH_TSR_TXCOMP_Msk) != 0U) ? true:false;
 }
 /****************************************************************************
  * Function: DRV_PIC32CGMAC_LibTxEnable

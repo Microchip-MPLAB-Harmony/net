@@ -1,5 +1,5 @@
 <#--
-Copyright (C) 2021-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2021-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -114,7 +114,7 @@ uint8_t txPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first} [DRV_
 uint8_t rxPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first} [DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES];
 
 /*** ${GMAC_PERIPHERAL_INSTANCE} Initialization Data ***/
-TCPIP_MODULE_GMAC_QUEUE_CONFIG  ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_config[DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES]=
+TCPIP_MODULE_GMAC_QUEUE_CONFIG  ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_cfg[DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES]=
 {
     <#lt><#assign queCnt = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_MAX_MAC_QUE_CNT"?eval - 1 >
     <#lt><#list 0..queCnt as qIndx>
@@ -154,7 +154,7 @@ TCPIP_MODULE_GMAC_QUEUE_CONFIG  ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_con
 
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
 { 
-    <#lt>       .gmac_queue_config = ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_config,
+    <#lt>       .gmac_queue_config = ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_cfg,
     <#lt>       .macQueNum = DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES, 
     <#lt>       .txPrioNumToQueIndx = txPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first},
     <#lt>       .rxPrioNumToQueIndx = rxPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first},

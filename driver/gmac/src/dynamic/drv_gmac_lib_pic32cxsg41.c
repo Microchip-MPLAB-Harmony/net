@@ -726,7 +726,7 @@ void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST
             break;
         }
         // release pending list packets
-        if(*pMACDrv->sGmacData.pktAckF != NULL)
+        if(pMACDrv->sGmacData.pktAckF != NULL)
         {   // Tx Callback
             (*pMACDrv->sGmacData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
         }
