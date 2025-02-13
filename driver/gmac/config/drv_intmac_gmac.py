@@ -1706,19 +1706,19 @@ def instantiateComponent(drvGmacComponent):
     drvGmacLibCFileStem = "drv_gmac_lib"
 
     if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZCA7" in processor) or ("SAMRH" in processor)):
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_samE7x_V7x"
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_same7x_v7x"
     elif ("SAME5" in processor):
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_samE5x"
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_same5x"
     elif ("SAMA5D2" in processor):      
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_samA5D2"
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_sama5d2"
     elif ("PIC32CZCA8" in processor) or ("PIC32CZCA9" in processor): 
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32CZ"
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32cZ"
     elif ("SAMA7G" in processor):
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_samA7G5"
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_sama7g5"
     elif ("SAMA7D6" in processor):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_sama7d6"
     elif ("SAM9X7" in processor):
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_sam9X7" 
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_sam9x7" 
     elif ("PIC32CK" in processor): 
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32ck"
     elif ("PIC32CXSG41" in processor): 

@@ -869,7 +869,7 @@ def instantiateComponent( macComponent ):
         [ "drv_emac_lib.h",                         "HEADER" ],
         [ "drv_emac.c",                             "SOURCE" ],
         [ "drv_emac_statistics.c",                  "SOURCE" ],
-        [ "drv_emac_lib_" + macLibDeviceCore + ".c","SOURCE" ],
+        [ "drv_emac_lib_" + macLibDeviceCore.lower() + ".c","SOURCE" ],
     ]
     for ff in dynamicFiles:
         fileSymbol = macComponent.createFileSymbol( None, None )
