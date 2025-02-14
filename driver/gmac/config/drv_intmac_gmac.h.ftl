@@ -52,6 +52,7 @@ Microchip or any third party.
     <#lt><#assign MAC_QUEUE_RX_ENABLE =  "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_EN_QUE" + qIndx?string >
         <#lt><#if .vars[MAC_QUEUE_ENABLE]?has_content>
             <#lt><#if .vars[ MAC_QUEUE_ENABLE ] == true>
+                <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUEUE_${qIndx}                                  true  
                 <#lt><#if .vars[ MAC_QUEUE_TX_ENABLE ] == true>
                     <#lt>/*** QUEUE ${qIndx} TX Configuration ***/
                     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_TX_DESCRIPTORS_COUNT_QUE${qIndx}            ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_TX_DESCRIPTORS_COUNT_QUE" + qIndx?string]}
@@ -70,6 +71,7 @@ Microchip or any third party.
                     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_BUFF_ALLOC_COUNT_QUE${qIndx}             ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_BUFF_ALLOC_COUNT_QUE" + qIndx?string]}
                 <#lt><#else>
                     <#lt>/*** QUEUE ${qIndx} Dummy RX Configuration ***/
+                    <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUEUE_${qIndx}                              false
                     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_DESCRIPTORS_COUNT_QUE${qIndx}            TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_DESCRIPTORS_COUNT_DUMMY
                     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_BUFF_SIZE_QUE${qIndx}                    TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_BUFF_SIZE_DUMMY
                     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_DEDICATED_BUFFERS_QUE${qIndx}            1
