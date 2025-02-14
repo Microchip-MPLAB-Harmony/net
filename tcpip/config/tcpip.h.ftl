@@ -68,10 +68,10 @@ Microchip or any third party.
 
 
 // TCP/IP stack version
-#define TCPIP_STACK_VERSION_MAJOR         15
+#define TCPIP_STACK_VERSION_MAJOR         14
 #define TCPIP_STACK_VERSION_MINOR         0
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "15.0.0 - H3"
+#define TCPIP_STACK_VERSION_STR           "14.0.0 - H3"
 
 
 // *****************************************************************************
