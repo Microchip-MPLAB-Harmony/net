@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2017-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2017-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -86,7 +86,8 @@ typedef void ( * SYS_TMR_CALLBACK ) ( uintptr_t context, uint32_t currTick );
 #if !defined SYS_TMR_HANDLE_INVALID
 #define SYS_TMR_HANDLE_INVALID          SYS_TIME_HANDLE_INVALID
 #endif
-typedef struct{
+typedef struct
+{
    SYS_TMR_CALLBACK   callback;
 }SYS_TIME_H2_ADAPTER_OBJ;
 
@@ -393,11 +394,11 @@ static __inline__ uint64_t __attribute__((always_inline)) SYS_TMR_SystemCountGet
 	{
 		if ( context == 1 )
 		{
-			//20 ms
+			 - 20 ms
 		}
 		else
 		{
-			//30 ms
+			- 30 ms
 		}
 	}
     </code>
