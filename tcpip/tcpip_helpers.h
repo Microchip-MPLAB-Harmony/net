@@ -411,6 +411,7 @@ static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAdd
     None.    
  */
 
+#if defined(__mips__)
 uint32_t __attribute__((nomips16)) TCPIP_Helper_htonl(uint32_t hLong);
 
 uint16_t __attribute__((nomips16)) TCPIP_Helper_htons(uint16_t hShort);
@@ -418,6 +419,7 @@ uint16_t __attribute__((nomips16)) TCPIP_Helper_htons(uint16_t hShort);
 uint64_t __attribute__((nomips16)) TCPIP_Helper_htonll(uint64_t hLLong);
 
 #define     TCPIP_Helper_ntohll(ll)  TCPIP_Helper_htonll(ll)
+#endif  // !defined(__mips__)
 
 #if !defined(__mips__)
 

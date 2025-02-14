@@ -5259,23 +5259,23 @@ static void F_Command_MiimOp(SYS_CMD_DEVICE_NODE* pCmdIO, uint16_t rIx, uint32_t
     switch(miimCmd)
     {
         case TCPIP_PHY_READ:
-            opHandle = miimObj->DRV_MIIM_Read(miimHandle, rIx, miimAdd, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
+            opHandle = miimObj->miim_Read(miimHandle, rIx, miimAdd, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
             break;
 
         case TCPIP_PHY_WRITE:
-            opHandle = miimObj->DRV_MIIM_Write(miimHandle, rIx, miimAdd, (uint16_t)wData, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
+            opHandle = miimObj->miim_Write(miimHandle, rIx, miimAdd, (uint16_t)wData, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
             break;
 
         case TCPIP_PHY_DUMP:
-            opHandle = miimObj->DRV_MIIM_Read(miimHandle, (miimRegIx = miimRegStart), miimAdd, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
+            opHandle = miimObj->miim_Read(miimHandle, (miimRegIx = miimRegStart), miimAdd, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
             break;
 
         case TCPIP_PHY_READ_SMI:
-            opHandle = miimObj->DRV_MIIM_ReadExt(miimHandle, rIx, miimAdd, DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE, &miimRes);
+            opHandle = miimObj->miim_ReadExt(miimHandle, rIx, miimAdd, DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE, &miimRes);
             break;
 
         case TCPIP_PHY_WRITE_SMI:
-            opHandle = miimObj->DRV_MIIM_WriteExt(miimHandle, rIx, miimAdd, wData, DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE, &miimRes);
+            opHandle = miimObj->miim_WriteExt(miimHandle, rIx, miimAdd, wData, DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE, &miimRes);
             break;
 
         default:
@@ -5322,7 +5322,7 @@ static void F_Command_MiimSetup(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoPa
     miimSetup.setupFlags = DRV_MIIM_SETUP_FLAG_NONE;
 
     
-    res = miimObj->DRV_MIIM_Setup(miimHandle, &miimSetup);
+    res = miimObj->miim_Setup(miimHandle, &miimSetup);
 
     if((int)res < 0)
     {
@@ -5337,7 +5337,7 @@ static void F_Command_MiimSetup(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoPa
 
 static DRV_HANDLE F_MiimOpen(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoParam)
 {
-    DRV_HANDLE hMiim = miimObj->DRV_MIIM_Open(miimNetIx, DRV_IO_INTENT_SHARED);
+    DRV_HANDLE hMiim = miimObj->miim_Open(miimNetIx, DRV_IO_INTENT_SHARED);
     if(hMiim == DRV_HANDLE_INVALID || hMiim == 0U)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "miim open: failed!\r\n");
@@ -5349,7 +5349,7 @@ static DRV_HANDLE F_MiimOpen(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoParam
 
 static void F_MiimClose(bool idleState)
 {
-    miimObj->DRV_MIIM_Close(miimHandle);
+    miimObj->miim_Close(miimHandle);
     miimHandle = 0U;
     miimOpHandle = NULL;
     if(idleState)
@@ -5367,7 +5367,7 @@ static void TCPIPCmdMiimTask(void)
     bool    opContinue;
     uint32_t opData;
     
-    opRes = miimObj->DRV_MIIM_OperationResult(miimHandle, miimOpHandle, &opData);
+    opRes = miimObj->miim_OperationResult(miimHandle, miimOpHandle, &opData);
 
     if(opRes == DRV_MIIM_RES_PENDING)
     {   // ongoing...
@@ -5402,7 +5402,7 @@ static void TCPIPCmdMiimTask(void)
         {
             if(miimRegIx != miimRegEnd)
             {   // initiate another read
-                miimOpHandle = miimObj->DRV_MIIM_Read(miimHandle, ++miimRegIx, miimAdd, DRV_MIIM_OPERATION_FLAG_NONE, &opRes);
+                miimOpHandle = miimObj->miim_Read(miimHandle, ++miimRegIx, miimAdd, DRV_MIIM_OPERATION_FLAG_NONE, &opRes);
                 opContinue = true;
             }
         }

@@ -168,11 +168,6 @@ typedef struct
         TCPIP_MAC_PKT_FreeF     pktFreeF;
         TCPIP_MAC_PKT_FreeFDbg  pktFreeFDbg;
     };
-    union
-    {
-        TCPIP_MAC_PKT_FreeF     pktFreeF;
-        TCPIP_MAC_PKT_FreeFDbg  pktFreeFDbg;
-    };
     
     TCPIP_MAC_PKT_AckF              pktAckF;
     // synchronization
