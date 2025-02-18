@@ -1998,6 +1998,7 @@ static void StateMachineUDPTxOpen(tIperfState* pIState)
     }
 
     (void)TCPIP_UDP_SocketNetSet(pIState->udpSock, pIState->pNetIf);
+    (void)memset(&UdpSkt, 0, sizeof(UdpSkt));
     (void)TCPIP_UDP_SocketInfoGet(pIState->udpSock, &UdpSkt);
     pIState->localPort = UdpSkt.localPort;
 
