@@ -758,19 +758,19 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
     uint32_t readState = 0;
     int phyAddress = 0;
 
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &readState);
+    DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &readState);
     if((int)res < 0)
     {   // some error occurred
         return res;
     }
 
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch (readState)
     {
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_1:
             //Write to MMD Control register to set MMD Device Address
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
+            res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -778,7 +778,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             else if(res == DRV_ETHPHY_RES_OK)
             {
                 readState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                pBaseObj->phy_VendorDataSet(hClientObj, readState);
                 res = DRV_ETHPHY_RES_PENDING;
             }
             else
@@ -789,7 +789,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_2:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -797,7 +797,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, regIndex, phyAddress);
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, regIndex, phyAddress);
                 if((int)res < 0)
                 {   // some error
                     // do nothing
@@ -805,7 +805,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
                     readState++;
-                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                    pBaseObj->phy_VendorDataSet(hClientObj, readState);
                     res = DRV_ETHPHY_RES_PENDING;
                 }
                 else
@@ -821,7 +821,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_3:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -829,7 +829,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
                 if((int)res < 0)
                 {   // some error
                     // do nothing
@@ -837,7 +837,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
                     readState++;
-                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                    pBaseObj->phy_VendorDataSet(hClientObj, readState);
                     res = DRV_ETHPHY_RES_PENDING;
                 }
                 else
@@ -853,7 +853,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_4:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -861,7 +861,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Initiate read from MMD Data register
-                res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, phyAddress);
+                res = pBaseObj->phy_VendorSMIReadStart(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, phyAddress);
                 if((int)res < 0)
                 {   // some error
                     // do nothing
@@ -869,7 +869,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
                     readState++;
-                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                    pBaseObj->phy_VendorDataSet(hClientObj, readState);
                     res = DRV_ETHPHY_RES_PENDING;
                 }
                 else
@@ -885,7 +885,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_5:
             //Read result from MMD Data register
-            res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, pReadOut);
+            res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, pReadOut);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -893,7 +893,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             else if(res == DRV_ETHPHY_RES_OK)
             {           
                 readState = 0;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                pBaseObj->phy_VendorDataSet(hClientObj, readState);
             }
             else
             {
@@ -903,7 +903,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
 
         default:
             // should not occur
-            _DRV_ETHPHY_AssertCond(false, __func__, __LINE__);
+            F_ETHPHY_AssertCond(false, __func__, __LINE__);
             res = DRV_ETHPHY_RES_OPERATION_ERR;
             break; 
     }
@@ -939,19 +939,19 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
     uint32_t writeState = 0;
     int phyAddress = 0;
 
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &writeState);
+    DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &writeState);
     if((int)res < 0)
     {   // some error occurred
         return res;
     }
 
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch (writeState)
     {
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_1:
             //Write to MMD Control register to set MMD Device Address
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
+            res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -959,7 +959,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {
                 writeState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                pBaseObj->phy_VendorDataSet(hClientObj, writeState);
                 res = DRV_ETHPHY_RES_PENDING;
             }
             else
@@ -970,7 +970,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_2:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -978,7 +978,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, regIndex, phyAddress);
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, regIndex, phyAddress);
                 if((int)res < 0)
                 {   // some error
                     // do nothing
@@ -986,7 +986,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
                     writeState++;
-                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                    pBaseObj->phy_VendorDataSet(hClientObj, writeState);
                     res = DRV_ETHPHY_RES_PENDING;
                 }
                 else
@@ -1002,7 +1002,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_3:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -1010,7 +1010,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
                 if((int)res < 0)
                 {   // some error
                     // do nothing
@@ -1018,7 +1018,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
                     writeState++;
-                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                    pBaseObj->phy_VendorDataSet(hClientObj, writeState);
                     res = DRV_ETHPHY_RES_PENDING;
                 }    
                 else
@@ -1034,7 +1034,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_4:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -1042,7 +1042,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, writeIn, phyAddress);
+                res = pBaseObj->phy_VendorSMIWriteWaitComplete(hClientObj, (uint16_t)PHY_MMD_ACCESS_DATA_ADDR, writeIn, phyAddress);
                 if((int)res < 0)
                 {   // some error
                     // do nothing
@@ -1050,7 +1050,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
                     writeState++;
-                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                    pBaseObj->phy_VendorDataSet(hClientObj, writeState);
                     res = DRV_ETHPHY_RES_PENDING;
                 }    
                 else
@@ -1066,7 +1066,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
 
         case (uint32_t)DRV_LAN8840_MMD_REG_OPR_5:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
+            res = pBaseObj->phy_VendorSMIOperationIsComplete(hClientObj);
             if((int)res < 0)
             {   // some error
                 // do nothing
@@ -1074,7 +1074,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             { 
                 writeState = 0;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState); 
+                pBaseObj->phy_VendorDataSet(hClientObj, writeState); 
             }
             else
             {
@@ -1084,7 +1084,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
 
         default:
             // should not occur
-            _DRV_ETHPHY_AssertCond(false, __func__, __LINE__);
+            F_ETHPHY_AssertCond(false, __func__, __LINE__);
             res = DRV_ETHPHY_RES_OPERATION_ERR;
             break; 
     }
