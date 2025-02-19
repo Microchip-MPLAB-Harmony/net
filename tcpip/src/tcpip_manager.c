@@ -427,17 +427,6 @@ static bool    F_TCPIP_StackSyncFunction(void* synchHandle, TCPIP_MAC_SYNCH_REQU
 
 // conversion functions/helpers
 //
-static __inline__ const TCPIP_STACK_INIT* __attribute__((always_inline)) FC_SYSInit2StackInit(const SYS_MODULE_INIT* const init)
-{
-    union
-    {
-        const SYS_MODULE_INIT* const modInit;
-        const TCPIP_STACK_INIT*  cStackInit;
-    }U_TCPIP_STACK_INIT = {.modInit = init};
-
-    return U_TCPIP_STACK_INIT.cStackInit;
-}
-
 #if defined(TCPIP_STACK_USE_EVENT_NOTIFICATION) && (TCPIP_STACK_USER_NOTIFICATION != 0)
 static __inline__ TCPIP_EVENT_LIST_NODE* __attribute__((always_inline)) FC_ListNode2EventNode(SGL_LIST_NODE* node)
 {
@@ -841,7 +830,7 @@ void TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName,
 }
 #endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
 
-SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
+SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const struct TCPIP_STACK_INIT * const init)
 {
     if(tcpipNetIf != NULL)
     {   // already up and running
@@ -866,7 +855,7 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
 
     SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \r\n");
 
-    const TCPIP_STACK_INIT*  cStackInit = FC_SYSInit2StackInit(init);
+    const TCPIP_STACK_INIT*  cStackInit = init;
     tcpip_stack_init_cb = cStackInit->initCback;
 
     tcpip_stack_status = SYS_STATUS_BUSY;
@@ -3165,6 +3154,15 @@ TCPIP_NET_IF* TCPIPStackIPv6AddToNet(IPV6_ADDR* pIPv6Address, IPV6_ADDR_TYPE add
 }
 
 
+#else
+IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_TYPE addType, IPV6_ADDR_STRUCT* pAddStruct, IPV6_ADDR_HANDLE addHandle)
+{
+    return NULL;
+}
+TCPIP_NET_IF* TCPIPStackIPv6AddToNet(IPV6_ADDR* pIPv6Address, IPV6_ADDR_TYPE addType, bool useDefault)
+{
+    return NULL;
+}
 
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 

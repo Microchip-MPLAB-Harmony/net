@@ -957,20 +957,12 @@ UDP_SOCKET TCPIP_UDP_OpenServerSkt(IP_ADDRESS_TYPE addType, UDP_PORT localPort, 
    {
        return INVALID_SOCKET;
    } 
-   else
-   {
-       addType = IP_ADDRESS_TYPE_IPV4;
-   }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
     
 #if !defined (TCPIP_STACK_USE_IPV4)
    if(addType == IP_ADDRESS_TYPE_IPV4)
    {
        return INVALID_SOCKET;
-   }
-   else
-   {
-       addType = IP_ADDRESS_TYPE_IPV6;
    }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 

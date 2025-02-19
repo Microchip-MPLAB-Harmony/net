@@ -1875,12 +1875,13 @@ static void F_Command_IPAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
     TCPIP_NET_IF*   pNetIf;
     IP_ADDRESS_TYPE addType;
 
+    IPV4_ADDR ipAddr;
 #if defined(TCPIP_STACK_USE_IPV4)
-    IPV4_ADDR ipAddr, ipMask;
+    IPV4_ADDR ipMask;
     IPV4_ADDR*  pMask;
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_IPV6)
     IPV6_ADDR  ipv6Addr;
+#if defined(TCPIP_STACK_USE_IPV6)
     uint8_t    prefixLen;
 #endif  // defined(TCPIP_STACK_USE_IPV6)
     const void* cmdIoParam = pCmdIO->cmdIoParam;
@@ -1907,28 +1908,31 @@ static void F_Command_IPAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
         return;
     }
 
-
-    addType = IP_ADDRESS_TYPE_ANY;
-
-#if defined(TCPIP_STACK_USE_IPV4)
+    bool badAddType = false;
     if (TCPIP_Helper_StringToIPAddress(argv[2], &ipAddr))
     {
         addType = IP_ADDRESS_TYPE_IPV4;
-    }
+#if !defined(TCPIP_STACK_USE_IPV4)
+        badAddType = true;
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_IPV6)
-    if(TCPIP_Helper_StringToIPv6Address (argv[2], &ipv6Addr))
+    }
+    else if(TCPIP_Helper_StringToIPv6Address (argv[2], &ipv6Addr))
     {
         addType = IP_ADDRESS_TYPE_IPV6;
-    }
+#if !defined(TCPIP_STACK_USE_IPV6)
+        badAddType = true;
 #endif  // defined(TCPIP_STACK_USE_IPV6)
+    }
+    else
+    {
+        badAddType = true;
+    }
 
-    if(addType == IP_ADDRESS_TYPE_ANY)
+    if(badAddType)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid IP address string \r\n");
         return;
     }
-    
 
 #if defined(TCPIP_STACK_USE_IPV4)
     if(addType == IP_ADDRESS_TYPE_IPV4)
@@ -1992,11 +1996,9 @@ static void F_Command_GatewayAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
 {
     TCPIP_NET_HANDLE netH;
     IP_ADDRESS_TYPE addType;
-#if defined(TCPIP_STACK_USE_IPV4)
     IPV4_ADDR ipGateway;
-#endif  // defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_IPV6)
     IPV6_ADDR  ipv6Gateway;
+#if defined(TCPIP_STACK_USE_IPV6)
     uint32_t   validTime;
 #endif  // defined(TCPIP_STACK_USE_IPV6)
     const void* cmdIoParam = pCmdIO->cmdIoParam;
@@ -2016,22 +2018,27 @@ static void F_Command_GatewayAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
         return;
     }
 
-    addType = IP_ADDRESS_TYPE_ANY;
-
-#if defined(TCPIP_STACK_USE_IPV4)
+    bool badAddType = false;
     if (TCPIP_Helper_StringToIPAddress(argv[2], &ipGateway))
     {
         addType = IP_ADDRESS_TYPE_IPV4;
-    }
+#if !defined(TCPIP_STACK_USE_IPV4)
+        badAddType = true;
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_IPV6)
-    if(TCPIP_Helper_StringToIPv6Address (argv[2], &ipv6Gateway))
+    }
+    else if(TCPIP_Helper_StringToIPv6Address (argv[2], &ipv6Gateway))
     {
         addType = IP_ADDRESS_TYPE_IPV6;
-    }
+#if !defined(TCPIP_STACK_USE_IPV6)
+        badAddType = true;
 #endif  // defined(TCPIP_STACK_USE_IPV6)
+    }
+    else
+    {
+        badAddType = true;
+    }
 
-    if(addType == IP_ADDRESS_TYPE_ANY)
+    if(badAddType)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid IP address string \r\n");
         return;
@@ -3252,7 +3259,7 @@ static void F_Command_StackOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Restarting the stack with %d interface(s)\r\n", tcpipInitData.nNets);
 
-        tcpipStackObj = TCPIP_STACK_Initialize(0, &tcpipInitData.moduleInit);     // init the stack
+        tcpipStackObj = TCPIP_STACK_Initialize(0, &tcpipInitData);     // init the stack
         if ( tcpipStackObj == SYS_MODULE_OBJ_INVALID)
         {
             msg = "Stack up failed\r\n";

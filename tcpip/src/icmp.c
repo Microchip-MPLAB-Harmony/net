@@ -469,6 +469,15 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequestCancel (TCPIP_ICMP_REQUEST_HANDLE icmpHan
 }
 
 
+#else
+ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, TCPIP_ICMP_REQUEST_HANDLE* pHandle)
+{
+    return ICMP_ECHO_BAD_HANDLE;
+}
+ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequestCancel (TCPIP_ICMP_REQUEST_HANDLE icmpHandle)
+{
+    return ICMP_ECHO_BAD_HANDLE;
+}
 #endif
 
 void  TCPIP_ICMP_Task(void)
@@ -512,7 +521,6 @@ static void  TCPIP_ICMP_Process(void)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
         pRxHdr = FC_U8Ptr2IcmpPkt(pRxPkt->pTransportLayer);
-        ackRes = TCPIP_MAC_PKT_ACK_RX_OK;
 
         pIpv4Header = FC_U8Ptr2Ip4Hdr(pRxPkt->pNetLayer);
         srcAdd =  pIpv4Header->SourceAddress.Val;

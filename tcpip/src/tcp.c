@@ -1025,20 +1025,12 @@ TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP
    {
        return INVALID_SOCKET;
    } 
-   else
-   {
-       addType = IP_ADDRESS_TYPE_IPV4;
-   }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
     
 #if !defined (TCPIP_STACK_USE_IPV4)
    if(addType == IP_ADDRESS_TYPE_IPV4)
    {
        return INVALID_SOCKET;
-   }
-   else
-   {
-       addType = IP_ADDRESS_TYPE_IPV6;
    }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
@@ -1120,32 +1112,24 @@ TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP
 {
     TCP_SOCKET  skt;
 
-#if !defined (TCPIP_STACK_USE_IPV6)
-    if(addType == IP_ADDRESS_TYPE_IPV6)
+#if defined (TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IPV6)
+    if(addType != IP_ADDRESS_TYPE_IPV4 && addType != IP_ADDRESS_TYPE_IPV6)
     {
         return INVALID_SOCKET; 
     }
-    else
-    {
-        addType = IP_ADDRESS_TYPE_IPV4;
-    }
-#endif  // defined (TCPIP_STACK_USE_IPV6)
-
-#if !defined (TCPIP_STACK_USE_IPV4)
-    if(addType == IP_ADDRESS_TYPE_IPV4)
+#elif defined (TCPIP_STACK_USE_IPV4)
+    if(addType != IP_ADDRESS_TYPE_IPV4)
     {
         return INVALID_SOCKET; 
     }
-    else
-    {
-        addType = IP_ADDRESS_TYPE_IPV6;
-    }
-#endif  // defined (TCPIP_STACK_USE_IPV4)
-
-    if(addType == IP_ADDRESS_TYPE_ANY)
+#elif defined (TCPIP_STACK_USE_IPV6)
+    if(addType != IP_ADDRESS_TYPE_IPV6)
     {
         return INVALID_SOCKET; 
     }
+#else
+    return INVALID_SOCKET; 
+#endif  // defined (TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IPV6)
 
 
     skt = F_TCP_Open(addType, TCP_OPEN_CLIENT, remotePort, remoteAddress);
@@ -1451,11 +1435,11 @@ static void TCPIP_TCP_Process(void)
             {
                 ackRes = TCPIP_TCP_ProcessIPv6(pRxPkt);
             }
+#endif  // defined (TCPIP_STACK_USE_IPV6)
             else
             {
-               /* Do Nothing */
+                /* Do Nothing */
             }
-#endif  // defined (TCPIP_STACK_USE_IPV6)
         }
 
         if(ackRes != TCPIP_MAC_PKT_ACK_NONE)

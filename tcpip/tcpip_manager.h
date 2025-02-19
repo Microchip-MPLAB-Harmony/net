@@ -458,8 +458,7 @@ typedef bool(*TCPIP_STACK_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKE
 //*********************************************************************
 /*
    Function:  
-    SYS_MODULE_OBJ      TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, 
-                                     const SYS_MODULE_INIT * const init);
+    SYS_MODULE_OBJ      TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const struct TCPIP_STACK_INIT * const init);
   
    Summary:
     Stack initialization function.
@@ -498,8 +497,7 @@ typedef bool(*TCPIP_STACK_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKE
     If this call is made after the stack is successfully initialized,
     the current TCP/IP stack object handle will be returned.
  */
-SYS_MODULE_OBJ      TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, 
-                                     const SYS_MODULE_INIT * const init);
+SYS_MODULE_OBJ      TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const struct TCPIP_STACK_INIT * const init);
 
 //*********************************************************************
 /*

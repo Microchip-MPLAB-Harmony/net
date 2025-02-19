@@ -1016,12 +1016,12 @@ SYS_MODULE_OBJ TCPIP_STACK_Init(void)
     tcpipInit.pModConfig = TCPIP_STACK_MODULE_CONFIG_TBL;
     tcpipInit.nModules = TCPIP_STACK_MODULE_CONFIG_TBL_SIZE;
 <#if (TCPIP_STACK_ENABLE_INIT_CALLBACK) == true && (TCPIP_STACK_INIT_CALLBACK)?has_content >
-    tcpipInit.initCback = ${TCPIP_STACK_INIT_CALLBACK};
+    tcpipInit.initCback = &${TCPIP_STACK_INIT_CALLBACK};
 <#else>
-    tcpipInit.initCback = 0;
+    tcpipInit.initCback = NULL;
 </#if>
 
-    return TCPIP_STACK_Initialize(0, &tcpipInit.moduleInit);
+    return TCPIP_STACK_Initialize(0, &tcpipInit);
 }
 // </editor-fold>
 <#--
