@@ -2612,16 +2612,19 @@ bool TCPIP_UDP_TxOffsetSet(UDP_SOCKET hUDP, uint16_t wOffset, bool relative)
 {
     UDP_SOCKET_DCPT* pSkt = UDPSocketDcpt(hUDP);
 
-    if((pSkt != NULL) && UDPTxPktValid(pSkt))
+    if(pSkt != NULL)
     {
-        uint8_t* pNewWrite = relative ? pSkt->txWrite : pSkt->txStart;
-        pNewWrite += wOffset;
-
-        if(pSkt->txStart <= pNewWrite && pNewWrite <= pSkt->txEnd)
+        if(UDPTxPktValid(pSkt))
         {
-            pSkt->txWrite = pNewWrite;
-            return true;
-        }        
+            uint8_t* pNewWrite = relative ? pSkt->txWrite : pSkt->txStart;
+            pNewWrite += wOffset;
+
+            if(pSkt->txStart <= pNewWrite && pNewWrite <= pSkt->txEnd)
+            {
+                pSkt->txWrite = pNewWrite;
+                return true;
+            }        
+        }
     }
 
     return false;
@@ -2631,9 +2634,12 @@ uint8_t* TCPIP_UDP_TxPointerGet(UDP_SOCKET s)
 {
     UDP_SOCKET_DCPT* pSkt = UDPSocketDcpt(s);
 
-    if((pSkt != NULL) && UDPTxPktValid(pSkt))
+    if(pSkt != NULL)
     {
-        return pSkt->txWrite;
+        if(UDPTxPktValid(pSkt))
+        {
+            return pSkt->txWrite;
+        }
     }
 
     return NULL;
@@ -2699,21 +2705,24 @@ uint16_t TCPIP_UDP_ArrayPut(UDP_SOCKET hUDP, const uint8_t *cData, uint16_t wDat
     {
         UDP_SOCKET_DCPT* pSkt = UDPSocketDcpt(hUDP);
 
-        if(pSkt != NULL && UDPTxPktValid(pSkt))
+        if(pSkt != NULL)
         {
-            uint16_t wrSpace = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txWrite);
-            if(wDataLen > wrSpace)
+            if(UDPTxPktValid(pSkt))
             {
-                wDataLen = wrSpace;
-            }
+                uint16_t wrSpace = (uint16_t)((uintptr_t)pSkt->txEnd - (uintptr_t)pSkt->txWrite);
+                if(wDataLen > wrSpace)
+                {
+                    wDataLen = wrSpace;
+                }
 
-            if(wDataLen != 0U)
-            {
-                (void)TCPIP_Helper_Memcpy(pSkt->txWrite, cData, wDataLen);
-                pSkt->txWrite += wDataLen;
-            }
+                if(wDataLen != 0U)
+                {
+                    (void)TCPIP_Helper_Memcpy(pSkt->txWrite, cData, wDataLen);
+                    pSkt->txWrite += wDataLen;
+                }
 
-            return wDataLen;
+                return wDataLen;
+            }
         }
     }
 
@@ -2741,33 +2750,36 @@ uint16_t TCPIP_UDP_Flush(UDP_SOCKET hUDP)
     uint16_t payload;
     UDP_SOCKET_DCPT* pSkt = UDPSocketDcpt(hUDP);
 
-    if((pSkt != NULL) && UDPTxPktValid(pSkt))
+    if(pSkt != NULL)
     {
-        if(pSkt->flags.txSplitAlloc == 0U)
+        if(UDPTxPktValid(pSkt))
         {
-            payload = (uint16_t)((uintptr_t)pSkt->txWrite - (uintptr_t)pSkt->txStart);
-        }
-        else
-        {
-            payload = ((UDP_V4_ZC_PACKET*)pSkt->pPkt)->zcSeg->segLen;
-        }
-
-        if(payload != 0U)
-        {
-#if defined(TCPIP_STACK_USE_IPV6)
-            if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
+            if(pSkt->flags.txSplitAlloc == 0U)
             {
-                return UDPv6Flush(pSkt);
+                payload = (uint16_t)((uintptr_t)pSkt->txWrite - (uintptr_t)pSkt->txStart);
             }
+            else
+            {
+                payload = ((UDP_V4_ZC_PACKET*)pSkt->pPkt)->zcSeg->segLen;
+            }
+
+            if(payload != 0U)
+            {
+#if defined(TCPIP_STACK_USE_IPV6)
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
+                {
+                    return UDPv6Flush(pSkt);
+                }
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
 #if defined(TCPIP_STACK_USE_IPV4)
-            if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
-            {
-                return UDPv4Flush(pSkt);
-            }
+                if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
+                {
+                    return UDPv4Flush(pSkt);
+                }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
+            }
         }
     }
 
@@ -2779,9 +2791,12 @@ uint16_t TCPIP_UDP_TxCountGet(UDP_SOCKET hUDP)
 {
     UDP_SOCKET_DCPT* pSkt = UDPSocketDcpt(hUDP);
 
-    if(pSkt != NULL && UDPTxPktValid(pSkt))
+    if(pSkt != NULL)
     {
-        return (uint16_t)((uintptr_t)pSkt->txWrite - (uintptr_t)pSkt->txStart);
+        if(UDPTxPktValid(pSkt))
+        {
+            return (uint16_t)((uintptr_t)pSkt->txWrite - (uintptr_t)pSkt->txStart);
+        }
     }
 
     return 0;

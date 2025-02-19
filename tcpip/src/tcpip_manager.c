@@ -361,7 +361,7 @@ static __inline__ void __attribute__((always_inline)) F_TCPIPInsertMacRxPacket(c
 }
 
 // protection against MAC ISR
-static __inline__ uint32_t __attribute__((always_inline)) F_TCPIPMacIsrSuspend(TCPIP_NET_IF* pNetIf)
+static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) F_TCPIPMacIsrSuspend(TCPIP_NET_IF* pNetIf)
 {
 #if defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
     return OSAL_CRIT_Enter(OSAL_CRIT_TYPE_HIGH);
@@ -370,7 +370,7 @@ static __inline__ uint32_t __attribute__((always_inline)) F_TCPIPMacIsrSuspend(T
 #endif // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
 }
 
-static __inline__ void __attribute__((always_inline)) F_TCPIPMacIsrResume(TCPIP_NET_IF* pNetIf, uint32_t suspLevel)
+static __inline__ void __attribute__((always_inline)) F_TCPIPMacIsrResume(TCPIP_NET_IF* pNetIf, OSAL_CRITSECT_DATA_TYPE suspLevel)
 {
 #if defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_HIGH, suspLevel);
@@ -396,7 +396,7 @@ static __inline__ void __attribute__((always_inline)) F_TCPIPModuleSignalSetNoti
 
 static __inline__ void __attribute__((always_inline)) F_TCPIP_ClearMacEvent(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT event)
 {
-    uint32_t suspLvl = F_TCPIPMacIsrSuspend(pNetIf);
+    OSAL_CRITSECT_DATA_TYPE suspLvl = F_TCPIPMacIsrSuspend(pNetIf);
 
     pNetIf->activeEvents &= ~(uint16_t)event;
 
@@ -2343,7 +2343,7 @@ static void    F_TCPIP_MacEventCB(TCPIP_MAC_EVENT event, const void* hParam)
 
 static void F_TCPIP_NetIfEvent(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT event, bool isrProtect)
 {
-    uint32_t isrSuspLvl = 0;
+    OSAL_CRITSECT_DATA_TYPE isrSuspLvl = 0;
 
     TCPIP_MODULE_SIGNAL_ENTRY* pSigEntry;
     pSigEntry = (((uint16_t)event & (uint16_t)TCPIP_STACK_MAC_ACTIVE_RX_EVENTS) != 0U) ? F_TCPIPModuleToSignalEntry(TCPIP_MODULE_MANAGER) : NULL;
