@@ -98,5 +98,6 @@ bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, int32_t * ce
 
 <#else>
     return false;
-}
 </#if>
+}
+
