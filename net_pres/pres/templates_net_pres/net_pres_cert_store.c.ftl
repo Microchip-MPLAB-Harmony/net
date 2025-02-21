@@ -89,7 +89,7 @@ bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * s
 
 bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, int32_t * certSize, const uint8_t ** pvtKeyPtr, int32_t * pvtKeySize, uint8_t certIndex)
 {
-<#if NET_PRES_BLOB_CERT_REPO> and <#if NET_PRES_BLOB_CLIENT_SUPPORT> and <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
+<#if (NET_PRES_BLOB_CERT_REPO && NET_PRES_BLOB_CLIENT_SUPPORT && NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT)>    
     *certPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_VARIABLE};
     *certSize = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_LEN_VARIABLE};
     *pvtKeyPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_VARIABLE};
