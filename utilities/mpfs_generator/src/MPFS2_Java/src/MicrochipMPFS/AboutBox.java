@@ -9,7 +9,7 @@
 */
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -85,7 +85,7 @@ public class AboutBox extends javax.swing.JDialog {
         lblVersion.setText("Version 3.6.2");
         getContentPane().add(lblVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 25, 220, 10));
 
-        lblCopyRight.setText("Copyright © 2013 Microchip Technology, Inc.");
+        lblCopyRight.setText("Copyright © 2025 Microchip Technology, Inc.");
         getContentPane().add(lblCopyRight, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 270, -1));
 
         lblCompany.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 12)); // NOI18N

@@ -10,7 +10,7 @@
 */
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -811,29 +811,32 @@ public class MPFS2Lib //: MPFS2Writer
                 "* Generated " + sdf.format(date) + " " + "\r\n" +
                 "* \r\n" +
                 "***************************************************************/\r\n\r\n"+
-                "/*****************************************************************************\r\n" +        
-                "Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries\r\n\r\n" +
-                "Microchip Technology Inc. and its subsidiaries.\r\n" +
-                "\r\n" +
-                "Subject to your compliance with these terms, you may use Microchip software\r\n" +
-                "and any derivatives exclusively with Microchip products. It is your \r\n" +
-                "responsibility to comply with third party license terms applicable to your\r\n" +
-                "use of third party software (including open source software) that may\r\n" +
-                "accompany Microchip software.\r\n" +
-                "\r\n" +
-                "THIS SOFTWARE IS SUPPLIED BY MICROCHIP \"AS IS\". NO WARRANTIES, WHETHER\r\n" +
-                "EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED\r\n" +
-                "WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR\r\n" +
-                "PURPOSE.\r\n\r\n" +
-                "IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,\r\n" +
-                "INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND\r\n" +
-                "WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS\r\n" +
-                "BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE\r\n" +
-                "FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN\r\n" +
-                "ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,\r\n" +
-                "THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.\r\n" +
-                "\r\n"+
-                " *****************************************************************************/\r\n\r\n" +
+
+               "\r\n/*\r\n"+
+                "Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.\r\n"+
+
+                "\r\nThe software and documentation is provided by microchip and its contributors\r\n"+
+                "\"as is\" and any express, implied or statutory warranties, including, but not\r\n"+
+                "limited to, the implied warranties of merchantability, fitness for a particular\r\n"+
+                "purpose and non-infringement of third party intellectual property rights are\r\n"+
+                "disclaimed to the fullest extent permitted by law. In no event shall microchip\r\n"+
+                "or its contributors be liable for any direct, indirect, incidental, special,\r\n"+
+                "exemplary, or consequential damages (including, but not limited to, procurement\r\n"+
+                "of substitute goods or services; loss of use, data, or profits; or business\r\n"+
+                "interruption) however caused and on any theory of liability, whether in contract,\r\n"+
+                "strict liability, or tort (including negligence or otherwise) arising in any way\r\n"+
+                "out of the use of the software and documentation, even if advised of the\r\n"+
+                "possibility of such damage.\r\n"+
+
+                "\r\nExcept as expressly permitted hereunder and subject to the applicable license terms\r\n"+
+                "for any third-party software incorporated in the software and any applicable open\r\n"+
+                "source software license terms, no license or other rights, whether express or\r\n"+
+                "implied, are granted under any patent or other intellectual property rights of\r\n"+
+                "Microchip or any third party.\r\n"+
+
+               "*/\r\n"+
+               "\r\n"+
+
                 "#include <stdint.h>\r\n" +
                 "#include \"configuration.h\"\r\n" +
                 "#include \"definitions.h\"\r\n" +
@@ -841,13 +844,8 @@ public class MPFS2Lib //: MPFS2Writer
                 "/**************************************\r\n" +
                 " * MPFS2 Image Data\r\n" +
                 " **************************************/ \r\n\r\n" +
-                "#if defined( __ICCARM__ )   // IAR compiler build \r\n"+
-                "    #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL \r\n"+
-                "    const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {\r\n"+
-                "#else\r\n"+
                 "    const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((used,keep))\r\n"+
-                "    NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {\r\n"+
-                "#endif"        
+                "    NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {\r\n"
             );
         }        
         }catch (IOException e){}

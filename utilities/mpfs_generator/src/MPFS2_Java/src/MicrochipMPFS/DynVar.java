@@ -9,7 +9,7 @@
 */
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -64,30 +64,29 @@ public class DynVar {
         "* \r\n"+
        "*********************************************************************/\r\n"+
 
-       "\r\n/*****************************************************************************\r\n"+
-        "Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.\r\n"+
+       "\r\n/*\r\n"+
+        "Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.\r\n"+
 
-       "\r\nMicrochip Technology Inc. and its subsidiaries.\r\n"+
+        "\r\nThe software and documentation is provided by microchip and its contributors\r\n"+
+        "\"as is\" and any express, implied or statutory warranties, including, but not\r\n"+
+        "limited to, the implied warranties of merchantability, fitness for a particular\r\n"+
+        "purpose and non-infringement of third party intellectual property rights are\r\n"+
+        "disclaimed to the fullest extent permitted by law. In no event shall microchip\r\n"+
+        "or its contributors be liable for any direct, indirect, incidental, special,\r\n"+
+        "exemplary, or consequential damages (including, but not limited to, procurement\r\n"+
+        "of substitute goods or services; loss of use, data, or profits; or business\r\n"+
+        "interruption) however caused and on any theory of liability, whether in contract,\r\n"+
+        "strict liability, or tort (including negligence or otherwise) arising in any way\r\n"+
+        "out of the use of the software and documentation, even if advised of the\r\n"+
+        "possibility of such damage.\r\n"+
 
-       "\r\nSubject to your compliance with these terms, you may use Microchip software \r\n"+
-       "and any derivatives exclusively with Microchip products. It is your\r\n"+
-       "responsibility to comply with third party license terms applicable to your\r\n"+
-       "use of third party software (including open source software) that may\r\n"+
-       "accompany Microchip software.\r\n"+
-       "\r\n" +     
-       "THIS SOFTWARE IS SUPPLIED BY MICROCHIP \"AS IS\". NO WARRANTIES, WHETHER\r\n"+
-       "EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED\r\n"+
-       "WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR\r\n"+
-       "PURPOSE.\r\n"+
-       "\r\n" +    
-       "IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,\r\n"+
-       "INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND\r\n"+
-       "WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS\r\n"+
-       "BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE\r\n"+
-       "FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN\r\n"+
-       "ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,\r\n"+
-       "THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.\r\n"+   
-       "*****************************************************************************/\r\n"+
+        "\r\nExcept as expressly permitted hereunder and subject to the applicable license terms\r\n"+
+        "for any third-party software incorporated in the software and any applicable open\r\n"+
+        "source software license terms, no license or other rights, whether express or\r\n"+
+        "implied, are granted under any patent or other intellectual property rights of\r\n"+
+        "Microchip or any third party.\r\n"+
+
+       "*/\r\n"+
        "\r\n" +       
        "#ifndef _HTTP_NET_PRINT_H\r\n"+
        "#define _HTTP_NET_PRINT_H\r\n"+
@@ -154,15 +153,15 @@ public class DynVar {
         "#endif\r\n"+
         "\r\n"+     
         " // processing the HTTP buffer acknowledgment\r\n"+
-        "void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void *buffer, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
+        "void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void *buffer, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
         "\r\n"+     
         "// processing the HTTP reported events\r\n"+
-        "void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_NET_EVENT_TYPE evType, const void *evInfo, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
+        "void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_NET_EVENT_TYPE evType, const void *evInfo, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
         "\r\n"+     
         "// example of processing an SSI notification\r\n"+
         "// return false for standard processing of this SSI command by the HTTP module\r\n"+
         "// return true if the processing is done by you and HTTP need take no further action\r\n"+
-        "bool TCPIP_HTTP_NET_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT *pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
+        "bool TCPIP_HTTP_NET_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT *pSSINotifyDcpt, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
         "\r\n"+ 
         "/****************************************************************************\r\n"+
         "  Section:\r\n"+
@@ -232,28 +231,32 @@ public class DynVar {
         "* This file is automatically generated by the MPFS Utility\r\n" +
         "* ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS GENERATOR\r\n" +
         "*\r\n"+        
-        "*********************************************************************/\r\n\r\n" +
-        "/*****************************************************************************\r\n" +
-        " Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.\r\n\r\n" +
-        " Microchip Technology Inc. and its subsidiaries.\r\n\r\n" +
-        " Subject to your compliance with these terms, you may use Microchip software\r\n" +
-        " and any derivatives exclusively with Microchip products. It is your\r\n" +
-        " responsibility to comply with third party license terms applicable to your\r\n" +
-        " use of third party software (including open source software) that may\r\n" +
-        " accompany Microchip software.\r\n\r\n" +
-        " THIS SOFTWARE IS SUPPLIED BY MICROCHIP \"AS IS\". NO WARRANTIES, WHETHER\r\n" +
-        " EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED\r\n" +
-        " WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR\r\n" +
-        " PURPOSE.\r\n" +
-        " \r\n" +
-        " IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,\r\n" +
-        " INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND\r\n" +
-        " WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS\r\n" +
-        " BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE\r\n" +
-        " FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN\r\n" +
-        " ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,\r\n" +
-        " THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.\r\n" +
-        " *****************************************************************************/\r\n\r\n" +
+       "*********************************************************************/\r\n"+
+
+       "\r\n/*\r\n"+
+        "Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.\r\n"+
+
+        "\r\nThe software and documentation is provided by microchip and its contributors\r\n"+
+        "\"as is\" and any express, implied or statutory warranties, including, but not\r\n"+
+        "limited to, the implied warranties of merchantability, fitness for a particular\r\n"+
+        "purpose and non-infringement of third party intellectual property rights are\r\n"+
+        "disclaimed to the fullest extent permitted by law. In no event shall microchip\r\n"+
+        "or its contributors be liable for any direct, indirect, incidental, special,\r\n"+
+        "exemplary, or consequential damages (including, but not limited to, procurement\r\n"+
+        "of substitute goods or services; loss of use, data, or profits; or business\r\n"+
+        "interruption) however caused and on any theory of liability, whether in contract,\r\n"+
+        "strict liability, or tort (including negligence or otherwise) arising in any way\r\n"+
+        "out of the use of the software and documentation, even if advised of the\r\n"+
+        "possibility of such damage.\r\n"+
+
+        "\r\nExcept as expressly permitted hereunder and subject to the applicable license terms\r\n"+
+        "for any third-party software incorporated in the software and any applicable open\r\n"+
+        "source software license terms, no license or other rights, whether express or\r\n"+
+        "implied, are granted under any patent or other intellectual property rights of\r\n"+
+        "Microchip or any third party.\r\n"+
+
+       "*/\r\n"+
+
         "#include \"configuration.h\"\r\n" +
         "#include \"definitions.h\" \r\n" +
         "#include \"tcpip/tcpip.h\"\r\n"+
@@ -326,7 +329,7 @@ public class DynVar {
         "    {\r\n"+
         "        if(pDynBuffer->busy == 0)\r\n"+
         "        {\r\n"+
-        "           pDynBuffer->busy = 1;\r\n"+
+        "            pDynBuffer->busy = 1;\r\n"+
         "            return pDynBuffer;\r\n"+
         "        }\r\n"+
         "    }\r\n"+

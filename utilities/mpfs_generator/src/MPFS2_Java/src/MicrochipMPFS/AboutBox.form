@@ -57,7 +57,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCopyRight">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2013 Microchip Technology, Inc."/>
+        <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2025 Microchip Technology, Inc."/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
