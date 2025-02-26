@@ -88,8 +88,8 @@ public class DynVar {
 
        "*/\r\n"+
        "\r\n" +       
-       "#ifndef _HTTP_NET_PRINT_H\r\n"+
-       "#define _HTTP_NET_PRINT_H\r\n"+
+       "#ifndef H_HTTP_NET_PRINT_H\r\n"+
+       "#define H_HTTP_NET_PRINT_H\r\n"+
        "\r\n/****************************************************************************\r\n"+
        "Section:\r\n"+
            "\tDynamic Variables Function Prototypes\r\n"+
@@ -218,7 +218,7 @@ public class DynVar {
         "// dynamic variables processing\r\n"+
         "HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void);\r\n\r\n\r\n";
     String HTTPPRINT_NET_H_FOOTER =
-        "#endif /* _HTTP_NET_PRINT_H */\r\n";
+        "#endif /* H_HTTP_NET_PRINT_H */\r\n";
 
     
     String HTTPPRINT_NET_C_HEADER =

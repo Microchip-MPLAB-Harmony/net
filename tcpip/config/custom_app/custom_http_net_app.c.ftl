@@ -1012,7 +1012,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHan
             }
 
 
-            memset(&postEmail, 0, sizeof(postEmail));
+            (void)memset(&postEmail, 0, sizeof(postEmail));
             TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
             return TCPIP_HTTP_NET_IO_RES_WAITING;
 
@@ -1099,7 +1099,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHan
             }
 
             // prepare the message itself
-            memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
+            (void)memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
             mySMTPMessage.body = (const uint8_t*)postEmail.mailBody;
             mySMTPMessage.bodySize = strlen(postEmail.mailBody);
             mySMTPMessage.smtpServer = postEmail.serverName;
@@ -2036,7 +2036,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_read_comm(TCPIP_HTTP_NET_CONN_HANDLE c
         }
 
         dest = (uint8_t *)pDynBuffer->data;
-        memset(dest, 0, TCPIP_SNMP_COMMUNITY_MAX_LEN + 1);
+        (void)memset(dest, 0, TCPIP_SNMP_COMMUNITY_MAX_LEN + 1);
         if(TCPIP_SNMP_ReadCommunityGet(num, TCPIP_SNMP_COMMUNITY_MAX_LEN, dest) != true)
         {   // failed; release the buffer
             pDynBuffer->busy = 0;
@@ -2082,7 +2082,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE 
         }
 
         dest = (uint8_t *)pDynBuffer->data;
-        memset(dest, 0, TCPIP_SNMP_COMMUNITY_MAX_LEN + 1);
+        (void)memset(dest, 0, TCPIP_SNMP_COMMUNITY_MAX_LEN + 1);
         if(TCPIP_SNMP_WriteCommunityGet(num, TCPIP_SNMP_COMMUNITY_MAX_LEN, dest) != true)
         {   // failed; release the buffer
             pDynBuffer->busy = 0;

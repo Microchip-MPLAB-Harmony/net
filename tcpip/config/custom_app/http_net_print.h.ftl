@@ -32,8 +32,8 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 
-#ifndef _HTTP_NET_PRINT_H
-#define _HTTP_NET_PRINT_H
+#ifndef H_HTTP_NET_PRINT_H
+#define H_HTTP_NET_PRINT_H
 
 <#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 /****************************************************************************
@@ -200,4 +200,4 @@ HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void);
 
 </#if>
 
-#endif /* _HTTP_NET_PRINT_H */
+#endif /* H_HTTP_NET_PRINT_H */

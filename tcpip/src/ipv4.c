@@ -2816,7 +2816,7 @@ static void TCPIP_IPV4_Process(void)
     IPV4_HEADER_BARE  *pHeader;
     IPV4_HEADER_BARE  cIpv4Hdr, *pCHeader;
     IPV4_PKT_PROC_TYPE procType;
-    TCPIP_MAC_PKT_ACK_RES ackRes;
+    TCPIP_MAC_PKT_ACK_RES ackRes = TCPIP_MAC_PKT_ACK_NONE;
 
     // extract queued IPv4 packets
     while((pRxPkt = TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != NULL)
