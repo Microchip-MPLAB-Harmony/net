@@ -237,6 +237,9 @@ typedef enum
                                     // (the default TTL for multicast traffic is 1).
     UDP_OPTION_MULTICAST,           // Sets the multicast options for a socket by using UDP_OPTION_MULTICAST_DATA value
     UDP_OPTION_TOS,                 // Sets the Type of Service (TOS) for IPv4 packets sent by the socket
+                                    // An ipv4.h::TCPIP_IPV4_TOS_FLAGS value.
+    UDP_OPTION_DSCP,                // Sets the Differentiated Services Code Point (DSCP) for IPv6 packets sent by the socket
+                                    // A numerical 6 bit value or a predefined ipv6.h::TCPIP_IPV6_DSCP_CS value.    
     UDP_OPTION_DF,                  // Sets the Don't Fragment (DF) option for IPv4 packets sent by the socket
     UDP_OPTION_FIXED_DEST_ADDRESS,  // If set, then the destination address won't change to reply to the latest host that sent the packet
                                     // The socket will reply to the set destination address. 
@@ -849,7 +852,8 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
                       - UDP_OPTION_RX_AUTO_ADVANCE  - boolean enable/disable
                       - UDP_OPTION_TX_TTL           - 8-bit value of TTL
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_OPTION_MULTICAST_DATA structure
-                      - UDP_OPTION_TOS              - 8-bit value of the TOS
+                      - UDP_OPTION_TOS              - 8-bit value of the TCPIP_IPV4_TOS_FLAGS (TOS)
+                      - UDP_OPTION_DSCP             - 8-bit value of the IPv6 DSCP (TCPIP_IPV6_DSCP_CS) 
                       - UDP_OPTION_DF               - boolean - true: no fragmentation allowed; false: fragmentation allowed
                       - UDP_OPTION_FIXED_DEST_ADDRESS - boolean - true: set fixed destination address; false: clear the fixed destination address
                       - UDP_OPTION_FIXED_DEST_PORT  - boolean - true: set fixed destination port; false: clear the fixed destination port
@@ -902,7 +906,8 @@ bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION opti
                       - UDP_OPTION_RX_AUTO_ADVANCE  - pointer to boolean
                       - UDP_OPTION_TX_TTL           - pointer to an 8 bit value to receive the TTL value
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_MULTICAST_FLAGS value to receive the current socket settings
-                      - UDP_OPTION_TOS              - pointer to an 8 bit value to receive the TOS
+                      - UDP_OPTION_TOS              - pointer to an 8 bit value to receive the TCPIP_IPV4_TOS_FLAGS (TOS)
+                      - UDP_OPTION_DSCP             - pointer to an 8 bit value to receive the IPv6 DSCP (TCPIP_IPV6_DSCP_CS)
                       - UDP_OPTION_DF               - pointer to boolean - true: no fragmentation allowed; false: fragmentation allowed
                       - UDP_OPTION_FIXED_DEST_ADDRESS - pointer boolean - true: fixed destination address is set; false: fixed destination address is cleared
                       - UDP_OPTION_FIXED_DEST_PORT  - pointer boolean - true: fixed destination port is set; false: fixed destination port is cleared

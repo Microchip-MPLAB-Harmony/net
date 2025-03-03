@@ -2282,7 +2282,7 @@ static uint16_t UDPv6Flush(UDP_SOCKET_DCPT* pSkt)
     }
 
 
-    TCPIP_IPV6_HeaderPut(pSkt->pV6Pkt, (uint8_t)IP_PROT_UDP);
+    TCPIP_IPV6_HeaderPut(pSkt->pV6Pkt, (uint8_t)IP_PROT_UDP, pSkt->dscp);
 
     pUDPHeader = (UDP_HEADER *)TCPIP_IPV6_UpperLayerHeaderPtrGet(pSkt->pV6Pkt);
 
@@ -3626,6 +3626,10 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 pSkt->flags.tos = U_OPT_PARAM.param8;
                 break;
                 
+            case (uint32_t)UDP_OPTION_DSCP:
+                pSkt->dscp = U_OPT_PARAM.param8;
+                break;
+                
             case (uint32_t)UDP_OPTION_DF:
                 pSkt->flags.df = (optParam != NULL) ? 1U : 0U;
                 break;
@@ -3740,6 +3744,10 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
 
              case UDP_OPTION_TOS:
                 *(uint8_t*)optParam = (uint8_t)pSkt->flags.tos;
+                break;
+
+             case UDP_OPTION_DSCP:
+                *(uint8_t*)optParam = (uint8_t)pSkt->dscp;
                 break;
                 
              case UDP_OPTION_DF:

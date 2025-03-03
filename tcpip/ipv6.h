@@ -460,6 +460,51 @@ typedef struct
 
 
 // *****************************************************************************
+/* IPv6 Differentiated Services Code Point (DSCP)
+
+  Summary:
+    Enumeration describing the DSCP Class Selector values for an IPv6 packet
+
+  Description:
+    This is a enumeration pf the possible values for the DSCP Class Selector values of an IPv6 packet
+    The DSCP field is part of the 'Traffic Class' header member.
+    It is a 6 bit value.
+
+  Remarks:
+    The DSCP specifies a mechanism for classifying and managing network traffic and providing quality of service
+    in an IPv6 packet.
+
+    There is backward compatibility with the IPv4 TOS values.
+    A DSCP value divided by 8 will result in an IPv4 TOS value.
+
+    Default value is 0, i.e. standard service class, default forwarding (DF).
+
+    Currently only 6 bit values are supported!
+
+    The Class Selector values are just some predefined/standard values.
+    Full range of 6 bit values is supported.
+
+ */
+
+typedef enum __attribute__ ((__packed__))
+{
+    TCPIP_IPV6_DSCP_CS0     = 0,
+    TCPIP_IPV6_DSCP_CS1     = 8,
+    TCPIP_IPV6_DSCP_CS2     = 16,
+    TCPIP_IPV6_DSCP_CS3     = 24,
+    TCPIP_IPV6_DSCP_CS4     = 32,
+    TCPIP_IPV6_DSCP_CS5     = 40,
+    TCPIP_IPV6_DSCP_CS6     = 48,
+    TCPIP_IPV6_DSCP_CS7     = 56,
+
+    //
+    TCPIP_IPV6_DSCP_MAX    = ((1U << 6) - 1U),    // maximum value, 6 bits 
+}TCPIP_IPV6_DSCP_CS;
+
+
+
+
+// *****************************************************************************
 /* 
   Enumeration:
     IPV6_EVENT_TYPE 
@@ -2080,6 +2125,118 @@ TCPIP_IPV6_RESULT TCPIP_IPV6_NeighborAddressDelete(TCPIP_NET_HANDLE netH, const 
     None
 */
 TCPIP_IPV6_RESULT TCPIP_IPV6_G3PLC_PanIdSet(TCPIP_NET_HANDLE netH, uint16_t panId);
+
+// *****************************************************************************
+/* IPv6 packet TX priority handler
+
+  Function:
+    uint8_t <FunctionName> (TCPIP_NET_HANDLE hNet, uint8_t dscp);
+
+  Summary:
+    Pointer to a function(handler) that will get called to calculate the priority queue of an outgoing IPv6 packet.
+
+  Description:
+    Pointer to a function that will be called by the IPv6 module
+    when a packet needs to be transmitted.
+
+  Precondition:
+    None
+
+  Parameters:
+    hNet - network handle on which the packet will be transmitted
+    dscp - the packet IPv6 header Differentiated Service Field (dscp) value
+
+  Returns:
+    An 8 bit value specifying the MAC priority queue with which the packet is to be transmitted.
+    For MACs that support priority queues (GMAC), the packets will be transmitted with different priorities.
+    This function allows an IPv6 user to select the desired priority.
+
+
+  Remarks:
+   The IPv6 header IPV6_HEADER::ds value is set using:
+        - TCPIP_UDP_OptionsSet(skt, UDP_OPTION_DSCP, ...) for UDP
+        - TCPIP_TCP_OptionsSet(skt, TCP_OPTION_DSCP, ...) for TCP
+
+   The number of MAC supported priority queues is available using TCPIP_STACK_MacTxPriGet(hNet)
+
+   The returned value should NOT exceed the maximum MAC supported priority queue - 1!
+
+   Registration of a function to calculate the packet priority is optional.
+   By default an internal calculation is performed if no such function is registered.
+   The calculation is as follows:
+        - Q == the number of MAC supported priority queues
+        - M == the maximum IPv6 dscp value == TCPIP_IPV6_DSCP_MAX (63)
+        - d == the current value of the IPv6 header ds (dscp)
+        - q == the MAC priority queue:
+        q = (d x Q) / M - 1;
+
+ */
+typedef uint8_t(*TCPIP_IPV6_TX_PRI_HANDLER)(TCPIP_NET_HANDLE hNet, uint8_t dscp);
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_IPV6_TxPriHandlerRegister(TCPIP_IPV6_TX_PRI_HANDLER priHandler);
+
+  Summary:
+    Registers a packet TX priority queue handler
+
+  Description:
+    This function registers a new packet TX priority handler.
+    The handler will be called when the IPv6 module needs to transmit a packet 
+    and the packet MAC priority queue needs to be calculated.
+
+
+  Precondition:
+    IPv6 properly initialized
+
+  Parameters:
+    priHandler      - the packet priority handler which will be called for an outgoing packet
+
+  Returns:
+    - true - if the operation succeeded
+    - false - if the operation failed
+                i.e. another handler is already registered
+
+  Remarks:
+    Currently only one packet TX priority handler is supported for the IPv6 module.
+    The call will fail if a handler is already registered.
+    Use TCPIP_IPV6_TxPriHandlerDeregister first
+
+    The registration of an handler is optional.
+    See the TCPIP_IPV6_TX_PRI_HANDLER for the default priority queues calculation.
+  */
+bool    TCPIP_IPV6_TxPriHandlerRegister(TCPIP_IPV6_TX_PRI_HANDLER priHandler);
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_IPV6_TxPriHandlerDeregister(TCPIP_IPV6_TX_PRI_HANDLER priHandler);
+
+  Summary:
+    Deregisters a packet TX priority queue handler
+
+  Description:
+    This function deregisters a previously registered packet TX priority handler.
+
+  Precondition:
+    IPv6 properly initialized
+
+  Parameters:
+    priHandler      - the packet priority handler which has been previously registered
+
+  Returns:
+    - true - if the operation succeeded
+    - false - if the operation failed
+                i.e. no such handler is registered
+
+  Remarks:
+    Currently only one packet TX priority handler is supported for the IPv6 module.
+    TCPIP_IPV6_TxPriHandlerDeregister should be called before registering another handler.
+
+  */
+bool    TCPIP_IPV6_TxPriHandlerDeregister(TCPIP_IPV6_TX_PRI_HANDLER priHandler);
+
 
 // *****************************************************************************
 /*

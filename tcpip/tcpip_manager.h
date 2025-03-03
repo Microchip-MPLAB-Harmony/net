@@ -2208,6 +2208,60 @@ bool                TCPIP_STACK_NetBiosNameSet(TCPIP_NET_HANDLE netH, const char
  */
 bool                TCPIP_STACK_NetAddressMacSet(TCPIP_NET_HANDLE netH, const TCPIP_MAC_ADDR* pAddr);
 
+//*********************************************************************
+/* Function:        
+    uint8_t TCPIP_STACK_MacTxPriGet(TCPIP_NET_HANDLE netH);
+  
+   Summary:
+    Number of the TX MAC priority queues.
+
+   Description:
+    This function returns the number of the TX MAC priority queues
+    for the selected network interface
+  
+   Precondition:    
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+  
+   Parameters:      
+    netH - Interface handle to get the number of priority queues for.
+  
+   Returns:         
+    The number of TX priority queues for the selected interface.
+    0 if an invalid interface
+                 
+   Remarks:         
+    The default value is 1.
+ */
+uint8_t         TCPIP_STACK_MacTxPriGet(TCPIP_NET_HANDLE netH);
+
+
+//*********************************************************************
+/* Function:        
+    uint8_t TCPIP_STACK_MacRxPriGet(TCPIP_NET_HANDLE netH);
+  
+   Summary:
+    Number of the RX MAC priority queues.
+
+   Description:
+    This function returns the number of the RX MAC priority queues
+    for the selected network interface
+  
+   Precondition:    
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+  
+   Parameters:      
+    netH - Interface handle to get the number of priority queues for.
+  
+   Returns:         
+    The number of RX priority queues for the selected interface.
+    0 if an invalid interface
+                 
+   Remarks:         
+    The default value is 1.
+ */
+uint8_t         TCPIP_STACK_MacRxPriGet(TCPIP_NET_HANDLE netH);
 
 
 //*******************************************************************************

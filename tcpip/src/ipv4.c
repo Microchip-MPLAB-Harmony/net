@@ -95,6 +95,7 @@ typedef enum
 
 }TCPIP_IPV4_DEST_TYPE;
 
+static TCPIP_IPV4_TX_PRI_HANDLER ipv4PriPktHandler = NULL;
 
 #if (M_TCPIP_IPV4_EXT_PKT_PROCESS != 0)
 static TCPIP_IPV4_PACKET_HANDLER ipv4PktHandler = NULL;
@@ -784,6 +785,8 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPkt(const TCPIP_NET_IF* pNetIf, IPV4_
 
 #endif  // (M_TCPIP_IPV4_FWD_ENABLE != 0)
 
+static uint8_t TCPIP_IPV4_TxPriQueue(const TCPIP_NET_IF* pNetIf, uint8_t precedence);
+
 /*****************************************************************************
   Function:
     bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, 
@@ -886,6 +889,7 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
                 pEntry++;
             }
 
+            ipv4PriPktHandler = NULL;
 
 #if (M_TCPIP_IPV4_EXT_PKT_PROCESS != 0)
             ipv4PktHandler = NULL;
@@ -2476,6 +2480,9 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
 
 
     pMacPkt->pktIf = pNetIf;
+    IPV4_HEADER_BARE* pHdr = FC_U8Ptr2HdrBare(pMacPkt->pNetLayer);
+    uint8_t precedence = pHdr->TypeOfService.precedence;
+    pMacPkt->pktPriority = TCPIP_IPV4_TxPriQueue(pNetIf, precedence);
 
     // properly format the packet
     (void)TCPIP_PKT_PacketMACFormat(pMacPkt, pMacDst, FC_CUptr2CMacAdd(TCPIPStack_NetMACAddressGet(pNetIf)), TCPIP_ETHER_TYPE_IPV4);
@@ -2487,7 +2494,6 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
         if(pktPayload > linkMtu)
         {
 #if (M_TCPIP_IPV4_FRAGMENTATION != 0)
-            IPV4_HEADER_BARE* pHdr = FC_U8Ptr2HdrBare(pMacPkt->pNetLayer);
             if(pHdr->FragmentInfo.DF != 0U)
             {   // no fragments
                 return false;
@@ -4215,6 +4221,7 @@ static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu
             // copy the header part: MAC + IPv4
             (void)memcpy(pFragTx->macPkt.pMacLayer, pMacPkt->pMacLayer, pktHeaderSize);
             pFragTx->macPkt.pDSeg->segLen = pktHeaderSize;
+            pFragTx->macPkt.pktPriority = pMacPkt->pktPriority;
             
             // link
             tail->pkt_next = &pFragTx->macPkt;
@@ -4388,6 +4395,56 @@ bool TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle)
     return false;
 }
 #endif  // (M_TCPIP_IPV4_EXT_PKT_PROCESS != 0)
+
+
+// calculates a TX packet priority queue based on the network interface
+// precedence value should be the IPv4 header IPV4_TYPE_OF_SERVICE::precedence
+static uint8_t TCPIP_IPV4_TxPriQueue(const TCPIP_NET_IF* pNetIf, uint8_t precedence)
+{
+    if(ipv4PriPktHandler != NULL)
+    {
+        return ipv4PriPktHandler((TCPIP_NET_HANDLE)pNetIf, precedence);
+    }
+    // default calculation
+    uint16_t qNo = (uint16_t)TCPIPStack_TxPriNum(pNetIf);   // number of the MAC supported queues
+    if(precedence > (uint8_t)TCPIP_IPV4_PRECEDENCE_MAX)
+    {   // avoid overflow
+        precedence = (uint8_t)TCPIP_IPV4_PRECEDENCE_MAX;
+    }
+
+    uint16_t pri16 = ((uint16_t)precedence * qNo) / (uint16_t)TCPIP_IPV4_PRECEDENCE_MAX; 
+    return pri16 == 0 ? 0 : (uint8_t)pri16 - 1U;
+}
+
+bool TCPIP_IPV4_TxPriHandlerRegister(TCPIP_IPV4_TX_PRI_HANDLER priHandler)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv4PriPktHandler == NULL)
+    {
+        ipv4PriPktHandler = priHandler;
+        res = true;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+bool TCPIP_IPV4_TxPriHandlerDeregister(TCPIP_IPV4_TX_PRI_HANDLER priHandler)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv4PriPktHandler == priHandler)
+    {
+        ipv4PriPktHandler = NULL;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
 
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 

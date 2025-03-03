@@ -97,6 +97,18 @@ typedef enum
 
 }TCPIP_IPV6_ULA_STATE;
 
+// VTF 32 bit value in the IPV6_HEADER
+typedef union
+{
+    uint32_t    val;   // compressed Version, Traffic class and Flow Label
+    struct
+    {
+        unsigned int flow_label     : 20;
+        unsigned int ecn            : 2;
+        unsigned int ds             : 6;
+        unsigned int version        : 4;
+    };
+}IPV6_VTF;
 
 #endif // H_IPV6_PRIVATE_H_
 

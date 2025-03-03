@@ -670,7 +670,8 @@ typedef struct
   Remarks:
     The type is used to set the IPV4_TYPE_OF_SERVICE in an IPv4 packet.
 
-    Multiple flags can be set to specify the precedence, delay, throughput and reliability.
+    The flags can be used to specify the precedence, delay, throughput and reliability.
+    Multiple flags for delay, throughput and reliability can be set simultaneously.
 
     Default value is 0x00, i.e. normal precedence, delay, throughput and reliability.
 
@@ -693,6 +694,7 @@ typedef enum __attribute__ ((__packed__))
     TCPIP_IPV4_PRECEDENCE_NET_CONTROL     = 0x07,
 
     TCPIP_IPV4_PRECEDENCE_MASK            = 0x07,
+    TCPIP_IPV4_PRECEDENCE_MAX             = 7,  // maximum precedence value
 
     // delay flag
     TCPIP_IPV4_DELAY_NORMAL               = 0x00,
@@ -1726,6 +1728,118 @@ bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, boo
  */
 bool TCPIP_IPv4_ArpStatGet(TCPIP_IPV4_ARP_QUEUE_STAT* pStat, bool clear);
 
+
+// *****************************************************************************
+/* IPv4 packet TX priority handler
+
+  Function:
+    uint8_t <FunctionName> (TCPIP_NET_HANDLE hNet, uint8_t precedence);
+
+  Summary:
+    Pointer to a function(handler) that will get called to calculate the priority queue of an outgoing IPv4 packet.
+
+  Description:
+    Pointer to a function that will be called by the IPv4 module
+    when a packet needs to be transmitted.
+
+  Precondition:
+    None
+
+  Parameters:
+    hNet        - network handle on which the packet will be transmitted
+    precedence  - the packet IPv4 header IPV4_TYPE_OF_SERVICE::precedence value
+
+  Returns:
+    An 8 bit value specifying the MAC priority queue with which the packet is to be transmitted.
+    For MACs that support priority queues (GMAC), the packets will be transmitted with different priorities.
+    This function allows an IPv4 user to select the desired priority.
+
+
+  Remarks:
+   The IPv4 header IPV4_TYPE_OF_SERVICE::precedence value is set using:
+        - TCPIP_UDP_OptionsSet(skt, UDP_OPTION_TOS, ...) for UDP
+        - TCPIP_TCP_OptionsSet(skt, TCP_OPTION_TOS, ...) for TCP
+
+   The number of MAC supported priority queues is available using TCPIP_STACK_MacTxPriGet(hNet)
+
+   The returned value should NOT exceed the maximum MAC supported priority queue - 1!
+
+   Registration of a function to calculate the packet priority is optional.
+   By default an internal calculation is performed if no such function is registered.
+   The calculation is as follows:
+        - Q == the number of MAC supported priority queues
+        - M == the maximum IPv4 precedence value == TCPIP_IPV4_PRECEDENCE_MAX (7)
+        - p == the current value of the IPv4 header IPV4_TYPE_OF_SERVICE::precedence
+        - q == the MAC priority queue:
+        q = (p x Q) / M - 1;
+
+ */
+typedef uint8_t(*TCPIP_IPV4_TX_PRI_HANDLER)(TCPIP_NET_HANDLE hNet, uint8_t precedence);
+
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_IPV4_TxPriHandlerRegister(TCPIP_IPV4_TX_PRI_HANDLER priHandler);
+
+  Summary:
+    Registers a packet TX priority queue handler
+
+  Description:
+    This function registers a new packet TX priority handler.
+    The handler will be called when the IPv4 module needs to transmit a packet 
+    and the packet MAC priority queue needs to be calculated.
+
+
+  Precondition:
+    IPv4 properly initialized
+
+  Parameters:
+    priHandler      - the packet priority handler which will be called for an outgoing packet
+
+  Returns:
+    - true - if the operation succeeded
+    - false - if the operation failed
+                i.e. another handler is already registered
+
+  Remarks:
+    Currently only one packet TX priority handler is supported for the IPv4 module.
+    The call will fail if a handler is already registered.
+    Use TCPIP_IPV4_TxPriHandlerDeregister first
+
+    The registration of an handler is optional.
+    See the TCPIP_IPV4_TX_PRI_HANDLER for the default priority queues calculation.
+  */
+bool    TCPIP_IPV4_TxPriHandlerRegister(TCPIP_IPV4_TX_PRI_HANDLER priHandler);
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_IPV4_TxPriHandlerDeregister(TCPIP_IPV4_TX_PRI_HANDLER priHandler);
+
+  Summary:
+    Deregisters a packet TX priority queue handler
+
+  Description:
+    This function deregisters a previously registered packet TX priority handler.
+
+  Precondition:
+    IPv4 properly initialized
+
+  Parameters:
+    priHandler      - the packet priority handler which has been previously registered
+
+  Returns:
+    - true - if the operation succeeded
+    - false - if the operation failed
+                i.e. no such handler is registered
+
+  Remarks:
+    Currently only one packet TX priority handler is supported for the IPv4 module.
+    TCPIP_IPV4_TxPriHandlerDeregister should be called before registering another handler.
+
+  */
+bool    TCPIP_IPV4_TxPriHandlerDeregister(TCPIP_IPV4_TX_PRI_HANDLER priHandler);
 
 // *****************************************************************************
 /*

@@ -257,6 +257,8 @@ typedef struct S_tag_TCPIP_NET_IF
     uint8_t             txOffload;              // MAC TX TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS        
     uint8_t             rxOffload;              // MAC RX TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS        
                                                 // Not used. The MAC sets the pktFlags when calculating RX checksums!
+    uint8_t             txPriNum;               // number of Tx priorities supported by MAC
+    uint8_t             rxPriNum;               // number of Rx priorities supported by MAC
     union
     {
         struct __attribute__((packed))
@@ -271,8 +273,8 @@ typedef struct S_tag_TCPIP_NET_IF
     }exFlags;                               // additional extended flags      
     uint8_t             macType;            // a TCPIP_MAC_TYPE value: ETH, Wi-Fi, etc; 
 
-    char                ifName[7];          // native interface name + \0
     uint8_t             bridgePort;         // bridge port this interface belongs to; < 256
+    char                ifName[7];          // native interface name + \0
 } TCPIP_NET_IF;
 
 
@@ -790,6 +792,16 @@ static __inline__ bool __attribute__((always_inline))  TCPIPStack_BridgeCheckIf(
 static __inline__ uint8_t __attribute__((always_inline))  TCPIPStack_BridgeGetIfPort(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->bridgePort;
+}
+
+static __inline__ uint8_t  __attribute__((always_inline)) TCPIPStack_TxPriNum(const TCPIP_NET_IF* pNetIf)
+{
+    return (pNetIf != NULL) ? pNetIf->txPriNum : 0U;
+}
+
+static __inline__ uint8_t  __attribute__((always_inline)) TCPIPStack_RxPriNum(const TCPIP_NET_IF* pNetIf)
+{
+    return (pNetIf != NULL) ? pNetIf->rxPriNum : 0U;
 }
 
 

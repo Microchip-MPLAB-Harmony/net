@@ -191,8 +191,8 @@ typedef struct
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;           // socket signal handler
     const void*         sigParam;                   // socket signal parameter
     uint8_t             keepAliveLim;               // current limit
-    uint8_t ttl;                                    // socket TTL value
-    uint8_t tos;                                    // socket TOS value
+    uint8_t             ttl;                        // socket TTL value
+    uint8_t             tos;                        // socket TOS value
     uint8_t             dupAckCnt;                  // duplicate ack count for fast retransmission
     union
     {
@@ -232,6 +232,7 @@ typedef struct
             unsigned int res2           : 1;                // not used
         } flags;
     };
+    uint8_t             dscp;                        // socket DSCP value
 
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
     union

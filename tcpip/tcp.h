@@ -256,6 +256,9 @@ typedef enum
                                     // If 0, the socket will use the default global IPv4 TTL setting.
                                     // This option allows the user to specify a different TTL value.
     TCP_OPTION_TOS,                 // Sets the Type of Service (TOS) for IPv4 packets sent by the socket
+                                    // An ipv4.h::TCPIP_IPV4_TOS_FLAGS value.    
+    TCP_OPTION_DSCP,                // Sets the Differentiated Services Code Point (DSCP) for IPv6 packets sent by the socket
+                                    // A numerical 6 bit value or a predefined ipv6.h::TCPIP_IPV6_DSCP_CS value.    
 } TCP_SOCKET_OPTION;
 
 
@@ -758,7 +761,8 @@ bool  TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT re
                       - TCP_OPTION_THRES_FLUSH          - a TCP_OPTION_THRES_FLUSH_TYPE
                       - TCP_OPTION_DELAY_SEND_ALL_ACK   - boolean to enable/disable the DELAY Send All ACK data functionality
                       - TCP_OPTION_TX_TTL              - 8-bit value of TTL
-                      - TCP_OPTION_TOS                 - 8-bit value of the TOS
+                      - TCP_OPTION_TOS                 - 8-bit value of the TCPIP_IPV4_TOS_FLAGS (TOS)
+                      - TCP_OPTION_DSCP                - 8-bit value of the IPv6 DSCP (TCPIP_IPV6_DSCP_CS)
 
   Returns:
     - true  - Indicates success
@@ -800,7 +804,8 @@ bool  TCPIP_TCP_OptionsSet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optP
                       - TCP_OPTION_THRES_FLUSH          - a TCP_OPTION_THRES_FLUSH_TYPE
                       - TCP_OPTION_DELAY_SEND_ALL_ACK   - pointer to boolean to return current DELAY Send All ACK status
                       - TCP_OPTION_TX_TTL               - pointer to an 8 bit value to receive the TTL value
-                      - TCP_OPTION_TOS                  - pointer to an 8 bit value to receive the TOS
+                      - TCP_OPTION_TOS                  - pointer to an 8 bit value to receive the TCPIP_IPV4_TOS_FLAGS (TOS)
+                      - TCP_OPTION_DSCP                 - pointer to an 8-bit value to receive the IPv6 DSCP (TCPIP_IPV6_DSCP_CS)
 
   Returns:
     - true  - Indicates success

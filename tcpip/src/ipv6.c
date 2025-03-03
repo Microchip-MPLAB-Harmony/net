@@ -51,10 +51,10 @@ Microchip or any third party.
 #include "crypto/crypto.h"
 #endif  // (TCPIP_IPV6_RIID_ENABLED != 0) || (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
-// This is left shifted by 4.  Actual value is 0x04.
-#define IPv4_VERSION        (0x40u)
+// The IPv6 version constant
+#define IPv6_VERSION            (0x06u)
 // This is left shifted by 4.  Actual value is 0x06.
-#define IPv6_VERSION        (0x60u)
+#define IPv6_SHIFT_VERSION      (0x60u)
 
 // IHL (Internet Header Length) is # of 32 bit words in a header.
 // Since, we do not support options, our IP header length will be
@@ -164,6 +164,8 @@ static const void* ipv6PktHandlerParam;
 #endif  // (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
 
 static TCPIP_IPV6_CONFIG_DCPT  ipv6_config_dcpt;
+
+static TCPIP_IPV6_TX_PRI_HANDLER ipv6PriPktHandler = NULL;
 /************************************************************************/
 /****************               Prototypes               ****************/
 /************************************************************************/
@@ -260,6 +262,8 @@ static __inline__ uint16_t __attribute__((always_inline)) TCPIP_IPV6_GetOptionHe
     return MACGetArray(pRxPkt, pData, len << 3U); 
 }
 
+static uint8_t TCPIP_IPV6_TxPriQueue(const TCPIP_NET_IF* pNetIf, uint8_t dscp);
+
 // conversion functions/helpers
 //
 static __inline__ IPV6_DATA_SEGMENT_HEADER_FULL* __attribute__((always_inline)) FC_SegHdr2FullHdr(IPV6_DATA_SEGMENT_HEADER* pSegHdr)
@@ -297,6 +301,18 @@ static __inline__ uint8_t* __attribute__((always_inline)) FC_SegHdrDataPtr(IPV6_
 
     U_SEG_HDR_FULL_HDR.pSegHdr = pSegHdr;
     return (uint8_t*)U_SEG_HDR_FULL_HDR.pSegFull->data;
+}
+
+static __inline__ IPV6_DATA_SEGMENT_HEADER* __attribute__((always_inline)) FC_VPtr2SegHdr(void* vPtr)
+{
+    union
+    {
+        void*  vPtr;
+        IPV6_DATA_SEGMENT_HEADER* pSegHdr;
+    }U_VPTR_SEG_HDR;
+
+    U_VPTR_SEG_HDR.vPtr = vPtr;
+    return U_VPTR_SEG_HDR.pSegHdr;
 }
 
 static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_Ip6Pkt2SglNode(IPV6_PACKET* pkt)
@@ -482,6 +498,8 @@ bool TCPIP_IPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const pStackInit, cons
             ipv6_config_dcpt.riidKeyF = pIpv6Init->pSecretKeyFnc;
 #endif // (TCPIP_IPV6_RIID_ENABLED != 0)
             ipv6_config_dcpt.configFlags = (uint16_t)pIpv6Init->configFlags;
+
+            ipv6PriPktHandler = NULL;
         }
 
         ipv6ModuleInitCount++;
@@ -900,7 +918,7 @@ void TCPIP_IPV6_PacketIPProtocolSet (IPV6_PACKET * ptrPacket)
 
 
 // ipv6_manager.h
-void TCPIP_IPV6_HeaderPut(IPV6_PACKET * ptrPacket, uint8_t protocol)
+void TCPIP_IPV6_HeaderPut(IPV6_PACKET * ptrPacket, uint8_t protocol, uint8_t dscp)
 {
     if(ptrPacket->flags.addressType != (uint8_t)IP_ADDRESS_TYPE_IPV6)
     {
@@ -908,16 +926,18 @@ void TCPIP_IPV6_HeaderPut(IPV6_PACKET * ptrPacket, uint8_t protocol)
     }
 
     void * ptrSegment = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_HEADER);
-
     if (ptrSegment == NULL)
     {
         return;
     }
 
-
     IPV6_HEADER* pHdr = FC_VPtr2IPv6Hdr(ptrSegment);
 
-    pHdr->V_T_F = (uint32_t)IPv6_VERSION;
+    IPV6_VTF vtf;
+    vtf.val = 0U;
+    vtf.version = IPv6_VERSION; 
+    vtf.ds = dscp; 
+    pHdr->V_T_F = TCPIP_Helper_htonl(vtf.val);
     pHdr->HopLimit = 0U;
 }
 
@@ -1357,7 +1377,8 @@ static unsigned short TCPIP_IPV6_PseudoHeaderChecksumGet (IPV6_PACKET * ptrPacke
 // ipv6_manager.h
 void TCPIP_IPV6_HopLimitSet(IPV6_PACKET * ptrPacket, uint8_t hopLimit)
 {
-    IPV6_HEADER * ptrHeader = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_HEADER);
+    void * ptrSegment = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_HEADER);
+    IPV6_HEADER* ptrHeader = FC_VPtr2IPv6Hdr(ptrSegment);
     ptrHeader->HopLimit = hopLimit;
 }
 
@@ -1472,7 +1493,8 @@ int TCPIP_IPV6_Flush (IPV6_PACKET * ptrPacket)
     // Write the Ethernet Header to the MAC TX Buffer
     IPV6_ADDR_STRUCT * sourceAddress;
     IPV6_ADDR * destinationAddress = TCPIP_IPV6_DestAddressGet(ptrPacket);
-    IPV6_HEADER * ptrIpHeader = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_HEADER);
+    void * ptrSegment = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_HEADER);
+    IPV6_HEADER* ptrIpHeader = FC_VPtr2IPv6Hdr(ptrSegment);
 
     if (ptrPacket->headerLen == 0u)
     {
@@ -1522,7 +1544,7 @@ int TCPIP_IPV6_Flush (IPV6_PACKET * ptrPacket)
 
     if (ptrPacket->upperLayerChecksumOffset != IPV6_NO_UPPER_LAYER_CHECKSUM)
     {
-        checksumPointer = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_UPPER_LAYER_HEADER);
+        checksumPointer = (uint16_t*)TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, (uint8_t)TYPE_IPV6_UPPER_LAYER_HEADER);
         if (checksumPointer != NULL)
         {
             if((((const TCPIP_NET_IF*)ptrPacket->netIfH)->txOffload & (uint8_t)TCPIP_MAC_CHECKSUM_IPV6) == 0U)
@@ -1725,7 +1747,8 @@ static bool TCPIP_IPV6_PacketTransmitInFragments (IPV6_PACKET * pkt, uint16_t mt
         return false;
     }
 
-    if ((ptrSegment = TCPIP_IPV6_DataSegmentContentsGetByType(pkt, (uint8_t)TYPE_IPV6_EX_HEADER_FRAGMENT)) == NULL)
+    ptrSegment = FC_VPtr2SegHdr(TCPIP_IPV6_DataSegmentContentsGetByType(pkt, (uint8_t)TYPE_IPV6_EX_HEADER_FRAGMENT));
+    if (ptrSegment == NULL)
     {
 
         ptrSegment = TCPIP_IPV6_DataSegmentHeaderAllocate ((uint16_t)sizeof (IPV6_FRAGMENT_HEADER));
@@ -2006,7 +2029,7 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIPAddr, IPV
     (void)MACGetArray(pRxPkt, (uint8_t*)&header, (uint16_t)sizeof(header));
 
     // Make sure that this is an IPv6 packet.
-    if ((header.V_T_F & 0x000000F0U) != (uint32_t)IPv6_VERSION)
+    if ((header.V_T_F & 0x000000F0U) != (uint32_t)IPv6_SHIFT_VERSION)
     {
         return false;
     }
@@ -2053,7 +2076,7 @@ bool TCPIP_IPV6_AddressesGet(const TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** p
     pHeader = FC_CuPtr2IPv6Hdr(pNetLayer);
 
     // Make sure that this is an IPv6 packet.
-    if ((pHeader->V_T_F & 0x000000F0U) != (uint32_t)IPv6_VERSION)
+    if ((pHeader->V_T_F & 0x000000F0U) != (uint32_t)IPv6_SHIFT_VERSION)
     {
         return false;
     }
@@ -4487,6 +4510,12 @@ static TCPIP_MAC_PACKET* TCPIP_IPV6_MacPacketTxAllocate(IPV6_PACKET* pkt, uint16
 {
     TCPIP_MAC_PACKET* pMacPkt;
 
+    void * ptrSegment = TCPIP_IPV6_DataSegmentContentsGetByType (pkt, (uint8_t)TYPE_IPV6_HEADER);
+    if (ptrSegment == NULL)
+    {
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        return NULL;
+    }
 
     // allocate a packet with nSegs segments
     uint32_t uFlags = (uint32_t)flags;
@@ -4497,6 +4526,12 @@ static TCPIP_MAC_PACKET* TCPIP_IPV6_MacPacketTxAllocate(IPV6_PACKET* pkt, uint16
     {
         TCPIP_MAC_PACKET_ACK_FUNC macAckFnc = (pkt->macAckFnc != NULL) ? pkt->macAckFnc : &TCPIP_IPV6_MacPacketTxAck;
         TCPIP_PKT_PacketAcknowledgeSet(pMacPkt, macAckFnc, pkt->ack6Param);
+
+        IPV6_HEADER* pHdr = FC_VPtr2IPv6Hdr(ptrSegment);
+        IPV6_VTF vtf;
+        vtf.val = TCPIP_Helper_ntohl(pHdr->V_T_F);
+        uint8_t dscp = vtf.ds;
+        pMacPkt->pktPriority = TCPIP_IPV6_TxPriQueue(pkt->netIfH, dscp);
     }
 
     return pMacPkt;
@@ -4869,6 +4904,56 @@ TCPIP_IPV6_RESULT TCPIP_IPV6_G3PLC_PanIdSet(TCPIP_NET_HANDLE netH, uint16_t panI
 }
 
 #endif  // defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
+
+// calculates a TX packet priority queue based on the network interface
+// dscp value should be the IPv6 header IPV6_VTF::ds
+static uint8_t TCPIP_IPV6_TxPriQueue(const TCPIP_NET_IF* pNetIf, uint8_t dscp)
+{
+    if(ipv6PriPktHandler != NULL)
+    {
+        return ipv6PriPktHandler((TCPIP_NET_HANDLE)pNetIf, dscp);
+    }
+
+    // default calculation
+    uint16_t qNo = (uint16_t)TCPIPStack_TxPriNum(pNetIf);   // number of the MAC supported queues
+    if(dscp > (uint8_t)TCPIP_IPV6_DSCP_MAX)
+    {   // avoid overflow
+        dscp = (uint8_t)TCPIP_IPV6_DSCP_MAX;
+    }
+
+    uint16_t pri16 = ((uint16_t)dscp * qNo) / (uint16_t)TCPIP_IPV6_DSCP_MAX; 
+    return pri16 == 0 ? 0 : (uint8_t)pri16 - 1U;
+}
+
+bool TCPIP_IPV6_TxPriHandlerRegister(TCPIP_IPV6_TX_PRI_HANDLER priHandler)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv6PriPktHandler == NULL)
+    {
+        ipv6PriPktHandler = priHandler;
+        res = true;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+bool TCPIP_IPV6_TxPriHandlerDeregister(TCPIP_IPV6_TX_PRI_HANDLER priHandler)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv6PriPktHandler == priHandler)
+    {
+        ipv6PriPktHandler = NULL;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
 
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 

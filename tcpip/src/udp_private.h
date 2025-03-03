@@ -251,8 +251,7 @@ typedef struct
     uint8_t         addType;        // IPV4/6 socket type, IP_ADDRESS_TYPE;
     uint8_t         extFlags;       // a UDP_EXT_FLAGS value, 8 bit
     uint8_t         ttl;            // socket TTL value 
-    uint8_t         padding;        // padding; not used
-
+    uint8_t         dscp;           // IPv6 DSCP value
 } UDP_SOCKET_DCPT;
 
 

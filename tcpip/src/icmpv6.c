@@ -45,6 +45,9 @@ Microchip or any third party.
 #if defined TCPIP_STACK_USE_IPV6
 
 
+// default DSCP for ICMPv6
+#define ICMPV6_DEFAULT_DSCP     TCPIP_IPV6_DSCP_CS2
+
 
 static const void*      icmpv6MemH = NULL;        // memory handle
 static int              icmpv6InitCount = 0;      // module initialization count
@@ -451,7 +454,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderErrorPut (const TCPIP_NET_IF * pNetIf, const IP
     header.wChecksum = 0x0000;
     header.additionalData = additionalData;
 
-    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6);
+    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6, (uint8_t)ICMPV6_DEFAULT_DSCP);
 
     TCPIP_IPV6_HopLimitSet(pkt, 255U);
 
@@ -519,7 +522,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderEchoRequestPut (TCPIP_NET_HANDLE hNetIf, const 
     header.identifier = TCPIP_Helper_htons (identifier);
     header.sequenceNumber = TCPIP_Helper_htons (sequenceNumber);
 
-    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6);
+    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6, (uint8_t)ICMPV6_DEFAULT_DSCP);
 
     // Put the ICMPv6 Header
     if (TCPIP_IPV6_UpperLayerHeaderPut (pkt, (void *)&header, (uint16_t)sizeof (ICMPV6_HEADER_ECHO), (uint8_t)IPV6_PROT_ICMPV6, ICMPV6_CHECKSUM_OFFSET) == NULL)
@@ -574,7 +577,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (const TCPIP_NET_IF * pNe
     header.wChecksum = 0x0000;
     header.Reserved = 0x00000000;
 
-    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6);
+    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6, (uint8_t)ICMPV6_DEFAULT_DSCP);
 
     TCPIP_IPV6_HopLimitSet(pkt, 255U);
 
@@ -698,7 +701,7 @@ bool TCPIP_ICMPV6_G3RouterAdvertisementPut (const TCPIP_NET_IF * pNetIf, const I
     
     header.routerLifetime = 0xffff; // max value allowed by RFC 6775
 
-    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6);
+    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6, (uint8_t)ICMPV6_DEFAULT_DSCP);
 
     TCPIP_IPV6_HopLimitSet(pkt, 255U);
 
@@ -803,7 +806,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborSolicitationPut (const TCPIP_NET_IF * p
     IPV6_ADDR* pDstAdd = FC_U8Ptr2Ip6Add(((uint8_t*)&header + offsetof(struct ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress)));
     (void)memcpy (pDstAdd, targetAddr, sizeof (IPV6_ADDR));
 
-    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6);
+    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6, (uint8_t)ICMPV6_DEFAULT_DSCP);
 
     TCPIP_IPV6_HopLimitSet(pkt, 255U);
 
@@ -879,7 +882,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (const TCPIP_NET_IF * 
     IPV6_ADDR* pDstAdd = FC_U8Ptr2Ip6Add(((uint8_t*)&header + offsetof(struct ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT, aTargetAddress)));
     (void)memcpy(pDstAdd, targetAddr, sizeof(IPV6_ADDR));
 
-    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6);
+    TCPIP_IPV6_HeaderPut(pkt, (uint8_t)IPV6_PROT_ICMPV6, (uint8_t)ICMPV6_DEFAULT_DSCP);
 
     TCPIP_IPV6_HopLimitSet(pkt, 255U);
 

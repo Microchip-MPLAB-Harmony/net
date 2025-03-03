@@ -2008,12 +2008,16 @@ static bool F_TCPIPStackIsRunState(void)
                     // set the default MTU; MAC driver will override if needed
                     TCPIP_MAC_PARAMETERS macParams = {{{0}}};
                     macParams.linkMtu = TCPIP_MAC_LINK_MTU_DEFAULT; 
+                    macParams.macTxPrioNum = 1U; 
+                    macParams.macRxPrioNum = 1U;    // se the default priority queue numbers 
                     (void) (*pNetIf->pMacObj->MAC_ParametersGet)(pNetIf->hIfMac, &macParams);
                     (void) memcpy(pNetIf->netMACAddr.v, macParams.ifPhyAddress.v, sizeof(pNetIf->netMACAddr));
                     pNetIf->Flags.bMacProcessOnEvent = (uint8_t)(macParams.processFlags != TCPIP_MAC_PROCESS_FLAG_NONE);
                     pNetIf->linkMtu = (uint16_t)macParams.linkMtu;
                     pNetIf->txOffload = (uint8_t)macParams.checksumOffloadTx;
                     pNetIf->rxOffload = (uint8_t)macParams.checksumOffloadRx;
+                    pNetIf->txPriNum = macParams.macTxPrioNum;
+                    pNetIf->rxPriNum = macParams.macRxPrioNum;
 
                     // enable this interface
                     pNetIf->Flags.bInterfaceEnabled = 1;
@@ -5065,6 +5069,18 @@ static bool F_TCPIP_StackSyncFunction(void* synchHandle, TCPIP_MAC_SYNCH_REQUEST
     }
 
     return res;
+}
+
+uint8_t TCPIP_STACK_MacTxPriGet(TCPIP_NET_HANDLE netH)
+{
+    TCPIP_NET_IF*  pNetIf = TCPIPStackHandleToNet(netH);
+    return TCPIPStack_TxPriNum(pNetIf);
+}
+
+uint8_t TCPIP_STACK_MacRxPriGet(TCPIP_NET_HANDLE netH)
+{
+    TCPIP_NET_IF*  pNetIf = TCPIPStackHandleToNet(netH);
+    return TCPIPStack_RxPriNum(pNetIf);
 }
 
 unsigned int TCPIP_STACK_VersionGet ( const SYS_MODULE_INDEX index )

@@ -425,7 +425,7 @@ IPV6_DATA_SEGMENT_HEADER * TCPIP_IPV6_UpperLayerHeaderPut (IPV6_PACKET * ptrPack
 // the link-layer address.  Now the link-layer address is passed in in the TCPIP_IPV6_Flush
 // function.  The length of remoteIPAddr is 4 or 16, depending on packet's IP protocol
 // type.
-void TCPIP_IPV6_HeaderPut(IPV6_PACKET * ptrPacket, uint8_t protocol);
+void TCPIP_IPV6_HeaderPut(IPV6_PACKET * ptrPacket, uint8_t protocol, uint8_t dscp);
 
 
 /*****************************************************************************

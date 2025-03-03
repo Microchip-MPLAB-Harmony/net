@@ -4454,7 +4454,7 @@ static TCP_SEND_RES F_TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 #if defined (TCPIP_STACK_USE_IPV6)
         if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {   // Write IP header
-            TCPIP_IPV6_HeaderPut((IPV6_PACKET*)pSendPkt, (uint8_t)IP_PROT_TCP);
+            TCPIP_IPV6_HeaderPut((IPV6_PACKET*)pSendPkt, (uint8_t)IP_PROT_TCP, pSkt->dscp);
         }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
@@ -6709,6 +6709,10 @@ bool TCPIP_TCP_OptionsSet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optPa
                 pSkt->tos = U_OPT_PARAM.param8;
                 break;
                 
+            case TCP_OPTION_DSCP:
+                pSkt->dscp = U_OPT_PARAM.param8;
+                break;
+                
             default:
                 res = false;   // not supported option
                 break;
@@ -6776,6 +6780,10 @@ bool TCPIP_TCP_OptionsGet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optPa
 
              case TCP_OPTION_TOS:
                 *(uint8_t*)optParam = pSkt->tos;
+                break;
+                
+             case TCP_OPTION_DSCP:
+                *(uint8_t*)optParam = pSkt->dscp;
                 break;
                 
             default:
