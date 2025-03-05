@@ -1541,8 +1541,8 @@ static TCPIP_WSC_RES WSC_OpenSocket(TCPIP_WSC_CONN_CTRL* pConn)
 
 
     if((pConn->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON) != 0U)
-    {   // encrypted
-        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_ENCRYPTED);
+    {   // encrypted at run time
+        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_UNENCRYPTED);
     }
     else if((pConn->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF) != 0U)
     {   // unencrypted
