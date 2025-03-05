@@ -60,7 +60,7 @@ Microchip or any third party.
         #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32cz.h"
     #elif defined (DRV_PIC32CK)
         #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32ck.h"
-    #elif defined (DRV_WBZ653)
+    #elif defined (DRV_PIC32WM_BZ6)
         #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32cxbz6.h"
     #elif defined (DRV_PIC32CXBZ6)
         #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32cxbz6.h"

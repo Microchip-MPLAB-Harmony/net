@@ -245,7 +245,7 @@ def instantiateComponent(drvMiimComponent):
         drv_miim_xxx_file = "drv_miim_gmac.c"
     elif ("PIC32CZCA8" in processor) or ("PIC32CZCA9" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32cz.c"
-    elif (("WBZ653" in processor) or ("PIC32CXBZ6" in dev_series)):
+    elif (("PIC32WM_BZ6" in processor) or ("PIC32CXBZ6" in dev_series)):
         drv_miim_xxx_file = "drv_miim_pic32cxbz6.c"
     elif ("SAM9X6" in processor): 
         drv_miim_xxx_file = "drv_miim_emac.c"
@@ -370,7 +370,7 @@ def drvMiimSetIntMacId(symbol, event):
         if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZCA8") or 
             (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZCA9") or 
             (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CK") or 
-            (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "WBZ653") or 
+            (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32WM_BZ6") or 
             (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CXBZ6")):  
             symbol.setValue("ETH_BASE_ADDRESS") 
         else:

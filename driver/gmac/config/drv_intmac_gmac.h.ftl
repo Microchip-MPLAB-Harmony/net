@@ -314,7 +314,7 @@ Microchip or any third party.
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MAIN_CLOCK_FREQUENCY}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32CXSG41">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MAIN_CLOCK_FREQUENCY}
-        <#lt><#elseif TCPIP_INTMAC_DEVICE == "WBZ653">
+        <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32WM_BZ6">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.SYS_CLK_FREQ}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32CXBZ6">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.SYS_CLK_FREQ}
