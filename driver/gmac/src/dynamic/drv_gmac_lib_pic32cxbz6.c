@@ -373,7 +373,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
     uint16_t nRxDescCnt = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt; 
     uint16_t desc_idx = start_index;
 
-    while ((nDscCnt--) != 0U)
+    while ((nDesc_Cnt--) != 0U)
     {
         //dynamically allocate new rx packets, if number of rx packets are less than threshold
         if(((uint16_t)pMACDrv->sGmacData.gmac_queue[queueIdx].RxQueue.nNodes) < (pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffCntThres))
@@ -1151,10 +1151,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, ui
  * Function:    DRV_PIC32CGMAC_LibRxBuffersCountGet
  * Summary :    Returns the number of pending RX buffers and scheduled buffers in the GMAC queues.
  *****************************************************************************/
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs)
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, uint32_t* pendBuffs, uint32_t* schedBuffs)
 {
-    int pend_buffer_cnt = 0;
-    int sched_buffer_cnt = 0;
+    uint32_t pend_buffer_cnt = 0;
+    uint32_t sched_buffer_cnt = 0;
 
     for(uint16_t queue_idx=0; queue_idx < pMACDrv->sGmacData.gmacConfig.macQueNum; queue_idx++)
     {
