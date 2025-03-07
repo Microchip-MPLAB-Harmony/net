@@ -690,6 +690,12 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
             res = TCPIP_WSC_RES_RESOURCE_ERROR;
             break;
         } 
+        // secure flags check
+        if((connDcpt->connFlags & ((uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON | (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF)) == ((uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON | (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF))
+        {   // both secure_on/secure_off set
+            res = TCPIP_WSC_RES_BAD_ARG;
+            break;
+        }
         if(connDcpt->protocols != NULL && connDcpt->nProtocols != 0)
         {   // check the protocols
             if(connDcpt->nProtocols > TCPIP_WSC_PROTO_MAX_NO)
@@ -1539,18 +1545,38 @@ static TCPIP_WSC_RES WSC_OpenSocket(TCPIP_WSC_CONN_CTRL* pConn)
     NET_PRES_SKT_HANDLE_T netSkt;
     TCPIP_WSC_MODULE_DCPT*  pDcpt = pConn->parent;
 
-
+    bool doEncrypt;
     if((pConn->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON) != 0U)
-    {   // encrypted at run time
-        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_UNENCRYPTED);
+    {   // forced encrypted connection
+        doEncrypt = true;
     }
     else if((pConn->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF) != 0U)
-    {   // unencrypted
-        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_UNENCRYPTED);
+    {   // forced unencrypted
+        doEncrypt = false;
     }
     else
-    {   // use default port number
-        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT);
+    {   // use the port number
+        if(TCPIP_Helper_TCPSecurePortGet(pConn->connPort))
+        {
+            doEncrypt = true;
+            pConn->connFlags |= (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON;
+        }
+        else
+        {
+            doEncrypt = false;
+        }
+    }
+#if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SKT_OPEN) != 0)
+    SYS_CONSOLE_PRINT("WSC Open skt - encrypted: %d, port: %d\r\n", doEncrypt, pConn->connPort);
+#endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SKT_OPEN) != 0)
+
+    if(doEncrypt)
+    {
+        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_ENCRYPTED);
+    }
+    else
+    {
+        sktType = (NET_PRES_SKT_T)((uint16_t)NET_PRES_SKT_STREAM | (uint16_t)NET_PRES_SKT_CLIENT | (uint16_t)NET_PRES_SKT_UNENCRYPTED);
     }
 
     res = TCPIP_WSC_RES_OK;
@@ -1889,19 +1915,8 @@ static void WSC_Task_WaitConnect(TCPIP_WSC_CONN_CTRL* pWsc)
 
     if(NET_PRES_SocketIsConnected(skt))
     {   // success
-        bool forceSecure = (pWsc->connFlags & TCPIP_WSC_CONN_FLAG_SECURE_ON) != 0U;
-        bool portSecure = TCPIP_Helper_TCPSecurePortGet(pWsc->connPort);
-        if(forceSecure || portSecure)
+        if((pWsc->connFlags & TCPIP_WSC_CONN_FLAG_SECURE_ON) != 0U)
         {   // secure connection
-            if(!portSecure)
-            {   // forced secure connection
-                if(!NET_PRES_SocketEncryptSocket(skt))
-                {   // TLS failure
-                    WSC_FailConnection(pWsc, TCPIP_WSC_RES_TLS_ERROR);
-                    return;
-                }
-            }
-            // all good
             WSC_StartSrvWaitTimer(pWsc);
             SetIntState(pWsc, WSC_INT_STAT_WAIT_TLS_CONNECT); 
         }

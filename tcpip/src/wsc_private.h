@@ -101,6 +101,8 @@ Microchip or any third party.
 #define WSC_DEBUG_MASK_RTOS             0x8000      // show the used RTOS details
 #define WSC_DEBUG_MASK_SKT_SIZE         0x10000     // debug the WSC socket buffer size
 
+#define WSC_DEBUG_MASK_SKT_OPEN         0x20000     // show the WSC socket connection details
+
 #define WSC_DEBUG_LEVEL                 (0x01)
 
 #define WSC_DBG_RX_BUFFER_SIZE          100U    // debugging, when WSC_DEBUG_MASK_SHOW_RX_MSG is defined
