@@ -44,22 +44,6 @@ Microchip or any third party.
 #define GMAC_RX_STICKY_BUFFERS  1
 #define GMAC_RX_DYNAMIC_BUFFERS 0
 
-// Interrupt bits
-// All interrupts
-#define GMAC_INT_ALL 0xFFFFFFFF
-// RX Interrupts
-#define GMAC_INT_RX_BITS  \
-    (ETH_IER_RCOMP_Msk  | ETH_IER_RXUBR_Msk  | ETH_IER_ROVR_Msk )
-// TX err interrupts
-#define GMAC_INT_TX_ERR_BITS  \
-    (ETH_IER_TUR_Msk  | ETH_IER_RLEX_Msk  | ETH_IER_TFC_Msk  | ETH_IER_HRESP_Msk)
-// TX interrupts
-#define GMAC_INT_TX_BITS  (GMAC_INT_TX_ERR_BITS)
-// Interrupt Status bits
-#define GMAC_INT_RX_STATUS_BITS  \
-    (ETH_ISR_RCOMP_Msk  | ETH_ISR_RXUBR_Msk  | ETH_ISR_ROVR_Msk )
-#define GMAC_INT_TX_STATUS_ERR_BITS  \
-    (ETH_ISR_TUR_Msk  | ETH_ISR_RLEX_Msk  | ETH_ISR_TFC_Msk  | ETH_ISR_HRESP_Msk )
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -111,6 +95,20 @@ static __inline__ TCPIP_MAC_PACKET * __attribute__((always_inline)) FC_LstNode2M
     U_NODE_PKT.pNode = lstNode;
     return U_NODE_PKT.pPkt;
 }
+
+static __inline__ DRV_PIC32CGMAC_SGL_LIST_NODE * __attribute__((always_inline)) FC_DescIndex2LstNode(DRV_GMAC_TX_DESC_INDEX * qNode)
+{
+    union
+    {
+        DRV_GMAC_TX_DESC_INDEX * qNode;        
+        DRV_PIC32CGMAC_SGL_LIST_NODE * pNode;
+    }U_TX_INDEX_NODE;
+
+    U_TX_INDEX_NODE.qNode = qNode;
+    return U_TX_INDEX_NODE.pNode;
+}
+
+
 static __inline__ DRV_GMAC_TX_DESC_INDEX * __attribute__((always_inline)) FC_LstNode2TxDscIdx(DRV_PIC32CGMAC_SGL_LIST_NODE * lstNode)
 {
     union
@@ -616,7 +614,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
             pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc[desc_idx].tx_desc_status.val = GMAC_TX_USED_BIT | GMAC_TX_LAST_BUFFER_BIT;
             //Allocate memory for nodes to store Tx Descriptor Index used for transmission
             queue_node = (*pMACDrv->sGmacData.mac_callocF)(pMACDrv->sGmacData.mac_AllocH,1, sizeof(DRV_GMAC_TX_DESC_INDEX));
-            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx].TxDescAckPoolQueue, FC_MacPkt2LstNode(queue_node)); 
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx].TxDescAckPoolQueue, FC_DescIndex2LstNode(queue_node)); 
                         
         }
         pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc[desc_idx-1U].tx_desc_status.val |= GMAC_TX_WRAP_BIT;
@@ -693,7 +691,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
             GCIRC_DEC(wTxIndex,wTxDescCount);
             nLoopCnt--;
         }
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, FC_MacPkt2LstNode(pTxQueueNode));
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, pTxQueueNode);
         //memory barrier to ensure all the memories updated before enabling transmission
         __DMB();
         //Enable Transmission
@@ -795,14 +793,14 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             pTxAckQueueNode->startIndex = pTxAckQueueNode->endIndex = 0;  
             
             F_DRV_GMAC_TxLock(pMACDrv); 
-            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue, FC_MacPkt2LstNode(pTxAckQueueNode)); 
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue, FC_DescIndex2LstNode(pTxAckQueueNode)); 
             F_DRV_GMAC_TxUnlock(pMACDrv);
         }
         else
         {
             F_DRV_GMAC_TxLock(pMACDrv); 
             // add the node back to queue as transmit not yet completed
-            DRV_PIC32CGMAC_SingleListHeadAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, FC_MacPkt2LstNode(pTxAckQueueNode)); 
+            DRV_PIC32CGMAC_SingleListHeadAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescUnAckQueue, FC_DescIndex2LstNode(pTxAckQueueNode)); 
             F_DRV_GMAC_TxUnlock(pMACDrv);
             break;
         }    
@@ -936,7 +934,7 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
         pTxAckQueueNode->buffer_count = 0;
         pTxAckQueueNode->startIndex = pTxAckQueueNode->endIndex = 0;  
         F_DRV_GMAC_TxLock(pMACDrv); 
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue, FC_MacPkt2LstNode(pTxAckQueueNode)); 
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx].TxDescAckPoolQueue, FC_DescIndex2LstNode(pTxAckQueueNode)); 
         F_DRV_GMAC_TxUnlock(pMACDrv);
             
     }
