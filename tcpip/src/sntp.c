@@ -103,12 +103,13 @@ static uint32_t         sntp_tstamp_timeout;
 static uint32_t         sntp_query_interval;
 static uint32_t         sntp_error_interval;
 
+static uint32_t         sysFreq;        // current system running frequency
+
 typedef enum
 {
     SM_INVALID = -1,    // invalid state
     //
-    SM_INIT = 0,
-    SM_HOME,
+    SM_HOME = 0,
     SM_WAIT_DNS,
     SM_DNS_RESOLVED,
     SM_UDP_SEND,
@@ -121,7 +122,7 @@ typedef enum
 }TCPIP_SNTP_STATE;
 
 
-static TCPIP_SNTP_STATE     sntpState = SM_INIT;
+static TCPIP_SNTP_STATE     sntpState = SM_HOME;
 static bool                 sntpDisabled = false;   // run time enable/disable 
 
 // the server address
@@ -143,7 +144,6 @@ static void     TCPIP_SNTP_Event(TCPIP_SNTP_EVENT evType, const void* param);
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_STATE) != 0)
 static const char* const T_SNTP_DbgState_Tbl[] = 
 {
-    "init",            //    SM_INIT,
     "home",            //    SM_HOME,
     "wait_dns",        //    SM_WAIT_DNS,
     "dns_solved",      //    SM_DNS_RESOLVED,
@@ -399,6 +399,7 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         }
 #endif  // !defined (TCPIP_STACK_USE_IPV4)
 
+        sysFreq = SYS_TMR_TickCounterFrequencyGet(); 
         (void)memset(&ntpData, 0, sizeof(ntpData));
         sntpServerName[0] = '\0';
         if(pSNTPConfig->ntp_server != NULL)
@@ -407,10 +408,10 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
             sntpServerName[sizeof(sntpServerName) - 1U] = '\0';
         }
         ntpConnection = pSNTPConfig->ntp_connection_type;
-        sntp_reply_timeout = pSNTPConfig->ntp_reply_timeout;
-        sntp_tstamp_timeout = pSNTPConfig->ntp_stamp_timeout;
-        sntp_query_interval = pSNTPConfig->ntp_success_interval;
-        sntp_error_interval = pSNTPConfig->ntp_error_interval;
+        sntp_reply_timeout = pSNTPConfig->ntp_reply_timeout * sysFreq;
+        sntp_tstamp_timeout = pSNTPConfig->ntp_stamp_timeout * sysFreq;
+        sntp_query_interval = pSNTPConfig->ntp_success_interval * sysFreq;
+        sntp_error_interval = pSNTPConfig->ntp_error_interval * sysFreq;
 
         pSntpDefIf = (const TCPIP_NET_IF*)TCPIP_STACK_NetHandleGet(pSNTPConfig->ntp_interface);
 
@@ -434,11 +435,10 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
         ntpEventHandler = NULL;
         sntpDisabled = false;
+        TCPIP_SNTP_SetIdleState(SM_HOME);
         break;
     }
 
-    // Reset per interface state machine and flags to default values
-    TCPIP_SNTP_SetIdleState(SM_INIT);
 
     ntpLastError = SNTP_RES_OK; 
 
@@ -527,16 +527,6 @@ static void TCPIP_SNTP_Process(void)
 
     switch(sntpState)
     {
-        case SM_INIT:
-            // perform delayed initialization
-            // convert seconds to sys ticks
-            sntp_reply_timeout *= SYS_TMR_TickCounterFrequencyGet();
-            sntp_tstamp_timeout *= SYS_TMR_TickCounterFrequencyGet();
-            sntp_query_interval *= SYS_TMR_TickCounterFrequencyGet();
-            sntp_error_interval *= SYS_TMR_TickCounterFrequencyGet();
-            TCPIP_SNTP_SetNewState(SM_HOME);
-            break;
-
         case SM_HOME:
             if(sntpDisabled || sntpServerName[0] == '\0')
             {   // idle or no active server name
@@ -638,7 +628,6 @@ static void TCPIP_SNTP_Process(void)
             // Make certain the socket can be written to
             if(TCPIP_UDP_TxPutIsReady(sntpSocket, (uint16_t)sizeof(pkt)) == 0U)
             {   // Wait no more than 1 sec
-                uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
                 if((SYS_TMR_TickCountGet() - SNTPTimer > 1U * sysFreq))
                 {
                     TCPIP_SNTP_SetErrorState(SM_DNS_RESOLVED, SNTP_RES_SKT_ERR, TCPIP_SNTP_EVENT_SKT_ERROR, false);
@@ -789,17 +778,16 @@ static uint32_t TCPIP_SNTP_CurrTime(uint32_t* pMs)
 
     TCPIP_SNTP_TIME_STAMP deltaStamp, fractStamp;
     
-    uint32_t ticksPerSec = SYS_TMR_TickCounterFrequencyGet();
     uint64_t deltaTick = SYS_TMR_TickCountGetLong() - ntpData.tStampTick;
     
-    // calculate seconds = deltaTick / ticksPerSec;
-    deltaStamp.tStampSeconds = (uint32_t)(deltaTick / ticksPerSec);
+    // calculate seconds = deltaTick / sysFreq;
+    deltaStamp.tStampSeconds = (uint32_t)(deltaTick / sysFreq);
 
-    // calculate fract part: (deltaTick % ticksPerSec) / ticksPerSec) * 2^32 ; 
-    fractStamp.tStampSeconds = (uint32_t)(deltaTick - (uint64_t)deltaStamp.tStampSeconds * ticksPerSec);
+    // calculate fract part: (deltaTick % sysFreq) / sysFreq) * 2^32 ; 
+    fractStamp.tStampSeconds = (uint32_t)(deltaTick - (uint64_t)deltaStamp.tStampSeconds * sysFreq);
     fractStamp.tStampFraction = 0;
 
-    deltaStamp.tStampFraction = (uint32_t)(fractStamp.llStamp / ticksPerSec);
+    deltaStamp.tStampFraction = (uint32_t)(fractStamp.llStamp / sysFreq);
 
     // 64 bit addition gets us the new time stamp
     deltaStamp.llStamp += ntpData.tStamp.llStamp;
@@ -899,7 +887,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_Disable(void)
 {
     if(sntpDisabled == false)
     {
-        if(sntpState > SM_INIT)
+        if(sntpState > SM_HOME)
         {   // no more rx data
             (void)TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, FC_Uint2VPtr(0U));
             // discard any data
@@ -920,7 +908,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_Enable(void)
 {
     if(sntpDisabled == true)
     {   // re-enable the module
-        TCPIPStack_Assert(sntpState == SM_INIT || sntpState == SM_HOME, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(sntpState == SM_HOME, __FILE__, __func__, __LINE__);
         sntpDisabled = false;
     }
 
