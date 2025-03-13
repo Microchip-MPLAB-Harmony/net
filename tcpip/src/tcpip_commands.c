@@ -8739,7 +8739,7 @@ static char wsc_proto[16 + 1] = "";
 // current port to connect to
 static uint16_t wsc_port = 80U;
 // if proto usage is enforced
-static int wsc_proto_enforced = 1;
+static int32_t wsc_proto_enforced = 1;
 // current base settings for the connection flags
 static uint16_t wsc_flags = (uint16_t)TCPIP_WSC_CONN_FLAG_NONE;
 
@@ -8982,8 +8982,8 @@ static void F_Command_WsPreset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
         return;
     }
 
-    int presIx; 
-    (void)FC_Str2L(argv[2], 10, &presIx);
+    uint32_t presIx; 
+    (void)FC_Str2UL(argv[2], 10, &presIx);
     if(presIx >= sizeof(wsc_presets) / sizeof(*wsc_presets))
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc preset - wrong preset index! Maxim '%d'\r\n", sizeof(wsc_presets) / sizeof(*wsc_presets) - 1);
@@ -9325,7 +9325,7 @@ static void F_Command_WsRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 
     if(argc > 2)
     {
-        size_t bSize;
+        uint32_t bSize;
         (void)FC_Str2UL(argv[2], 10, &bSize);
         if(bSize == 0U || bSize > sizeof(U_WSC_RD_BUFF.uBuffer))
         {
