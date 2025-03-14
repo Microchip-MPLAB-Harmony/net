@@ -8655,16 +8655,17 @@ typedef struct
     const char* resource;
     const char* proto;
     uint16_t    port;
+    uint16_t    flags;
 }WSC_TEST_PRESET;
 
 // list of preset servers
 static const WSC_TEST_PRESET wsc_presets[] = 
 {
 // { server, resource, proto, port}
-    {"ws.ifelse.io", 0, 0, 80},
-    {"ws.ifelse.io", 0, 0, 443},
-    {"echo.websocket.org", 0, 0, 443},
-    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", 16968},
+    {"ws.ifelse.io", 0, 0, 80, TCPIP_WSC_CONN_FLAG_SECURE_OFF},
+    {"ws.ifelse.io", 0, 0, 443, TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
+    {"echo.websocket.org", 0, 0, 443, TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
+    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", 16968, TCPIP_WSC_CONN_FLAG_SECURE_ON},
 };
 
 // message to be sent for a connection close
@@ -9021,6 +9022,7 @@ static void F_Command_WsPreset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
     }
 
     wsc_port = preset->port;
+    wsc_flags = preset->flags;
 
     Wsc_PrintSettings(pCmdIO, argv);
 }
@@ -9034,6 +9036,7 @@ static void Wsc_PrintSettings(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv)
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tresource: '%s'\r\n", wsc_resource[0] == '\0' ? "none" : wsc_resource);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tproto: '%s'\r\n", wsc_proto[0] == '\0' ? "none" : wsc_proto);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tport: %d\r\n", wsc_port);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tflags: 0x%02x\r\n", wsc_flags);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tproto_enforced: '%d'\r\n", wsc_proto_enforced);
 } 
 
