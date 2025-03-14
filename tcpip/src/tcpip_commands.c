@@ -8662,10 +8662,10 @@ typedef struct
 static const WSC_TEST_PRESET wsc_presets[] = 
 {
 // { server, resource, proto, port}
-    {"ws.ifelse.io", 0, 0, 80, TCPIP_WSC_CONN_FLAG_SECURE_OFF},
-    {"ws.ifelse.io", 0, 0, 443, TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
-    {"echo.websocket.org", 0, 0, 443, TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
-    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", 16968, TCPIP_WSC_CONN_FLAG_SECURE_ON},
+    {"ws.ifelse.io", 0, 0, 80, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF},
+    {"ws.ifelse.io", 0, 0, 443, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
+    {"echo.websocket.org", 0, 0, 443, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
+    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", 16968, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON},
 };
 
 // message to be sent for a connection close
