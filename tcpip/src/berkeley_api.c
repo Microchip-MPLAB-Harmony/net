@@ -753,19 +753,19 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
 
     bsocket->localPort = lPort;
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (bsocket->addressFamily == (uint8_t)AF_INET)
-            {
+    if (bsocket->addressFamily == (uint8_t)AF_INET)
+    {
 #endif
-                bsocket->localIPv4 = lAddr.v4Add.Val;
+        bsocket->localIPv4 = lAddr.v4Add.Val;
 #if defined(TCPIP_STACK_USE_IPV6)
-            }
-            else
-            {
-                bsocket->localIPv6[0] = lAddr.v6Add.d32[0];
-                bsocket->localIPv6[1] = lAddr.v6Add.d32[1];
-                bsocket->localIPv6[2] = lAddr.v6Add.d32[2];
-                bsocket->localIPv6[3] = lAddr.v6Add.d32[3];
-            }
+    }
+    else
+    {
+        bsocket->localIPv6[0] = lAddr.v6Add.d32[0];
+        bsocket->localIPv6[1] = lAddr.v6Add.d32[1];
+        bsocket->localIPv6[2] = lAddr.v6Add.d32[2];
+        bsocket->localIPv6[3] = lAddr.v6Add.d32[3];
+    }
 #endif
     bsocket->bsdState = (uint8_t)SKT_BOUND;
     return 0; //success
@@ -1319,27 +1319,27 @@ static int connect_bound_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteI
                 bsocket->SocketID = INVALID_SOCKET;
                 break;
             }
+        }
 
-            // success
-            if (bsocket->SocketID == INVALID_SOCKET) 
-            {
-                errno = ENOBUFS;
-                break;
-            }
-
-            F_cfgBsdSocket(bsocket);
-            // Clear the first reset flag
-            (void)NET_PRES_SocketWasReset(bsocket->SocketID);
-
-            localAddr.v4Add.Val  = bsocket->localIPv4 == IP_ADDR_ANY ? 0U : bsocket->localIPv4;
-            remoteAddr.Val = remoteIP->v4Add.Val;
-            (void)TCPIP_TCP_SocketNetSet(bsocket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(NULL, &remoteAddr, &localAddr.v4Add, true), false);
-
-            bsocket->isServer = 0U;
-            bsocket->bsdState = (uint8_t)SKT_IN_PROGRESS;
-            errno = EINPROGRESS;
+        // success
+        if (bsocket->SocketID == INVALID_SOCKET) 
+        {
+            errno = ENOBUFS;
             break;
         }
+
+        F_cfgBsdSocket(bsocket);
+        // Clear the first reset flag
+        (void)NET_PRES_SocketWasReset(bsocket->SocketID);
+
+        localAddr.v4Add.Val  = bsocket->localIPv4 == IP_ADDR_ANY ? 0U : bsocket->localIPv4;
+        remoteAddr.Val = remoteIP->v4Add.Val;
+        (void)TCPIP_TCP_SocketNetSet(bsocket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(NULL, &remoteAddr, &localAddr.v4Add, true), false);
+
+        bsocket->isServer = 0U;
+        bsocket->bsdState = (uint8_t)SKT_IN_PROGRESS;
+        errno = EINPROGRESS;
+        break;
     }
 
     return SOCKET_ERROR;
