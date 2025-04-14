@@ -381,7 +381,12 @@ typedef struct S_tag_MAC_DATA_SEGMENT
     uint16_t                 segAllocSize;  
 
     /*  Additional client segment data. Ignored by the MAC driver. */
-    uint8_t                  segClientData[4];
+    union
+    {
+        uint8_t                  segClientData[4];
+        uint8_t                  segClientData8[4];
+        uint32_t                 segClientData32;
+    };
 
     /*  Additional client segment payload; Ignored by the MAC driver. */
     //  uint8_t                  segClientLoad[];
