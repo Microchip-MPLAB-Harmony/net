@@ -2289,7 +2289,7 @@ bool TCPIP_Helper_UDPSecurePortGet(uint16_t udpPort)
     return false;
 }
 
-uint16_t TCPIP_Helper_SecurePortGetByIndex(int index, bool streamSocket, int* pnIndexes)
+uint16_t TCPIP_Helper_SecurePortGetByIndex(size_t index, bool streamSocket, size_t* pnIndexes)
 {
     if(pnIndexes)
     {
