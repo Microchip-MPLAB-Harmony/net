@@ -3,7 +3,7 @@
 ### ADDITIONS AND UPDATES FOR v3.14.0:
 
 - **New Features**
-    - Addition of net support for PIC32-BZ6 family of devices
+    - Addition of net support for PIC32CX-BZ6 and PIC32WM-BZ6 family of devices
     - Addition of WebSocket Client module
     - TCP, UDP IPv4 and IPv6 added priority queue support
 
@@ -11,7 +11,7 @@
   - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
 
 - **Improvements and Bug Fixes**
-    - Added net support for PIC32-BZ6 family of devices
+    - Added net support for PIC32CX-BZ6 and PIC32WM-BZ6  family of devices
 
 	-	The following table provides the list of improvements and bug fixes in the v3.14.0 release:
 
@@ -48,6 +48,7 @@ In order to regenerate source code for any of the applications, you will also ne
 
 ### KNOWN ISSUES
 - Some MISRA C required violations are still reported by the Coverity analysis tool.
+    - The issues are not in the stack modules.
     - They will be fixed in a future release.
 
 
