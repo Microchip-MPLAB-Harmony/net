@@ -1,4 +1,57 @@
 # Microchip MPLAB® Harmony 3 Release Notes
+## Net Release v3.14.0 (April, 2025)
+### ADDITIONS AND UPDATES FOR v3.14.0:
+
+- **New Features**
+    - Addition of net support for PIC32-BZ6 family of devices
+    - Addition of WebSocket Client module
+    - TCP, UDP IPv4 and IPv6 added priority queue support
+
+- **Applications**
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
+
+- **Improvements and Bug Fixes**
+    - Added net support for PIC32-BZ6 family of devices
+
+	-	The following table provides the list of improvements and bug fixes in the v3.14.0 release:
+
+		| Module        | Description |
+		| ------------- | ----------- |
+        | WebSocket Client | New TCP/IP module to support the WebSocket client communication |
+        | SNTP          | Bug fix for skipping the INIT state when restarting the network interface |
+        | IPv6, UDP, TCP | Added DSCP option for MAC TX priority queues |
+        | IPv4, UDP, TCP | Added TOS option for MAC TX priority queues |  
+        | HTTP, SMTP, LLDP | These obsolete modules have been removed |
+        | all       	| Major rework to fix MISRA C required violations |
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.25](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.60](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.14.0
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.5.2 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.15.1
+- Harmony csp repository, v3.22.0
+- Harmony bsp repository, v3.22.0
+- Harmony crypto repository, v3.8.2
+- harmony-services repository, v1.5.0
+- wolfMQTT v1.19.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.19.2) for demos requiring wolfMQTT support
+
+### KNOWN ISSUES
+- Some MISRA C required violations are still reported by the Coverity analysis tool.
+    - They will be fixed in a future release.
+
+
+# Microchip MPLAB® Harmony 3 Release Notes
 ## Net Release v3.13.0 (December, 2024)
 ### ADDITIONS AND UPDATES FOR v3.13.0:
 
