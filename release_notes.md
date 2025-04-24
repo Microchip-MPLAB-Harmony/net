@@ -4,7 +4,7 @@
 
 - **New Features**
     - Addition of net support for PIC32CX-BZ6 and PIC32WM-BZ6 family of devices
-    - Addition of WebSocket Client module
+    - Addition of WebSocket Client module - beta
     - TCP, UDP IPv4 and IPv6 added priority queue support
 
 - **Applications**
@@ -17,7 +17,7 @@
 
 		| Module        | Description |
 		| ------------- | ----------- |
-        | WebSocket Client | New TCP/IP module to support the WebSocket client communication |
+        | WebSocket Client | New TCP/IP module to support the WebSocket client communication - beta |
         | SNTP          | Bug fix for skipping the INIT state when restarting the network interface |
         | IPv6, UDP, TCP | Added DSCP option for MAC TX priority queues |
         | IPv4, UDP, TCP | Added TOS option for MAC TX priority queues |  
