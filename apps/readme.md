@@ -12,4 +12,5 @@ Microchip MPLAB Harmony provides several networking application examples for mos
 | [net_apps_pic32cz_ca](https://github.com/Microchip-MPLAB-Harmony/net_apps_pic32cz_ca) | Networking application examples for PIC32CZ_CA family |
 | [net_apps_sama7d6](https://github.com/Microchip-MPLAB-Harmony/net_apps_sama7d6) | Networking application examples for SAMA7D6 family |
 | [net_apps_pic32cz_ca70](https://github.com/Microchip-MPLAB-Harmony/net_apps_pic32cz_ca70) | Networking application examples for PIC32CZ CA70 family |
+| [net_apps_pic32_bz6](https://github.com/Microchip-MPLAB-Harmony/net_apps_pic32_bz6) | Networking application examples for PIC32CX-BZ6/PIC32WM-BZ6 family |
 
