@@ -5,7 +5,7 @@
         <Dependency name="csp" version="v3.22.0"/>
         <Dependency name="bsp" version="v3.22.0"/>
         <Dependency name="crypto" version="v3.8.2"/>
-        <Dependency name="wolfMQTT" version="v1.19.1"/>
+        <Dependency name="wolfMQTT" version="v1.19.2"/>
         <Dependency name="harmony-services" version="v1.5.0"/>
     </Dependencies>
 </Package>

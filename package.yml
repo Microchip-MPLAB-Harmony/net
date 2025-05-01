@@ -20,7 +20,7 @@ package:
       version: "v3.8.2"
     - name: "wolfMQTT"
       type: "package"
-      version: "v1.19.1"
+      version: "v1.19.2"
     - name: "harmony-services"
       type: "package"
       version: "v1.5.0"
