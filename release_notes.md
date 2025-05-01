@@ -45,6 +45,7 @@ In order to regenerate source code for any of the applications, you will also ne
 - Harmony crypto repository, v3.8.2
 - harmony-services repository, v1.5.0
 - wolfMQTT v1.19.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.19.2) for demos requiring wolfMQTT support
+- wolfSSL v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring encryption wolfSSL support
 
 ### KNOWN ISSUES
 - Some MISRA C required violations are still reported by the Coverity analysis tool.
@@ -52,7 +53,6 @@ In order to regenerate source code for any of the applications, you will also ne
     - They will be fixed in a future release.
 
 
-# Microchip MPLAB® Harmony 3 Release Notes
 ## Net Release v3.13.0 (December, 2024)
 ### ADDITIONS AND UPDATES FOR v3.13.0:
 
