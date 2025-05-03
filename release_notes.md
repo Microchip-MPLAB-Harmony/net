@@ -11,12 +11,11 @@
   - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
 
 - **Improvements and Bug Fixes**
-    - Added net support for PIC32CX-BZ6 and PIC32WM-BZ6  family of devices
-
 	-	The following table provides the list of improvements and bug fixes in the v3.14.0 release:
 
 		| Module        | Description |
 		| ------------- | ----------- |
+        | MCC, drivers  | Support for PIC32CX-BZ6 and PIC32WM-BZ6 family of devices |
         | WebSocket Client | New TCP/IP module to support the WebSocket client communication - beta |
         | SNTP          | Bug fix for skipping the INIT state when restarting the network interface |
         | IPv6, UDP, TCP | Added DSCP option for MAC TX priority queues |
@@ -40,7 +39,7 @@ Before using MPLAB Harmony Net, ensure that the following are installed:
 In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
 
 - Harmony core repository, v3.15.1
-- Harmony csp repository, v3.22.0
+- Harmony csp repository, v3.22.2
 - Harmony bsp repository, v3.22.0
 - Harmony crypto repository, v3.8.2
 - harmony-services repository, v1.5.0
