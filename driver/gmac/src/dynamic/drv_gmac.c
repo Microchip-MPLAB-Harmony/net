@@ -2109,8 +2109,6 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
         
         for(queIdx = (uint8_t)GMAC_QUE_0; queIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queIdx++)
         {   
-            //Read ISR register to clear the interrupt status   
-            (void)DRV_PIC32CGMAC_LibReadInterruptStatus(pMACDrv, (GMAC_QUE_LIST)queIdx);
             //Enable GMAC interrupts
             DRV_PIC32CGMAC_LibEnableInterrupt(pMACDrv, (GMAC_QUE_LIST)queIdx, ethAckEv);
             
