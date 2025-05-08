@@ -1853,7 +1853,7 @@ static GMAC_RXFRAME_STATE F_SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CG
         else
         {
             //No RX packets in RX descriptors
-            break;
+            //Continue search in next descriptor
         }
 
         // increment rx index and continue search
