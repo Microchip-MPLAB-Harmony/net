@@ -112,42 +112,51 @@ typedef enum
     /* No PHY was detected or it failed to respond to reset command */
     DRV_ETHPHY_RES_DTCT_ERR               /*DOM-IGNORE-BEGIN*/ =  -1, /*DOM-IGNORE-END*/
 
+    /* Failed to clear the BMCON detect bits */
+    DRV_ETHPHY_RES_DTCT_CLR_ERR             = -2,
+
+    /* Failed to clear the BMCON reset bits */
+    DRV_ETHPHY_RES_DTCT_RST_CLR_ERR         = -3,
+
+    /* Timeout in Reset read step */
+    DRV_ETHPHY_RES_DTCT_RST_TMO_ERR         = -4,
+
     /* Timeout in the detection procedure */
-    DRV_ETHPHY_RES_DTCT_TMO               /*DOM-IGNORE-BEGIN*/ =  -2, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_DTCT_TMO               /*DOM-IGNORE-BEGIN*/ =  -5, /*DOM-IGNORE-END*/
 
     /* No match between the capabilities: the PHY supported and the open
       requested ones */
-    DRV_ETHPHY_RES_CPBL_ERR               /*DOM-IGNORE-BEGIN*/ =  -3, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_CPBL_ERR               /*DOM-IGNORE-BEGIN*/ =  -6, /*DOM-IGNORE-END*/
 
     /* Hardware configuration doesn't match the requested open mode */
-    DRV_ETHPHY_RES_CFG_ERR                /*DOM-IGNORE-BEGIN*/ =  -4, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_CFG_ERR                /*DOM-IGNORE-BEGIN*/ =  -7, /*DOM-IGNORE-END*/
 
     /* No negotiation active */
-    DRV_ETHPHY_RES_NEGOTIATION_INACTIVE   /*DOM-IGNORE-BEGIN*/ =  -5, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_INACTIVE   /*DOM-IGNORE-BEGIN*/ =  -8, /*DOM-IGNORE-END*/
 
     /* No negotiation support */
-    DRV_ETHPHY_RES_NEGOTIATION_UNABLE     /*DOM-IGNORE-BEGIN*/ =  -6, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_UNABLE     /*DOM-IGNORE-BEGIN*/ =  -9, /*DOM-IGNORE-END*/
 
     /* Negotiation not started yet */
-    DRV_ETHPHY_RES_NEGOTIATION_NOT_STARTED/*DOM-IGNORE-BEGIN*/ =  -7, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_NOT_STARTED/*DOM-IGNORE-BEGIN*/ =  -10, /*DOM-IGNORE-END*/
 
     /* Negotiation active */
-    DRV_ETHPHY_RES_NEGOTIATION_ACTIVE     /*DOM-IGNORE-BEGIN*/ =  -8, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_ACTIVE     /*DOM-IGNORE-BEGIN*/ =  -11, /*DOM-IGNORE-END*/
 
     /* Unsupported or operation error */
-    DRV_ETHPHY_RES_OPERATION_ERR          /*DOM-IGNORE-BEGIN*/ =  -9, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_OPERATION_ERR          /*DOM-IGNORE-BEGIN*/ =  -12, /*DOM-IGNORE-END*/
 
     /* Driver busy with a previous operation */
-    DRV_ETHPHY_RES_NOT_READY_ERR          /*DOM-IGNORE-BEGIN*/ =  -10, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NOT_READY_ERR          /*DOM-IGNORE-BEGIN*/ =  -13, /*DOM-IGNORE-END*/
 
     /* Passed handle is invalid */
-    DRV_ETHPHY_RES_HANDLE_ERR             /*DOM-IGNORE-BEGIN*/ =  -11, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_HANDLE_ERR             /*DOM-IGNORE-BEGIN*/ =  -14, /*DOM-IGNORE-END*/
 
     /* Operation aborted */
-    DRV_ETHPHY_RES_ABORTED                /*DOM-IGNORE-BEGIN*/ =  -12, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_ABORTED                /*DOM-IGNORE-BEGIN*/ =  -15, /*DOM-IGNORE-END*/
 
     /* MIIM Driver Operation Error */
-    DRV_ETHPHY_RES_MIIM_ERR              /*DOM-IGNORE-BEGIN*/ =   -13, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_MIIM_ERR              /*DOM-IGNORE-BEGIN*/ =   -16, /*DOM-IGNORE-END*/
 
 } DRV_ETHPHY_RESULT; 
 

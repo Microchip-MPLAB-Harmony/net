@@ -1374,7 +1374,7 @@ static DRV_ETHPHY_RESULT F_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJECT_
                 F_ETHPHY_Dbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, detectMask, 0);
                 if((bmcon.w & detectMask) != 0U)
                 {   // failed to clear
-                    res = DRV_ETHPHY_RES_DTCT_ERR;
+                    res = DRV_ETHPHY_RES_DTCT_CLR_ERR;
                 }
                 else
                 {
@@ -1432,7 +1432,7 @@ static void F_DRV_ETHPHY_SetupPhaseReadId(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
         default:
             // shouldn't happen
-            F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
+            F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
             break;
     }
 
@@ -1451,6 +1451,8 @@ static void F_DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             if(F_DRV_PHY_SMIWriteStart(hClientObj, (uint16_t)PHY_REG_BMCON, (uint16_t)BMCON_RESET_MASK))
             {
                 F_DRV_PHY_SetOperPhase(hClientObj, (uint16_t)DRV_ETHPHY_SETUP_PHASE_RESET, 1);
+                uint32_t temp_tickFreq = SYS_TMR_TickCounterFrequencyGet();
+                hClientObj->operTStamp = SYS_TMR_TickCountGet() + (uint32_t)((((phyInst->ethphyTmo->resetTmo) * temp_tickFreq) + 999U) / 1000U);
             }
             break;
 
@@ -1458,8 +1460,6 @@ static void F_DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             // read the BMCON
             if(F_DRV_PHY_SMIReadStart(hClientObj, (uint16_t)PHY_REG_BMCON))
             {
-                uint32_t temp_tickFreq = SYS_TMR_TickCounterFrequencyGet();
-                hClientObj->operTStamp = SYS_TMR_TickCountGet() + (uint32_t)((((phyInst->ethphyTmo->resetTmo) * temp_tickFreq) + 999U) / 1000U);
                 F_DRV_PHY_SetOperPhase(hClientObj, (uint16_t)DRV_ETHPHY_SETUP_PHASE_RESET, 2);
             }
             break;
@@ -1480,7 +1480,7 @@ static void F_DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
                 }
                 else
                 {
-                    F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
+                    F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_RST_CLR_ERR);
                 }
             }
             else
@@ -1491,7 +1491,7 @@ static void F_DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
         default:
             // shouldn't happen
-            F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
+            F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
             break;
     }
 
@@ -3011,7 +3011,7 @@ static void F_DRV_ETHPHY_ResetPhaseRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
                 }
                 else
                 {   // failed by timeout
-                    F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
+                    F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_RST_TMO_ERR);
                 }
             }
             else
