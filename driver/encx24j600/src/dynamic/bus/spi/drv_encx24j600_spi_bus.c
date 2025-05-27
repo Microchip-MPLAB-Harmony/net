@@ -298,10 +298,7 @@ int32_t DRV_ENCX24J600_SPI_OpenInterface(struct S_DRV_ENCX24J600_DriverInfo *  p
         return -1;
     }
       
-    DRV_SPI_TRANSFER_SETUP spiClientInfo= {    
-        .chipSelect = pDrvInstance->drvCfg.spiSetup.chipSelect,//SYS_PORT_PIN_RD9,
-    };
-    (void)DRV_SPI_TransferSetup (pBusInfo->clientHandle, &spiClientInfo);
+    (void)DRV_SPI_TransferSetup (pBusInfo->clientHandle, &pDrvInstance->drvCfg.spiSetup);
     
     return 0;
 }

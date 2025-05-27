@@ -486,10 +486,7 @@ int32_t DRV_ENC28J60_SPI_OpenInterface(DRV_ENC28J60_DriverInfo *  pDrvInstance )
         return -1;
     }
       
-    DRV_SPI_TRANSFER_SETUP spiClientInfo= {    
-        .chipSelect = pDrvInstance->drvCfg.spiSetup.chipSelect,//SYS_PORT_PIN_RD9,
-    };
-    (void)DRV_SPI_TransferSetup (pBusInfo->clientHandle, &spiClientInfo);
+    (void)DRV_SPI_TransferSetup (pBusInfo->clientHandle, &pDrvInstance->drvCfg.spiSetup);
     return 0;
 }
 
