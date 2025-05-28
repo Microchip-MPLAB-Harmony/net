@@ -3553,11 +3553,11 @@ static int F_DHCPV6Option_WriteOptionRequest(TCPIP_DHCPV6_IA_DCPT* pIa)
     pOptReq->optCode = TCPIP_Helper_htons((uint16_t)DHCPV6_OPT_CODE_OPTION_REQ);
     pOptReq->optLen = TCPIP_Helper_htons((uint16_t)reqCodeSize);
 
-    uint16_t* pReqDest = pOptReq->reqCode; 
     const uint32_t* pCurrReq = NULL;
     uint32_t currReqMask = 0U;
 
     uint32_t reqCode;    
+    int reqIx = 0;
     while(true)
     {
         reqCode = F_DHCPV6OptionSet_ExtractCode(optionSet, pMaskSet->nSets, &pCurrReq, &currReqMask);
@@ -3566,7 +3566,7 @@ static int F_DHCPV6Option_WriteOptionRequest(TCPIP_DHCPV6_IA_DCPT* pIa)
             break;
         }
 
-        *pReqDest++ = TCPIP_Helper_htons((uint16_t)reqCode);
+        pOptReq->reqCode[reqIx++] = TCPIP_Helper_htons((uint16_t)reqCode);
     }
 
 

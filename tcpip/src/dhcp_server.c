@@ -3071,37 +3071,23 @@ static uint8_t* F_DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uin
         uint8_t*    wrPtr;
     }uPtr;
 
-    typedef union __attribute__((packed))
-    {
-        uint8_t     b[4];
-        uint32_t    v32;
-    }pkd32;
-
-    union
-    {
-        uint32_t*   uptr;
-        pkd32*      pkdPtr;
-    }U_UINT_PDK32;
-
     uPtr.wrPtr = wrPtr;
 
     uPtr.pOption->optionType = optionType;
     uPtr.pOption->optionLen = 0U;
-    U_UINT_PDK32.uptr = uPtr.pOption->intVal;
-    pkd32* pVal = U_UINT_PDK32.pkdPtr;
 
+    int optIx = 0;
     for(ix = 0; ix < nSources; ix++)
     {
         if(*pSrc != 0U)
         {
-            pVal->v32 = *pSrc;
-            pVal++;
+            uPtr.pOption->intVal[optIx++] = *pSrc;
             uPtr.pOption->optionLen += (uint8_t)sizeof(uint32_t);
         }
         pSrc++;
     }
 
-    return (uint8_t*)pVal;
+    return (uint8_t*)(uPtr.pOption->intVal + optIx); 
 }
 
 // Note: this is just ICMP the handler and it needs to be short

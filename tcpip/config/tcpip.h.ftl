@@ -131,7 +131,7 @@ typedef IPV4_ADDR   IP_ADDR;
     None.
 */
 
-typedef union
+typedef union __attribute__((__packed__))
 {
     uint8_t  v[16];
     uint16_t w[8];
