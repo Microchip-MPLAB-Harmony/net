@@ -242,9 +242,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
     }
     
     //dma configuration
-    pGmacRegs->ETH_DCFGR = (ETH_DCFGR_DRBS_Msk & (((uint32_t)wRxBufferSize_temp >> 6) << ETH_DCFGR_DRBS_Pos))
-                            | (ETH_DCFGR_RXBMS_Msk & ((3) << ETH_DCFGR_RXBMS_Pos)) | ETH_DCFGR_TXPBMS_Msk  
-                            | ETH_DCFGR_FBLDO(4) | ETH_DCFGR_DDRP_Msk;
+    pGmacRegs->ETH_DCFGR = (ETH_DCFGR_DRBS_Msk & (((uint32_t)wRxBufferSize_temp >> 6UL) << ETH_DCFGR_DRBS_Pos))
+                            | (ETH_DCFGR_RXBMS_Msk & ((3UL) << ETH_DCFGR_RXBMS_Pos)) | ETH_DCFGR_TXPBMS_Msk  
+                            | ETH_DCFGR_FBLDO(4UL) | ETH_DCFGR_DDRP_Msk;
 
     if((pMACDrv->sGmacData.gmacConfig.checksumOffloadTx) != TCPIP_MAC_CHECKSUM_NONE)
     {
@@ -322,7 +322,7 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
         ncfgr &= ~ETH_NCFGR_SPD_Msk ;
     }
 
-    if(pauseType & TCPIP_ETH_PAUSE_TYPE_EN_RX)
+    if(((uint8_t)pauseType & (uint8_t)TCPIP_ETH_PAUSE_TYPE_EN_RX) != 0U)
     {
         ncfgr |= ETH_NCFGR_PEN_Msk ;
     }
@@ -748,7 +748,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
         }
         //remove head of TxDescUnAckQueue queue if USED bit is set.        
         //Check head of TxDescUnAckQueue queue start index descriptor 'USED' bit is set?
-        if(((pTxDesc[pTxAckQueueNode->startIndex].tx_desc_status.val) & GMAC_TX_USED_BIT) && (pTxDesc[pTxAckQueueNode->startIndex].tx_desc_buffaddr != 0))
+        if((((pTxDesc[pTxAckQueueNode->startIndex].tx_desc_status.val) & GMAC_TX_USED_BIT) != 0U) && (pTxDesc[pTxAckQueueNode->startIndex].tx_desc_buffaddr != 0))
         {            
             //get buffer count
             buffer_count = pTxAckQueueNode->buffer_count;
@@ -950,7 +950,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
     DRV_PIC32CGMAC_RX_FRAME_INFO rx_frame_state = {0,0,0};
     DRV_PIC32CGMAC_RESULT   res = DRV_PIC32CGMAC_RES_NO_PACKET;
     GMAC_RXFRAME_STATE  frameState = GMAC_RX_NO_FRAME_STATE;
-    bool bna_flag = 0;  
+    bool bna_flag = false;  
     
     //Check for BNA error due to shortage of Rx Buffers
     bna_flag = IsBufferNotAvailable(pMACDrv);
@@ -969,7 +969,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
         //pass the packet status to upper layer
         *pRxStat = (pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_frame_state.endIndex].rx_desc_status);       
         //number of buffers to return
-        *pnBuffs = rx_frame_state.buffer_count;     
+        *pnBuffs = (int)rx_frame_state.buffer_count;     
         // extract Rx packet and pass it to upper layer
         res = GetRxPacket(pMACDrv, &rx_frame_state, pRxPkt, queueIdx);     
     }
@@ -1098,7 +1098,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxFilterHash_Calculate(DRV_GMAC_DRIVER* 
 
         // read the current hash value stored in register
         hash_value = F_DRV_GMAC_HashValueGet(pMACDrv);
-        hash_value  |= (1 << (hash_Index.index));
+        hash_value  |= (1UL << (hash_Index.index));
     }
     else
     {   // Set hash value directly
@@ -1135,12 +1135,12 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, ui
 {
     eth_registers_t *  pGmacRegs = (eth_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
 
-    pMacAddr[0] = (pGmacRegs->SA[0].ETH_SAB)& 0xFF;
-    pMacAddr[1] = ((pGmacRegs->SA[0].ETH_SAB)>>8)& 0xFF;
-    pMacAddr[2] = ((pGmacRegs->SA[0].ETH_SAB)>>16)& 0xFF;
-    pMacAddr[3] = ((pGmacRegs->SA[0].ETH_SAB)>>24)& 0xFF;
-    pMacAddr[4] = (pGmacRegs->SA[0].ETH_SAT)& 0xFF;
-    pMacAddr[5] = ((pGmacRegs->SA[0].ETH_SAT)>>8)& 0xFF;
+    pMacAddr[0] = (pGmacRegs->SA[0].ETH_SAB)& 0xFFU;
+    pMacAddr[1] = ((pGmacRegs->SA[0].ETH_SAB)>>8)& 0xFFU;
+    pMacAddr[2] = ((pGmacRegs->SA[0].ETH_SAB)>>16)& 0xFFU;
+    pMacAddr[3] = ((pGmacRegs->SA[0].ETH_SAB)>>24)& 0xFFU;
+    pMacAddr[4] = (pGmacRegs->SA[0].ETH_SAT)& 0xFFU;
+    pMacAddr[5] = ((pGmacRegs->SA[0].ETH_SAT)>>8)& 0xFFU;
     
     return DRV_PIC32CGMAC_RES_OK;
 }
@@ -1395,7 +1395,7 @@ void DRV_PIC32CGMAC_LibEnableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST q
 {
     eth_registers_t *  pGmacRegs = (eth_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     
-    pGmacRegs->ETH_IER = ethEvents;
+    pGmacRegs->ETH_IER = (uint32_t)ethEvents;
 }
 
 /****************************************************************************
@@ -1406,7 +1406,7 @@ void DRV_PIC32CGMAC_LibDisableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST 
 {
     eth_registers_t *  pGmacRegs = (eth_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
 
-    pGmacRegs->ETH_IDR = ethEvents;
+    pGmacRegs->ETH_IDR = (uint32_t)ethEvents;
 }
 /****************************************************************************
  * GMAC Interrupt Service Routines(ISR)
@@ -2145,8 +2145,8 @@ uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv)
 static void F_DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value)
 {
     eth_registers_t *  pGmacRegs = (eth_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
-    pGmacRegs->ETH_HRB = hash_value & 0xffffffffUL;
-    pGmacRegs->ETH_HRT = (hash_value >> 32) & 0xffffffffUL;
+    pGmacRegs->ETH_HRB = (uint32_t)(hash_value & 0xffffffffUL);
+    pGmacRegs->ETH_HRT = (uint32_t)((hash_value >> 32UL) & 0xffffffffUL);
 }
 
 /****************************************************************************
