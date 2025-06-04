@@ -577,7 +577,7 @@ uint16_t Net_ProvWriteReady${INST}(void * providerData, uint16_t reqSize, uint16
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     
-    char dataBuff;
+    char dataBuff = '\0';
     WOLFSSL* ssl;
     (void)memcpy((void*)&ssl, providerData, sizeof(WOLFSSL*));
 
@@ -642,7 +642,7 @@ int32_t Net_ProvReadReady${INST}(void * providerData)
     int32_t ret = wolfSSL_pending(ssl);
     if (ret == 0) // wolfSSL_pending() doesn't check the underlying layer.
     {
-        char dataBuff;
+        char dataBuff = '\0';
         if (wolfSSL_peek(ssl, &dataBuff, 1) == 0)
         {
             return 0;

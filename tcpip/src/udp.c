@@ -3419,7 +3419,7 @@ bool TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT rem
         }
 
 #if defined (TCPIP_STACK_USE_IPV4)
-        if(addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
+        if(addType == IP_ADDRESS_TYPE_IPV4)
         {
             pSkt->pktSrcAddress.Val = remoteAddress->v4Add.Val;
         } 

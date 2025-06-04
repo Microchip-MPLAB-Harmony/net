@@ -414,8 +414,8 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData, 
 #if !defined (TCPIP_STACK_USE_IPV6)
         if(dnsData->ipAddressType == IP_ADDRESS_TYPE_IPV6)
         {
-            (void)F_DNSPutString;
-            (void)F_DNS_SelectIntf;
+            (void)&F_DNSPutString;
+            (void)&F_DNS_SelectIntf;
             return false;
         }
 #endif  // !defined (TCPIP_STACK_USE_IPV6)

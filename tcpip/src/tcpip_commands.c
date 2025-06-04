@@ -1934,9 +1934,13 @@ static void F_Command_IPAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
         return;
     }
 
+    (void)addType;
+
 #if defined(TCPIP_STACK_USE_IPV4)
+#if defined(TCPIP_STACK_USE_IPV6)
     if(addType == IP_ADDRESS_TYPE_IPV4)
     {
+#endif  // defined(TCPIP_STACK_USE_IPV6)
         if(TCPIPStackAddressServiceIsRunning(pNetIf) != TCPIP_STACK_ADDR_SRVC_NONE)
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "An address service is already running. Stop DHCP, ZCLL, etc. first\r\n");
@@ -1961,14 +1965,17 @@ static void F_Command_IPAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
         {
             success = true;
         }
-
+#if defined(TCPIP_STACK_USE_IPV6)
     }
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
 #if defined(TCPIP_STACK_USE_IPV6)
 
+#if defined(TCPIP_STACK_USE_IPV4)
     if(addType == IP_ADDRESS_TYPE_IPV6)
     {
+#endif  //  defined(TCPIP_STACK_USE_IPV4)
         if(argc > 3)
         {   // we have prefix length
             uint32_t prefix32 = 0UL;
@@ -1984,7 +1991,9 @@ static void F_Command_IPAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
         {
             success = true;
         }
+#if defined(TCPIP_STACK_USE_IPV4)
     }
+#endif  //  defined(TCPIP_STACK_USE_IPV4)
 
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
@@ -2045,23 +2054,32 @@ static void F_Command_GatewayAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
     }
 
 
+    (void)addType;
 #if defined(TCPIP_STACK_USE_IPV4)
+#if defined(TCPIP_STACK_USE_IPV6)
     if(addType == IP_ADDRESS_TYPE_IPV4)
     {
+#endif  // defined(TCPIP_STACK_USE_IPV6)
         success = TCPIP_STACK_NetAddressGatewaySet(netH, &ipGateway);
+#if defined(TCPIP_STACK_USE_IPV6)
     }
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
 #if defined(TCPIP_STACK_USE_IPV6)
+#if defined(TCPIP_STACK_USE_IPV4)
     if(addType == IP_ADDRESS_TYPE_IPV6)
     {
+#endif  // defined(TCPIP_STACK_USE_IPV4)
         validTime = 0UL;
         if(argc > 3)
         {   // we have validity time
             (void)FC_Str2UL(argv[3], 10, &validTime);
         }
         success = TCPIP_IPV6_RouterAddressAdd(netH, &ipv6Gateway, validTime, 0);
+#if defined(TCPIP_STACK_USE_IPV4)
     }
+#endif  // defined(TCPIP_STACK_USE_IPV4)
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
 
@@ -8795,7 +8813,7 @@ static void Wsc_CmdTask(void)
         if(pWsc_TxMsgDcpt != NULL)
         {
             TCPIP_WSC_RES res = Wsc_SendMsg(pWsc_TxMsgDcpt);
-            if(res <= 0)
+            if((int)res <= 0)
             {   // done one way or another
                 pWsc_TxMsgDcpt = NULL;
             }
@@ -8806,7 +8824,7 @@ static void Wsc_CmdTask(void)
         if(!wscDisAutoRead && wsc_RxMsgHandle != NULL)
         {
             TCPIP_WSC_RES res = Wsc_ReadMsg(wsc_RxMsgHandle);
-            if(res <= 0)
+            if((int)res <= 0)
             {   // done one way or another
                 wsc_RxMsgHandle = NULL;
             }
@@ -8889,7 +8907,7 @@ static void F_Command_WsSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         int argIx = 2;
         argc -= 2;
 
-        if((argc & 0x1) != 0)
+        if(((unsigned int)argc & 0x1U) != 0U)
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc set : an even number of arguments is required. Retry!\r\n");
             printUsage = true;
@@ -8987,7 +9005,7 @@ static void F_Command_WsPreset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
     (void)FC_Str2UL(argv[2], 10, &presIx);
     if(presIx >= sizeof(wsc_presets) / sizeof(*wsc_presets))
     {
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc preset - wrong preset index! Maxim '%d'\r\n", sizeof(wsc_presets) / sizeof(*wsc_presets) - 1);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc preset - wrong preset index! Maxim '%d'\r\n", sizeof(wsc_presets) / sizeof(*wsc_presets) - 1U);
         return;
     }
 
@@ -9049,7 +9067,7 @@ static void F_Command_WscRate(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     {
         uint32_t rateMs;
         (void)FC_Str2UL(argv[2], 10, &rateMs);
-        if(rateMs < WSC_CMD_TASK_RATE_MIN) 
+        if(rateMs < (uint32_t)WSC_CMD_TASK_RATE_MIN) 
         {
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc rate - bad value: %d. Minimum: %d\r\n", rateMs, WSC_CMD_TASK_RATE_MIN);
             return;
@@ -9140,7 +9158,7 @@ static void F_Command_WsRegister(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     {
         uint32_t regVal = 0;
         (void)FC_Str2UL(argv[2], 10, &regVal);
-        bool doReg = regVal != 0;
+        bool doReg = regVal != 0U;
 
         if(doReg && wsc_EvHandle != NULL)
         {   // nothing to do
@@ -9359,7 +9377,7 @@ static void F_Command_WsRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     }
 
     TCPIP_WSC_RES res = Wsc_ReadMsg(wsc_RxMsgHandle);
-    if(res <= 0)
+    if((int)res <= 0)
     {   // done one way or another
         wsc_RxMsgHandle = NULL;
     }
@@ -9459,12 +9477,12 @@ static TCPIP_WSC_RES Wsc_SendMsg(TCPIP_WSC_SEND_MSG_DCPT* txDcpt)
     TCPIP_WSC_RES res;
 
     size_t sentSize = TCPIP_WSC_MessageSend(wscConnHandle, txDcpt, &res);
-    if(sentSize != 0)
+    if(sentSize != 0U)
     {
         (*pTcpipCmdDevice->pCmdApi->print)(cmdIoParam, "wsc msg - sent: %d, expected: %d, res: %d\r\n", sentSize, txDcpt->msgSize, res);
     }
 
-    if(res < 0)
+    if((int)res < 0)
     {
         (*pTcpipCmdDevice->pCmdApi->print)(cmdIoParam, "wsc msg - failed with res: %d. Aborted!\r\n", res);
     }
@@ -9486,19 +9504,19 @@ static TCPIP_WSC_RES Wsc_ReadMsg(const void* rxHandle)
     const void* cmdIoParam = pTcpipCmdDevice->cmdIoParam;
 
     size_t readSize = TCPIP_WSC_MessageRead(wscConnHandle, rxHandle, U_WSC_RD_BUFF.uBuffer, wsc_bReadSize, &res);
-    if(readSize != 0)
+    if(readSize != 0U)
     {
         pTcpipCmdDevice->pCmdApi->print(cmdIoParam, "wsc read - readSize: %d, res: %d\r\n", readSize, res);
     }
 
-    if(res < 0)
+    if((int)res < 0)
     {
         (*pTcpipCmdDevice->pCmdApi->print)(cmdIoParam, "wsc read - failed with res: %d. Aborted!\r\n", res);
     }
     else
     {
         // check if smth was read
-        if(readSize != 0)
+        if(readSize != 0U)
         {   // display 100 chars...
             U_WSC_RD_BUFF.cBuffer[readSize] = '\0';
             U_WSC_RD_BUFF.cBuffer[100] = '\0';   // limit to 100 chars
@@ -9561,7 +9579,7 @@ static void Wsc_EventHandler(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_EVENT_TYPE e
             openInfo = evInfo.openInfo;
 
             addBuff[0] = '\0';
-            if(openInfo->ipType == IP_ADDRESS_TYPE_IPV4)
+            if(openInfo->ipType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
             {
                 (void)TCPIP_Helper_IPAddressToString(&openInfo->srvAddress.v4Add, addBuff, sizeof(addBuff));
             }

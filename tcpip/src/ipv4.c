@@ -713,7 +713,7 @@ static bool TCPIP_IPV4_TxMacPkt(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pP
 // if no fragment support, transmit just the head
 static __inline__ bool __attribute__((always_inline)) TCPIP_IPV4_TxMacPkt(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pPkt)
 {
-    return TCPIPStackPacketTx(pNetIf, pPkt) >= 0;
+    return (int)TCPIPStackPacketTx(pNetIf, pPkt) >= 0;
 }
 
 // if no fragment support, acknowledge just the head
@@ -4413,7 +4413,7 @@ static uint8_t TCPIP_IPV4_TxPriQueue(const TCPIP_NET_IF* pNetIf, uint8_t precede
     }
 
     uint16_t pri16 = ((uint16_t)precedence * qNo) / (uint16_t)TCPIP_IPV4_PRECEDENCE_MAX; 
-    return pri16 == 0 ? 0 : (uint8_t)pri16 - 1U;
+    return pri16 == 0U ? 0U : (uint8_t)pri16 - 1U;
 }
 
 bool TCPIP_IPV4_TxPriHandlerRegister(TCPIP_IPV4_TX_PRI_HANDLER priHandler)
