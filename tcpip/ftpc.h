@@ -239,6 +239,7 @@ typedef enum
     TCPIP_FTPC_ERROR_BIND_DATA_SOCKET,
     TCPIP_FTPC_ERROR_CONNECT_DATA_SOCKET,
  
+    TCPIP_FTPC_ERROR_OUT_OF_MEMORY,
 }TCPIP_FTPC_ERROR_TYPE;
 
 // *****************************************************************************

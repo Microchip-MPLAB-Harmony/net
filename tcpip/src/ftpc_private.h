@@ -332,6 +332,8 @@ typedef struct S_TCPIP_FTPC_DCPT_TYPE
     uint32_t    ftpcDataTxLen;      //  Data Socket transmit length
     uint16_t    ftpcDataLength;
     uint16_t    ftpcSignal;         // TCPIP_FTPC_SIGNAL_TYPE: last response received
+    uint16_t    ctrlTxBuffSize;     // size of the allocated ftpcCtrlTxBuff
+    uint16_t    ctrlRxBuffSize;     // size of the allocated ftpcCtrlRxBuff
     
     const char* ftpcServerPathname;     //  pathname pointer
     const char* ftpcClientPathname;     //  pathname pointer

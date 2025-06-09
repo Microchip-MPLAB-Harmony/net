@@ -56,7 +56,7 @@ static uint32_t F_EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtr
 
 
 // conversion functions/helpers
-static __inline__ DRV_ETHMAC_DCPT_NODE_TX* __attribute__((always_inline)) CF_EthMacNodeDcptTx(DRV_ETHMAC_DCPT_NODE * pEthDcptNode)
+static __inline__ DRV_ETHMAC_DCPT_NODE_TX* __attribute__((always_inline)) FC_EthDcptNode2Tx(DRV_ETHMAC_DCPT_NODE * pEthDcptNode)
 {
     union
     {
@@ -68,7 +68,7 @@ static __inline__ DRV_ETHMAC_DCPT_NODE_TX* __attribute__((always_inline)) CF_Eth
     return U_DCPT_NODE_NODETX.pNodeEthDcptTx;
 }
 
-static __inline__ DRV_ETHMAC_DCPT_NODE_RX* __attribute__((always_inline)) CF_EthMacNodeDcptRx(DRV_ETHMAC_DCPT_NODE * pEthDcptNode)
+static __inline__ DRV_ETHMAC_DCPT_NODE_RX* __attribute__((always_inline)) FC_EthDcptNode2Rx(DRV_ETHMAC_DCPT_NODE * pEthDcptNode)
 {
     union
     {
@@ -80,7 +80,7 @@ static __inline__ DRV_ETHMAC_DCPT_NODE_RX* __attribute__((always_inline)) CF_Eth
     return U_DCPT_NODE_NODERX.pNodeEthDcptRx;
 }
 
-static __inline__ uint32_t __attribute__((always_inline)) CF_VoidPtr2Uint32(const void * pParam)
+static __inline__ uint32_t __attribute__((always_inline)) FC_VoidPtr2Uint32(const void * pParam)
 {
     union
     {
@@ -92,7 +92,7 @@ static __inline__ uint32_t __attribute__((always_inline)) CF_VoidPtr2Uint32(cons
     return U_VPTR_UINT.uintAddr;
 }
 
-static __inline__ const void * __attribute__((always_inline)) CF_phyAddr2VoidPtr(_paddr_t phyAddr)
+static __inline__ const void * __attribute__((always_inline)) FC_PhyAddr2VoidPtr(_paddr_t phyAddr)
 {
     union
     {
@@ -104,7 +104,7 @@ static __inline__ const void * __attribute__((always_inline)) CF_phyAddr2VoidPtr
     return U_PHYADDR_VPTR.pAddr;
 }
 
-static __inline__ const DRV_ETHMAC_PKT_STAT_TX* __attribute__((always_inline)) CF_TXvStat2cStat(volatile DRV_ETHMAC_PKT_STAT_TX* vStat)
+static __inline__ const DRV_ETHMAC_PKT_STAT_TX* __attribute__((always_inline)) FC_TXvStat2cStat(volatile DRV_ETHMAC_PKT_STAT_TX* vStat)
 {
     union
     {
@@ -116,7 +116,7 @@ static __inline__ const DRV_ETHMAC_PKT_STAT_TX* __attribute__((always_inline)) C
     return U_PKT_STAT_TX.cstat;
 }
 
-static __inline__ const DRV_ETHMAC_PKT_STAT_RX* __attribute__((always_inline)) CF_RXvStat2cStat(volatile DRV_ETHMAC_PKT_STAT_RX* vStat)
+static __inline__ const DRV_ETHMAC_PKT_STAT_RX* __attribute__((always_inline)) FC_RXvStat2cStat(volatile DRV_ETHMAC_PKT_STAT_RX* vStat)
 {
     union
     {
@@ -578,7 +578,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
         }
         // ok valid descriptor
         // pas it to hw, always use linked descriptors
-        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(CF_VoidPtr2Uint32(pBuff));
+        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(FC_VoidPtr2Uint32(pBuff));
 
         pEDcpt->hwDcpt.hdr.w=(uint32_t)SDCPT_HDR_NPV_MASK_|(uint32_t)SDCPT_HDR_EOWN_MASK_;    // hw owned
 
@@ -592,11 +592,11 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
             pEDcpt->hwDcpt.hdr.rx_nack=1;
         }
 
-        if(IS_KVA0(CF_VoidPtr2Uint32(pBuff)))
+        if(IS_KVA0(FC_VoidPtr2Uint32(pBuff)))
         {
             pEDcpt->hwDcpt.hdr.kv0=1;
         }
-        else if(!IS_KVA(CF_VoidPtr2Uint32(pBuff)))
+        else if(!IS_KVA(FC_VoidPtr2Uint32(pBuff)))
         {
             res=DRV_ETHMAC_RES_USPACE_ERR;
             break;
@@ -662,7 +662,7 @@ static DRV_ETHMAC_RESULT F_EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, con
     DRV_ETHMAC_DCPT_NODE   *pEDcpt;
     DRV_ETHMAC_RESULT     res;
         
-    if(!IS_KVA(CF_VoidPtr2Uint32(pBuff)))
+    if(!IS_KVA(FC_VoidPtr2Uint32(pBuff)))
     {
         return DRV_ETHMAC_RES_USPACE_ERR;
     }
@@ -672,10 +672,10 @@ static DRV_ETHMAC_RESULT F_EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, con
     if(pEDcpt != NULL)
     {   // ok valid descriptor
         // pass it to hw, always use linked descriptors, set proper size
-        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(CF_VoidPtr2Uint32(pBuff));
+        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(FC_VoidPtr2Uint32(pBuff));
         pEDcpt->hwDcpt.hdr.w =(uint32_t)SDCPT_HDR_NPV_MASK_|(uint32_t)SDCPT_HDR_EOWN_MASK_|((uint32_t)nBytes<<SDCPT_HDR_BCOUNT_POS_);   // hw owned
 
-        if(IS_KVA0(CF_VoidPtr2Uint32(pBuff)))
+        if(IS_KVA0(FC_VoidPtr2Uint32(pBuff)))
         {
             pEDcpt->hwDcpt.hdr.kv0=1;
         }
@@ -821,7 +821,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus(DRV_ETHMAC_INSTANCE_DCPT* pMac
         {   // that's it, got it! The 1st descriptor to be updated by the hw is the packet header!
             if(pTxStat != NULL)
             {
-                *pTxStat=CF_TXvStat2cStat(&(CF_EthMacNodeDcptTx(pHead)->hwDcpt.stat));
+                *pTxStat=FC_TXvStat2cStat(&(FC_EthDcptNode2Tx(pHead)->hwDcpt.stat));
             }
             res=DRV_ETHMAC_RES_OK;
         }
@@ -857,7 +857,7 @@ static DRV_ETHMAC_DCPT_NODE* F_EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT
     DRV_ETHMAC_DCPT_NODE*  pEDcpt;
     const void* pPhysPkt;
 
-    pPhysPkt=CF_phyAddr2VoidPtr(KVA_TO_PA(CF_VoidPtr2Uint32(pBuff)));
+    pPhysPkt=FC_PhyAddr2VoidPtr(KVA_TO_PA(FC_VoidPtr2Uint32(pBuff)));
 
     for(pEDcpt=pList->head; pEDcpt != NULL; pEDcpt=pEDcpt->next)
     {
@@ -918,7 +918,7 @@ static DRV_ETHMAC_RESULT F_EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_L
     pEDcpt=pRemList->head; 
     while( pEDcpt != NULL ) 
     {
-        if((pEDcpt->hwDcpt.hdr.SOP != 0U) && ((pPkt==NULL) || pEDcpt->hwDcpt.pEDBuff==(uint8_t*)KVA_TO_PA(CF_VoidPtr2Uint32(pPkt))))
+        if((pEDcpt->hwDcpt.hdr.SOP != 0U) && ((pPkt==NULL) || pEDcpt->hwDcpt.pEDBuff==(uint8_t*)KVA_TO_PA(FC_VoidPtr2Uint32(pPkt))))
         { // found the beg of a packet
             pktFound=1;
 
@@ -1169,7 +1169,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV
 
             if(pRxStat != NULL)
             {
-                *pRxStat = CF_RXvStat2cStat(&(CF_EthMacNodeDcptRx(pEDcpt))->hwDcpt.stat);
+                *pRxStat = FC_RXvStat2cStat(&(FC_EthDcptNode2Rx(pEDcpt))->hwDcpt.stat);
             }
 
             while((pBuffDcpt != NULL) || (pnBuffs != NULL))

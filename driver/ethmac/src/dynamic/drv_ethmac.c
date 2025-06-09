@@ -253,7 +253,7 @@ static DRV_ETHMAC_INSTANCE_DCPT* PIC32HandleToMacInst(uintptr_t handle)
 #endif  // (DRV_ETHMAC_INSTANCES == 1)
 
 // conversion functions/helpers
-static __inline__ TCPIP_MAC_INIT* __attribute__((always_inline)) CF_ModInit2MacInit(SYS_MODULE_INIT const * const init)
+static __inline__ TCPIP_MAC_INIT* __attribute__((always_inline)) FC_ModInit2MacInit(SYS_MODULE_INIT const * const init)
 {
     union
     {
@@ -265,7 +265,7 @@ static __inline__ TCPIP_MAC_INIT* __attribute__((always_inline)) CF_ModInit2MacI
     return U_MAC_INIT.pMacinit;
 }
 
-static __inline__ SYS_MODULE_INIT* __attribute__((always_inline)) CF_PhyInit2ModInit(DRV_ETHPHY_INIT const * init)
+static __inline__ SYS_MODULE_INIT* __attribute__((always_inline)) FC_PhyInit2ModInit(DRV_ETHPHY_INIT const * init)
 {
     union
     {
@@ -277,7 +277,7 @@ static __inline__ SYS_MODULE_INIT* __attribute__((always_inline)) CF_PhyInit2Mod
     return U_MOD_PHY.pModinit;
 }
 
-static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT * __attribute__((always_inline)) CF_Ptr8toSegGapDsc(uint8_t * pPkt)
+static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT * __attribute__((always_inline)) FC_Ptr2SegGapDsc(uint8_t * pPkt)
 {
     union
     {
@@ -289,7 +289,7 @@ static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT * __attribute__((always_inline)) CF
     return U_PTR8_SEGGAPDSC.pSegGapDsc;
 }
 
-static __inline__ TCPIP_MAC_PACKET_RX_STAT * __attribute__((always_inline)) CF_EthtoTcipRxStat(DRV_ETHMAC_PKT_STAT_RX const * pRxStat)
+static __inline__ TCPIP_MAC_PACKET_RX_STAT * __attribute__((always_inline)) FC_Eth2TcipRxStat(DRV_ETHMAC_PKT_STAT_RX const * pRxStat)
 {
     union
     {
@@ -301,7 +301,7 @@ static __inline__ TCPIP_MAC_PACKET_RX_STAT * __attribute__((always_inline)) CF_E
     return U_ETH_TCPIP_RXSTAT.pTcpip_RxStat;
 }
 
-static __inline__ DRV_ETHMAC_PKT_DCPT const * __attribute__((always_inline)) CF_MacDataSegtoPktDcpt(TCPIP_MAC_DATA_SEGMENT  * pDSeg)
+static __inline__ DRV_ETHMAC_PKT_DCPT const * __attribute__((always_inline)) FC_MacDataSeg2PktDcpt(TCPIP_MAC_DATA_SEGMENT  * pDSeg)
 {
     union
     {
@@ -313,7 +313,7 @@ static __inline__ DRV_ETHMAC_PKT_DCPT const * __attribute__((always_inline)) CF_
     return U_MAC_DSEG_PKTDCPT.pPktDcpt;
 }
 
-static __inline__ DRV_ETHMAC_SGL_LIST_NODE * __attribute__((always_inline)) CF_EthMacPkt2LstNode(TCPIP_MAC_PACKET * ptrPacket)
+static __inline__ DRV_ETHMAC_SGL_LIST_NODE * __attribute__((always_inline)) FC_EthMacPkt2LstNode(TCPIP_MAC_PACKET * ptrPacket)
 {
     union
     {
@@ -324,7 +324,7 @@ static __inline__ DRV_ETHMAC_SGL_LIST_NODE * __attribute__((always_inline)) CF_E
     U_PKT_NODE.pPkt = ptrPacket;
     return U_PKT_NODE.pNode;
 }
-static __inline__ TCPIP_MAC_PACKET * __attribute__((always_inline)) CF_LstNode2EthMacPkt(DRV_ETHMAC_SGL_LIST_NODE  * lstNode)
+static __inline__ TCPIP_MAC_PACKET * __attribute__((always_inline)) FC_LstNode2EthMacPkt(DRV_ETHMAC_SGL_LIST_NODE  * lstNode)
 {
     union
     {
@@ -336,7 +336,7 @@ static __inline__ TCPIP_MAC_PACKET * __attribute__((always_inline)) CF_LstNode2E
     return U_NODE_PKT.pPkt;
 }
 
-static __inline__ uint32_t __attribute__((always_inline)) CF_VoidPtr2Uint(void * pParam)
+static __inline__ uint32_t __attribute__((always_inline)) FC_VoidPtr2Uint(void * pParam)
 {
     union
     {
@@ -348,7 +348,7 @@ static __inline__ uint32_t __attribute__((always_inline)) CF_VoidPtr2Uint(void *
     return U_VPTR_UINT.uintAddr;
 }
 
-static __inline__ DRV_ETHMAC_INSTANCE_DCPT* __attribute__((always_inline)) CF_VoidPtr2EthDcpt(void const * pParam)
+static __inline__ DRV_ETHMAC_INSTANCE_DCPT* __attribute__((always_inline)) FC_VoidPtr2EthDcpt(void const * pParam)
 {
     union
     {
@@ -415,7 +415,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     SYS_MODULE_OBJ hPhySysObject;
     DRV_HANDLE     hPhyClient;
     uint16_t        nRxDedicatedBuffers, nRxInitBuffers;
-    TCPIP_MAC_INIT* initMac = CF_ModInit2MacInit(init); 
+    TCPIP_MAC_INIT* initMac = FC_ModInit2MacInit(init); 
     const TCPIP_MAC_MODULE_CTRL* const macControl = initMac->macControl; 
     const TCPIP_MODULE_MAC_PIC32INT_CONFIG* initData = (const TCPIP_MODULE_MAC_PIC32INT_CONFIG*)initMac->moduleData;
 
@@ -534,7 +534,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 
         pPhyBase =  pMacD->mData.macConfig.pPhyBase;
 
-        hPhySysObject = pPhyBase->phy_Initialize(phyIx, CF_PhyInit2ModInit(pMacD->mData.macConfig.pPhyInit));
+        hPhySysObject = pPhyBase->phy_Initialize(phyIx, FC_PhyInit2ModInit(pMacD->mData.macConfig.pPhyInit));
         if ( hPhySysObject == SYS_MODULE_OBJ_INVALID )
         {
             initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
@@ -954,8 +954,8 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
         pLastDcpt = pRootDcpt;
         while((pCurrDcpt != NULL) && (pCurrDcpt->pBuff != NULL))
         {
-            uint8_t* segBuff = (uint8_t*)(CF_VoidPtr2Uint(pCurrDcpt->pBuff) & pMacD->mData.dataOffsetMask);
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = CF_Ptr8toSegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
+            uint8_t* segBuff = (uint8_t*)(FC_VoidPtr2Uint(pCurrDcpt->pBuff) & pMacD->mData.dataOffsetMask);
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
             pCurrPkt = pGap->segmentPktPtr;
                 
             pCurrDSeg = pCurrPkt->pDSeg;
@@ -982,8 +982,8 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
             pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_SPLIT;
         } 
 #else
-        uint8_t* segBuff = (uint8_t*)(CF_VoidPtr2Uint(pRootDcpt->pBuff) & pMacD->mData.dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = CF_Ptr8toSegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
+        uint8_t* segBuff = (uint8_t*)(FC_VoidPtr2Uint(pRootDcpt->pBuff) & pMacD->mData.dataOffsetMask);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
         pRxPkt = pGap->segmentPktPtr;
         pRxPkt->pDSeg->next = NULL;
         // adjust the last segment for FCS size
@@ -1018,7 +1018,7 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
 
         if(pPktStat != NULL)
         {
-            *pPktStat = *(CF_EthtoTcipRxStat(pRxPktStat)); 
+            *pPktStat = *(FC_Eth2TcipRxStat(pRxPktStat)); 
         }
         // success
         return pRxPkt;
@@ -1555,7 +1555,7 @@ static TCPIP_MAC_RES F_MACTxPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PA
     DRV_ETHMAC_RESULT ethRes;
 
     // Note: the TCPIP_MAC_DATA_SEGMENT is defined to be a perfect match for DRV_ETHMAC_PKT_DCPT !!!
-    ethRes = DRV_ETHMAC_LibTxSendPacket(pMacD, CF_MacDataSegtoPktDcpt(ptrPacket->pDSeg));
+    ethRes = DRV_ETHMAC_LibTxSendPacket(pMacD, FC_MacDataSeg2PktDcpt(ptrPacket->pDSeg));
 
     if(ethRes == DRV_ETHMAC_RES_OK)
     {
@@ -1587,8 +1587,8 @@ static void F_MACTxPacketAckCallback(void* pBuff, void* fParam)
     DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)fParam;
 
     // restore packet the buffer belongs to
-    uint8_t* segBuff = (uint8_t*)(CF_VoidPtr2Uint(pBuff) & pMacD->mData.dataOffsetMask);
-    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = CF_Ptr8toSegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
+    uint8_t* segBuff = (uint8_t*)(FC_VoidPtr2Uint(pBuff) & pMacD->mData.dataOffsetMask);
+    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
     TCPIP_MAC_PACKET* ptrPacket = pGap->segmentPktPtr;
 
     // acknowledge the packet
@@ -1612,7 +1612,7 @@ static void F_MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PAC
         {
             pNext = pPkt->next;
             pPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
-            DRV_ETHMAC_SingleListTailAdd(&pMacD->mData.TxQueue, CF_EthMacPkt2LstNode(pPkt));
+            DRV_ETHMAC_SingleListTailAdd(&pMacD->mData.TxQueue, FC_EthMacPkt2LstNode(pPkt));
             pPkt = pNext;
         }
         F_DRV_ETHMAC_TxUnlock(pMacD);
@@ -1634,14 +1634,14 @@ static void F_MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PAC
     DRV_ETHMAC_SingleListInitialize(&txList);
     
     F_DRV_ETHMAC_TxLock(pMacD);
-    while((pPkt = CF_LstNode2EthMacPkt(DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData.TxQueue))) != NULL)
+    while((pPkt = FC_LstNode2EthMacPkt(DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData.TxQueue))) != NULL)
     {
-        DRV_ETHMAC_SingleListTailAdd(&txList, CF_EthMacPkt2LstNode(pPkt));
+        DRV_ETHMAC_SingleListTailAdd(&txList, FC_EthMacPkt2LstNode(pPkt));
     }
     F_DRV_ETHMAC_TxUnlock(pMacD);
 
     // now transmit the packets from the list
-    while( (pPkt = CF_LstNode2EthMacPkt((txList.head))) != NULL)
+    while( (pPkt = FC_LstNode2EthMacPkt((txList.head))) != NULL)
     {
         pktRes = F_MACTxPacket(pMacD, pPkt);
         if(pktRes == TCPIP_MAC_RES_PENDING)
@@ -1755,7 +1755,7 @@ static void F_MacTxFreeCallback(  void* ptr, void* param )
     {
         // check if the payload offset is actually used for TX
         uint8_t* segBuff = (uint8_t*)((uint32_t)pTxBuff & pMacD->mData.dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = CF_Ptr8toSegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
         pTxPkt = pGap->segmentPktPtr;
 
         (*pMacD->mData.pktAckF)(pTxPkt, TCPIP_MAC_PKT_ACK_NET_DOWN, TCPIP_THIS_MODULE_ID);
@@ -1778,7 +1778,7 @@ static void F_MacRxFreeCallback(  void* ptr, void* param )
     if(pRxBuff != NULL)
     {
         uint8_t* segBuff = (uint8_t*)((uint32_t)pRxBuff & pMacD->mData.dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = CF_Ptr8toSegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
         pRxPkt = pGap->segmentPktPtr;
         pRxPkt->pDSeg->next = NULL;     // break the ETH MAC run time chaining
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)
@@ -1826,9 +1826,9 @@ static void F_MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_
         F_DRV_ETHMAC_TxLock(pMacD);
     }
 
-    while( (pPkt = CF_LstNode2EthMacPkt(DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData.TxQueue))) != NULL)
+    while( (pPkt = FC_LstNode2EthMacPkt(DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData.TxQueue))) != NULL)
     {   // acknowledge the packet
-        DRV_ETHMAC_SingleListTailAdd(&discardTx, CF_EthMacPkt2LstNode(pPkt));
+        DRV_ETHMAC_SingleListTailAdd(&discardTx, FC_EthMacPkt2LstNode(pPkt));
     }
 
     if(synch)
@@ -1837,7 +1837,7 @@ static void F_MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_
     }
 
     // acknowledge the packets
-    while( (pPkt = CF_LstNode2EthMacPkt(DRV_ETHMAC_SingleListHeadRemove(&discardTx))) != NULL)
+    while( (pPkt = FC_LstNode2EthMacPkt(DRV_ETHMAC_SingleListHeadRemove(&discardTx))) != NULL)
     {
         (*pMacD->mData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
     }
@@ -1849,7 +1849,7 @@ static void F_MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
     TCPIP_MAC_PACKET* pCurrPkt;
     TCPIP_MAC_DATA_SEGMENT* pSeg, *pNSeg;
 
-    DRV_ETHMAC_INSTANCE_DCPT* pMacD = CF_VoidPtr2EthDcpt(param);
+    DRV_ETHMAC_INSTANCE_DCPT* pMacD = FC_VoidPtr2EthDcpt(param);
 
     bool isMacDead = pMacD->mData.macFlags.macInit == 0; // if we're dead and gone
     
@@ -1867,7 +1867,7 @@ static void F_MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
         }
 
         // extract packet the segment belongs to
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = CF_Ptr8toSegGapDsc(pSeg->segBuffer + pMacD->mData.gapDcptOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(pSeg->segBuffer + pMacD->mData.gapDcptOffset);
         pCurrPkt = pGap->segmentPktPtr;
 
         if(isMacDead || (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY) == 0)

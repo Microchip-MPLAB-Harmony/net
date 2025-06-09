@@ -76,7 +76,7 @@ typedef struct S_TAG_DRV_ETHMAC_PKT_DCPT
     Status is always two "words" (64-bits) long.
 */
 
-typedef union
+typedef union __attribute__ ((__packed__))
 {
     struct
     {
@@ -160,9 +160,9 @@ typedef union
     Status is always two "words" (64-bits) long.
 */
 
-typedef union
+typedef union __attribute__ ((__packed__))
 {
-    struct
+    struct 
     {
         // Packet payload checksum
         unsigned int        pktChecksum     :16;
