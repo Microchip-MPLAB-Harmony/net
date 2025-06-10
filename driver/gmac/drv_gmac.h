@@ -59,6 +59,7 @@ Microchip or any third party.
 #include "driver/ethphy/drv_ethphy.h"
 
 #include "tcpip/tcpip_mac.h"
+#include "tcpip/tcpip_mac_object.h"
 #include "tcpip/tcpip_ethernet.h"
 #include "system/int/sys_int.h"
 
