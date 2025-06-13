@@ -45,269 +45,384 @@ int32_t DRV_ENCX24J600_ConfigStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrv
     uint16_t regPtr = 0;
     uintptr_t ret;
     int32_t res = 0;
-    switch (curSt->state)
+    bool writePhCon1;
+    bool abortTask = false;
+
+    while(!abortTask)
     {
-        case DRV_ENCX24J600_CS_SET_EGPRDPT:
-            ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_GPRD, regPtr, DRV_ENCX24J600_CS_OP_SET_EGPRDPT);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_ERXRDPT;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_ERXRDPT:
-            regPtr = pDrvInst->encMemRxStart;
-            ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, regPtr, DRV_ENCX24J600_CS_OP_SET_ERXRDPT);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_EUDARDPT;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_EUDARDPT:
-            regPtr = pDrvInst->encMemUdaStart;
-            ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_UDARD, regPtr, DRV_ENCX24J600_CS_OP_SET_EUDARDPT);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_EGPWRPT;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_EGPWRPT:
-            regPtr = 0;
-            ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, regPtr, DRV_ENCX24J600_CS_OP_SET_EGPWRPT);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_ERXRDPT;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_ERXWRPT:
-            regPtr = pDrvInst->encMemRxStart;
-            ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_RXWR, regPtr, DRV_ENCX24J600_CS_OP_SET_ERXWRPT);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_EUDARDPT;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_EUDAWRPT:
-            regPtr = pDrvInst->encMemUdaStart;
-            ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_UDAWR, regPtr, DRV_ENCX24J600_CS_OP_SET_EUDAWRPT);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_EGPWRPT;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_ERXST:
-            reg.value = 0;
-            reg.erxst.ERXST = pDrvInst->encMemRxStart;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXST, reg, DRV_ENCX24J600_CS_OP_SET_ERXST);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_ERXTAIL;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_ERXTAIL:
-            reg.value = 0;
-            reg.erxtail.ERXTAIL = (pDrvInst->encMemRxEnd - 2U) & 0x7fffU;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXTAIL, reg, DRV_ENCX24J600_CS_OP_SET_ERXTAIL);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_PHCON1;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_PHCON1:
-            reg.value = 0;
-            switch (pDrvInst->drvCfg.ethType)
-            {
-                case TCPIP_ETH_OPEN_10:
+        switch (curSt->state)
+        {
+            case DRV_ENCX24J600_CS_SET_EGPRDPT:
+                ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_GPRD, regPtr, DRV_ENCX24J600_CS_OP_SET_EGPRDPT);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_ERXRDPT;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_ERXRDPT:
+                regPtr = pDrvInst->encMemRxStart;
+                ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, regPtr, DRV_ENCX24J600_CS_OP_SET_ERXRDPT);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_EUDARDPT;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_EUDARDPT:
+                regPtr = pDrvInst->encMemUdaStart;
+                ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_UDARD, regPtr, DRV_ENCX24J600_CS_OP_SET_EUDARDPT);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_EGPWRPT;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_EGPWRPT:
+                regPtr = 0;
+                ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, regPtr, DRV_ENCX24J600_CS_OP_SET_EGPWRPT);
+                if (ret != 0)
+                {   // success - set state to start over
+                    curSt->state = DRV_ENCX24J600_CS_SET_ERXRDPT;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                    break;
+                }
+
+                // execute DRV_ENCX24J600_CS_SET_ERXWRPT
+                regPtr = pDrvInst->encMemRxStart;
+                ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_RXWR, regPtr, DRV_ENCX24J600_CS_OP_SET_ERXWRPT);
+                if (ret != 0)
+                {   // success - set state to start over
+                    curSt->state = DRV_ENCX24J600_CS_SET_EUDARDPT;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                    break;
+                }
+
+                // execute DRV_ENCX24J600_CS_SET_EUDAWRPT
+                regPtr = pDrvInst->encMemUdaStart;
+                ret = (*pDrvInst->busVTable->fpPtrWr)(pDrvInst, DRV_ENCX24J600_PTR_UDAWR, regPtr, DRV_ENCX24J600_CS_OP_SET_EUDAWRPT);
+                if (ret != 0)
+                {   // success - set state to start over
+                    curSt->state = DRV_ENCX24J600_CS_SET_EGPWRPT;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+
+                // execute DRV_ENCX24J600_CS_SET_ERXST:
+                reg.value = 0;
+                reg.erxst.ERXST = pDrvInst->encMemRxStart;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXST, reg, DRV_ENCX24J600_CS_OP_SET_ERXST);
+                if (ret != 0)
+                {   // success - set state to start over
+                    curSt->state = DRV_ENCX24J600_CS_SET_ERXTAIL;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_ERXTAIL:
+                reg.value = 0;
+                reg.erxtail.ERXTAIL = (pDrvInst->encMemRxEnd - 2U) & 0x7fffU;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ERXTAIL, reg, DRV_ENCX24J600_CS_OP_SET_ERXTAIL);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_PHCON1;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_PHCON1:
+                reg.value = 0;
+                if(pDrvInst->drvCfg.ethType == TCPIP_ETH_OPEN_10)
+                {
                     if (pDrvInst->drvCfg.dupMode == TCPIP_ETH_OPEN_FDUPLEX)
                     {
                         reg.phcon1.PFULDPX = 1;
                     }
-                    ret = (*pDrvInst->busVTable->fpPhyWr)(pDrvInst, DRV_ENCX24J600_PHY_SFR_PHCON1, reg, DRV_ENCX24J600_CS_OP_SET_PHCON1);
-                    if (ret != 0)
-                    {
-                        curSt->state = DRV_ENCX24J600_CS_SET_EUDAST;
-                    }
-                    break;
-
-                case TCPIP_ETH_OPEN_100:
+                    writePhCon1 = true;
+                } 
+                else if (pDrvInst->drvCfg.ethType == TCPIP_ETH_OPEN_100)
+                {
                     if (pDrvInst->drvCfg.dupMode != TCPIP_ETH_OPEN_HDUPLEX)
                     {
                         reg.phcon1.PFULDPX = 1;
                     }
                     reg.phcon1.SPD100 = 1;
+                    writePhCon1 = true;
+                }
+                else
+                {   // TCPIP_ETH_OPEN_AUTO no write needed
+                    writePhCon1 = false;
+                }
+
+                if(writePhCon1)
+                {
                     ret = (*pDrvInst->busVTable->fpPhyWr)(pDrvInst, DRV_ENCX24J600_PHY_SFR_PHCON1, reg, DRV_ENCX24J600_CS_OP_SET_PHCON1);
-                    if (ret != 0)
-                    {
-                        curSt->state = DRV_ENCX24J600_CS_SET_EUDAST;
+                    if (ret == 0)
+                    {   // failed
+                        abortTask = true;
+                        break;
                     }
-                    break;                    
-
-                case TCPIP_ETH_OPEN_AUTO:
-                default:
-                    curSt->state = DRV_ENCX24J600_CS_SET_EUDAST;
-                    break;
-            }
-            break;
-
-        case DRV_ENCX24J600_CS_SET_EUDAST:
-            reg.value = 0;
-            reg.eudast.EUDAST = pDrvInst->encMemUdaStart;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, reg, DRV_ENCX24J600_CS_OP_SET_EUDAST);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_EUDAND;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_EUDAND:
-            reg.value = 0;
-            reg.eudand.EUDAND = pDrvInst->encMemUdaEnd;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAND, reg, DRV_ENCX24J600_CS_OP_SET_EUDAND);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_ERXFCON;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_ERXFCON:
-            reg.value = 0;
-            reg.erxfcon.MCEN = 1;
-            reg.erxfcon.BCEN = 1;
-            ret = (pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENCX24J600_SFR_ERXFCON, reg, DRV_ENCX24J600_CS_OP_SET_ERXFCON);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_READ_MACON2;
-            }
-            break;
-
-        case DRV_ENCX24J600_CS_READ_MACON2:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MACON2, DRV_ENCX24J600_CS_OP_READ_MACON2);
-            if (ret != 0)
-            {
-                curSt->waitForMacon2Op = ret;
-                if ((pDrvInst->stackCfg.ifPhyAddress.v[0] != 0) ||
-                        (pDrvInst->stackCfg.ifPhyAddress.v[1] != 0) ||
-                        (pDrvInst->stackCfg.ifPhyAddress.v[2] != 0) ||
-                        (pDrvInst->stackCfg.ifPhyAddress.v[3] != 0) ||
-                        (pDrvInst->stackCfg.ifPhyAddress.v[4] != 0) ||
-                        (pDrvInst->stackCfg.ifPhyAddress.v[5] != 0))
-                {
-                    curSt->state = DRV_ENCX24J600_CS_WRITE_MAADR1;
-                    break;
                 }
-                curSt->state = DRV_ENCX24J600_CS_READ_MAADR1;
-            }
-            break;
-        case DRV_ENCX24J600_CS_READ_MAADR1:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MAADR1, DRV_ENCX24J600_CS_OP_RD_MAADR1);
-            if (ret != 0)
-            {
-                curSt->waitForMaddr1Op = ret;
-                curSt->state = DRV_ENCX24J600_CS_READ_MAADR2;
-            }
-            break;
-        case DRV_ENCX24J600_CS_READ_MAADR2:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MAADR2, DRV_ENCX24J600_CS_OP_RD_MAADR2);
-            if (ret != 0)
-            {
-                curSt->waitForMaddr2Op = ret;
-                curSt->state = DRV_ENCX24J600_CS_READ_MAADR3;
-            }
-            break;
-        case DRV_ENCX24J600_CS_READ_MAADR3:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MAADR3, DRV_ENCX24J600_CS_OP_RD_MAADR3);
-            if (ret != 0)
-            {
-                curSt->waitForMaddr3Op = ret;
-                curSt->state = DRV_ENCX24J600_CS_WAIT_FOR_MACON2;
-            }
-            break;
-        case DRV_ENCX24J600_CS_WAIT_FOR_MACON2:
-            if (DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->waitForMacon2Op, &reg, (uint8_t)DRV_ENCX24J600_CS_OP_READ_MACON2))
-            {
-                if ((reg.macon2.PADCFG != 5) || (reg.macon2.TXCRCEN != 1))
-                {
-                    curSt->state = DRV_ENCX24J600_CS_SET_MACON2;
-                    break;
-                }
-                curSt->state = DRV_ENCX24J600_CS_SET_PHANA;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_PHANA:
-            reg.value = 0x5e1;
-            ret = (pDrvInst->busVTable->fpPhyWr)(pDrvInst, DRV_ENCX24J600_PHY_SFR_PHANA, reg, DRV_ENCX24J600_CS_OP_SET_PH_1);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_EIE;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_EIE:
-            reg.value = 0;
-            reg.eie.LINKIE = 1;
-            reg.eie.PCFULIE = 1;
-            reg.eie.PKTIE = 1;
-            reg.eie.RXABTIE = 1;
-            reg.eie.TXABTIE = 1;
-            reg.eie.TXIE = 1;
-            //reg.eie.INTIE = 1;
-            ret = (pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENCX24J600_SFR_EIE, reg, DRV_ENCX24J600_CS_OP_SET_EIE);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_WAIT_FOR_MAADR3;
-            }
-            break;
-        case DRV_ENCX24J600_CS_WAIT_FOR_MAADR3:
-            if (DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->waitForMaddr3Op, &reg, (uint8_t)DRV_ENCX24J600_CS_OP_RD_MAADR3))
-            {
-                pDrvInst->stackParameters.ifPhyAddress.v[4] = (uint8_t)reg.maadr3.MAADR3 & 0xffU;
-                pDrvInst->stackParameters.ifPhyAddress.v[5] = (uint8_t)(reg.maadr3.MAADR3 >> 8) & 0xffU;
-                (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, curSt->waitForMaddr2Op, &reg, DRV_ENCX24J600_CS_OP_RD_MAADR2);
-                pDrvInst->stackParameters.ifPhyAddress.v[2] = (uint8_t)reg.maadr2.MAADR2 & 0xffU;
-                pDrvInst->stackParameters.ifPhyAddress.v[3] = (uint8_t)(reg.maadr2.MAADR2 >> 8) & 0xffU;
-                (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, curSt->waitForMaddr1Op, &reg, DRV_ENCX24J600_CS_OP_RD_MAADR1);
-                pDrvInst->stackParameters.ifPhyAddress.v[0] = (uint8_t)reg.maadr1.MAADR1 & 0xffU;
-                pDrvInst->stackParameters.ifPhyAddress.v[1] = (uint8_t)(reg.maadr1.MAADR1 >> 8) & 0xffU;
-                pDrvInst->stackParameters.processFlags = TCPIP_MAC_PROCESS_FLAG_NONE;
-                pDrvInst->stackParameters.macType = TCPIP_MAC_TYPE_ETH;
-                pDrvInst->stackParameters.linkMtu = TCPIP_MAC_LINK_MTU_ETH;
-                res = 1;
-            }
-            break;
-        case DRV_ENCX24J600_CS_WRITE_MAADR1:
-            reg.value = (uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[0] | ((uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[1]<<8);
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MAADR1, reg, DRV_ENCX24J600_CS_OP_WR_MAADR1);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_WRITE_MAADR2;
-            }
-            break;
-        case DRV_ENCX24J600_CS_WRITE_MAADR2:
-            reg.value = (uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[2] | ((uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[3]<<8);
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MAADR2, reg, DRV_ENCX24J600_CS_OP_WR_MAADR2);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_WRITE_MAADR3;
-            }
-            break;
-        case DRV_ENCX24J600_CS_WRITE_MAADR3:
-            reg.value = (uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[4] | ((uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[5]<<8);
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MAADR3, reg, DRV_ENCX24J600_CS_OP_WR_MAADR3);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_READ_MAADR1;
-            }
-            break;
-        case DRV_ENCX24J600_CS_SET_MACON2:
-            reg.value = 0;
-            reg.macon2.TXCRCEN = 1;
-            reg.macon2.PADCFG = 0x5;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MACON2, reg, DRV_ENCX24J600_CS_OP_SET_MACON2);
-            if (ret != 0)
-            {
-                curSt->state = DRV_ENCX24J600_CS_SET_PHANA;
-            }
-            break;
 
-        default:
-            // do nothing
-            break;
+                curSt->state = DRV_ENCX24J600_CS_SET_EUDAST;
+                break;
+
+            case DRV_ENCX24J600_CS_SET_EUDAST:
+                reg.value = 0;
+                reg.eudast.EUDAST = pDrvInst->encMemUdaStart;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, reg, DRV_ENCX24J600_CS_OP_SET_EUDAST);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_EUDAND;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_EUDAND:
+                reg.value = 0;
+                reg.eudand.EUDAND = pDrvInst->encMemUdaEnd;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAND, reg, DRV_ENCX24J600_CS_OP_SET_EUDAND);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_ERXFCON;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_ERXFCON:
+                reg.value = 0;
+                reg.erxfcon.MCEN = 1;
+                reg.erxfcon.BCEN = 1;
+                ret = (pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENCX24J600_SFR_ERXFCON, reg, DRV_ENCX24J600_CS_OP_SET_ERXFCON);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_READ_MACON2;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_READ_MACON2:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MACON2, DRV_ENCX24J600_CS_OP_READ_MACON2);
+                if (ret != 0)
+                {
+                    curSt->waitForMacon2Op = ret;
+                    if ((pDrvInst->stackCfg.ifPhyAddress.v[0] != 0) ||
+                            (pDrvInst->stackCfg.ifPhyAddress.v[1] != 0) ||
+                            (pDrvInst->stackCfg.ifPhyAddress.v[2] != 0) ||
+                            (pDrvInst->stackCfg.ifPhyAddress.v[3] != 0) ||
+                            (pDrvInst->stackCfg.ifPhyAddress.v[4] != 0) ||
+                            (pDrvInst->stackCfg.ifPhyAddress.v[5] != 0))
+                    {
+                        curSt->state = DRV_ENCX24J600_CS_WRITE_MAADR1;
+                        break;
+                    }
+                    curSt->state = DRV_ENCX24J600_CS_READ_MAADR1;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_READ_MAADR1:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MAADR1, DRV_ENCX24J600_CS_OP_RD_MAADR1);
+                if (ret != 0)
+                {
+                    curSt->waitForMaddr1Op = ret;
+                    curSt->state = DRV_ENCX24J600_CS_READ_MAADR2;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_READ_MAADR2:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MAADR2, DRV_ENCX24J600_CS_OP_RD_MAADR2);
+                if (ret != 0)
+                {
+                    curSt->waitForMaddr2Op = ret;
+                    curSt->state = DRV_ENCX24J600_CS_READ_MAADR3;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_READ_MAADR3:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_MAADR3, DRV_ENCX24J600_CS_OP_RD_MAADR3);
+                if (ret != 0)
+                {
+                    curSt->waitForMaddr3Op = ret;
+                    curSt->state = DRV_ENCX24J600_CS_WAIT_FOR_MACON2;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_WAIT_FOR_MACON2:
+                if (DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->waitForMacon2Op, &reg, (uint8_t)DRV_ENCX24J600_CS_OP_READ_MACON2))
+                {
+                    if ((reg.macon2.PADCFG != 5) || (reg.macon2.TXCRCEN != 1))
+                    {
+                        curSt->state = DRV_ENCX24J600_CS_SET_MACON2;
+                    }
+                    else
+                    {
+                        curSt->state = DRV_ENCX24J600_CS_SET_PHANA;
+                    }
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_PHANA:
+                reg.value = 0x5e1;
+                ret = (pDrvInst->busVTable->fpPhyWr)(pDrvInst, DRV_ENCX24J600_PHY_SFR_PHANA, reg, DRV_ENCX24J600_CS_OP_SET_PH_1);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_EIE;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_SET_EIE:
+                reg.value = 0;
+                reg.eie.LINKIE = 1;
+                reg.eie.PCFULIE = 1;
+                reg.eie.PKTIE = 1;
+                reg.eie.RXABTIE = 1;
+                reg.eie.TXABTIE = 1;
+                reg.eie.TXIE = 1;
+                //reg.eie.INTIE = 1;
+                ret = (pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENCX24J600_SFR_EIE, reg, DRV_ENCX24J600_CS_OP_SET_EIE);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_WAIT_FOR_MAADR3;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_WAIT_FOR_MAADR3:
+                if (DRV_ENCX24J600_ReadSfr(pDrvInst, curSt->waitForMaddr3Op, &reg, (uint8_t)DRV_ENCX24J600_CS_OP_RD_MAADR3))
+                {
+                    pDrvInst->stackParameters.ifPhyAddress.v[4] = (uint8_t)reg.maadr3.MAADR3 & 0xffU;
+                    pDrvInst->stackParameters.ifPhyAddress.v[5] = (uint8_t)(reg.maadr3.MAADR3 >> 8) & 0xffU;
+                    (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, curSt->waitForMaddr2Op, &reg, DRV_ENCX24J600_CS_OP_RD_MAADR2);
+                    pDrvInst->stackParameters.ifPhyAddress.v[2] = (uint8_t)reg.maadr2.MAADR2 & 0xffU;
+                    pDrvInst->stackParameters.ifPhyAddress.v[3] = (uint8_t)(reg.maadr2.MAADR2 >> 8) & 0xffU;
+                    (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, curSt->waitForMaddr1Op, &reg, DRV_ENCX24J600_CS_OP_RD_MAADR1);
+                    pDrvInst->stackParameters.ifPhyAddress.v[0] = (uint8_t)reg.maadr1.MAADR1 & 0xffU;
+                    pDrvInst->stackParameters.ifPhyAddress.v[1] = (uint8_t)(reg.maadr1.MAADR1 >> 8) & 0xffU;
+                    pDrvInst->stackParameters.processFlags = TCPIP_MAC_PROCESS_FLAG_NONE;
+                    pDrvInst->stackParameters.macType = TCPIP_MAC_TYPE_ETH;
+                    pDrvInst->stackParameters.linkMtu = TCPIP_MAC_LINK_MTU_ETH;
+                    res = 1;
+                }
+                abortTask = true;
+                break;
+
+            case DRV_ENCX24J600_CS_WRITE_MAADR1:
+                reg.value = (uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[0] | ((uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[1]<<8);
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MAADR1, reg, DRV_ENCX24J600_CS_OP_WR_MAADR1);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_WRITE_MAADR2;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_WRITE_MAADR2:
+                reg.value = (uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[2] | ((uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[3]<<8);
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MAADR2, reg, DRV_ENCX24J600_CS_OP_WR_MAADR2);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_WRITE_MAADR3;
+                }
+                else
+                {   // failed
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_CS_WRITE_MAADR3:
+                reg.value = (uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[4] | ((uint16_t)pDrvInst->stackCfg.ifPhyAddress.v[5]<<8);
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MAADR3, reg, DRV_ENCX24J600_CS_OP_WR_MAADR3);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_READ_MAADR1;
+                }
+
+                abortTask = true;
+                break;
+
+            case DRV_ENCX24J600_CS_SET_MACON2:
+                reg.value = 0;
+                reg.macon2.TXCRCEN = 1;
+                reg.macon2.PADCFG = 0x5;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_MACON2, reg, DRV_ENCX24J600_CS_OP_SET_MACON2);
+                if (ret != 0)
+                {
+                    curSt->state = DRV_ENCX24J600_CS_SET_PHANA;
+                }
+
+                abortTask = true;
+                break;
+
+            default:
+                // do nothing
+                abortTask = true;
+                break;
+        }
     }
 
 

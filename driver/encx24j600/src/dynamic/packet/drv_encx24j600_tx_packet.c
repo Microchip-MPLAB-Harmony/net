@@ -48,122 +48,108 @@ int32_t DRV_ENCX24J600_TxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvIns
     uintptr_t ret;
     uint16_t count;
     uint16_t ptrValue;
-    bool abortSwitch;
-    switch (pkt->state)
+    bool abortTask = false;
+
+    while(!abortTask)
     {
-        case DRV_ENCX24J600_TP_NO_PKT_STATE:
-            break;
+        switch (pkt->state)
+        {
+            case DRV_ENCX24J600_TP_NO_PKT_STATE:
+                abortTask = true;
+                break;
 
-        case DRV_ENCX24J600_TP_WAIT_FOR_CTS_TO_ENC:
-            break;
+            case DRV_ENCX24J600_TP_WAIT_FOR_CTS_TO_ENC:
+                abortTask = true;
+                break;
 
-        case DRV_ENCX24J600_TP_READ_GPWRREG:
-            ret = (pDrvInst->busVTable->fpPtrRdStart)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, DRV_ENCX24J500_TP_OP_READ_GPWRREG);
-            if (ret != 0)
-            {
-                pkt->operation = ret;
-                pkt->state = DRV_ENCX24J600_TP_SND_PKT_TO_ENC;
-            }
-            break;
-
-        case DRV_ENCX24J600_TP_SND_PKT_TO_ENC:
-            if (pkt->gpPtr == DRV_ENCX24J600_MEM_SIZE)
-            {
-                pkt->gpPtr = pDrvInst->gpPtrVal;
-                pkt->pDSeg = pkt->pkt->pDSeg;
-            }
-            count = 0;
-            abortSwitch = false;
-            while (pkt->pDSeg != NULL)
-            {
-                if (pDrvInst->txBufferRemaining < pkt->pDSeg->segLen)
+            case DRV_ENCX24J600_TP_READ_GPWRREG:
+                ret = (pDrvInst->busVTable->fpPtrRdStart)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, DRV_ENCX24J500_TP_OP_READ_GPWRREG);
+                if (ret != 0)
                 {
-                    abortSwitch = true; // finish the switch
+                    pkt->operation = ret;
+                    pkt->state = DRV_ENCX24J600_TP_SND_PKT_TO_ENC;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+
+            case DRV_ENCX24J600_TP_SND_PKT_TO_ENC:
+                if (pkt->gpPtr == DRV_ENCX24J600_MEM_SIZE)
+                {
+                    pkt->gpPtr = pDrvInst->gpPtrVal;
+                    pkt->pDSeg = pkt->pkt->pDSeg;
+                }
+                count = 0;
+                while (pkt->pDSeg != NULL)
+                {
+                    if (pDrvInst->txBufferRemaining < pkt->pDSeg->segLen)
+                    {
+                        abortTask = true;
+                        break;
+                    }
+                    ret = (pDrvInst->busVTable->fpDataWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, pkt->pDSeg->segLoad, pkt->pDSeg->segLen);
+                    count+= pkt->pDSeg->segLen;
+                    if (ret == 0)
+                    {
+                        abortTask = true;
+                        break;
+                    }
+                    DRV_ENCX24J600_AddGpData(pDrvInst, pkt->pDSeg->segLen);
+                    pkt->pDSeg = pkt->pDSeg->next;
+                }
+
+                if(abortTask)
+                {
                     break;
                 }
-                ret = (pDrvInst->busVTable->fpDataWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, pkt->pDSeg->segLoad, pkt->pDSeg->segLen);
-                count+= pkt->pDSeg->segLen;
-                if (ret == 0)
-                {
-                    abortSwitch = true; // finish the switch
-                    break;
-                }
-                DRV_ENCX24J600_AddGpData(pDrvInst, pkt->pDSeg->segLen);
-                pkt->pDSeg = pkt->pDSeg->next;
-            }
-            if(abortSwitch == false)
-            {
+
                 // If we're here there are no data segments left.
                 //SYS_CONSOLE_PRINT("TXe:pkt %x @ %x len %x next @ %x\r\n", pkt, pkt->gpPtr, count, pDrvInst->gpPtrVal);
                 pkt->state = DRV_ENCX24J600_TP_WAIT_FOR_GPWRREG;
-            }
-            break;
+                abortTask = false;
+                break;
 
-        case DRV_ENCX24J600_TP_WAIT_FOR_GPWRREG:
-            ptrValue = 0;
-            if ((*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation) == DRV_ENCX24J600_BR_SUCCESS)
-            {
-                (void)(*pDrvInst->busVTable->fpPtrRdResult)(pDrvInst, pkt->operation, &ptrValue, DRV_ENCX24J500_TP_OP_READ_GPWRREG);
-                /*if (pkt->gpPtr != ptrValue)
-                  {
-                  SYS_CONSOLE_PRINT("%x Change in pointer %x %x\r\n", pkt, pkt->gpPtr, ptrValue);
-                  }*/
-                pkt->gpPtr = ptrValue;
-                pkt->state = DRV_ENCX24J600_TP_WAIT_FOR_CTTX;
-                pDrvInst->mainStateInfo.runningInfo.ctsToEnc = true;
-            }
-            break;
+            case DRV_ENCX24J600_TP_WAIT_FOR_GPWRREG:
+                ptrValue = 0;
+                if ((*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation) == DRV_ENCX24J600_BR_SUCCESS)
+                {
+                    (void)(*pDrvInst->busVTable->fpPtrRdResult)(pDrvInst, pkt->operation, &ptrValue, DRV_ENCX24J500_TP_OP_READ_GPWRREG);
+                    /*if (pkt->gpPtr != ptrValue)
+                      {
+                      SYS_CONSOLE_PRINT("%x Change in pointer %x %x\r\n", pkt, pkt->gpPtr, ptrValue);
+                      }*/
+                    pkt->gpPtr = ptrValue;
+                    pkt->state = DRV_ENCX24J600_TP_WAIT_FOR_CTTX;
+                    pDrvInst->mainStateInfo.runningInfo.ctsToEnc = true;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
 
-        case DRV_ENCX24J600_TP_WAIT_FOR_CTTX:
-            break;
+            case DRV_ENCX24J600_TP_WAIT_FOR_CTTX:
+                abortTask = true;
+                break;
 
-        case DRV_ENCX24J600_TP_SET_ETXST:
-            reg.value = 0;
-            reg.etxst.ETXST = pkt->gpPtr;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ETXS, reg, DRV_ENCX24J600_TP_OP_SET_ETXST);
-            if (ret != 0U)
-            {
-                pkt->state = DRV_ENCX24J600_TP_SET_ETXLEN;
-            }
-            break;
+            case DRV_ENCX24J600_TP_SET_ETXST:
+                reg.value = 0;
+                reg.etxst.ETXST = pkt->gpPtr;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ETXS, reg, DRV_ENCX24J600_TP_OP_SET_ETXST);
+                if (ret == 0U)
+                {
+                    abortTask = true;
+                }
+                else
+                {
+                    pkt->state = DRV_ENCX24J600_TP_SET_ETXLEN;
+                }
+                break;
 
-        case DRV_ENCX24J600_TP_SET_ETXLEN:
-            reg.value = 0;
-            count = 0;
-            pkt->pDSeg = pkt->pkt->pDSeg;
-            while (pkt->pDSeg != NULL)
-            {
-                count += pkt->pDSeg->segLen;
-                pkt->pDSeg = pkt->pDSeg->next;
-            }
-            reg.etxlen.ETXLEN = count;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ETXLEN, reg, DRV_ENCX24J600_TP_OP_SET_ETXLEN);
-            if (ret != 0U)
-            {
-                //SYS_CONSOLE_PRINT("TX:pkt %x @ %x len %x next @ %x\r\n", pkt, pkt->gpPtr, count, pDrvInst->gpPtrVal);
-                /*if (lastPacketAddr == pkt->gpPtr)
-                  {
-                  SYS_CONSOLE_MESSAGE("Badd Stuff\r\n");
-                  }*/
-                lastPacketAddr = pkt->gpPtr;
-                pkt->state = DRV_ENCX24J600_TP_SET_ETXLEN;
-            }
-            break;
-
-        case DRV_ENCX24J600_TP_RQ_PKT_TX:
-            ret = (*pDrvInst->busVTable->fpReqPktTx)(pDrvInst);
-            if (ret != 0U)
-            {
-                pkt->state = DRV_ENCX24J600_TP_WAIT_FOR_COMPLETE;
-            }
-            break;
-
-        case DRV_ENCX24J600_TP_WAIT_FOR_COMPLETE:
-            break;
-
-        case DRV_ENCX24J600_TP_RST_EIR:
-            if(pkt->pkt != NULL)
-            {
+            case DRV_ENCX24J600_TP_SET_ETXLEN:
+                reg.value = 0;
                 count = 0;
                 pkt->pDSeg = pkt->pkt->pDSeg;
                 while (pkt->pDSeg != NULL)
@@ -171,39 +157,98 @@ int32_t DRV_ENCX24J600_TxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvIns
                     count += pkt->pDSeg->segLen;
                     pkt->pDSeg = pkt->pDSeg->next;
                 }
-                if (!pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkState)
+                reg.etxlen.ETXLEN = count;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_ETXLEN, reg, DRV_ENCX24J600_TP_OP_SET_ETXLEN);
+                if (ret == 0U)
                 {
-                    pkt->pkt->ackRes = (int8_t)TCPIP_MAC_PKT_ACK_LINK_DOWN;
+                    abortTask = true;
                 }
                 else
                 {
-                    pkt->pkt->ackRes = (int8_t)TCPIP_MAC_PKT_ACK_TX_OK;
+                    //SYS_CONSOLE_PRINT("TX:pkt %x @ %x len %x next @ %x\r\n", pkt, pkt->gpPtr, count, pDrvInst->gpPtrVal);
+                    /*if (lastPacketAddr == pkt->gpPtr)
+                      {
+                      SYS_CONSOLE_MESSAGE("Badd Stuff\r\n");
+                      }*/
+                    lastPacketAddr = pkt->gpPtr;
+                    ret = (*pDrvInst->busVTable->fpReqPktTx)(pDrvInst);
+                    if (ret == 0U)
+                    {
+                        abortTask = true;
+                    }
+                    else
+                    {
+                        pkt->state = DRV_ENCX24J600_TP_WAIT_FOR_COMPLETE;
+                    }
                 }
 
-                pkt->pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
-                (*pkt->pkt->ackFunc)(pkt->pkt, pkt->pkt->ackParam);
-                DRV_ENCX24J600_SetEvent(pDrvInst, TCPIP_MAC_EV_TX_DONE);
-                pkt->pkt = NULL;
-                DRV_ENCX24J600_TxAck(pDrvInst, count);
-                pDrvInst->mainStateInfo.runningInfo.nTxOkPackets ++;
-                pkt->gpPtr = DRV_ENCX24J600_MEM_SIZE;
-            }
-            reg.value = 0;
-            reg.eir.TXABTIF = 1;
-            reg.eir.TXIF = 1;
-            ret = (*pDrvInst->busVTable->fpSfrBitClr)(pDrvInst, DRV_ENCX24J600_SFR_EIR, reg, DRV_ENCX24J600_TP_OP_RST_EIR);
-            if (ret != 0U)
-            {
-                pkt->state = DRV_ENCX24J600_TP_NO_PKT_STATE;
-                pDrvInst->mainStateInfo.runningInfo.ctTx = true;
-                pkt->pkt = NULL;
-                pkt->gpPtr = DRV_ENCX24J600_MEM_SIZE;
-            }
-            break;
+                break;
 
-        default:
-            // do nothing
-            break;
+            case DRV_ENCX24J600_TP_RQ_PKT_TX:
+                ret = (*pDrvInst->busVTable->fpReqPktTx)(pDrvInst);
+                if (ret == 0U)
+                {
+                    abortTask = true;
+                }
+                else
+                {
+                    pkt->state = DRV_ENCX24J600_TP_WAIT_FOR_COMPLETE;
+                }
+                break;
+
+            case DRV_ENCX24J600_TP_WAIT_FOR_COMPLETE:
+                abortTask = true;
+                break;
+
+            case DRV_ENCX24J600_TP_RST_EIR:
+                if(pkt->pkt != NULL)
+                {
+                    count = 0;
+                    pkt->pDSeg = pkt->pkt->pDSeg;
+                    while (pkt->pDSeg != NULL)
+                    {
+                        count += pkt->pDSeg->segLen;
+                        pkt->pDSeg = pkt->pDSeg->next;
+                    }
+                    if (!pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkState)
+                    {
+                        pkt->pkt->ackRes = (int8_t)TCPIP_MAC_PKT_ACK_LINK_DOWN;
+                    }
+                    else
+                    {
+                        pkt->pkt->ackRes = (int8_t)TCPIP_MAC_PKT_ACK_TX_OK;
+                    }
+
+                    pkt->pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+                    (*pkt->pkt->ackFunc)(pkt->pkt, pkt->pkt->ackParam);
+                    DRV_ENCX24J600_SetEvent(pDrvInst, TCPIP_MAC_EV_TX_DONE);
+                    pkt->pkt = NULL;
+                    DRV_ENCX24J600_TxAck(pDrvInst, count);
+                    pDrvInst->mainStateInfo.runningInfo.nTxOkPackets ++;
+                    pkt->gpPtr = DRV_ENCX24J600_MEM_SIZE;
+                }
+                reg.value = 0;
+                reg.eir.TXABTIF = 1;
+                reg.eir.TXIF = 1;
+                ret = (*pDrvInst->busVTable->fpSfrBitClr)(pDrvInst, DRV_ENCX24J600_SFR_EIR, reg, DRV_ENCX24J600_TP_OP_RST_EIR);
+                if (ret == 0U)
+                {
+                    abortTask = true;
+                }
+                else
+                {
+                    pkt->state = DRV_ENCX24J600_TP_NO_PKT_STATE;
+                    pDrvInst->mainStateInfo.runningInfo.ctTx = true;
+                    pkt->pkt = NULL;
+                    pkt->gpPtr = DRV_ENCX24J600_MEM_SIZE;
+                }
+                break;
+
+            default:
+                // do nothing
+                abortTask = true;
+                break;
+        }
     }
 
     return 0;

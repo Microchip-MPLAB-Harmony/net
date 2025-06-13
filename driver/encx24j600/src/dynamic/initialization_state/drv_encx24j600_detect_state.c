@@ -44,41 +44,55 @@ int32_t DRV_ENCX24J600_DetectStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrv
     DRV_ENCX24J600_RegUnion reg = {0};
     uintptr_t ret;
     int32_t res = 0;
+    bool abortTask = false;
 
-    switch (pDrvInst->mainStateInfo.initInfo.detectStateInfo.state)
+    while(!abortTask)
     {
-        case DRV_ENCX24J600_DS_WRITE_EUDAST:
-            reg.eudast.EUDAST = 0x1234;
-            ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, reg, DRV_ENCX24J600_DS_OPS_WRITE_EUDAST);
-            if (ret != 0)
-            {
-                pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_READ_EUDAST;
-            }
-            break;
-        case DRV_ENCX24J600_DS_READ_EUDAST:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, DRV_ENCX24J600_DS_OPS_READ_EUDAST);
-            if (ret != 0)
-            {
-                pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WAIT_FOR_READ;
-                pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp = ret;
-            }
-            break;
-        case DRV_ENCX24J600_DS_WAIT_FOR_READ:
-            if (DRV_ENCX24J600_ReadSfr(pDrvInst, pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp, &reg, (uint8_t)DRV_ENCX24J600_DS_OPS_READ_EUDAST))
-            {
-                if (reg.eudast.EUDAST == 0x1234)
+        switch (pDrvInst->mainStateInfo.initInfo.detectStateInfo.state)
+        {
+            case DRV_ENCX24J600_DS_WRITE_EUDAST:
+                reg.eudast.EUDAST = 0x1234;
+                ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, reg, DRV_ENCX24J600_DS_OPS_WRITE_EUDAST);
+                if (ret != 0)
                 {
-                    res = 1;
+                    pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_READ_EUDAST;
                 }
                 else
                 {
-                    pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WRITE_EUDAST;
+                    abortTask = true;
                 }
-            }
-            break;
-        default:
-            // do nothing
-            break;
+                break;
+            case DRV_ENCX24J600_DS_READ_EUDAST:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, DRV_ENCX24J600_DS_OPS_READ_EUDAST);
+                if (ret != 0)
+                {
+                    pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WAIT_FOR_READ;
+                    pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp = ret;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+            case DRV_ENCX24J600_DS_WAIT_FOR_READ:
+                if (DRV_ENCX24J600_ReadSfr(pDrvInst, pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp, &reg, (uint8_t)DRV_ENCX24J600_DS_OPS_READ_EUDAST))
+                {
+                    if (reg.eudast.EUDAST == 0x1234)
+                    {
+                        res = 1;
+                    }
+                    else
+                    {
+                        pDrvInst->mainStateInfo.initInfo.detectStateInfo.state = DRV_ENCX24J600_DS_WRITE_EUDAST;
+                    }
+                }
+                abortTask = true;
+                break;
+            default:
+                // do nothing
+                abortTask = true;
+                break;
+        }
     }
     return res;
 }

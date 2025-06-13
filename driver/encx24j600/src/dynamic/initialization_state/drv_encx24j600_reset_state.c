@@ -48,83 +48,111 @@ int32_t DRV_ENCX24J600_ResetStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvI
     uintptr_t ret;
     DRV_ENCX24J600_BUS_RESULT busRes;
     int32_t retRes = 0;
-    switch(pDrvInst->mainStateInfo.initInfo.resetStateInfo.state)
+    bool abortTask = false;
+
+    while(!abortTask)
     {
-        case DRV_ENCX24J600_RS_READ_ESTAT:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_ESTAT, 0);
-            if (ret != 0U)
-            {
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.op = ret;
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_FOR_ESTAT;
-            }
-            break;
-        case DRV_ENCX24J600_RS_WAIT_FOR_ESTAT:
-            busRes =  pDrvInst->busVTable->fpOpResult(pDrvInst, pDrvInst->mainStateInfo.initInfo.resetStateInfo.op);
-            if(busRes == DRV_ENCX24J600_BR_SUCCESS)
-            {
-                (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, pDrvInst->mainStateInfo.initInfo.resetStateInfo.op, &reg, 0);
-                if (reg.estat.CLKRDY == 0x1)
+        switch(pDrvInst->mainStateInfo.initInfo.resetStateInfo.state)
+        {
+            case DRV_ENCX24J600_RS_READ_ESTAT:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_ESTAT, 0);
+                if (ret != 0U)
                 {
-                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_SEND_RESET;
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.op = ret;
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_FOR_ESTAT;
                 }
                 else
                 {
-                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_READ_ESTAT;
+                    abortTask = true;
                 }
-            }
-            break;
+                break;
 
-        case DRV_ENCX24J600_RS_SEND_RESET:
-            ret = (*pDrvInst->busVTable->fpSysRst)(pDrvInst);
-            if (ret != 0U)
-            {
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_1;
-                uint32_t sysFreq = SYS_TIME_FrequencyGet();
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick = (uint64_t)SYS_TIME_CounterGet() + (uint64_t)(sysFreq / WAIT_25_6_US_DIV);
-            }
-            break;
-        case DRV_ENCX24J600_RS_WAIT_1:
-            if (SYS_TIME_CounterGet() > pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick)
-            {
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_READ_EUDAST;
-            }
-            break;
-        case DRV_ENCX24J600_RS_READ_EUDAST:
-            ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, 0);
-            if (ret != 0U)
-            {
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_FOR_EUDAST;
-                pDrvInst->mainStateInfo.initInfo.resetStateInfo.op = ret;
-            }
-            break;
-        case DRV_ENCX24J600_RS_WAIT_FOR_EUDAST:
-            busRes = pDrvInst->busVTable->fpOpResult(pDrvInst, pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp);
-            if(busRes == DRV_ENCX24J600_BR_SUCCESS)
-            {
-                (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, pDrvInst->mainStateInfo.initInfo.resetStateInfo.op, &reg, 0);
-                if (reg.eudast.EUDAST == 0x0000U)
+            case DRV_ENCX24J600_RS_WAIT_FOR_ESTAT:
+                busRes =  pDrvInst->busVTable->fpOpResult(pDrvInst, pDrvInst->mainStateInfo.initInfo.resetStateInfo.op);
+                if(busRes == DRV_ENCX24J600_BR_SUCCESS)
                 {
-                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_2;
+                    (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, pDrvInst->mainStateInfo.initInfo.resetStateInfo.op, &reg, 0);
+                    if (reg.estat.CLKRDY == 0x1)
+                    {
+                        pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_SEND_RESET;
+                    }
+                    else
+                    {
+                        pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_READ_ESTAT;
+                    }
+                }
+                // else if busRes == DRV_ENCX24J600_BR_ERROR; report error
+                abortTask = true;
+                break;
+
+            case DRV_ENCX24J600_RS_SEND_RESET:
+                ret = (*pDrvInst->busVTable->fpSysRst)(pDrvInst);
+                if (ret != 0U)
+                {
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_1;
                     uint32_t sysFreq = SYS_TIME_FrequencyGet();
-                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick = (uint64_t)SYS_TIME_CounterGet() + ((uint64_t)sysFreq / WAIT_256_US_DIV);
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick = (uint64_t)SYS_TIME_CounterGet() + (uint64_t)(sysFreq / WAIT_25_6_US_DIV);
                 }
                 else
                 {
-                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_SEND_RESET;
+                    abortTask = true;
                 }
-            }
+                break;
+            case DRV_ENCX24J600_RS_WAIT_1:
+                if (SYS_TIME_CounterGet() > pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick)
+                {
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_READ_EUDAST;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+            case DRV_ENCX24J600_RS_READ_EUDAST:
+                ret = (*pDrvInst->busVTable->fpSfrRdStart)(pDrvInst, DRV_ENCX24J600_SFR_EUDAST, 0);
+                if (ret != 0U)
+                {
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_FOR_EUDAST;
+                    pDrvInst->mainStateInfo.initInfo.resetStateInfo.op = ret;
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+            case DRV_ENCX24J600_RS_WAIT_FOR_EUDAST:
+                busRes = pDrvInst->busVTable->fpOpResult(pDrvInst, pDrvInst->mainStateInfo.initInfo.detectStateInfo.readOp);
+                if(busRes == DRV_ENCX24J600_BR_SUCCESS)
+                {
+                    (void)(*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, pDrvInst->mainStateInfo.initInfo.resetStateInfo.op, &reg, 0);
+                    if (reg.eudast.EUDAST == 0x0000U)
+                    {
+                        pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_WAIT_2;
+                        uint32_t sysFreq = SYS_TIME_FrequencyGet();
+                        pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick = (uint64_t)SYS_TIME_CounterGet() + ((uint64_t)sysFreq / WAIT_256_US_DIV);
+                    }
+                    else
+                    {
+                        pDrvInst->mainStateInfo.initInfo.resetStateInfo.state = DRV_ENCX24J600_RS_SEND_RESET;
+                    }
+                }
+                // else if busRes == DRV_ENCX24J600_BR_ERROR; report error
 
-            break;
-        case DRV_ENCX24J600_RS_WAIT_2:
-            if (SYS_TIME_CounterGet() > pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick)
-            {
-                retRes = 1;
-            }
-            break;
+                abortTask = true;
+                break;
+            case DRV_ENCX24J600_RS_WAIT_2:
+                if (SYS_TIME_CounterGet() > pDrvInst->mainStateInfo.initInfo.resetStateInfo.waitTillTick)
+                {
+                    retRes = 1;
+                }
+                abortTask = true;
+                break;
 
-        default:
-            // do nothing
-            break;
+            default:
+                // do nothing
+                abortTask = true;
+                break;
+        }
     }
     return retRes;
 }

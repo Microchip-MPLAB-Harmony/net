@@ -42,45 +42,64 @@ int32_t DRV_ENCX24J600_InitStateTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvIn
 {
     int32_t retRes = 0;
     int32_t res;
-    switch (pDrvInst->mainStateInfo.initInfo.state)
+    bool abortTask = false;
+
+    while(!abortTask)
     {
-        case DRV_ENCX24J600_IS_OPEN_BUS:
-            res = (*pDrvInst->busVTable->fpOpenIf)(pDrvInst);
-            if (res == 0)
-            {
-                pDrvInst->mainStateInfo.initInfo.state = DRV_ENCX24J600_IS_DETECT;
-                (void)DRV_ENCX24J600_DetectStateEnter(pDrvInst);
-            }
-            break;
-        case DRV_ENCX24J600_IS_DETECT:
-            res = DRV_ENCX24J600_DetectStateTask(pDrvInst);
-            if (res == 1)
-            {
-                pDrvInst->mainStateInfo.initInfo.state = DRV_ENCX24J600_IS_RESET;
-                (void)DRV_ENCX24J600_DetectStateExit(pDrvInst);
-                (void)DRV_ENCX24J600_ResetStateEnter(pDrvInst);
-            }
-            break;
-        case DRV_ENCX24J600_IS_RESET:
-            res = DRV_ENCX24J600_ResetStateTask(pDrvInst);
-            if (res == 1)
-            {
-                pDrvInst->mainStateInfo.initInfo.state = DRV_ENCX24J600_IS_CONFIG;
-                (void)DRV_ENCX24J600_ResetStateExit(pDrvInst);
-                (void)DRV_ENCX24J600_ConfigStateEnter(pDrvInst);
-            }
-            break;
-        case DRV_ENCX24J600_IS_CONFIG:
-            res = DRV_ENCX24J600_ConfigStateTask(pDrvInst);
-            if (res == 1)
-            {
-                (void)DRV_ENCX24J600_ConfigStateExit(pDrvInst);
-                retRes = 1;
-            }
-            break;
-        default:
-            // do nothing
-            break;
+        switch (pDrvInst->mainStateInfo.initInfo.state)
+        {
+            case DRV_ENCX24J600_IS_OPEN_BUS:
+                res = (*pDrvInst->busVTable->fpOpenIf)(pDrvInst);
+                if (res == 0)
+                {
+                    pDrvInst->mainStateInfo.initInfo.state = DRV_ENCX24J600_IS_DETECT;
+                    (void)DRV_ENCX24J600_DetectStateEnter(pDrvInst);
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+            case DRV_ENCX24J600_IS_DETECT:
+                res = DRV_ENCX24J600_DetectStateTask(pDrvInst);
+                if (res == 1)
+                {
+                    pDrvInst->mainStateInfo.initInfo.state = DRV_ENCX24J600_IS_RESET;
+                    (void)DRV_ENCX24J600_DetectStateExit(pDrvInst);
+                    (void)DRV_ENCX24J600_ResetStateEnter(pDrvInst);
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+            case DRV_ENCX24J600_IS_RESET:
+                res = DRV_ENCX24J600_ResetStateTask(pDrvInst);
+                if (res == 1)
+                {
+                    pDrvInst->mainStateInfo.initInfo.state = DRV_ENCX24J600_IS_CONFIG;
+                    (void)DRV_ENCX24J600_ResetStateExit(pDrvInst);
+                    (void)DRV_ENCX24J600_ConfigStateEnter(pDrvInst);
+                }
+                else
+                {
+                    abortTask = true;
+                }
+                break;
+            case DRV_ENCX24J600_IS_CONFIG:
+                res = DRV_ENCX24J600_ConfigStateTask(pDrvInst);
+                if (res == 1)
+                {
+                    (void)DRV_ENCX24J600_ConfigStateExit(pDrvInst);
+                    retRes = 1;
+                }
+                abortTask = true;
+                break;
+            default:
+                // do nothing
+                abortTask = true;
+                break;
+        }
     }
     return retRes;
 }
