@@ -228,7 +228,7 @@ void NET_PRES_Tasks(SYS_MODULE_OBJ obj)
                     {
                         continue;
                     }
-                    if (!(*sNetPresSockets[x].provObject->fpOpen)(obj, (uintptr_t)(x + 1), sNetPresSockets[x].transHandle, &sNetPresSockets[x].providerData))
+                    if (!(*sNetPresSockets[x].provObject->fpOpen)(obj, (uintptr_t)((uint32_t)x + 1U), sNetPresSockets[x].transHandle, &sNetPresSockets[x].providerData))
                     {
                         sNetPresSockets[x].status = (uint8_t)NET_PRES_ENC_SS_FAILED;
                         continue;                       
@@ -1119,17 +1119,23 @@ NET_PRES_CBACK_HANDLE NET_PRES_SniCallbackRegister(SYS_MODULE_OBJ obj, NET_PRES_
         return NULL;
     }
 
-    NET_PRES_CBACK_HANDLE cbHandle = NULL;
+    union
+    {
+        NET_PRES_CBACK_HANDLE cbHandle;
+        NET_PRES_SNI_CALLBACK sniCback;
+    }U_SNI_CBACK_HANDLE;
+
+    U_SNI_CBACK_HANDLE.cbHandle = NULL;
     (void)OSAL_MUTEX_Lock(&pData->presMutex, OSAL_WAIT_FOREVER);
     if(pData->sniCback == NULL)
     {
-        pData->sniCback = cBack;
-        cbHandle = (NET_PRES_CBACK_HANDLE)pData->sniCback;
+        U_SNI_CBACK_HANDLE.sniCback = cBack;
+        pData->sniCback = U_SNI_CBACK_HANDLE.cbHandle;
     }
 
     (void)OSAL_MUTEX_Unlock(&pData->presMutex);
 
-    return cbHandle;
+    return U_SNI_CBACK_HANDLE.cbHandle;
 }
 
 bool NET_PRES_SniCallbackDeregister(SYS_MODULE_OBJ obj, NET_PRES_CBACK_HANDLE cBackHandle)
@@ -1161,5 +1167,12 @@ NET_PRES_SNI_CALLBACK NET_PRES_SniCallbackGet(SYS_MODULE_OBJ obj)
         return NULL;
     }
 
-    return pData->sniCback;
+    union
+    {
+        NET_PRES_CBACK_HANDLE cbHandle;
+        NET_PRES_SNI_CALLBACK sniCback;
+    }U_SNI_CBACK_HANDLE;
+
+    U_SNI_CBACK_HANDLE.cbHandle = pData->sniCback;
+    return U_SNI_CBACK_HANDLE.sniCback;
 }

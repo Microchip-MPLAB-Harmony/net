@@ -4922,7 +4922,7 @@ static uint8_t TCPIP_IPV6_TxPriQueue(const TCPIP_NET_IF* pNetIf, uint8_t dscp)
     }
 
     uint16_t pri16 = ((uint16_t)dscp * qNo) / (uint16_t)TCPIP_IPV6_DSCP_MAX; 
-    return pri16 == 0 ? 0 : (uint8_t)pri16 - 1U;
+    return pri16 == 0U ? 0U : (uint8_t)pri16 - 1U;
 }
 
 bool TCPIP_IPV6_TxPriHandlerRegister(TCPIP_IPV6_TX_PRI_HANDLER priHandler)

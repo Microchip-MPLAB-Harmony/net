@@ -454,7 +454,7 @@ bool Net_Prov${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uintptr_t presH
     <#lt>    {
     <#lt>        return false;
     <#lt>    }
-    <#lt>    if (wolfSSL_set_fd(ssl, transHandle) != SSL_SUCCESS)
+    <#lt>    if (wolfSSL_set_fd(ssl, (int)transHandle) != SSL_SUCCESS)
     <#lt>    {
     <#lt>        wolfSSL_free(ssl);
     <#lt>        return false;

@@ -159,18 +159,18 @@ typedef struct
 #define GMAC_RX_CHECKSUM_IP_UDP_OFFLOAD     ((unsigned int)0x00C00000)
 
 // receive buffer descriptor bits
-#define GMAC_RX_OWNERSHIP_BIT   (1u <<  0)
-#define GMAC_RX_WRAP_BIT        (1u <<  1)
-#define GMAC_RX_SOF_BIT         (1u << 14)
-#define GMAC_RX_EOF_BIT         (1u << 15)
+#define GMAC_RX_OWNERSHIP_BIT   (1UL <<  0U)
+#define GMAC_RX_WRAP_BIT        (1UL <<  1U)
+#define GMAC_RX_SOF_BIT         (1UL << 14U)
+#define GMAC_RX_EOF_BIT         (1UL << 15U)
 
 // Transmit buffer descriptor bits
-#define GMAC_TX_LAST_BUFFER_BIT (1u << 15)
-#define GMAC_TX_WRAP_BIT        (1u << 30)
-#define GMAC_TX_USED_BIT        (1u << 31)
-#define GMAC_TX_RLE_BIT         (1u << 29) /// Retry Limit Exceeded
-#define GMAC_TX_LCOL_BIT        (1u << 28) /// Tx error due to late collision
-#define GMAC_TX_AHB_ERR_BIT     (1u << 27) /// Frame corruption due to AHB Error
+#define GMAC_TX_LAST_BUFFER_BIT (1UL << 15U)
+#define GMAC_TX_WRAP_BIT        (1UL << 30U)
+#define GMAC_TX_USED_BIT        (1UL << 31U)
+#define GMAC_TX_RLE_BIT         (1UL << 29U) /// Retry Limit Exceeded
+#define GMAC_TX_LCOL_BIT        (1UL << 28U) /// Tx error due to late collision
+#define GMAC_TX_AHB_ERR_BIT     (1UL << 27U) /// Frame corruption due to AHB Error
 #define GMAC_TX_ERR_BITS        (GMAC_TX_RLE_BIT | GMAC_TX_LCOL_BIT | GMAC_TX_AHB_ERR_BIT)
 
 /* Ethernet Receive Filter Flags
