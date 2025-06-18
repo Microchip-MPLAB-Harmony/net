@@ -73,6 +73,7 @@ static void WSC_Task_WaitConnect(TCPIP_WSC_CONN_CTRL* pWsc);
 static void WSC_Task_WaitTlsConnect(TCPIP_WSC_CONN_CTRL* pWsc);
 static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc);
 static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc);
+static void WSC_Task_Authenticate(TCPIP_WSC_CONN_CTRL* pWsc);
 static void WSC_Task_Process(TCPIP_WSC_CONN_CTRL* pWsc);
 static void WSC_Task_Closed(TCPIP_WSC_CONN_CTRL* pWsc);
 
@@ -85,6 +86,7 @@ static void     WSC_CloseConnection(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_RES err
 static void     WSC_FailConnection(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_RES errRes);
 static void     WSC_AbortConnection(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_RES errRes);
 static int      WSC_GenerateKey(uint8_t* base64Buffer, size_t buffLen);
+static int      WSC_UserAuthenticate(TCPIP_WSC_CONN_CTRL* pWsc, const char* srvChallenge, uint8_t* outBuff, size_t outBuffLen);
 static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvResponse);
 
 static TCPIP_WSC_RES WSC_SendCtrlFrame(TCPIP_WSC_CONN_CTRL* pWsc, uint8_t opCode, uint8_t* payloadBuff, uint16_t payloadLen);
@@ -111,6 +113,7 @@ static bool WSC_ConnectionLock(TCPIP_WSC_CONN_CTRL* pWsc, bool taskProcess);
 static void WSC_ConnectionUnlock(TCPIP_WSC_CONN_CTRL* pWsc, bool taskProcess);
 
 int WSC_RngGenerate(uint8_t* rngBuff, size_t buffSize);
+static int WSC_GenerateBasicAuth(const TCPIP_WSC_AUTH_DATA* wscAuthD, uint8_t* base64Buff, size_t base64BuffLen);
 
 static bool strcany(const char* delim, int ch);
 static const char* strdelim(const char* str, const char* delim);
@@ -232,6 +235,7 @@ static const char* intState_Tbl[] =
     "wtls",         // WSC_INT_STAT_WAIT_TLS_CONNECT
     "shhk",         // WSC_INT_STAT_START_HSHAKE
     "wshk",         // WSC_INT_STAT_WAIT_HSHAKE
+    "auth",         // WSC_INT_STAT_AUTHENTICATE
     "open",         // WSC_INT_STAT_OPEN
     "closing",      // WSC_INT_STAT_CLOSING
     "closed",       // WSC_INT_STAT_CLOSED
@@ -363,7 +367,7 @@ static TCPIP_WSC_CONN_CTRL* WSC_ValidateConn(TCPIP_WSC_CONN_HANDLE hConn)
     if(gWscDcpt != NULL && pWsc != NULL)
     {
         int connIx = pWsc - gWscDcpt->wscConnCtrl;
-        if(connIx >= 0 && connIx < gWscDcpt->wscConnNo)
+        if(connIx >= 0 && connIx < (int)gWscDcpt->wscConnNo)
         {
             TCPIP_WSC_CONN_CTRL* pCtrl = gWscDcpt->wscConnCtrl + connIx;
             if(pCtrl == pWsc)
@@ -696,9 +700,19 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
             res = TCPIP_WSC_RES_BAD_ARG;
             break;
         }
-        if(connDcpt->protocols != NULL && connDcpt->nProtocols != 0)
+
+        if((connDcpt->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_AUTH_ON_CONNECT) != 0U)
+        {
+            if(connDcpt->authHandler == NULL)
+            {   // cannot be NULL if authentication needed
+                res = TCPIP_WSC_RES_BAD_ARG;
+                break;
+            }
+        }
+
+        if(connDcpt->protocols != NULL && connDcpt->nProtocols != 0U)
         {   // check the protocols
-            if(connDcpt->nProtocols > TCPIP_WSC_PROTO_MAX_NO)
+            if(connDcpt->nProtocols > (uint16_t)TCPIP_WSC_PROTO_MAX_NO)
             {
                 res = TCPIP_WSC_RES_PROTO_ERROR;
                 break;
@@ -708,7 +722,7 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
             res = TCPIP_WSC_RES_OK; 
             for(protoSrcIx = 0; protoSrcIx < connDcpt->nProtocols; protoSrcIx++) 
             {
-                if(protoSrc != NULL && strlen(protoSrc) >= TCPIP_WSC_PROTO_MAX_LEN)
+                if(protoSrc != NULL && strlen(protoSrc) >= (size_t)TCPIP_WSC_PROTO_MAX_LEN)
                 {
                     res = TCPIP_WSC_RES_PROTO_ERROR;
                     break;
@@ -747,6 +761,7 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
         }
 
         Wsc_ConnInit(pWsConn);
+        pWsConn->authHandler = connDcpt->authHandler;
         pWsConn->connPort = connDcpt->port;
         pWsConn->connFlags = connDcpt->connFlags;
         if((connDcpt->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_USE_IPV6) != 0U)
@@ -781,7 +796,7 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
 
             pWsConn->nProtocols = 0;
             pWsConn->protInUseIx = -1;
-            if(connDcpt->protocols != NULL && connDcpt->nProtocols != 0)
+            if(connDcpt->protocols != NULL && connDcpt->nProtocols != 0U)
             {   // copy the protocols
                 protoDstIx = 0;
                 for(protoSrcIx = 0; protoSrcIx < connDcpt->nProtocols; protoSrcIx++) 
@@ -1629,7 +1644,7 @@ static TCPIP_WSC_RES WSC_OpenSocket(TCPIP_WSC_CONN_CTRL* pConn)
         break;
     }
 
-    if(res < 0)
+    if((int)res < 0)
     {   // failed
         if(netSkt != NET_PRES_INVALID_SOCKET)
         { 
@@ -1773,6 +1788,7 @@ static WSC_TASK_FUNC wsc_task_tbl[] =
     &WSC_Task_WaitTlsConnect,   // WSC_INT_STAT_WAIT_TLS_CONNECT
     &WSC_Task_StartHandshake,   // WSC_INT_STAT_START_HSHAKE
     &WSC_Task_WaitHandshake,    // WSC_INT_STAT_WAIT_HSHAKE
+    &WSC_Task_Authenticate,     // WSC_INT_STAT_AUTHENTICATE
     &WSC_Task_Process,          // WSC_INT_STAT_OPEN
     &WSC_Task_Process,          // WSC_INT_STAT_CLOSING
     &WSC_Task_Closed,           // WSC_INT_STAT_CLOSED
@@ -1915,7 +1931,7 @@ static void WSC_Task_WaitConnect(TCPIP_WSC_CONN_CTRL* pWsc)
 
     if(NET_PRES_SocketIsConnected(skt))
     {   // success
-        if((pWsc->connFlags & TCPIP_WSC_CONN_FLAG_SECURE_ON) != 0U)
+        if((pWsc->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON) != 0U)
         {   // secure connection
             WSC_StartSrvWaitTimer(pWsc);
             SetIntState(pWsc, WSC_INT_STAT_WAIT_TLS_CONNECT); 
@@ -1969,14 +1985,17 @@ static const char* wsc_connection_header = "Connection: Upgrade\r\n";
 static const char* wsc_protocol_header = "Sec-WebSocket-Protocol:";
 static const char* wsc_key_header = "Sec-WebSocket-Key: %s\r\n";  // Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
 static const char* wsc_version_header = "Sec-WebSocket-Version: 13\r\n";
+static const char* wsc_auth_basic_header = "Authorization: Basic ";
 
 // WS server response headers
-static const char wss_status_line[] = "HTTP/1.1";    // "HTTP/1.1 101 Switching Protocols\r\n";
+static const char wss_status_line[] = "HTTP/1.1";    // "HTTP/1.1 101 Switching Protocols\r\n" - if all OK
+                                                     // "HTTP/1.1 401 Unauthorized" - if authorization needed
 static const char wss_upgrade_line[] = "Upgrade:";   // "Upgrade: websocket"
 static const char wss_connection_line[] = "Connection:"; // "Connection: Upgrade"
 static const char wss_accept_line[] = "Sec-WebSocket-Accept:";  // "Sec-WebSocket-Accept: dGhlIHNhbXBsZSBub25jZQ==\r\n"
 static const char wss_proto_line[] = "Sec-WebSocket-Protocol:";    // "Sec-WebSocket-Protocol: prot1, prot2\r\n"
 static const char wss_extension_line[] = "Sec-WebSocket-Extensions:";    // "Sec-WebSocket-Extensions: ex1, ex2\r\n"
+static const char wss_authenticate_line[] = "WWW-Authenticate:";    // 'WW-Authenticate: Basic realm="WallyWorld"\r\n'
 
 // general HTTP strings
 static const char* ws_end_line = "\r\n";  // http headers line end
@@ -1985,6 +2004,7 @@ static const char* ws_alt_end_header = "\n\n";  // some servers end like this...
 static const char* ws_list_delim = ", ";        // list words delimiter
 static const char* ws_guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";    // WS GUID
 static int ws_word_delim = (int)' ';                 // word delimiter
+static const char* ws_on_connect_challenge = "Basic realm=\"none\"";   // challenge used for the 'on connect' authentication
 
 // Origin: http://example.com - optional for non web clients
 // static const char wsc_origin_header = "Origin: %s"; // Origin: http://example.com
@@ -2004,6 +2024,9 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
         char resourceBuff[TCPIP_WSC_RESOURCE_MAX_LEN + 25U];    // resource space
         char srvBuff[20U + TCPIP_WSC_SERVER_MAX_LEN + 25U];     // srvName and all other plain headers
         char keyBuff[20U + WSC_KEY_BASE64_BUFFER_SIZE + 25U];   // key space
+        uint8_t uAuthB64Buff[25U + ((TCPIP_WSC_RESOURCE_MAX_LEN + 2U + 2U) * 4U) / 3U]; // wsc_auth_basic_header + Base64 (user + ':' + pass + '\0')
+                                                                                        // i.e.  (TCPIP_WSC_RESOURCE_MAX_LEN + 2) * 4 /3
+        char cAuthB64Buff[25U + ((TCPIP_WSC_RESOURCE_MAX_LEN + 2U + 2U) * 4U) / 3U];    // same as characters
     }U_HDR_BUFF;
 
     int len = WSC_GenerateKey(pWsc->uBase64Key, sizeof(pWsc->uBase64Key)); 
@@ -2092,7 +2115,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
                  U_HDR_BUFF.srvBuff[sLen] = ws_list_delim[0];
                  U_HDR_BUFF.srvBuff[sLen + 1U] = ws_list_delim[1];
              }
-             sLen += 2;     // protocol separator len: ", " or "\r\n"
+             sLen += 2U;     // protocol separator len: ", " or "\r\n"
              totReqLen += sLen;
              outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.srvBuff, sLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
@@ -2113,7 +2136,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
 #endif // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
 
     // Sec-WebSocket-Version: 13
-    if((pWsc->connFlags & TCPIP_WSC_CONN_FLAG_SKIP_VERSION) == 0U) 
+    if((pWsc->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_SKIP_VERSION) == 0U) 
     {
         sLen = (uint16_t)strlen(wsc_version_header);
         totReqLen += sLen;
@@ -2124,6 +2147,24 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
         SYS_CONSOLE_PRINT("WSC TX hdr-> %s\r\n", U_HDR_BUFF.srvBuff);
 #endif // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
     }
+
+    if((pWsc->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_AUTH_ON_CONNECT) != 0U)
+    {   // authorization needs to be sent
+        int authLen = WSC_UserAuthenticate(pWsc, ws_on_connect_challenge, U_HDR_BUFF.uAuthB64Buff, sizeof(U_HDR_BUFF.uAuthB64Buff));
+        if(authLen < 0)
+        {   // failed
+            WSC_FailConnection(pWsc, TCPIP_WSC_RES_BAD_AUTH_DATA);
+            return;
+        }
+
+        totReqLen += (uint16_t)authLen;
+        outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.uAuthB64Buff, (uint16_t)authLen);
+#if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
+        U_HDR_BUFF.cAuthB64Buff[authLen] = '\0';
+        SYS_CONSOLE_PRINT("WSC TX hdr-> %s\r\n", U_HDR_BUFF.cAuthB64Buff);
+#endif // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
+    }
+
 
     // end of headers
     sLen = (uint16_t)strlen(ws_end_line);
@@ -2147,6 +2188,73 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
         SetIntState(pWsc, WSC_INT_STAT_WAIT_HSHAKE);
     }
     
+}
+
+// sends the server challenge to the user and places the authorization string in the outBuff
+// returns the size of the output string or < 0 if error
+// NOTE: Currently only the Basic authentication is supported
+// NOTE: the buffer has to be large enough to hold the authentication header + digest + '\r\n'!! 
+static int WSC_UserAuthenticate(TCPIP_WSC_CONN_CTRL* pWsc, const char* srvChallenge, uint8_t* outBuff, size_t outBuffLen)
+{
+    const TCPIP_WSC_AUTH_DATA* wscAuthD = pWsc->authHandler((TCPIP_WSC_CONN_HANDLE)pWsc, srvChallenge); 
+    // basic sanity check
+    if(wscAuthD == NULL || wscAuthD->user == NULL || wscAuthD->pass == NULL)
+    {   // failed
+        return -1;
+    }
+
+    if(wscAuthD->authType != TCPIP_WSC_AUTH_BASIC) 
+    {   // the only one supported for now is Basic auth; this will change in the future
+        return -1;
+    }
+
+    return WSC_GenerateBasicAuth(wscAuthD, outBuff, outBuffLen);
+}
+
+// generates basic Base64 authentication into the supplied buffer
+// returns the size of the Base64 string or < 0 if error
+// NOTE: the buffer has to be large enough to hold both the wsc_auth_basic_header + the Base64 encoded Basic digest + '\r\n'!! 
+static int WSC_GenerateBasicAuth(const TCPIP_WSC_AUTH_DATA* wscAuthD, uint8_t* base64Buff, size_t base64BuffLen)
+{
+
+    union
+    {   // space for joining user + ':'  pass + '\0'
+        char    cBuff[TCPIP_WSC_RESOURCE_MAX_LEN + 2U];
+        uint8_t uBuff[TCPIP_WSC_RESOURCE_MAX_LEN + 2U];
+    }uCredBuff;
+
+
+    // copy the auth header to the buffer
+    size_t hdrLen = strlen(wsc_auth_basic_header);
+    (void)memcpy(base64Buff, (const uint8_t*)wsc_auth_basic_header, hdrLen);
+    // base64 encode just after the header
+    uint8_t* encode64Buff =  base64Buff + hdrLen;
+
+    // join the user + ':' + pass
+    size_t uLen = strlen(wscAuthD->user);
+    size_t pLen = strlen(wscAuthD->pass);
+    if(uLen + pLen > sizeof(uCredBuff.uBuff) - 2U)
+    {
+        return -1;
+    }
+    (void)strcpy(uCredBuff.cBuff, wscAuthD->user);
+    uCredBuff.cBuff[uLen] = ':';
+    (void)strcpy(uCredBuff.cBuff + uLen + 1U, wscAuthD->pass);
+    uCredBuff.cBuff[uLen + pLen + 1U] = '\0';
+
+    // base64 encode the base64 authentication data
+    uint16_t base64Len = TCPIP_Helper_Base64Encode(uCredBuff.uBuff, (uint16_t)(uLen + pLen + 1U), encode64Buff, (uint16_t)(base64BuffLen - hdrLen));
+    encode64Buff[base64Len] = (uint8_t)'\r';
+    encode64Buff[base64Len + 1U] = (uint8_t)'\n';
+    base64Len += 2U;
+
+    TCPIPStack_Assert(hdrLen + base64Len < base64BuffLen, __FILE__, __func__, __LINE__);
+#if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_BASIC_AUTH) != 0)
+    encode64Buff[base64Len] = 0;    // end buffer properly
+    SYS_CONSOLE_PRINT("WSC Basic Auth: '%s'\r\n", (char*)base64Buff);
+#endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_BASIC_AUTH) != 0)
+
+    return (int)hdrLen + (int)base64Len;
 }
 
 // generate the WS key
@@ -2174,6 +2282,7 @@ static int WSC_GenerateKey(uint8_t* base64Buffer, size_t buffLen)
 // server handshake validation functions
 typedef uint32_t (*VALIDATE_SRV_FNC)(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd);
 static uint32_t Validate_StatusLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd);
+static uint32_t Validate_AuthenticateLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd);
 static uint32_t Validate_UpgradeLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd);
 static uint32_t Validate_ConnectionLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd);
 static uint32_t Validate_AcceptLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd);
@@ -2190,6 +2299,7 @@ typedef struct
 static const WSC_VALIDATE_ENTRY wsc_validate_tbl[] =
 {
     {wss_status_line, &Validate_StatusLine},
+    {wss_authenticate_line, &Validate_AuthenticateLine},
     {wss_upgrade_line, &Validate_UpgradeLine},
     {wss_connection_line, &Validate_ConnectionLine},
     {wss_accept_line, &Validate_AcceptLine},
@@ -2281,7 +2391,7 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
                 }
             }
 
-            bool valOk = valMask == expMask;
+            bool valOk = (valMask == expMask);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_VALIDATE) != 0)
             SYS_CONSOLE_PRINT("WSC Validation %s - Expected: 0x%x, Got: 0x%x\r\n", valOk ? "Success" : "Failed", expMask, valMask);
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_VALIDATE) != 0)
@@ -2290,6 +2400,17 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
             {   // success
                 WSC_OpenConnection(pWsc);
             }
+            else if((valMask & (WSC_VALID_MASK_UNAUTHORIZED | WSC_VALID_MASK_AUTHENTICATE)) == (WSC_VALID_MASK_UNAUTHORIZED | WSC_VALID_MASK_AUTHENTICATE))
+            {   // server requested authentication; user needs to be alerted
+                if(pWsc->authHandler == NULL)
+                {   // abort if there's no handler for this
+                    WSC_FailConnection(pWsc, TCPIP_WSC_RES_NO_AUTH_HANDLER);
+                }
+                else
+                {
+                    SetIntState(pWsc, WSC_INT_STAT_AUTHENTICATE);
+                }
+            } 
             else
             {   // failed to validate the server's response
                 WSC_FailConnection(pWsc, TCPIP_WSC_RES_VALIDATION_ERROR);
@@ -2322,7 +2443,7 @@ static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvRespons
     lineStart = srvResponse;
     uint32_t    valMask = 0;
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_VALIDATE) != 0)
-    SYS_CONSOLE_PRINT("WSC Validate -> Processing: %s\r\n", srvResponse);
+    SYS_CONSOLE_PRINT("WSC Validate -> Server response: %s\r\n", srvResponse);
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_VALIDATE) != 0)
 
     while(true)
@@ -2343,7 +2464,7 @@ static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvRespons
         }
 
         int lineSize = eol - lineStart;
-        if(lineSize == 0 || lineSize > (int)sizeof(lineBuff) - 1U)
+        if(lineSize == 0 || lineSize > (int)sizeof(lineBuff) - 1)
         {   // ignore empty/very long lines - not our headers!
             lineStart = lineEnd;
             continue;
@@ -2377,7 +2498,7 @@ static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvRespons
                 valMask |= entryMask;
 
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_VALIDATE) != 0)
-                SYS_CONSOLE_PRINT("WSC Validate header: %s, returned mask: 0x%x\r\n", wordBuff, entryMask);
+                SYS_CONSOLE_PRINT("\tWSC Validate header: %s, returned mask: 0x%x\r\n", wordBuff, entryMask);
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_VALIDATE) != 0)
                 break;
             }
@@ -2391,19 +2512,47 @@ static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvRespons
 // validate "HTTP/1.1 101 Switching Protocols"
 static uint32_t Validate_StatusLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd)
 {
-    return (stricmp(kwrdEnd + 1, "101 Switching Protocols" ) == 0)? WSC_VALID_MASK_STATUS_OK : WSC_VALID_MASK_NONE; 
+    if(stricmp(kwrdEnd + 1, "101 Switching Protocols" ) == 0)
+    {   // all good
+        return WSC_VALID_MASK_STATUS_OK;
+    }
+    else if(stricmp(kwrdEnd + 1, "401 Unauthorized" ) == 0)
+    {   // server needs user credentials
+        return WSC_VALID_MASK_UNAUTHORIZED;
+    }
+    else
+    {
+        return WSC_VALID_MASK_NONE;
+    }
+}
+
+// validate "WWW-Authenticate:"
+static uint32_t Validate_AuthenticateLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd)
+{
+    size_t authLen = strlen(kwrdEnd + 1);
+
+    if(authLen != 0U && authLen < sizeof(pWsc->u_srvAuthChal))
+    {   // server indicated the authentication it needs
+        (void)strcpy(pWsc->c_srvAuthChal, kwrdEnd + 1);
+        pWsc->c_srvAuthChal[authLen] = '\0';
+        return WSC_VALID_MASK_AUTHENTICATE;
+    }
+    else
+    {
+        return WSC_VALID_MASK_NONE;
+    }
 }
 
 // validate "Upgrade: websocket"
 static uint32_t Validate_UpgradeLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd)
 {
-    return (stricmp(kwrdEnd + 1, "websocket") == 0)? WSC_VALID_MASK_UPGRADE_OK : WSC_VALID_MASK_NONE;
+    return (stricmp(kwrdEnd + 1, "websocket") == 0) ? WSC_VALID_MASK_UPGRADE_OK : WSC_VALID_MASK_NONE;
 }
 
 // validate "Connection: Upgrade"
 static uint32_t Validate_ConnectionLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, char* kwrdEnd)
 {
-    return (stricmp(kwrdEnd + 1, "Upgrade") == 0)? WSC_VALID_MASK_CONNECTION_OK : WSC_VALID_MASK_NONE;
+    return (stricmp(kwrdEnd + 1, "Upgrade") == 0) ? WSC_VALID_MASK_CONNECTION_OK : WSC_VALID_MASK_NONE;
 }
 
 // validate "Sec-WebSocket-Accept: dGhlIHNhbXBsZSBub25jZQ==\r\n"
@@ -2452,13 +2601,13 @@ static uint32_t Validate_AcceptLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, c
     U_64_BUFF.ub64Buffer[base64Len] = 0;    // end string properly
 
     // that should be the value in the accept key.
-    return (strcmp(U_64_BUFF.cb64Buffer, kwrdEnd + 1U) == 0)? WSC_VALID_MASK_ACCEPT_OK : WSC_VALID_MASK_NONE;
+    return (strcmp(U_64_BUFF.cb64Buffer, kwrdEnd + 1U) == 0) ? WSC_VALID_MASK_ACCEPT_OK : WSC_VALID_MASK_NONE;
 }
 
 // validate "Sec-WebSocket-Protocol: prot"
 // RFC: Server should reply with:
 //      - Either a single value representing the subprotocol the server is ready to use
-//              The value chosen MUST be derived from the client’s handshake, specifically by selecting one of
+//              The value chosen MUST be derived from the client's handshake, specifically by selecting one of
 //              the values from the |Sec-WebSocket-Protocol| field that the server is willing
 //              to use for this connection (if any).
 //      - or NULL.
@@ -2488,6 +2637,43 @@ static uint32_t Validate_ExtensionLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff
     return WSC_VALID_MASK_EXT_PRESENT;
 }
 
+// WSC_INT_STAT_AUTHENTICATE
+static void WSC_Task_Authenticate(TCPIP_WSC_CONN_CTRL* pWsc)
+{
+    // Note: provide a buffer for Basic authentication since this is the only one supported for now!
+    union
+    {
+        uint8_t uAuthB64Buff[25U + ((TCPIP_WSC_RESOURCE_MAX_LEN + 2U + 2U) * 4U) / 3U]; // wsc_auth_basic_header + Base64 (user + ':' + pass + '\0')
+                                                                                        // i.e.  (TCPIP_WSC_RESOURCE_MAX_LEN + 2) * 4 /3
+        char cAuthB64Buff[25U + ((TCPIP_WSC_RESOURCE_MAX_LEN + 2U + 2U) * 4U) / 3U];    // same as characters
+    }U_HDR_BUFF;
+
+    int authLen = WSC_UserAuthenticate(pWsc, pWsc->c_srvAuthChal, U_HDR_BUFF.uAuthB64Buff, sizeof(U_HDR_BUFF.uAuthB64Buff));
+    if(authLen < 0)
+    {   // failed
+        WSC_FailConnection(pWsc, TCPIP_WSC_RES_BAD_AUTH_DATA);
+        return;
+    }
+
+    NET_PRES_SKT_HANDLE_T skt = pWsc->netSocket;
+    uint16_t outLen = NET_PRES_SocketWrite(skt, U_HDR_BUFF.uAuthB64Buff, (uint16_t)authLen);
+#if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
+    U_HDR_BUFF.cAuthB64Buff[authLen] = '\0';
+    SYS_CONSOLE_PRINT("WSC TX hdr-> %s\r\n", U_HDR_BUFF.cAuthB64Buff);
+#endif // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
+
+    if(outLen != (uint16_t)authLen)
+    {   // failed
+        WSC_FailConnection(pWsc, TCPIP_WSC_RES_SKT_WR_ERROR);
+    }
+    else
+    {   // all good
+        (void)NET_PRES_SocketFlush(skt); 
+        WSC_StartSrvWaitTimer(pWsc);
+        pWsc->valMask = 0;
+        SetIntState(pWsc, WSC_INT_STAT_WAIT_HSHAKE);
+    }
+}
 
 // WSC_INT_STAT_OPEN
 // WSC_INT_STAT_CLOSING
@@ -2534,7 +2720,7 @@ static void WSC_Task_Process(TCPIP_WSC_CONN_CTRL* pWsc)
         if(frameType != TCPIP_WS_FRAME_TYPE_CTRL)
         {   // the pending control message is handled separately...
             // pending user data frame
-            if(pWsc->intState == WSC_INT_STAT_CLOSING)
+            if(pWsc->intState == (uint16_t)WSC_INT_STAT_CLOSING)
             {   // no longer acceppting messages; discard
                 pendDcpt->info.frameType = (uint8_t)TCPIP_WS_FRAME_TYPE_NONE;
                 pendDcpt->msgHandle = NULL;   // show no data message is pending
@@ -2602,7 +2788,7 @@ static bool WSC_ProcPendMsg(TCPIP_WSC_CONN_CTRL* pWsc)
     {
         if((msgAct & (uint16_t)WSC_MSG_ACTION_CLOSING) != 0U)
         {
-           if(pWsc->intState == WSC_INT_STAT_CLOSING)
+           if(pWsc->intState == (uint16_t)WSC_INT_STAT_CLOSING)
            {   // no longer accepting reads from the user; discard
                discardEv = WSC_EVENT_MSG_DISCARD_CLOSE;
                discardRes = TCPIP_WSC_RES_CLOSING; 
@@ -2717,7 +2903,7 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
     // check what frame we have to handle
     if(U_FRAME_BUFF.cFrame.hdr.payLen <= WS_FRAME_CTRL_MAX_PAYLEN)
     {   // control/small frame
-        if(U_FRAME_BUFF.cFrame.hdr.opcode >= WS_OPCODE_START_CTRL)
+        if(U_FRAME_BUFF.cFrame.hdr.opcode >= (uint8_t)WS_OPCODE_START_CTRL)
         {   // control frame 
             frameType = TCPIP_WS_FRAME_TYPE_CTRL;
             frameLen = (uint16_t)sizeof( U_FRAME_BUFF.cFrame);
@@ -2993,7 +3179,7 @@ static uint8_t WSC_MsgFlags(WS_FRAME_HEADER frameHdr)
     unsigned int opCode = frameHdr.opcode;
     uint8_t flags = 0;
 
-    if(opCode >= WS_OPCODE_START_CTRL)
+    if(opCode >= (uint8_t)WS_OPCODE_START_CTRL)
     {   // control frame 
         return (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL;
     }
@@ -3643,7 +3829,7 @@ static bool strcany(const char* delim, int ch)
     const char* pD = delim;
     while(*pD != '\0')
     {
-        if(*pD++ == ch)
+        if(*pD++ == (char)ch)
         {
             return true;
         }

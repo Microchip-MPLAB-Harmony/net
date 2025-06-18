@@ -466,13 +466,13 @@ bool Net_Prov${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uintptr_t presH
             <#lt>   if(sniCback != NULL)
             <#lt>   {
             <#lt>       const char* sni_name = sniCback(presHandle);
-            <#lt>       if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, sni_name, strlen(sni_name)) != WOLFSSL_SUCCESS)
+            <#lt>       if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, sni_name, (uint16_t)strlen(sni_name)) != WOLFSSL_SUCCESS)
             <#lt>       {
             <#lt>           return false;
             <#lt>       }
             <#lt>    }
             <#else>
-            <#lt>    if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, NET_PRES_SNI_HOST_NAME, strlen(NET_PRES_SNI_HOST_NAME)) != WOLFSSL_SUCCESS)
+            <#lt>    if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, NET_PRES_SNI_HOST_NAME, (uint16_t)strlen(NET_PRES_SNI_HOST_NAME)) != WOLFSSL_SUCCESS)
             <#lt>    {
             <#lt>        return false;
             <#lt>    }

@@ -8639,9 +8639,9 @@ static void F_Command_Sntp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #if defined(M_TCPIP_COMMANDS_WSC)  
 typedef struct
 {
-    const char* cmdName;     // name of the WSC command
-    SYS_CMD_FNC cmdFnc;      // command function
-    const char* cmdHelp;        // brief command explanation
+    const char* cmdName;    // name of the WSC command
+    SYS_CMD_FNC cmdFnc;     // command function
+    const char* cmdHelp;    // brief command explanation
 }WSC_COMMAND_DCPT;
 
 // list of supported WSC commands
@@ -8672,6 +8672,7 @@ typedef struct
     const char* server;
     const char* resource;
     const char* proto;
+    TCPIP_WSC_AUTH_HANDLER  authHandler;
     uint16_t    port;
     uint16_t    flags;
 }WSC_TEST_PRESET;
@@ -8680,10 +8681,10 @@ typedef struct
 static const WSC_TEST_PRESET wsc_presets[] = 
 {
 // { server, resource, proto, port}
-    {"ws.ifelse.io", 0, 0, 80, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF},
-    {"ws.ifelse.io", 0, 0, 443, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
-    {"echo.websocket.org", 0, 0, 443, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
-    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", 16968, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON},
+    {"ws.ifelse.io", 0, 0, NULL, 80, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_OFF},
+    {"ws.ifelse.io", 0, 0, NULL, 443, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
+    {"echo.websocket.org", 0, 0, NULL, 443, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT},
+    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", NULL, 16968, (uint16_t)TCPIP_WSC_CONN_FLAG_SECURE_ON},
 };
 
 // message to be sent for a connection close
@@ -8755,6 +8756,8 @@ static char wsc_server[64 + 1] = "";
 static char wsc_resource[64 + 1] = "";
 // current prototype to request
 static char wsc_proto[16 + 1] = "";
+// current authentication  handler
+static TCPIP_WSC_AUTH_HANDLER wsc_authHandler = NULL; 
 // current port to connect to
 static uint16_t wsc_port = 80U;
 // if proto usage is enforced
@@ -9039,6 +9042,7 @@ static void F_Command_WsPreset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
         wsc_proto[0] = '\0';
     }
 
+    wsc_authHandler = preset->authHandler;
     wsc_port = preset->port;
     wsc_flags = preset->flags;
 
@@ -9053,6 +9057,7 @@ static void Wsc_PrintSettings(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv)
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tserver: '%s'\r\n", wsc_server[0] == '\0' ? "none" : wsc_server);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tresource: '%s'\r\n", wsc_resource[0] == '\0' ? "none" : wsc_resource);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tproto: '%s'\r\n", wsc_proto[0] == '\0' ? "none" : wsc_proto);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tauth: '0x%08x'\r\n", wsc_authHandler);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tport: %d\r\n", wsc_port);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tflags: 0x%02x\r\n", wsc_flags);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tproto_enforced: '%d'\r\n", wsc_proto_enforced);
@@ -9121,6 +9126,7 @@ static void F_Command_WsOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     connDcpt.protocols = openProtos;
     connDcpt.nProtocols = nProto;
     connDcpt.extensions = NULL;
+    connDcpt.authHandler = wsc_authHandler;
 
     wscConnHandle = TCPIP_WSC_ConnOpen(&connDcpt, &res);
     
@@ -9425,7 +9431,6 @@ static void F_Command_WsAutoRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc auto-read is: %d\r\n", !wscDisAutoRead);
 }
-
 
 // sends a control message to the server
 static void Wsc_SendCtrlFrame(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv, const char* message, TCPIP_WS_OP_CODE opCode)

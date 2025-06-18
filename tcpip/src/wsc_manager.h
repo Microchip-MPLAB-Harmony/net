@@ -102,6 +102,5 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
  */
 void  TCPIP_WSC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
-
 #endif  // H_WSC_MANAGER_H_
 

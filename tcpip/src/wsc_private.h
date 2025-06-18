@@ -99,9 +99,12 @@ Microchip or any third party.
 #define WSC_DEBUG_MASK_USR_TMO          0x4000      // debug the user timeout
 
 #define WSC_DEBUG_MASK_RTOS             0x8000      // show the used RTOS details
+
 #define WSC_DEBUG_MASK_SKT_SIZE         0x10000     // debug the WSC socket buffer size
 
 #define WSC_DEBUG_MASK_SKT_OPEN         0x20000     // show the WSC socket connection details
+
+#define WSC_DEBUG_MASK_BASIC_AUTH       0x40000     // debug the basic authorization generation
 
 #define WSC_DEBUG_LEVEL                 (0x01)
 
@@ -129,6 +132,10 @@ Microchip or any third party.
 // Note: needs to hold a complete control message!
 //      Therefore it cannot be < WS_FRAME_CTRL_MAX_PAYLEN == 125!
 #define WSC_PEEK_BUFFER_SIZE        256U
+
+// size of the buffer to store the server authorization challenge request
+// for some special servers this may have to be added as a configuration parameter
+#define WSC_SRV_CHAL_BUFFER_SIZE        128U
 
 // size of the buffer to process a server response line
 #define WSC_LINE_BUFFER_SIZE        256U
@@ -287,6 +294,7 @@ typedef enum
     WSC_INT_STAT_WAIT_TLS_CONNECT,      // wait for TLS to complete
     WSC_INT_STAT_START_HSHAKE,          // start the handshake with the server
     WSC_INT_STAT_WAIT_HSHAKE,           // wait for the server to reply to the handshake
+    WSC_INT_STAT_AUTHENTICATE,          // send the authentication credentials to the server
     WSC_INT_STAT_OPEN,                  // handshake finished, good to go
     WSC_INT_STAT_CLOSING,               // user closing the connection
     WSC_INT_STAT_CLOSED,                // closed, cleaning up
@@ -314,13 +322,16 @@ typedef struct
 #define WSC_VALID_MASK_CONNECTION_OK    0x04U   // connection line validation mask
 #define WSC_VALID_MASK_ACCEPT_OK        0x08U   // accept line validation mask
 
-#define WSC_VALID_MASK_PROTO_PRESENT    0x10U   // protocol line present mask
-#define WSC_VALID_MASK_PROTO_MATCH      0x20U   // protocol line match mask
+#define WSC_VALID_MASK_UNAUTHORIZED     0x10U   // unauthorized status line validation mask
+#define WSC_VALID_MASK_AUTHENTICATE     0x20U   // authentication requested
 
-#define WSC_VALID_MASK_EXT_PRESENT      0x80U   // extension line present mask
+#define WSC_VALID_MASK_PROTO_PRESENT    0x40U   // protocol line present mask
+#define WSC_VALID_MASK_PROTO_MATCH      0x80U   // protocol line match mask
+
+#define WSC_VALID_MASK_EXT_PRESENT      0x0100U   // extension line present mask
 
 #define WSC_VALID_MASK_MANDATORY        0x0fU   // mask for headers that need to be always present
-#define WSC_VALID_MASK_ALL              0xffU   // mask for all headers
+#define WSC_VALID_MASK_ALL              0x01ffU // mask for all headers
 
 // Stores extended state data for each connection
 typedef struct
@@ -333,6 +344,7 @@ typedef struct
     uint16_t                connPort;                   // connecting port
     NET_PRES_SKT_HANDLE_T   netSocket;                  // connection socket
 
+    TCPIP_WSC_AUTH_HANDLER  authHandler;                // authentication callback that will be used when authentication is needed
     uint16_t                srvCloseCode;               // the server close code
     uint8_t                 addType;                    // a IP_ADDRESS_TYPE value
     uint8_t                 peekCtrlLen;                // length of the control message in the peek buffer
@@ -383,6 +395,12 @@ typedef struct
         char                c_peekBuff[WSC_PEEK_BUFFER_SIZE + 1U];  // peek buffer
         uint8_t             u_peekBuff[WSC_PEEK_BUFFER_SIZE];       // used for handhake but also to store the last control frame data message
                                                                     // always used from the RX thread!
+    };
+    union
+    {
+        char                c_srvAuthChal[WSC_SRV_CHAL_BUFFER_SIZE + 1U];  // authorization challenge buffer
+        uint8_t             u_srvAuthChal[WSC_SRV_CHAL_BUFFER_SIZE];       // stores the authorization (challenge) requested by the server
+                                                                    // needs to be presented to the user as part of authentication 
     };
 
     char                    srvName[TCPIP_WSC_SERVER_MAX_LEN + 1U];     // space to store the server name

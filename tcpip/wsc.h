@@ -130,9 +130,11 @@ typedef enum
     TCPIP_WSC_RES_NO_MSG            = -32,  // no message is pending, cannot get info
     TCPIP_WSC_RES_BAD_MSG_HANDLE    = -33,  // bad message handle used
     TCPIP_WSC_RES_BAD_MSG_ID        = -34,  // bad message ID used
-    TCPIP_WSC_RES_MSG_PROTO_ERR     = -35,  // protocol error detected in the incoming message/frame
+    TCPIP_WSC_RES_BAD_AUTH_DATA     = -35,  // bad authentication data provided by the user
+    TCPIP_WSC_RES_NO_AUTH_HANDLER   = -36,  // server requested authentication but no handler indicated by the user
+    TCPIP_WSC_RES_MSG_PROTO_ERR     = -37,  // protocol error detected in the incoming message/frame
                                             // message cannot be handled, connection closed
-    TCPIP_WSC_RES_MSG_TOO_LARGE     = -36,  // message is too large, cannot be handled
+    TCPIP_WSC_RES_MSG_TOO_LARGE     = -38,  // message is too large, cannot be handled
 
 
     // other error messages
@@ -543,6 +545,98 @@ typedef const void* TCPIP_WSC_EV_HANDLE;
 
 
 // *****************************************************************************
+/* Enumeration:
+    TCPIP_WSC_AUTH_TYPE
+
+  Summary:
+    WSC supported authentication types.
+
+  Description:
+    Authentication types supported for a WSC connection.
+
+  Remarks:
+    None
+*/
+typedef enum
+{
+    TCPIP_WSC_AUTH_NONE     = 0,        // none/invalid type
+    TCPIP_WSC_AUTH_BASIC    = 1,        // Basic authentication;
+                                        //      Currently supported
+    TCPIP_WSC_AUTH_DIGEST   = 2,        // Digest authentication;
+                                        //      Currently NOT supported!
+                                        //      Reserved for future improvements.
+    TCPIP_WSC_AUTH_OTHER    = 3,        // Different authentication type requested by the server;
+                                        //      Currently NOT supported!
+
+
+}TCPIP_WSC_AUTH_TYPE;
+
+// *****************************************************************************
+/* Structure:
+    TCPIP_WSC_AUTH_DATA
+
+  Summary:
+    WSC authorization data/credentials
+
+  Description:
+    WSC data structure describing the authorization credentials to be passed to a WS server
+
+  Remarks:
+    None
+
+*/
+typedef struct
+{
+    TCPIP_WSC_AUTH_TYPE authType;   // selected authentication type, usually from the server presented ones
+                                    // Note: Currently only the Basic authentication is supported.
+    const char*     realm;          // The selected realm
+                                    // This should be the realm indicated by the server authenticate request.
+                                    // However, there is no check done.
+    const char*     user;           // user for this authentication
+    const char*     pass;           // password for this authentication
+                                    // Note: total space for user and password is limited to TCPIP_WSC_RESOURCE_MAX_LEN characters
+                                    //       adjust accordingly!
+}TCPIP_WSC_AUTH_DATA;
+
+// *****************************************************************************
+/* Type:
+    TCPIP_WSC_AUTH_HANDLER
+
+  Summary:
+    Handler called by the WSC when authorization is needed.
+
+  Description:
+    The format of a authentication handler registered with the WSC module.
+
+  Parameters:
+    hConn       -  A connection handle, obtained by a call to TCPIP_WSC_ConnOpen 
+    srvChallenge      - is the authentication challenge, as received from the server
+                        it is passed unmodified to the user so it can be analyzed
+
+  Returns: - pointer to a TCPIP_WSC_AUTH_DATA structure holding the data to be used as credentials
+
+  Remarks:
+    The handler is called when connection authorization is needed.
+    This can happen in 2 scenarios:
+        - theTCPIP_WSC_CONN_FLAG_AUTH_ON_CONNECT flag is set
+            The WS client will send the credentials (basic authentication valid only)
+            to the server when the connection is initiated
+        - TCPIP_WSC_CONN_FLAG_AUTH_ON_REQUEST flag is used
+            The handler will be called when the server, upon a client connection,
+            requires authentication.        
+
+    When the handler is called because the TCPIP_WSC_CONN_FLAG_AUTH_ON_CONNECT is set,
+    the authentication is Basic, and the srvChallenge will be "Basic realm=\"none\""
+
+    The handler has to be short and quick, without lengthy processing.
+
+    The TCPIP_WSC_AUTH_DATA that's passed in this handler has to be valid only within the call context.
+    It does not have to be persistent.
+
+*/
+typedef const TCPIP_WSC_AUTH_DATA*    (*TCPIP_WSC_AUTH_HANDLER)(TCPIP_WSC_CONN_HANDLE hConn, const char* srvChallenge);
+
+// *****************************************************************************
 // *****************************************************************************
 // Section: WSC Routines
 // *****************************************************************************
@@ -565,15 +659,15 @@ typedef enum
 {
     TCPIP_WSC_CONN_FLAG_NONE                = 0x00,     // default value, no flag set
     TCPIP_WSC_CONN_FLAG_NO_DELAY            = 0x01,     // Create the WSC sockets with NO-DELAY option.
-                                                                // It will flush data as soon as possible.
+                                                        // It will flush data as soon as possible.
     TCPIP_WSC_CONN_FLAG_SECURE_ON           = 0x02,     // All WSC connections have to be secure
-                                                                // (supposing the network presentation layer supports encryption)
-                                                                // Cannot be used together with TCPIP_WSC_CONN_FLAG_SECURE_OFF
+                                                        // (supposing the network presentation layer supports encryption)
+                                                        // Cannot be used together with TCPIP_WSC_CONN_FLAG_SECURE_OFF
 
     TCPIP_WSC_CONN_FLAG_SECURE_OFF          = 0x04,     // WSC connections will be non-secure
-                                                                // Cannot be used together with TCPIP_WSC_CONN_FLAG_SECURE
+                                                        // Cannot be used together with TCPIP_WSC_CONN_FLAG_SECURE
 
-    TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT      = 0x00,     //  WSC security is based on the port numbers: default
+    TCPIP_WSC_CONN_FLAG_SECURE_DEFAULT      = 0x00,     // WSC security is based on the port numbers: default
 
     TCPIP_WSC_CONN_FLAG_USE_IPV6            = 0x08,     // connect using IPv6
     TCPIP_WSC_CONN_FLAG_USE_IPV4            = 0x00,     // connect using IPv4: default
@@ -585,9 +679,18 @@ typedef enum
     TCPIP_WSC_CONN_FLAG_PROTO_ENFORCED      = 0x00,     // the server should select a protocol from our client requested one
                                                         // This is the default
 
+    TCPIP_WSC_CONN_FLAG_AUTH_ON_CONNECT     = 0x20,     // The authentication credentials are sent to the server with the connection request.
+                                                        // This is valid for 'Basic' authentication only.
+
+    TCPIP_WSC_CONN_FLAG_AUTH_ON_REQUEST     = 0x00,     // The authentication credentials are sent only when the server requests for it
+                                                        // This allows for other authentication schemes, like 'Digest' where the server provides
+                                                        //      parameters to be used as part of the authentication 
+                                                        // This option allows to delay the authentication until the server requires for it.
+                                                        // Note: This should be the setting for servers that request basic authentication upon the client connection.
+
     // 
     TCPIP_WSC_CONN_FLAG_SKIP_VERSION        = 0x80,     // skip the client version header when connecting to the server
-                                                        // apparently some servers do not like this (?)
+                                                        // Some servers do not like this
 
 }TCPIP_WSC_CONN_FLAGS;
 
@@ -718,6 +821,13 @@ typedef struct
     uint16_t        nProtocols;     // number of listed protocols 
     uint16_t        nExtensions;    // number of listed extensions
                                     // currently not used and should be 0
+    TCPIP_WSC_AUTH_HANDLER  authHandler;    // authentication callback that will be used when authentication is needed
+                                            // This could occur:
+                                            //      - upon connection, when TCPIP_WSC_CONN_FLAG_AUTH_ON_CONNECT is set 
+                                            //      - when the server requested it
+                                            // Note: it could be NULL if authentication is not needed.
+                                            // Note: if the authHandler is NULL but the server asks for authentication
+                                            //       the connection will be dropped!
 }TCPIP_WSC_CONN_DCPT;
 
 
