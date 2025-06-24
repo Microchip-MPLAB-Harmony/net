@@ -71,10 +71,10 @@ def instantiateComponent(drvExtPhyLan8740Component):
     drvExtPhyLan8740ConfigRmii.setLabel("RMII Data Interface")
     drvExtPhyLan8740ConfigRmii.setVisible(True)
     drvExtPhyLan8740ConfigRmii.setDescription("RMII Data Interface")
+    drvExtPhyLan8740ConfigRmii.setDefaultValue(True)
     
-    if (Peripheral.moduleExists("GMAC")) or (Peripheral.moduleExists("ETH")):
-        drvExtPhyLan8740ConfigRmii.setDefaultValue(True)
-    elif ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
         drvExtPhyLan8740ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT

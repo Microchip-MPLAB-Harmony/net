@@ -64,10 +64,10 @@ def instantiateComponent(drvExtPhyVsc8540Component):
     drvExtPhyVsc8540ConfigRmii.setVisible(True)
     drvExtPhyVsc8540ConfigRmii.setDescription("RMII Data Interface")
     drvExtPhyVsc8540ConfigRmii.setDefaultValue(True)
+    drvExtPhyVsc8540ConfigRmii.setDefaultValue(True)
 
-    if Peripheral.moduleExists("GMAC"):
-        drvExtPhyVsc8540ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
         drvExtPhyVsc8540ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT

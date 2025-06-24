@@ -63,10 +63,10 @@ def instantiateComponent(drvExtPhyKsz8081Component):
     drvExtPhyKsz8081ConfigRmii.setLabel("RMII Data Interface")
     drvExtPhyKsz8081ConfigRmii.setVisible(True)
     drvExtPhyKsz8081ConfigRmii.setDescription("RMII Data Interface")
+    drvExtPhyKsz8081ConfigRmii.setDefaultValue(True)
     
-    if Peripheral.moduleExists("GMAC"):
-        drvExtPhyKsz8081ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
         drvExtPhyKsz8081ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT

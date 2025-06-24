@@ -63,9 +63,10 @@ def instantiateComponent(drvExtPhyDp83848Component):
     drvExtPhyDp83848ConfigRmii.setLabel("RMII Data Interface")
     drvExtPhyDp83848ConfigRmii.setVisible(True)
     drvExtPhyDp83848ConfigRmii.setDescription("RMII Data Interface")
-    if Peripheral.moduleExists("GMAC"):
-        drvExtPhyDp83848ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    drvExtPhyDp83848ConfigRmii.setDefaultValue(True)
+
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
         drvExtPhyDp83848ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT
@@ -82,7 +83,7 @@ def instantiateComponent(drvExtPhyDp83848Component):
         drvExtPhyDp83848ConfigAuto.setLabel("Use The Fuses Configuration")
         drvExtPhyDp83848ConfigAuto.setVisible(True)
         drvExtPhyDp83848ConfigAuto.setDescription("Use The Fuses Configuration")
-        drvExtPhyDp83848ConfigAuto.setDefaultValue(False)
+        drvExtPhyDp83848ConfigAuto.setDefaultValue(True)
         
     # Advanced Settings
     drvExtPhyDp83848AdvSettings = drvExtPhyDp83848Component.createMenuSymbol("TCPIP_INTMAC_PHY_ADV_SETTING", None)

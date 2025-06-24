@@ -64,11 +64,11 @@ def instantiateComponent(drvExtPhyLan9354Component):
     drvExtPhyLan9354ConfigRmii.setVisible(True)
     drvExtPhyLan9354ConfigRmii.setReadOnly(True)
     drvExtPhyLan9354ConfigRmii.setDescription("RMII Data Interface")
+    drvExtPhyLan9354ConfigRmii.setDefaultValue(True)
     
-    if Peripheral.moduleExists("GMAC"):
-        drvExtPhyLan9354ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
-        drvExtPhyLan9354ConfigRmii.setDefaultValue(True)
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
+        drvExtPhyLan9354ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT
         drvExtPhyLan9354ConfigAlt = drvExtPhyLan9354Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyLan9354ConnFlag)

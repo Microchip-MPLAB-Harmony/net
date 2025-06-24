@@ -64,11 +64,11 @@ def instantiateComponent(drvExtPhyLan8770Component):
     drvExtPhyLan8770ConfigRmii.setVisible(True)
     drvExtPhyLan8770ConfigRmii.setReadOnly(True)
     drvExtPhyLan8770ConfigRmii.setDescription("RMII Data Interface")
+    drvExtPhyLan8770ConfigRmii.setDefaultValue(True)
     
-    if Peripheral.moduleExists("GMAC"):
-        drvExtPhyLan8770ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
-        drvExtPhyLan8770ConfigRmii.setDefaultValue(True)
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
+        drvExtPhyLan8770ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT
         drvExtPhyLan8770ConfigAlt = drvExtPhyLan8770Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyLan8770ConnFlag)

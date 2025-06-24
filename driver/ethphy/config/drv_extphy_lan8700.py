@@ -63,9 +63,10 @@ def instantiateComponent(drvExtPhyLan8700Component):
     drvExtPhyLan8700ConfigRmii.setLabel("RMII Data Interface")
     drvExtPhyLan8700ConfigRmii.setVisible(True)
     drvExtPhyLan8700ConfigRmii.setDescription("RMII Data Interface")
-    if Peripheral.moduleExists("GMAC"):
-        drvExtPhyLan8700ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    drvExtPhyLan8700ConfigRmii.setDefaultValue(True)
+
+    if ("PIC32M" in Variables.get("__PROCESSOR")) or ("WFI32" in Variables.get("__PROCESSOR")):
+        # default is Auto for PIC32M
         drvExtPhyLan8700ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT
