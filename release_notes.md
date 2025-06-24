@@ -1,4 +1,58 @@
 # Microchip MPLAB® Harmony 3 Release Notes
+## Net Release v3.14.1 (June, 2025)
+### ADDITIONS AND UPDATES FOR v3.14.1:
+
+- **New Features**
+	- None
+
+- **Applications**
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
+
+
+- **Improvements and Bug Fixes**
+	-	The following table provides the list of improvements and bug fixes in the v3.14.1 release:
+
+		| Module        | Description |
+		| ------------- | ----------- |
+        | GMAC          | Added missing include of tcpip_mac_object.h |
+        | GMAC          | Fix for SingleListTailAdd wrong cast |
+        | GMAC          | Fix GMAC lockup under heavy traffic |
+        | TFTPc      	| Fix for the TFTPIsPutReady function |
+        | ENCx24J600    | Fix for the DRV_SPI_TRANSFER_SETUP call |
+        | FTPc          | Fix for usage of ctrlTxBuff size |
+        | PHY drivers   | Updated RMII configuration for PIC32M platforms |
+        | WSC           | Basic authentication support has been updated | 
+        | All modules   | MISRA C violations fixes |
+        | All modules   | Fixes for xc32 v5.0 reported issues |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.25](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.60](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.14.1
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.5.2 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.15.2
+- Harmony csp repository, v3.22.4
+- Harmony bsp repository, v3.22.0
+- Harmony crypto repository, v3.8.2
+- harmony-services repository, v1.5.0
+- wolfMQTT v1.19.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.19.2) for demos requiring wolfMQTT support
+- wolfSSL v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring encryption wolfSSL support
+
+
+### KNOWN ISSUES
+- Some MISRA C required violations are still reported by the Coverity analysis tool.
+    - The issues are not in the stack modules.
+    - They will be fixed in a future release.
+
 ## Net Release v3.14.0 (April, 2025)
 ### ADDITIONS AND UPDATES FOR v3.14.0:
 
