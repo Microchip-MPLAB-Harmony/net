@@ -8,10 +8,10 @@ package:
   dependencies:
     - name: "core"
       type: "package"
-      version: "v3.15.1"
+      version: "v3.15.2"
     - name: "csp"
       type: "package"
-      version: "v3.22.2"
+      version: "v3.22.4"
     - name: "bsp"
       type: "package"
       version: "v3.22.0"
