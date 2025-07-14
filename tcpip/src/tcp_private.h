@@ -130,7 +130,7 @@ typedef struct
     uint8_t*            txUnackedTail;              // TX tail pointer for data that is not yet acked
                                                     // Note: This TX buffer is for the user/app to write data, and the skt to read and transmit it
                                                     // So:
-                                                    //      - tx total size: txEnd - rxStart
+                                                    //      - tx total size: txEnd - txStart
                                                     //      - txBuffSize = txEnd - txStart - 1;     usable size  
                                                     //      - put space = txTail - txHead - 1 (+ txEnd - txStart; if txHead is behind txTail)
                                                     //      - unack data = txUnackedTail - txTail
