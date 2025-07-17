@@ -444,7 +444,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'WINC1500':     'WDRV_WINC1500_MACObject',
         'WILC1000':     'WDRV_WILC1000_MACObject',
         'PIC32MZW1':    'WDRV_PIC32MZW1_MACObject',
-        'LAN865x':      'DRV_LAN865X_MACObject',
+        'LAN865x':      'DRV_LAN865X_MACObject_0',
         'G3ADPMAC':     'DRV_G3ADP_MACObject',
         'PPP':     'DRV_PPP_MACObject',
     }

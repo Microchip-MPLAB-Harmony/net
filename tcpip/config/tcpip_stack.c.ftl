@@ -965,7 +965,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 <#if checkInterface("ENCX24J600")>
     {TCPIP_MODULE_MAC_ENCJ600,      drvEncX24j600InitData},         // TCPIP_MODULE_MAC_ENCJ600
 </#if>
-
+<#if checkInterface("LAN865x")>
+    {TCPIP_MODULE_MAC_LAN865X_0,       &drvLan865xInitData[0]},  // TCPIP_MODULE_MAC_LAN865x_0
+</#if>
 <#if checkInterface("ENC28J60")>
     {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitData},          // TCPIP_MODULE_MAC_ENCJ60
 </#if>
