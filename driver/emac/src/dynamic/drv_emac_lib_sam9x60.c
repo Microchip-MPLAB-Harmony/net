@@ -97,13 +97,19 @@ static void F_EMACAssertCond(bool cond, const char* message, int lineNo)
 
 
 
-void macDrvrLibDescriptorsPoolClear( void )
+void macDrvrLibDescriptorsPoolClear( MAC_DRIVER *  pMacDrvr )
 {
 #if defined( DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0 ) || defined( DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0 )
-     (void)memset( &EMAC0_DcptArray, 0, sizeof( EMAC0_DcptArray ) );
+    if( pMacDrvr->macIx == 0U)
+    {
+        (void)memset( &EMAC0_DcptArray, 0, sizeof( EMAC0_DcptArray ) );
+    }
 #endif
 #if defined( DRV_EMAC1_RX_DESCRIPTORS_COUNT_QUE0 ) || defined( DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0 )
-     (void)memset( &EMAC1_DcptArray, 0, sizeof( EMAC1_DcptArray ) );
+    if( pMacDrvr->macIx == 1U)
+    {
+        (void)memset( &EMAC1_DcptArray, 0, sizeof( EMAC1_DcptArray ) );
+    }
 #endif
 }
 

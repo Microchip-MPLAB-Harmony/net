@@ -337,7 +337,7 @@ SYS_MODULE_OBJ MAC_DRVR_Initialize( const SYS_MODULE_INDEX index, const SYS_MODU
     initRes = macDrvrEventInit( pMacDrvr, macControl->eventF, macControl->eventParam);
     if( TCPIP_MAC_RES_OK == initRes )
     {
-        macDrvrLibDescriptorsPoolClear();
+        macDrvrLibDescriptorsPoolClear(pMacDrvr);
         macDrvrLibDescriptorsPoolAssignment( pMacDrvr, MAC_DRVR_DCPT_TYPE_TX );
         macDrvrLibDescriptorsPoolAssignment( pMacDrvr, MAC_DRVR_DCPT_TYPE_RX );
 

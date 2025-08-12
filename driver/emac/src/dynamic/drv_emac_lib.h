@@ -554,7 +554,7 @@ MAC_DRVR_RESULT macDrvrLibTxSendPacket( MAC_DRIVER *  pMacDrvr, TCPIP_MAC_PACKET
 // -----------------------------------------------------------------------------
 // Section: Descriptors add and remove functions
 
-void macDrvrLibDescriptorsPoolClear( void );    // clears all pool space ahead of any pool assignment
+void macDrvrLibDescriptorsPoolClear( MAC_DRIVER *  pMacDrvr );    // clears all pool space ahead of any pool assignment
 
 /*******************************************************************************
   Function:
