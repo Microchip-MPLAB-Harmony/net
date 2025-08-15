@@ -1049,7 +1049,7 @@ static void F_DRV_GMAC_LinkStateStartLink(DRV_GMAC_DRIVER * pMACDrv)
     DRV_ETHPHY_RESULT phyRes;    
    
     phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->phy_LinkStatusGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData.negResult.linkStatus, false);
-    if((uint32_t)phyRes < 0U)
+    if((int32_t)phyRes < 0U)
     {   // some error occurred
         F_DRV_GMAC_LinkStateDown(pMACDrv);
         return;
@@ -1128,7 +1128,7 @@ static void F_DRV_GMAC_LinkStateWaitLinkUp(DRV_GMAC_DRIVER * pMACDrv)
     // after the re-negotiation is done
     // wait for negotiation complete
     phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->phy_NegotiationIsComplete(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, false);
-    if((uint32_t)phyRes < 0U)
+    if((int32_t)phyRes < 0U)
     {   // some error occurred
         F_DRV_GMAC_LinkStateDown(pMACDrv);
     }
@@ -1161,7 +1161,7 @@ static void F_DRV_GMAC_LinkStateNegComplete(DRV_GMAC_DRIVER * pMACDrv)
 
     phyRes = pPhyBase->phy_NegotiationResultGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData.negResult);
 
-    if((uint32_t)phyRes < 0U)
+    if((int32_t)phyRes < 0U)
     {   // some error occurred
         F_DRV_GMAC_LinkStateDown(pMACDrv);
     }
@@ -1197,7 +1197,7 @@ static void F_DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)
 
     if( ((uint32_t)pMACDrv->sGmacData.negResult.linkStatus & (uint32_t)DRV_ETHPHY_LINK_ST_UP) != 0U )
     {   
-        uint32_t tempLinkFlag;
+        uint32_t tempLinkFlag = (uint32_t)pMACDrv->sGmacData.negResult.linkFlags;
         // negotiation succeeded; properly update the MAC
         (void)pPhyBase->phy_HWConfigFlagsGet(pMACDrv->sGmacData.hPhyClient, &phyCfgFlags);
         if(((uint32_t)phyCfgFlags & (uint32_t)DRV_ETHPHY_CFG_GMII)!= 0U)
@@ -1218,7 +1218,7 @@ static void F_DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)
         }
         else
         {
-            tempLinkFlag = 0;
+            // keep the old flags
         }
         pMACDrv->sGmacData.negResult.linkFlags = (TCPIP_ETH_OPEN_FLAGS)tempLinkFlag;
         
@@ -2291,7 +2291,7 @@ static SYS_MODULE_OBJ F_DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv)
         
     phyInitRes = pPhyBase->phy_Setup(hPhyClient, &phySetup, &pMACDrv->sGmacData.linkResFlags);
     
-    if((uint32_t)phyInitRes < 0U)
+    if((int32_t)phyInitRes < 0U)
     {   // some error occurred
         initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
         return (uint32_t)initRes;
