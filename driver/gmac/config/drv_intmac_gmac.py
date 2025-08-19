@@ -1712,7 +1712,7 @@ def instantiateComponent(drvGmacComponent):
     elif ("SAMA5D2" in processor):      
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_sama5d2"
     elif ("PIC32CZCA8" in processor) or ("PIC32CZCA9" in processor): 
-        drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32cZ"
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32cz"
     elif ("SAMA7G" in processor):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_sama7g5"
     elif ("SAMA7D6" in processor):
