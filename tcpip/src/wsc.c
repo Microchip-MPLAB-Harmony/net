@@ -2950,7 +2950,7 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
         case TCPIP_WS_FRAME_TYPE_MEDIUM:
             payloadLen.Val = TCPIP_Helper_ntohs(U_FRAME_BUFF.mFrame.extPayLen); 
             // sanity check
-            if(payloadLen.Val < 128U || payloadLen.Val > WS_FRAME_MEDIUM_MAX_EXT_PAYLEN)
+            if(payloadLen.Val < WS_FRAME_MEDIUM_PAYLEN || payloadLen.Val > WS_FRAME_MEDIUM_MAX_EXT_PAYLEN)
             {   // wrong length
                 badFrameType = 2;
             } 
