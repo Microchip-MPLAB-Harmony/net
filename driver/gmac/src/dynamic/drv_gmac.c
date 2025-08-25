@@ -776,6 +776,12 @@ DRV_HANDLE DRV_GMAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT in
                 pMACDrv->sGmacData.macFlags.macOpen = 1;
                 hMac = (DRV_HANDLE)pMACDrv;
             }
+#if defined(DRV_GMAC_MULTI_CLIENT) && (DRV_GMAC_MULTI_CLIENT != 0)
+            else
+            {   // allow multiple clients
+                hMac = (DRV_HANDLE)pMACDrv;
+            }
+#endif  // defined(DRV_GMAC_MULTI_CLIENT) && (DRV_GMAC_MULTI_CLIENT != 0)
 
         }
     }

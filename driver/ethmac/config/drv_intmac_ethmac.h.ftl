@@ -138,6 +138,12 @@ Microchip or any third party.
 </#if>
 </#if>
 
+<#if DRV_ETHMAC_MULTI_CLIENT == true>
+#define DRV_ETHMAC_MULTI_CLIENT        			true
+<#else>
+#define DRV_ETHMAC_MULTI_CLIENT        			false
+</#if>
+
 <#--
 /*******************************************************************************
  End of File

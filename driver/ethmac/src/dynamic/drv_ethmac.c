@@ -821,12 +821,12 @@ DRV_HANDLE DRV_ETHMAC_PIC32MACOpen(const SYS_MODULE_INDEX drvIndex, const DRV_IO
                 pMacD->mData.macFlags.macOpen = 1;
                 hMac = (DRV_HANDLE)pMacD;
             }
-#if defined(DRV_ETHMAC_CLIENTS_NUMBER) && (DRV_ETHMAC_CLIENTS_NUMBER > 1)
+#if defined(DRV_ETHMAC_MULTI_CLIENT) && (DRV_ETHMAC_MULTI_CLIENT != 0)
             else
             {   // allow multiple clients
                 hMac = (DRV_HANDLE)pMacD;
             }
-#endif
+#endif  // defined(DRV_ETHMAC_MULTI_CLIENT) && (DRV_ETHMAC_MULTI_CLIENT != 0)
         }
     }
 

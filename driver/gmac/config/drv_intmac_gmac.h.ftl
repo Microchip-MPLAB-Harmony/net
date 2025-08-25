@@ -357,6 +357,13 @@ Microchip or any third party.
     <#lt></#if>
 <#lt></#if>
 
+<#if DRV_GMAC_MULTI_CLIENT == true>
+#define DRV_GMAC_MULTI_CLIENT        			true
+<#else>
+#define DRV_GMAC_MULTI_CLIENT        			false
+</#if>
+
+
 <#--
 /*******************************************************************************
  End of File

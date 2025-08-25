@@ -160,5 +160,15 @@ Microchip or any third party.
 </#if>
                                                     )
 
+<#if DRV_EMAC_MULTI_CLIENT == true>
+#if !defined(DRV_EMAC_MULTI_CLIENT)
+#define DRV_EMAC_MULTI_CLIENT        			true
+#endif
+<#else>
+#if !defined(DRV_EMAC_MULTI_CLIENT)
+#define DRV_EMAC_MULTI_CLIENT        			false
+#endif
+</#if>
+
 // *****************************************************************************
 <#lt></#if>

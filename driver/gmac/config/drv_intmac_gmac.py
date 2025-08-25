@@ -1568,6 +1568,12 @@ def instantiateComponent(drvGmacComponent):
         drvGmacNoCacheMemAddrDummy = drvGmacComponent.createBooleanSymbol("DRV_"+ gmacComponentName + "_NOCACHE_ADDR_DUMMY", drvGmacNoCacheConfig)
         drvGmacNoCacheMemAddrDummy.setVisible(False)
         drvGmacNoCacheMemAddrDummy.setDependencies(drvMacMemAddrConfig, ["DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"]) 
+
+    # Multiple Client Support
+    drvGmacMultiCliEnable = drvGmacComponent.createBooleanSymbol("DRV_GMAC_MULTI_CLIENT", tcpipGmacAdvSettings)
+    drvGmacMultiCliEnable.setHelp("mcc_h3_gmac_configurations")
+    drvGmacMultiCliEnable.setLabel("Enable Multiple GMAC Clients")
+    drvGmacMultiCliEnable.setDefaultValue(False) 
          
     # Driver GMAC Heap Size
     drvGmacHeapSize = drvGmacComponent.createIntegerSymbol("DRV_"+ gmacComponentName + "_HEAP_SIZE", None)

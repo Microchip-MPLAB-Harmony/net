@@ -554,12 +554,12 @@ DRV_HANDLE MAC_DRVR_Open( const SYS_MODULE_INDEX  drvIndex, const DRV_IO_INTENT 
                     pMacDrvr->macFlags.open = 1U;
                     hMac = (DRV_HANDLE) pMacDrvr;
                 }
-#if defined(macDrvrCLIENTS_NUMBER) && (macDrvrCLIENTS_NUMBER > 1)
+#if defined(DRV_EMAC_MULTI_CLIENT) && (DRV_EMAC_MULTI_CLIENT != 0)
                 else
                 {   // allow multiple clients
                     hMac = (DRV_HANDLE) pMacDrvr;
                 }
-#endif  // defined(macDrvrCLIENTS_NUMBER) && (macDrvrCLIENTS_NUMBER > 1)
+#endif  // defined(DRV_EMAC_MULTI_CLIENT) && (DRV_EMAC_MULTI_CLIENT != 0)
                 break;
             case SYS_STATUS_ERROR_EXTENDED:
             case SYS_STATUS_ERROR:

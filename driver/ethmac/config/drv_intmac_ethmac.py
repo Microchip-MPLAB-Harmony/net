@@ -494,6 +494,12 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacPhyType.setDescription("PHY Connected to ETHERNET MAC")
     tcpipEthmacPhyType.setDefaultValue("")
     tcpipEthmacPhyType.setReadOnly(True)
+
+    # Multiple Client Support
+    tcpipEthmacMultiCliEnable = drvPic32mEthmacComponent.createBooleanSymbol("DRV_ETHMAC_MULTI_CLIENT", tcpipEthmacAdvSettings)
+    tcpipEthmacMultiCliEnable.setHelp("mcc_h3_ethmac_configurations")
+    tcpipEthmacMultiCliEnable.setLabel("Enable Multiple ETHMAC Clients")
+    tcpipEthmacMultiCliEnable.setDefaultValue(False) 
     
     # Driver ETHMAC Interrupt Source
     tcpipEthmacIntrSource = drvPic32mEthmacComponent.createStringSymbol("DRV_ETHMAC_INTERRUPT_SOURCE", None)

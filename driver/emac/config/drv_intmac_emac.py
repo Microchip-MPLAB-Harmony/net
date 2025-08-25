@@ -757,6 +757,12 @@ def instantiateComponent( macComponent ):
     phyType.setDefaultValue( "" )
     phyType.setReadOnly( True )
     
+    # Multiple Client Support
+    tcpipEmacMultiCliEnable = macComponent.createBooleanSymbol("DRV_EMAC_MULTI_CLIENT", None)
+    tcpipEmacMultiCliEnable.setHelp("mcc_h3_emac_configurations")
+    tcpipEmacMultiCliEnable.setLabel("Enable Multiple EMAC Clients")
+    tcpipEmacMultiCliEnable.setDefaultValue(False) 
+    
     # Pin Settings
     tcpipEmacPinConfig = macComponent.createMenuSymbol("TCPIP_EMAC_PIN_CONFIG", None)
     tcpipEmacPinConfig.setLabel("Pin Configurations")
