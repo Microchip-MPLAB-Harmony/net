@@ -242,30 +242,21 @@ static const TCPIP_FRAME_PROCESS_ENTRY TCPIP_FRAME_PROCESS_TBL [] =
     // 1st layer handling                                                                 
 #if defined(TCPIP_STACK_USE_IPV4)                                                         
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_ARP,       .moduleId = (uint16_t)TCPIP_MODULE_ARP,     .pktTypeFlags = (uint32_t)TCPIP_MAC_PKT_FLAG_ARP},  // ARP entry
-#else                                                                               
-    {.frameType = (uint16_t)TCPIP_ETHER_TYPE_UNKNOWN,   .moduleId = (uint16_t)TCPIP_MODULE_ARP,     .pktTypeFlags = 0U},                       // ARP not processed
 #endif  // defined(TCPIP_STACK_USE_IPV4)                                            
                                                                                     
 #if defined(TCPIP_STACK_USE_IPV4)                                                   
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_IPV4,      .moduleId = (uint16_t)TCPIP_MODULE_IPV4,    .pktTypeFlags = (uint32_t)TCPIP_MAC_PKT_FLAG_IPV4}, // IPv4 entry
-#else                                                                               
-    {.frameType = (uint16_t)TCPIP_ETHER_TYPE_UNKNOWN,   .moduleId = (uint16_t)TCPIP_MODULE_IPV4,    .pktTypeFlags = 0U},                       // IPv4 not processed
 #endif  // defined(TCPIP_STACK_USE_IPV4)                                            
                                                                                     
 #if defined(TCPIP_STACK_USE_IPV6)                                                   
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_IPV6,      .moduleId = (uint16_t)TCPIP_MODULE_IPV6,    .pktTypeFlags = (uint32_t)TCPIP_MAC_PKT_FLAG_IPV6}, // IPv6 entry
-#else                                                                               
-    {.frameType = (uint16_t)TCPIP_ETHER_TYPE_UNKNOWN,   .moduleId = (uint16_t)TCPIP_MODULE_IPV6,    .pktTypeFlags = 0U},                       // IPv6 not processed
 #endif // defined(TCPIP_STACK_USE_IPV6)                                             
                                                                                     
 #if 0   // defined(TCPIP_STACK_USE_LLDP) - no LLDP support
     {.frameType = (uint16_t)TCPIP_ETHER_TYPE_LLDP,      .moduleId = (uint16_t)TCPIP_MODULE_LLDP,    .pktTypeFlags = (uint32_t)TCPIP_MAC_PKT_FLAG_LLDP}, // LLDP entry
-#else                                                                               
-    {.frameType = (uint16_t)TCPIP_ETHER_TYPE_UNKNOWN,   .moduleId = (uint16_t)TCPIP_MODULE_LLDP,    .pktTypeFlags = 0U},                       // LLDP not processed
 #endif  // defined(TCPIP_STACK_USE_LLDP)
 
     // add other types of supported frames here
-
 };
 
 
@@ -278,6 +269,9 @@ static TCPIP_STACK_HEAP_CONFIG  tcpip_heap_config = { 0 };      // copy of the h
 static uint32_t tcpip_SecCount;            // current second value
 static uint32_t tcpip_MsecCount;           // current millisecond value
 static void F_TCPIP_SecondCountSet(void);    // local time keeping
+
+static int16_t  pktGapDcptOffset;
+static uint32_t pktGapSign;
 
 #if defined(TCPIP_STACK_TIME_MEASUREMENT)
 static uint64_t         tcpip_stack_time = 0;
@@ -1079,6 +1073,41 @@ static bool F_TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
             break;
         }
 
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        // check the vlan settings
+        pUsrConfig = init->pNetConf;
+        netIx = 0;
+        int vlanFail = 0;
+        while(netIx < nNets) 
+        {
+            if(pUsrConfig->vlanId == 1U || pUsrConfig->vlanId == 2U || pUsrConfig->vlanId >= 0xfffU)
+            {
+                vlanFail = 1;
+                break;
+            }
+            if((pUsrConfig->vlanId & M_TCPIP_STACK_VLAN_ID_MASK) != 0U)
+            {   // wrong value
+                vlanFail = 1;
+                break;
+            }
+            if((pUsrConfig->vlanPcp & M_TCPIP_STACK_VLAN_PCP_MASK) != 0U)
+            {   // wrong value
+                vlanFail = 2;
+                break;
+            }
+
+            netIx++;
+            pUsrConfig++;
+        }
+
+        if(vlanFail != 0)
+        {
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "VLAN ID/PCP wrong value: %d\r\n", vlanFail < 2 ? pUsrConfig->vlanId : pUsrConfig->vlanPcp);
+            initFail = 7;
+            break;
+        }
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
         // delete the old defaults
         tcpipDefIf.defaultNet = NULL;
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
@@ -1101,84 +1130,75 @@ static bool F_TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
         }
 
         // start per interface initializing
+        pktGapDcptOffset = TCPIP_PKT_GapDcptOffset(); 
+        pktGapSign = TCPIP_PKT_GapSign(); 
         tcpip_stack_ctrl_data.stackAction = (uint8_t)TCPIP_STACK_ACTION_INIT;
 
-        netIx = 0;
         pIf = tcpipNetIf; 
-        while(netIx < nNets) 
+        pUsrConfig = init->pNetConf;
+        for(netIx = 0; netIx < nNets ; netIx++)
         {
-#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            if(!TCPIPStackNetIsPrimary(pIf))
+            if(TCPIPStackNetIsPrimary(pIf))
             {   // first bring up the primary, then the aliases!
-                continue;
+                // check the power mode
+                powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
+                if((powerMode != TCPIP_MAC_POWER_FULL) && (powerMode != TCPIP_MAC_POWER_DOWN))
+                {   
+                    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
+                    initFail = 8;
+                    break;
+                }
+
+                // set transient data
+                tcpip_stack_ctrl_data.powerMode = (uint8_t)powerMode;
+                tcpip_stack_ctrl_data.pNetIf = pIf;
+                tcpip_stack_ctrl_data.netIx = pIf->netIfIx;
+
+                if(!TCPIP_STACK_BringNetUp(&tcpip_stack_ctrl_data, pUsrConfig, pModConfig, nModules))
+                {
+                    initFail = 9;
+                    break;
+                }
             }
-#endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-
-            // check the power mode
-            powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
-            if((powerMode != TCPIP_MAC_POWER_FULL) && (powerMode != TCPIP_MAC_POWER_DOWN))
-            {   
-                SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
-                initFail = 7;
-                break;
-            }
-
-            // set transient data
-            tcpip_stack_ctrl_data.powerMode = (uint8_t)powerMode;
-            tcpip_stack_ctrl_data.pNetIf = pIf;
-            tcpip_stack_ctrl_data.netIx = (uint16_t)netIx;
-
-
-            if(!TCPIP_STACK_BringNetUp(&tcpip_stack_ctrl_data, pUsrConfig, pModConfig, nModules))
-            {
-                initFail = 8;
-                break;
-            }
-            netIx++;
             pIf++; 
             pUsrConfig++;
-
-            // interface success
         }
 
         // start the aliases, if any
 #if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+        if(initFail != 0)
+        {   // failed
+            break;
+        }
+
         pUsrConfig = init->pNetConf;
         pIf = tcpipNetIf;
-        if(initFail == 0)
+        for(netIx = 0; netIx < nNets ; netIx++)
         {
-            for(netIx = 0; (netIx < nNets) ; netIx++)
-            {
-                if(TCPIPStackNetIsPrimary(pIf))
+            if(!TCPIPStackNetIsPrimary(pIf))
             {   // primaries should be up
-                continue;
-            }
-
-            // check the power mode
-            powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
+                // check the power mode
+                powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
                 if((powerMode != TCPIP_MAC_POWER_FULL) && (powerMode != TCPIP_MAC_POWER_DOWN))
-            {   
-                SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
-                initFail = 9;
-                break;
+                {   
+                    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
+                    initFail = 10;
+                    break;
+                }
+
+                // set transient data
+                tcpip_stack_ctrl_data.powerMode = (uint8_t)powerMode;
+                tcpip_stack_ctrl_data.pNetIf = pIf;
+                tcpip_stack_ctrl_data.netIx = pIf->netIfIx;
+
+                if(!TCPIP_STACK_BringNetUp(&tcpip_stack_ctrl_data, pUsrConfig, pModConfig, nModules))
+                {
+                    initFail = 11;
+                    break;
+                }
             }
-
-            // set transient data
-            tcpip_stack_ctrl_data.powerMode = (uint8_t)powerMode;
-            tcpip_stack_ctrl_data.pNetIf = pIf;
-            tcpip_stack_ctrl_data.netIx = (uint16_t)netIx;
-
-
-            if(!TCPIP_STACK_BringNetUp(&tcpip_stack_ctrl_data, pUsrConfig, pModConfig, nModules))
-            {
-                initFail = 10;
-                break;
-            }
-                pIf++;
-                pUsrConfig++;
-
-            // alias interface success
-            }
+            pIf++;
+            pUsrConfig++;
         }
 #endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
 
@@ -1817,6 +1837,7 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
         {
             if ((pNetIf->Flags.bInterfaceEnabled == 0U) || !TCPIPStackNetIsPrimary(pNetIf))
             {
+                pNetIf++;
                 continue;
             }
             activeEvents =  (TCPIP_MAC_EVENT)pNetIf->activeEvents;
@@ -1863,6 +1884,7 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
     {
         if ((pNetIf->Flags.bInterfaceEnabled == 0U) || !TCPIPStackNetIsPrimary(pNetIf))
         {
+            pNetIf++;
             continue;
         }
 
@@ -2129,6 +2151,7 @@ static bool F_TCPIPStackIsRunState(void)
     return true;
 }
 
+// set the interfaces number/index and name
 static void F_TCPIPStackSetIfNumberName(void)
 { 
     size_t netIx;
@@ -2138,6 +2161,9 @@ static void F_TCPIPStackSetIfNumberName(void)
 
     (void) memset(ifNumber, 0, sizeof(ifNumber));
 
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    size_t priIfIx = 0;
+#endif // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
     pNetIf = tcpipNetIf;
     for(netIx = 0; netIx < (size_t)tcpip_stack_ctrl_data.nIfs; netIx++)
     {
@@ -2147,6 +2173,9 @@ static void F_TCPIPStackSetIfNumberName(void)
         // and update the alias interfaces
         if(TCPIPStackNetIsPrimary(pNetIf))
         {
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+            pNetIf->priIfIx = priIfIx++;  // store the primary abs index
+#endif // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
             macType = (TCPIP_MAC_TYPE)pNetIf->macType;
             const char* ifName = TCPIP_STACK_IF_ALIAS_NAME_TBL[macType]; 
             (void) FC_sprintf(pNetIf->ifName, sizeof(pNetIf->ifName), "%s%zu", ifName, ifNumber[macType]);
@@ -2232,6 +2261,48 @@ static void F_TCPIP_ProcessTickEvent(void)
 
 }
 
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_XPKT) != 0) 
+uint32_t dbgVFailRx1 = 0;
+uint32_t dbgVFailRx2 = 0;
+uint32_t dbgVFailRx3 = 0;
+uint32_t dbgVFailCheckCnt = 0;
+static void F_DbgCheckRxPkt(TCPIP_MAC_PACKET* pRxPkt, int code)
+{
+    int failChk = 0;
+    TCPIP_MAC_DATA_SEGMENT* pSeg = pRxPkt->pDSeg;
+    uint16_t* pSegBuffer = (uint16_t*)pSeg->segBuffer;
+    if(((uint32_t)pSegBuffer & 0x1U) != 0U)
+    {
+        dbgVFailRx1++;
+        failChk++;
+    }
+
+    // check the packet segment
+    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pSeg->segBuffer + pktGapDcptOffset);
+    if(pGap->gapSign != pktGapSign)
+    {
+        dbgVFailRx2++;
+        failChk++;
+    }
+    TCPIP_MAC_PACKET* pGapPkt = pGap->segmentPktPtr;
+    if(pGapPkt != pRxPkt)
+    {
+        dbgVFailRx3++;
+        failChk++;
+    }
+
+
+    if(failChk != 0)
+    {
+        failChk++;
+        failChk++;
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+    }
+    dbgVFailCheckCnt++;
+}
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_XPKT) != 0) 
+
+
 static int F_TCPIPExtractMacRxPackets(TCPIP_NET_IF* pNetIf)
 {
     TCPIP_MAC_PACKET*       pRxPkt;
@@ -2240,6 +2311,9 @@ static int F_TCPIPExtractMacRxPackets(TCPIP_NET_IF* pNetIf)
     // get all the new MAC packets
     while((pRxPkt = (*pNetIf->pMacObj->MAC_PacketRx)(pNetIf->hIfMac, NULL, NULL)) != NULL)
     {
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_XPKT) != 0) 
+        F_DbgCheckRxPkt(pRxPkt, 0);
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_XPKT) != 0) 
         F_TCPIPInsertMacRxPacket(pNetIf, pRxPkt);
         TCPIP_PKT_FlightLogRx(pRxPkt, (TCPIP_STACK_MODULE)pNetIf->macId);
         nPackets++;
@@ -2248,6 +2322,188 @@ static int F_TCPIPExtractMacRxPackets(TCPIP_NET_IF* pNetIf)
     return nPackets;
 }
 
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+// returns a primary/alias interface running this VLAN
+// returns NULL if not found
+// pInIf is the interface on which the packet arrived
+// it should be a primary interface - unless the packet was internally routed
+TCPIP_NET_IF* F_TCPIPMapVlanInterface(const TCPIP_NET_IF* pInIf, uint16_t vlanId)
+{
+    if(pInIf->vlanId == vlanId)
+    {
+        return FC_CNetIf2NetIf(pInIf);
+    }
+    // search an alias
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    TCPIP_NET_IF* pAlias;
+    for(pAlias = TCPIPStackNetGetAlias(pInIf); pAlias != NULL; pAlias = TCPIPStackNetGetAlias(pAlias)) 
+    {
+        if(pAlias->vlanId == vlanId)
+        {
+            return pAlias;
+        }
+    }
+#endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    return NULL;
+}
+
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+// debug VLAN retrieve packet function
+typedef struct
+{
+    uint32_t retr1;
+    uint32_t retr2;
+    uint32_t retr3;
+}TCPIP_VLAN_RETR_STRUCT;
+
+TCPIP_VLAN_RETR_STRUCT dbgRxRetr = {0};
+TCPIP_VLAN_RETR_STRUCT dbgTxRetr = {0};
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+
+// helper to retrieve the pointer to the corresponding TCPIP_MAC_PACKET from a buffer pointer
+// segLoad should be the pointer that the MAC uses for TX, i.e. pPkt->pDSeg->segLoad!
+static TCPIP_MAC_PACKET* F_TCPIP_MAC_PKT_Retrieve(uint8_t* segLoad, TCPIP_MAC_RETRIEVE_REQUEST retrReq)
+{
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+    TCPIP_VLAN_RETR_STRUCT* pRetr = (retrReq == TCPIP_MAC_RETRIEVE_RX) ? &dbgRxRetr : &dbgTxRetr;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+
+    // check if an untagged packet
+    uint8_t* segBuffer = (uint8_t*)(FC_CvPtr2U32(segLoad) & 0xfffffffcU);   // Note: TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 always set! 
+    uint8_t* ptrGap = segBuffer + pktGapDcptOffset; 
+
+    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Uptr2MacGapDcpt(ptrGap);
+    if(pGap->gapSign != pktGapSign)
+    {   // that didn't work, may be an VLAN packet
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_SEGB) != 0) 
+        segBuffer -= sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_SEGB) != 0) 
+        ptrGap -= sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        pGap = FC_Uptr2MacGapDcpt(ptrGap);
+        if(pGap->gapSign != pktGapSign)
+        {   // should NOT happen!
+            TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+            pRetr->retr3++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+            return NULL;
+        }
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+        else
+        {
+            pRetr->retr2++;
+        }
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+    }
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+    else
+    {
+        pRetr->retr1++;
+    }
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
+
+    TCPIP_MAC_PACKET* pPkt = pGap->segmentPktPtr;
+
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_SEGB) != 0) 
+    TCPIPStack_Assert(segBuffer == pPkt->pDSeg->segBuffer, __FILE__, __func__, __LINE__);
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_SEGB) != 0) 
+
+    return pPkt;
+}
+
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VTRACE) != 0) 
+// debug trace VLAN packets
+typedef struct
+{
+    TCPIP_MAC_PACKET* pPkt;
+    uint8_t*  segBuffer;
+    uint8_t*  segLoad;
+    uint8_t*  pMacLayer;
+}TCPIP_VLAN_TRACE_STRUCT;
+
+TCPIP_VLAN_TRACE_STRUCT tcpipVlanTrace[M_TCPIP_STACK_DEBUG_VTRACE_SIZE] = {0};
+size_t tcpipVlanTraceIx = 0;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VTRACE) != 0) 
+
+
+static void F_TCPIP_PKT_VlanAdjust(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET * ptrPacket)
+{
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+    TCPIP_NET_IF* pStatIf = FC_CNetIf2NetIf(pNetIf);  // update statistics
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+
+    bool setVlan = false;
+    TCPIP_MAC_DATA_SEGMENT* pDSeg = ptrPacket->pDSeg;
+
+    if(pNetIf->vlanId != 0U)
+    {
+        setVlan = true;
+    }
+    else if((ptrPacket->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_TX) != 0U)
+    {   // an TX allocated packet may need to be adjusted
+        if((pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) != 0U)
+        {   // transmit the VLAN anyway
+            setVlan = true;
+        }
+        else
+        {   // not vlan interface
+            if(ptrPacket->pNetLayer == ptrPacket->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER))
+            {   // the ETH header is too long; adjust the segLoad, pass over the extra not-transmitted 4 bytes
+                pDSeg->segLoad += sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
+                (void)memmove(pDSeg->segLoad, ptrPacket->pMacLayer, sizeof(TCPIP_MAC_ETHERNET_HEADER));
+                ptrPacket->pMacLayer = pDSeg->segLoad;
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+                pStatIf->vAdjustTxCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+            }
+            else
+            {   // this can happen for an internal looped packet
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+                pStatIf->vOkTxCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+            }
+        }
+    }
+    else
+    {
+        // do NOT modify an RX packet that gets transmitted again (ICMP)!
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        pStatIf->vRxTxCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+    }
+
+    if(setVlan)
+    {   // true/NULL vlan packet
+        TCPIP_8021Q_TAG vlanTag;
+        pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        TCPIP_MAC_ETHERNET_VLAN_HEADER* pVlanHdr = (TCPIP_MAC_ETHERNET_VLAN_HEADER*)ptrPacket->pMacLayer;
+        TCPIP_MAC_ETHERNET_HEADER* pEthHdr = (TCPIP_MAC_ETHERNET_HEADER*)ptrPacket->pMacLayer;
+        pVlanHdr->Type = pEthHdr->Type;
+
+        pVlanHdr->vlanTag.tpid = TCPIP_Helper_htons(TCPIP_ETHER_TYPE_C_TPID);
+        vlanTag.vid = pNetIf->vlanId;
+        vlanTag.pcp = pNetIf->vlanPcp;
+        vlanTag.dei = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI) == 0U ? 0 : 1;
+        pVlanHdr->vlanTag.tci = TCPIP_Helper_htons(vlanTag.tci);
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        pStatIf->vlanTxCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+    }
+
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VTRACE) != 0) 
+    TCPIP_VLAN_TRACE_STRUCT* pTrace = tcpipVlanTrace + tcpipVlanTraceIx;
+    pTrace->pPkt = ptrPacket;
+    pTrace->segBuffer = ptrPacket->pDSeg->segBuffer;
+    pTrace->segLoad = ptrPacket->pDSeg->segLoad;
+    pTrace->pMacLayer = ptrPacket->pMacLayer;
+    if(++tcpipVlanTraceIx == sizeof(tcpipVlanTrace) / sizeof(*tcpipVlanTrace))
+    {
+        tcpipVlanTraceIx = 0;
+    } 
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VTRACE) != 0) 
+}
+
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 // Process the queued RX packets
 // returns the mask of 1st layer frames that have been processed
 // signals the 1st layer modules if needed
@@ -2273,9 +2529,27 @@ static uint32_t F_TCPIPProcessMacPackets(bool signal_t)
 
         // process packet
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
-        pMacHdr = FC_Uptr2MacEthHdr(pRxPkt->pMacLayer);
+        
+
+        pMacHdr = FC_Uptr2MacEthHdr(pRxPkt->pDSeg->segLoad);
         // get the packet type
         frameType = TCPIP_Helper_ntohs(pMacHdr->Type);
+
+        // re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
+        pRxPkt->pMacLayer = pRxPkt->pDSeg->segLoad;
+
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        if(frameType == TCPIP_ETHER_TYPE_C_TPID)
+        {   // VLAN tagged frame
+            pRxPkt->pDSeg->segLen -= (uint16_t)(sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER));
+            pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+        }
+        else
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        {   // if VLAN is not enabled this packet type will be discarded
+            pRxPkt->pDSeg->segLen -= (uint16_t)(sizeof(TCPIP_MAC_ETHERNET_HEADER));
+            pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        }
 
 #if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
         TCPIP_NET_IF* pNetIf = FC_Cvptr2NetIf(pRxPkt->pktIf);
@@ -2301,32 +2575,70 @@ static uint32_t F_TCPIPProcessMacPackets(bool signal_t)
         
 #endif  // defined(TCPIP_STACK_USE_MAC_BRIDGE)
 
-
-        frameFound = false;
-        pFrameEntry = TCPIP_FRAME_PROCESS_TBL;
-        for(frameIx = 0; frameIx < (sizeof(TCPIP_FRAME_PROCESS_TBL) / sizeof(*TCPIP_FRAME_PROCESS_TBL)); frameIx++)
+        while(true)
         {
-            if(pFrameEntry->frameType == frameType)
-            {   // found proper frame handler
-                pRxPkt->pktFlags &= ~(uint32_t)TCPIP_MAC_PKT_FLAG_TYPE_MASK;
-                pRxPkt->pktFlags |= pFrameEntry->pktTypeFlags;
+            frameFound = false;
 
-                if(TCPIPStackModuleRxInsert((TCPIP_STACK_MODULE)pFrameEntry->moduleId, pRxPkt, 0))
-                {
-                    if(signal_t)
-                    {   // signal to the module that RX is pending; if not already done so
-                        if((procFrameMask & (1UL << frameIx)) == 0U)
-                        {   // set the frame mask so we don't signal again
-                            procFrameMask |= 1UL << frameIx;
-                            F_TCPIPModuleSignalSetNotify((TCPIP_STACK_MODULE)pFrameEntry->moduleId, TCPIP_MODULE_SIGNAL_RX_PENDING);
-                        }
-                    }
-                    frameFound = true;
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+            TCPIP_8021Q_TAG vlanTag;
+            TCPIP_NET_IF* pNetIf = FC_Cvptr2NetIf(pRxPkt->pktIf);
+            if(frameType == TCPIP_ETHER_TYPE_C_TPID)
+            {   // VLAN tagged packet
+                TCPIP_MAC_ETHERNET_VLAN_HEADER* pVlanHdr = (TCPIP_MAC_ETHERNET_VLAN_HEADER*)pRxPkt->pMacLayer;
+                vlanTag.tci = TCPIP_Helper_ntohs(pVlanHdr->vlanTag.tci); 
+                TCPIP_NET_IF* pVlanIf = F_TCPIPMapVlanInterface(pNetIf, vlanTag.vid);  
+                if(pVlanIf == NULL)
+                {   // vlan packet does not match the interface
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+                    pNetIf->vlanRxMissCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+                    break;
                 }
-                break;
+                // vlan match; make sure the packet interface is the right one!
+                pRxPkt->pktIf = pVlanIf;
+                frameType = TCPIP_Helper_ntohs(pVlanHdr->Type);
+                pRxPkt->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_RX_TAGGED;
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+                pVlanIf->vlanRxHitCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
             }
-            pFrameEntry++;
+            else
+            {
+                pRxPkt->pktFlags &= ~(uint32_t)TCPIP_MAC_PKT_FLAG_RX_TAGGED;
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+                pNetIf->vUntaggedRxCnt++;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+            }
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
+            pFrameEntry = TCPIP_FRAME_PROCESS_TBL;
+            for(frameIx = 0; frameIx < (sizeof(TCPIP_FRAME_PROCESS_TBL) / sizeof(*TCPIP_FRAME_PROCESS_TBL)); frameIx++)
+            {
+                if(pFrameEntry->frameType == frameType)
+                {   // found proper frame handler
+                    pRxPkt->pktFlags &= ~(uint32_t)TCPIP_MAC_PKT_FLAG_TYPE_MASK;
+                    pRxPkt->pktFlags |= pFrameEntry->pktTypeFlags;
+
+                    if(TCPIPStackModuleRxInsert((TCPIP_STACK_MODULE)pFrameEntry->moduleId, pRxPkt, 0))
+                    {
+                        if(signal_t)
+                        {   // signal to the module that RX is pending; if not already done so
+                            if((procFrameMask & (1UL << frameIx)) == 0U)
+                            {   // set the frame mask so we don't signal again
+                                procFrameMask |= 1UL << frameIx;
+                                F_TCPIPModuleSignalSetNotify((TCPIP_STACK_MODULE)pFrameEntry->moduleId, TCPIP_MODULE_SIGNAL_RX_PENDING);
+                            }
+                        }
+                        frameFound = true;
+                    }
+                    break;
+                }
+                pFrameEntry++;
+            }
+
+            break;
         }
+
         if(!frameFound)
         {   // unknown packet type; discard
             TCPIP_PKT_PacketAcknowledge(pRxPkt, TCPIP_MAC_PKT_ACK_TYPE_ERR); 
@@ -4035,12 +4347,7 @@ static bool F_LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NE
     const void* pMacConfig = NULL;             // MAC configuration save
 #if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
     TCPIP_MAC_ADDR  oldMACAddr;
-    oldMACAddr.v[0] = 0;
-    oldMACAddr.v[1] = 0;
-    oldMACAddr.v[2] = 0;
-    oldMACAddr.v[3] = 0;
-    oldMACAddr.v[4] = 0;
-    oldMACAddr.v[5] = 0;
+    memset(oldMACAddr.v, 0x0, sizeof(oldMACAddr));
     TCPIP_NET_IF    *pPriIf = NULL, *pAliasIf = NULL;
 #endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
     char    oldIfName[sizeof(pNetIf->ifName) + 1];
@@ -4098,6 +4405,11 @@ static bool F_LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NE
             loadFault = true;       // no such MAC type
             break;
         } 
+
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        pNetIf->vlanId = pUsrConfig->vlanId;
+        pNetIf->vlanPcp = pUsrConfig->vlanPcp;
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 
         // Load the NetBIOS Host Name
         (void) memcpy(pNetIf->NetBIOSName, (const uint8_t*)pUsrConfig->hostName, sizeof(tcpipNetIf[0].NetBIOSName));
@@ -4641,8 +4953,15 @@ static void TCPIP_STACK_StacktoMacCtrl(TCPIP_MAC_MODULE_CTRL* pMacCtrl, TCPIP_ST
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
 
     pMacCtrl->netIx = (uint16_t)stackCtrlData->netIx;
-    pMacCtrl->gapDcptOffset = TCPIP_PKT_GapDcptOffset();
+    pMacCtrl->gapDcptOffset = pktGapDcptOffset;
     pMacCtrl->gapDcptSize = TCPIP_PKT_GapDcptSize();
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+    if((pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) == 0U)
+    {
+        pMacCtrl->retrieveF = &F_TCPIP_MAC_PKT_Retrieve;
+    }
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+
     pMacCtrl->macAction = (uint8_t)TCPIP_STACK_StackToMacAction((TCPIP_STACK_ACTION)stackCtrlData->stackAction);
     pMacCtrl->powerMode = (uint8_t)stackCtrlData->powerMode;
     pMacCtrl->controlFlags = (uint16_t)TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2;
@@ -5001,7 +5320,9 @@ void TCPIPStackInsertRxPacket(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
 {
     pRxPkt->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED;
     // update the frame length
-    pRxPkt->pDSeg->segLen -= (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER);
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        F_TCPIP_PKT_VlanAdjust(pNetIf, pRxPkt);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
     F_TCPIPInsertMacRxPacket(pNetIf, pRxPkt);
 
     if(signal_t)
@@ -5019,6 +5340,10 @@ TCPIP_MAC_RES TCPIPStackPacketTx(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET * 
 
     if(pNetIf->hIfMac != 0U)
     {
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        F_TCPIP_PKT_VlanAdjust(pNetIf, ptrPacket);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
         res = pNetIf->pMacObj->MAC_PacketTx(pNetIf->hIfMac, ptrPacket);
         // stack should always use well formatted packets!
         TCPIPStack_Assert((int32_t)res >= 0, __FILE__, __func__, __LINE__);
@@ -5081,6 +5406,28 @@ uint8_t TCPIP_STACK_MacRxPriGet(TCPIP_NET_HANDLE netH)
 {
     TCPIP_NET_IF*  pNetIf = TCPIPStackHandleToNet(netH);
     return TCPIPStack_RxPriNum(pNetIf);
+}
+
+bool TCPIP_STACK_NetVlanCfgGet(TCPIP_NET_HANDLE netH, TCPIP_NETWORK_VLAN_CONFIG* pVlanCfg)
+{
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(netH);
+    if(pNetIf != NULL)
+    {
+        if(pVlanCfg)
+        {
+            pVlanCfg->id = F_TCPIP_NetVlanId(pNetIf);
+            pVlanCfg->pcp = F_TCPIP_NetVlanPcp(pNetIf);
+            pVlanCfg->dei = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI) == 0U ? 0 : 1;
+            pVlanCfg->useNullVid = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) == 0U ? 0 : 1;
+        }
+        return true;
+    }
+
+    return false;
+#else
+    return false;
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 }
 
 unsigned int TCPIP_STACK_VersionGet ( const SYS_MODULE_INDEX index )

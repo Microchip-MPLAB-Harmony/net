@@ -150,3 +150,8 @@ Microchip or any third party.
 #define TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${INDEX?string}           0
 </#if>
 </#if>
+
+
+#define TCPIP_NETWORK_VLAN_ID_IDX${INDEX?string}         ${.vars["TCPIP_NETWORK_VLAN_ID_IDX${INDEX?string}"]}
+#define TCPIP_NETWORK_VLAN_PCP_IDX${INDEX?string}         ${.vars["TCPIP_NETWORK_VLAN_PCP_IDX${INDEX?string}"]}
+

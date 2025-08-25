@@ -76,13 +76,28 @@ Microchip or any third party.
 #define M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT     0
 #endif  // defined(TCPIP_STACK_USE_IPV4) && (TCPIP_STACK_ALIAS_INTERFACE_SUPPORT != 0)
 
+// VLAN interface support
+#if defined(TCPIP_STACK_VLAN_INTERFACE_SUPPORT) && (TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+#define M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT    1
+#else
+#define M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT    0
+#endif  // defined(TCPIP_STACK_VLAN_INTERFACE_SUPPORT) && (TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+
 // debug symbols
 
-#define M_TCPIP_STACK_DEBUG_MASK_BASIC       0x01    // enable the TCPIPStack_Assert and TCPIPStack_Condition calls
-#define M_TCPIP_STACK_ENABLE_ASSERT_LOOP     0       // if !0, then an assert call will loop forever 
+#define M_TCPIP_STACK_DEBUG_MASK_BASIC      0x01    // enable the TCPIPStack_Assert and TCPIPStack_Condition calls
+#define M_TCPIP_STACK_ENABLE_ASSERT_LOOP    0       // if !0, then an assert call will loop forever 
                                                     // should be 0 for a release build
-#define M_TCPIP_STACK_ENABLE_COND_LOOP       0       // if !0, then an condition call will loop forever 
+#define M_TCPIP_STACK_ENABLE_COND_LOOP      0       // if !0, then an condition call will loop forever 
                                                     // should be 0 for a release build
+
+#define M_TCPIP_STACK_DEBUG_MASK_VSTAT      0x02    // gather some VLAN statistics
+#define M_TCPIP_STACK_DEBUG_MASK_VCHK_SEGB  0x04    // check VLAN MAC packets segment buffer - internal debugging
+#define M_TCPIP_STACK_DEBUG_MASK_VCHK_XPKT  0x08    // check the VLAN MAC extracted packets - internal debugging
+#define M_TCPIP_STACK_DEBUG_MASK_VRETR_F    0x10    // check the retrieve functionality of VLAN MAC packets - internal debugging
+#define M_TCPIP_STACK_DEBUG_MASK_VTRACE     0x20    // trace VLAN MAC packets - internal debugging
+#define M_TCPIP_STACK_DEBUG_VTRACE_SIZE     16      // VLAN trace size
+
 
 // enabled debugging masks 
 #define M_TCPIP_STACK_DEBUG_LEVEL            (M_TCPIP_STACK_DEBUG_MASK_BASIC)  // usually the basic debugging is enabled so asserts are not ignored

@@ -782,6 +782,8 @@ TCPIP_MAC_RES EmacDrvrStatisticsGet(MAC_DRIVER* pMacDrvr, TCPIP_MAC_RX_STATISTIC
 
 TCPIP_MAC_RES EmacDrvrRegisterStatisticsGet(MAC_DRIVER* pMacDrvr, TCPIP_MAC_STATISTICS_REG_ENTRY* pStatisticsEntry, size_t maxEntries, size_t* pActualNumEntries);
 
+TCPIP_MAC_PACKET * DRV_EMAC_Buff2PktPtr(MAC_DRIVER * pMacDrvr, uintptr_t buffAdd, TCPIP_MAC_RETRIEVE_REQUEST retrReq);
+
 // -----------------------------------------------------------------------------
 /** ISO/IEC 14882:2003(E) - 5.6 Multiplicative operators:
  * The binary / operator yields the quotient, and the binary % operator yields
@@ -824,18 +826,6 @@ __STATIC_INLINE uint32_t moduloIncrement( uint32_t value, uint32_t moduloDivisor
 __STATIC_INLINE uint32_t moduloDecrement( uint32_t value, uint32_t moduloDivisor )
 {
     return value == 0U ? (moduloDivisor - 1U) : value - 1U;
-}
-
-static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT* __attribute__((always_inline)) FC_U8Ptr2GapDcpt( uint8_t* u8Ptr )
-{
-    union
-    {
-        uint8_t*                    u8Ptr;
-        TCPIP_MAC_SEGMENT_GAP_DCPT* gapDcpt;
-    }U_U8_PTR_GAP_DCPT;
-
-    U_U8_PTR_GAP_DCPT.u8Ptr = u8Ptr;
-    return U_U8_PTR_GAP_DCPT.gapDcpt;
 }
 
 static __inline__ uint32_t* __attribute__((always_inline)) FC_U8Ptr2U32Ptr( uint8_t* u8Ptr )

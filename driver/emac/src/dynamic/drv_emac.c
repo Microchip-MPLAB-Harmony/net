@@ -326,6 +326,7 @@ SYS_MODULE_OBJ MAC_DRVR_Initialize( const SYS_MODULE_INDEX index, const SYS_MODU
     pMacDrvr->gapDcptSize = macControl->gapDcptSize;
     pMacDrvr->controlFlags = macControl->controlFlags;
     pMacDrvr->dataOffset = (macControl->controlFlags & (uint16_t)TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) != 0U ? 2U : 0U;
+    pMacDrvr->pktRetrF = macControl->retrieveF;
 
     // copy the configuration data
     pMacDrvr->config = *initData;
@@ -670,11 +671,6 @@ TCPIP_MAC_PACKET * MAC_DRVR_PacketRx( DRV_HANDLE  hMac, TCPIP_MAC_RES *  pRes, T
         // Reduce header length to get data segment length
         response = TCPIP_MAC_RES_OK;
         pMacDrvr->rxStat.nRxOkPackets++;
-        // set proper segment length
-        pMacPacket->pDSeg->segLen -= (uint16_t)sizeof( TCPIP_MAC_ETHERNET_HEADER );
-        // Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
-        pMacPacket->pMacLayer = pMacPacket->pDSeg->segLoad;
-        pMacPacket->pNetLayer = pMacPacket->pMacLayer + sizeof( TCPIP_MAC_ETHERNET_HEADER );
         pMacPacket->tStamp = SYS_TMR_TickCountGet();
         pMacPacket->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED;
         pMacPacket->pktFlags &= ~(uint32_t)TCPIP_MAC_PKT_FLAG_CAST_MASK;
@@ -896,11 +892,8 @@ static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
             break;
         }
 
-        // get aligned buffer address from Tx Descriptor Buffer Address
-        uint8_t* pSegBuff = (uint8_t*)(EMAC_RX_ADDRESS_MASK & pMacDrvr->pTxDesc[ extract ].bufferAddress);
-        // get packet pointer from buffer gap descriptor
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_U8Ptr2GapDcpt(pSegBuff + pMacDrvr->gapDcptOffset);
-        pMacPacket = pGap->segmentPktPtr;
+        // get packet pointer from Tx Descriptor Buffer Address
+        pMacPacket = DRV_EMAC_Buff2PktPtr(pMacDrvr, pMacDrvr->pTxDesc[ extract ].bufferAddress, TCPIP_MAC_RETRIEVE_TX);
 
         while( extract != pMacDrvr->txInsertPt )
         {
@@ -1707,3 +1700,27 @@ MAC_DRIVER* macDrvrObjGet(size_t* pnObjects)
     }
     return macDrvrDescription;
 }
+
+// helper to get the MAC packet from an EMAC driver buffer address
+TCPIP_MAC_PACKET * DRV_EMAC_Buff2PktPtr(MAC_DRIVER * pMacDrvr, uintptr_t buffAdd, TCPIP_MAC_RETRIEVE_REQUEST retrReq)
+{
+    union
+    {
+        uintptr_t  buffAdd;
+        uint8_t * u8Ptr; 
+        TCPIP_MAC_SEGMENT_GAP_DCPT * pGap;              
+    }U_PTR8_SEG_GAP_DSC;
+    U_PTR8_SEG_GAP_DSC.buffAdd = buffAdd;
+
+    if(pMacDrvr->pktRetrF != NULL)
+    {
+        return pMacDrvr->pktRetrF(U_PTR8_SEG_GAP_DSC.u8Ptr, retrReq);
+    }
+
+    // regular pointer recovery
+    U_PTR8_SEG_GAP_DSC.buffAdd &= EMAC_RX_ADDRESS_MASK;  // adjust the pointer to remove the data offset
+    U_PTR8_SEG_GAP_DSC.u8Ptr += pMacDrvr->gapDcptOffset;      // add the gap descriptor
+
+    return U_PTR8_SEG_GAP_DSC.pGap->segmentPktPtr;
+}
+

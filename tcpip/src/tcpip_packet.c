@@ -49,6 +49,13 @@ Microchip or any third party.
 // MAC driver data offset required by the TCP/IP stack
 #define TCPIP_MAC_PAYLOAD_OFFSET            2U 
 
+// gap signature that is part of the TCPIP_MAC_SEGMENT_GAP_DCPT
+// normally used only when VLAN is enabled
+
+// magic number gap descriptor signature
+#define TCPIP_MAC_GAP_SIGN      0xdeadfadeUL;  
+
+
 // the TCPIP_MAC_DATA_SEGMENT.segLoadOffset value
 // Allocation test
 // Note: enabling this in a real app will lead to run time exceptions!
@@ -118,6 +125,49 @@ static void                 F_TCPIP_PKT_LogInit(bool resetAll);
 
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_PKT) != 0) 
+static bool F_CheckVlanPkt(TCPIP_MAC_PACKET* pPkt, int callCode)
+{
+    TCPIP_MAC_DATA_SEGMENT* pDSeg = pPkt->pDSeg;
+    
+    int checkFail = 0;
+    while(true)
+    {
+        if(pDSeg->segLoad != pDSeg->segBuffer + 2U)
+        {
+            checkFail = 1;
+            break;
+        }
+
+        if(pPkt->pMacLayer != pDSeg->segLoad)
+        {
+            checkFail = 2;
+            break;
+        }
+
+        if(pPkt->pNetLayer != pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER))
+        {
+            checkFail = 3;
+            break;
+        }
+
+        break;
+    }
+
+    if(checkFail != 0)
+    {
+        SYS_CONSOLE_PRINT("F_CheckVlanPkt fail: %d, callCode: %d\r\n", checkFail, callCode);
+        return false;
+    }
+
+    return true;
+}
+#else
+#define F_CheckVlanPkt(pPkt, callCode) 
+#endif // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_PKT) != 0) 
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
 
 // API
 
@@ -175,12 +225,33 @@ void TCPIP_PKT_Deinitialize(void)
 }
 
 // acknowledges a packet
+// should setup the packet exacly as after allocation!
 static void F_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, TCPIP_STACK_MODULE moduleId)
 {
     if(ackRes != TCPIP_MAC_PKT_ACK_NONE)
     {
         pPkt->ackRes = (int8_t)ackRes;
     }
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+    if((pPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_TX) != 0U)
+    {   // TX packet
+        TCPIP_NET_IF* pNetIf = FC_Cvptr2NetIf(pPkt->pktIf);
+        if(pNetIf->vlanId == 0U && (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) == 0U)
+        {
+            pPkt->pDSeg->segLoad -= sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
+            pPkt->pMacLayer = pPkt->pDSeg->segLoad;
+        }
+        pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+        F_CheckVlanPkt(pPkt, 3);
+    }
+    else
+    {   // RX packet
+        // reset the pNetLayer just in case it has been moved by manager RX process
+        pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+        F_CheckVlanPkt(pPkt, 4);
+    }
+
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 
     if(pPkt->ackFunc != NULL)
     {
@@ -315,6 +386,12 @@ uint16_t TCPIP_PKT_GapDcptSize(void)
     return TCPIP_MAC_DATA_SEGMENT_GAP_SIZE; 
 }
 
+// return the gap signature
+uint32_t TCPIP_PKT_GapSign(void)
+{
+    return TCPIP_MAC_GAP_SIGN; 
+}
+
 
 // repeated debug versions; they store the original moduleId
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
@@ -331,7 +408,12 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) F_TCPIP_PKT_P
 
     pktUpLen = (((pktLen + 3U) >> 2U) << 2U);     // 32 bits round up
     // segment size, multiple of cache line size
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+    segAlignSize = (uint16_t)(((segLoadLen + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1U) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
+#else
     segAlignSize = (uint16_t)(((segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1U) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
     // segment allocation size, extra cache line so that the segBuffer can start on a cache line boundary
     segAllocSize = (uint16_t)(segAlignSize + TCPIP_MAC_DATA_SEGMENT_GAP_SIZE + TCPIP_MAC_PAYLOAD_OFFSET + TCPIP_SEGMENT_CACHE_ALIGN_SIZE); 
     // total allocation size
@@ -358,16 +440,22 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) F_TCPIP_PKT_P
         // set the pointer to the packet that segment belongs to
         TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Uptr2MacGapDcpt(pSeg->segBuffer + TCPIP_MAC_GAP_OFFSET);
         pGap->segmentPktPtr = pPkt;
+        pGap->gapSign = TCPIP_MAC_GAP_SIGN;
 
         pSeg->segFlags = (uint16_t)TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
-
+        
         pSeg->segLoad = pSeg->segBuffer + TCPIP_MAC_PAYLOAD_OFFSET;
         pPkt->pMacLayer = pSeg->segLoad;
         pPkt->pktFlags = (uint32_t)flags & (~(uint32_t)TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
         if(segLoadLen != 0U)
         {
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+            pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+            F_CheckVlanPkt(pPkt, 1);
+#else
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
         }
 
     }
@@ -699,7 +787,12 @@ TCPIP_MAC_PACKET* F_TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, 
 
     pktUpLen = (((pktLen + 3U) >> 2U) << 2U);     // 32 bits round up
     // segment size, multiple of cache line size
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+    segAlignSize = (uint16_t)(((segLoadLen + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1U) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
+#else
     segAlignSize = (uint16_t)(((segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1U) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
     // segment allocation size, extra cache line so that the segBuffer can start on a cache line boundary
     segAllocSize = (uint16_t)(segAlignSize + TCPIP_MAC_DATA_SEGMENT_GAP_SIZE + TCPIP_MAC_PAYLOAD_OFFSET + TCPIP_SEGMENT_CACHE_ALIGN_SIZE); 
     // total allocation size
@@ -722,6 +815,7 @@ TCPIP_MAC_PACKET* F_TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, 
         // set the pointer to the packet that segment belongs to
         TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Uptr2MacGapDcpt(pSeg->segBuffer + TCPIP_MAC_GAP_OFFSET);
         pGap->segmentPktPtr = pPkt;
+        pGap->gapSign = TCPIP_MAC_GAP_SIGN;
 
         pSeg->segFlags = (uint16_t)TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
@@ -731,7 +825,12 @@ TCPIP_MAC_PACKET* F_TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, 
         pPkt->pktFlags = (uint32_t)flags & (~(uint32_t)TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
         if(segLoadLen != 0U)
         {
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+            pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+            F_CheckVlanPkt(pPkt, 2);
+#else
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
         }
         pPkt->pktPriority = 0; // set the default priority
 

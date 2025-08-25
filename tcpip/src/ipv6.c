@@ -4592,7 +4592,20 @@ static void TCPIP_IPV6_MacPacketTxPutHeader(IPV6_PACKET* pkt, TCPIP_MAC_PACKET* 
 
 static void MACSetReadPtrInRx(TCPIP_MAC_PACKET* pRxPkt, uint16_t offset)
 {
-    pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER) + offset;
+    uint16_t ethHdrSize;
+
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+    if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_RX_TAGGED) != 0U)
+    {
+        ethHdrSize = sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+    }
+    else
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+    {
+        ethHdrSize = sizeof(TCPIP_MAC_ETHERNET_HEADER);
+    }
+
+    pRxPkt->pNetLayer = pRxPkt->pMacLayer + ethHdrSize + offset;
 }
 
 static TCPIP_MAC_PTR_TYPE MACSetReadPtr(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PTR_TYPE address)

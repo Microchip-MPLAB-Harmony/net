@@ -580,6 +580,10 @@ static void Wsc_CloseConn(void);
 static void F_CommandWsc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+static void F_CommandVlan(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
@@ -706,6 +710,9 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(M_TCPIP_COMMANDS_WSC)
     {"wsc",        &F_CommandWsc,                  ": WebSocket commands"},
 #endif  // defined(M_TCPIP_COMMANDS_WSC)
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+    {"vlan",        &F_CommandVlan,                  ": VLAN commands"},
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
 };
 
 #if defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((M_TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
@@ -844,7 +851,7 @@ void TCPIP_Commands_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
 static void F_Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    size_t i;
+    size_t i, startIx, endIx;
     TCPIP_NET_HANDLE netH;
     const TCPIP_MAC_ADDR* pMac;
     const char  *hostName;
@@ -864,18 +871,28 @@ static void F_Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     char   addrBuff[20];
 #endif
 
-    if (argc > 2)
+    if (argc > 1)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: netinfo\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: netinfo\r\n");
-        return;
+        netH = TCPIP_STACK_NetHandleGet(argv[1]);
+        if (netH == NULL)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface\r\n");
+            return;
+        }
+        startIx = (size_t)TCPIP_STACK_NetIndexGet(netH); 
+        endIx = startIx + 1;
+    }
+    else
+    {
+        startIx = 0;
+        endIx = initialNetIfs;
     }
 
-    for (i=0; i < initialNetIfs; i++)
+    for (i = startIx; i < endIx; i++)
     {
         netH = TCPIP_STACK_IndexToNet(i);
         (void)TCPIP_STACK_NetAliasNameGet(netH, addrBuff, sizeof(addrBuff));
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "---------- Interface <%s/%s> ---------- \r\n", addrBuff, TCPIP_STACK_NetNameGet(netH));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "---------- Interface <%s/%s>(%d) ----------\r\n", addrBuff, TCPIP_STACK_NetNameGet(netH), i);
         if(!TCPIP_STACK_NetIsUp(netH))
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Interface is down\r\n");
@@ -977,6 +994,19 @@ static void F_Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         }
 
 #endif  // defined(TCPIP_STACK_USE_IPV6)
+
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+        TCPIP_NETWORK_VLAN_CONFIG vlanCfg;
+        if(!TCPIP_STACK_NetVlanCfgGet(netH, &vlanCfg))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Failed to get the VLAN info!\r\n");
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "VLAN - ID: %d, PCP: %d, DEI: %d, useNullVid: %d\r\n", vlanCfg.id, vlanCfg.pcp, vlanCfg.dei, vlanCfg.useNullVid);
+        }
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+
 
 #if defined(TCPIP_STACK_USE_IPV4)
         
@@ -9678,6 +9708,59 @@ static void Wsc_CloseConn(void)
 }
 
 #endif // defined(M_TCPIP_COMMANDS_WSC)  
+
+
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+static void F_CommandVlan(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // vlan info/stat
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    size_t nNets = TCPIP_STACK_NumberOfNetworksGet();
+    size_t netIx;
+    TCPIP_NET_IF* pNetIf;
+    char nameBuff[20];
+    int vlanAction = 0;     // 0 == info; 1 == stat 
+
+    if(argc > 1)
+    {
+        if(strcmp(argv[1], "info") == 0)
+        {
+            vlanAction = 0;
+        }
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) && ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        else if(strcmp(argv[1], "stat") == 0)
+        {
+            vlanAction = 1;
+        }
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) && ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        else
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "vlan - unknown keyword: %s\r\n", argv[1]);
+            return;
+        }
+    }
+
+    for (netIx = 0; netIx < nNets; netIx++)
+    {
+        TCPIP_NET_HANDLE netH = TCPIP_STACK_IndexToNet(netIx);
+        TCPIP_STACK_NetAliasNameGet(netH, nameBuff, sizeof(nameBuff));
+        pNetIf = TCPIPStackHandleToNet(netH);
+        if(vlanAction == 0)
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "if: %s, vlanId: %d,  vlanPcp: %d, dei: %d, vidNull: %d\r\n", nameBuff, pNetIf->vlanId, pNetIf->vlanPcp, (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI), (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL));
+        }
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) && ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        else if(vlanAction == 1)
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "if: %s, vlan TxCnt: %d,  vAdjustTxCnt: %d, vOkTxCnt: %d, vRxTxCnt: %d\r\n", nameBuff, pNetIf->vlanTxCnt, pNetIf->vAdjustTxCnt, pNetIf->vOkTxCnt, pNetIf->vRxTxCnt);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tRxHitCnt: %d, RxMissCnt: %d, vUntaggedRxCnt: %d\r\n", pNetIf->vlanRxHitCnt, pNetIf->vlanRxMissCnt, pNetIf->vUntaggedRxCnt);
+        }
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) && ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+    }
+
+}
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 

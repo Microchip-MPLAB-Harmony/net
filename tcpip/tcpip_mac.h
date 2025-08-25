@@ -108,6 +108,62 @@ typedef struct  __attribute__((aligned(2), packed))
     uint16_t            Type;
 } TCPIP_MAC_ETHERNET_HEADER;
 
+
+// *****************************************************************************
+/*  MAC VLAN Header
+
+  Summary:
+    Definition of the VLAN tag in an Ethernet frame.
+
+  Description:
+    This structure defines the IEEE 802.1Q VLAN tag for an VLAN-ed Ethernet frame.
+
+  Remarks:        
+    None.
+*/
+typedef struct
+{
+    uint16_t            tpid;       // Tag Protocol Identifier == 0x8100 for C-VLAN frames
+    union
+    {
+        uint16_t        tci;        // Tag Control Information
+        struct __attribute__((packed))
+        {
+            unsigned    vid:        12;     // VLAN Id
+            // Some values are reserved and should NOT be used:
+            //  0x00: The NULL VID. No VID is used
+            //  0x01: The default Port VID for ingress Bridge Port
+            //  0x02: The default SR (Stream Reservation) Port VID
+            //  0xFFF: Reserved for implementation use. 
+            unsigned    dei:         1;     // drop eligibile indicator
+            unsigned    pcp:         3;     // priority code point
+        };
+    };
+}TCPIP_8021Q_TAG;
+
+
+// *****************************************************************************
+/*  MAC Ethernet VLAN Header
+
+  Summary:
+    Definition of the VLAN Ethernet header.
+
+  Description:
+    This structure defines the Ethernet header
+    for an VLAN-ed Ethernet frame.
+
+  Remarks:        
+    None.
+*/
+
+typedef struct  __attribute__((aligned(2), packed))
+{
+    TCPIP_MAC_ADDR      DestMACAddr;
+    TCPIP_MAC_ADDR      SourceMACAddr;
+    TCPIP_8021Q_TAG     vlanTag;
+    uint16_t            Type;
+}TCPIP_MAC_ETHERNET_VLAN_HEADER;
+
 // *****************************************************************************
 /*  MAC Modules ID
 
@@ -275,6 +331,7 @@ typedef enum
     TCPIP_MAC_SEGMENT_GAP_DCPT:
         | ... alignment space, if needed                                |
         | 4 bytes for storing the packet pointer this buffer belongs to |
+        | 4 bytes for storing the gap signature                         |
         | n bytes gap for MAC use. NOT  PRESERVED across calls!         |
     segment buffer:
         | Cache aligned buffer segBuffer (segSize bytes)                |
@@ -288,7 +345,9 @@ typedef struct
     /* Packet pointer. This is the packet the segment belongs to.
      * Could be used by the MAC driver to restore the packet to which
      * a payload belongs to. */
-    struct S_tag_TCPIP_MAC_PACKET*   segmentPktPtr;
+    struct S_tag_TCPIP_MAC_PACKET*  segmentPktPtr;
+    /* Gap signature; Magic number for identifying this gap as a valid one */  
+    uint32_t                        gapSign;
 
     /* Extra space allocated to be used by the MAC driver
      * The size of the gap is variable:
@@ -559,7 +618,7 @@ typedef enum
        Set when the packet is allocated. */
     TCPIP_MAC_PKT_FLAG_STATIC               = 0x00000001U,
 
-    /* If set, it is a TX packet/segment. Otherwise, it is a RX packet.*/
+    /* If set, it is a TX allocated packet/segment. Otherwise, it is a RX allocated packet.*/
     TCPIP_MAC_PKT_FLAG_TX                   = 0x00000002U,
 
     /* Packet data spans multiple segments - ZC functionality.
@@ -593,8 +652,8 @@ typedef enum
        are not updated by the MAC RX process. */
     TCPIP_MAC_PKT_FLAG_CAST_DISABLED        = 0x00000000U,      
 
-    /* Reserved for future use */
-    TCPIP_MAC_PKT_FLAG_RESERVED             = 0x00000080U,      
+    /* RX Packet is VLAN tagged */
+    TCPIP_MAC_PKT_FLAG_RX_TAGGED            = 0x00000080U,      
 
     /* RX packet checksum calculation flags.
        MAC driver updates these flags: */
@@ -893,14 +952,14 @@ struct S_tag_TCPIP_MAC_PACKET
 
     /* Pointer to the MAC frame.
        On TX: the sending higher layer protocol updates this field.
-       On RX: the MAC driver updates this field before handing over the packet.
+       On RX: the MAC driver does not use this field.
        (MCHP TCP/IP stack note: The packet allocation function update this field automatically). */
     uint8_t*                        pMacLayer;
 
     /* Pointer to the network layer data.
        On TX: the sending higher layer protocol updates this field.
             The PPP MAC driver needs this field. Other MAC drivers do not use the field.
-       On RX: the MAC driver updates this field before handing over the packet.
+       On RX: the MAC driver does not use this field.
        (MCHP TCP/IP stack note: The packet allocation function updates this field automatically. But not for IPv6!). */
     uint8_t*                        pNetLayer;
 
@@ -1272,6 +1331,46 @@ typedef enum
 }TCPIP_MAC_SYNCH_REQUEST;
 
 // *****************************************************************************
+/* TCP/IP MAC Retrieve function request
+
+  Summary:
+    Defines the possible MAC retrieve request types.
+
+  Description:
+    TCP/IP MAC synchronization packet pointer retrieve codes.
+    
+    This enumeration defines all the possible packet retrieve actions that can be
+    requested by the MAC to the stack at run time.
+    
+  Remarks:
+    None
+
+*/
+
+typedef enum
+{
+    /*  no special request, default */
+    TCPIP_MAC_RETRIEVE_NONE    = 0x00,
+    
+    /*  request to retrieve the packet pointer for an RX packet */
+    TCPIP_MAC_RETRIEVE_RX       = 0x01,
+
+    /*  request to retrieve the packet pointer for an TX packet */
+    TCPIP_MAC_RETRIEVE_TX       = 0x02,
+
+    /*  request to retrieve a packet pointer but the packet is still alive, not freed */
+    /* If set, the corresponding TCPIP_MAC_PACKET is not removed from the packet tables 
+       if the stack maintains such tables.
+       By default this flag is not set and the call should remove the TCPIP_MAC_PACKET from the tables.
+       
+       Note: it is up to the implementation if packet tables are maintained and this flag is used.
+       The Harmony TCP/IP stack does not use this flag */
+    TCPIP_MAC_RETRIEVE_PEEK     = 0x04,
+
+}TCPIP_MAC_RETRIEVE_REQUEST;
+
+
+// *****************************************************************************
 /* TCP/IP MAC Checksum calculation offloading
 
   Summary:
@@ -1578,7 +1677,7 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
 // *****************************************************************************
 /*
   Retrieve packet Function:
-    typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, bool isRx, bool peek);
+    typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, TCPIP_MAC_RETRIEVE_REQUEST retrReq);
 
   Summary:
     Helper function for the MAC driver to retrieve a TCPIP_MAC_PACKET packet belonging to a segment buffer
@@ -1594,11 +1693,9 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
 
   Parameters:
     segBuffer:      - pointer to a TX/RX buffer
-    isRx            - boolean specifying if an RX/TX packet is needed
+    retrReq         - a TCPIP_MAC_RETRIEVE_REQUEST value specifying if an RX/TX packet is needed
                       This allows implementing different RX/TX mappings/tables
-    peek            - boolean to specify if a peek operation is needed
-                      If true, the corresponding TCPIP_MAC_PACKET is not removed from the tables
-                      Otherwise the call will remove the TCPIP_MAC_PACKET from the tables
+                      Also, peek request are supported, if needed.
 
   Returns:
    - a valid TCPIP_MAC_PACKET pointer if the call was successful and the corresponding packet was found
@@ -1611,10 +1708,11 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
     If this function is provided, the MAC driver will have to call it to retrieve the TCPIP_MAC_PACKET that corresponds 
     to a transmitted/received segment buffer.
 
-    The Harmony TCP/IP stack does not use this mechanism.
+    The Harmony TCP/IP stack uses this mechanism only when VLAN traffic is enabled.
+    The TCPIP_MAC_RETRIEVE_REQUEST parameter is not used.
 
 */
-typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, bool isRx, bool peek);
+typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, TCPIP_MAC_RETRIEVE_REQUEST retrReq);
 
 
 // *****************************************************************************
@@ -1841,7 +1939,8 @@ typedef struct
     to a transmitted/received segment buffer.
     Otherwise the TCPIP_MAC_SEGMENT_GAP_DCPT mechanism should be used.
 
-    The Harmony TCP/IP stack does not use this mechanism and the retrieveF should == 0. */
+    The Harmony TCP/IP stack uses this mechanism only for VLAN traffic
+    Otherwise the retrieveF should == 0. */
     TCPIP_MAC_PKT_RetrieveF retrieveF;
 
     /*  number of the interfaces supported in this session */

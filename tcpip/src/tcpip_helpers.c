@@ -1068,8 +1068,6 @@ uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* dataBuffer, uint16_t len, ui
         return 0;
     }
     
-    pVal = FC_Cptr82Ptr16(dataBuffer);
-
     // Calculate the sum of all words
     sum.dw = (uint32_t)seed;
     if (((uint32_t)dataBuffer % 2U) != 0U)
@@ -1078,6 +1076,10 @@ uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* dataBuffer, uint16_t len, ui
         sum.w[0] += tSum << 8;
         pVal = FC_Cptr82Ptr16(dataBuffer + 1U);
         len--;
+    }
+    else
+    {
+        pVal = FC_Cptr82Ptr16(dataBuffer);
     }
 
     i = len >> 1;

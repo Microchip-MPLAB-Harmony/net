@@ -464,6 +464,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     pMACDrv->sGmacData.pktAllocF = macControl->pktAllocF;
     pMACDrv->sGmacData.pktFreeF = macControl->pktFreeF;
     pMACDrv->sGmacData.pktAckF = macControl->pktAckF;
+    pMACDrv->sGmacData.pktRetrF = macControl->retrieveF;
 
     pMACDrv->sGmacData.macSynchF = macControl->synchF;
     
@@ -946,11 +947,6 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
         // first segment is always offset by Rx Data Offset
         pDSeg->segLoad = pDSeg->segBuffer + pMACDrv->sGmacData.dataOffset;
         
-        // segLen for the 1st packet        
-        // Ethernet MAC header(14 bytes) stored in data packet (or in first data buffer for multi-buffer data).
-        // reduce MAC header length to get data segment length
-        pDSeg->segLen = pDSeg->segLen - (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER);
-        
         //multiple data segments?
         if(pDSeg->next != NULL)
         {
@@ -973,10 +969,6 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
             
         }
         
-        // Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
-        pRxPkt->pMacLayer = pRxPkt->pDSeg->segLoad;
-        pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
-
         pRxPkt->tStamp = SYS_TMR_TickCountGet();
         pRxPkt->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED;
 
@@ -2299,3 +2291,26 @@ static SYS_MODULE_OBJ F_DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv)
     initRes = TCPIP_MAC_RES_OK;
     return (uint32_t)initRes;
 }
+
+TCPIP_MAC_PACKET * DRV_PIC32CGMAC_Buff2PktPtr(DRV_GMAC_DRIVER * pMACDrv, uintptr_t buffAdd, TCPIP_MAC_RETRIEVE_REQUEST retrReq)
+{
+    union
+    {
+        uintptr_t  buffAdd;
+        uint8_t * u8Ptr; 
+        TCPIP_MAC_SEGMENT_GAP_DCPT * pGap;              
+    }U_PTR8_SEG_GAP_DSC;
+    U_PTR8_SEG_GAP_DSC.buffAdd = buffAdd;
+
+    if(pMACDrv->sGmacData.pktRetrF != NULL)
+    {
+        return pMACDrv->sGmacData.pktRetrF(U_PTR8_SEG_GAP_DSC.u8Ptr, retrReq);
+    }
+
+    // regular pointer recovery
+    U_PTR8_SEG_GAP_DSC.buffAdd &= pMACDrv->sGmacData.dataOffsetMask;  // adjust the pointer to remove the data offset
+    U_PTR8_SEG_GAP_DSC.u8Ptr += pMACDrv->sGmacData.dcptOffset;      // add the gap descriptor
+
+    return U_PTR8_SEG_GAP_DSC.pGap->segmentPktPtr;
+}
+

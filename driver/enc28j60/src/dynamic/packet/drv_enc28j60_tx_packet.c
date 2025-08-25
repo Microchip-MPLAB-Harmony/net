@@ -384,7 +384,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct S_DRV_ENC28J60_DriverInfo * pDrvInst, D
                 }
 
                 pkt->macPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
-                (*pkt->macPkt->ackFunc)(pkt->macPkt, pkt->macPkt->ackParam);
+                pDrvInst->stackCfg.pktAckF(pkt->macPkt, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_MODULE_MAC_ENCJ600);
 
                 DRV_ENC28J60_SetEvent(pDrvInst, TCPIP_MAC_EV_TX_DONE);
                 pkt->macPkt = NULL;

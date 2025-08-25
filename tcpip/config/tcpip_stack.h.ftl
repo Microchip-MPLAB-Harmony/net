@@ -70,6 +70,12 @@ Microchip or any third party.
 #define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT   false
 </#if>
 
+<#if TCPIP_STACK_VLAN_SUPPORT == true>
+#define TCPIP_STACK_VLAN_INTERFACE_SUPPORT   true
+<#else>
+#define TCPIP_STACK_VLAN_INTERFACE_SUPPORT   false
+</#if>
+
 <#if TCPIP_PACKET_LOG_ENABLE == true>
 #define TCPIP_PACKET_LOG_ENABLE                     1
 #define TCPIP_PKT_LOG_SIZE                          ${TCPIP_PKT_LOG_SIZE?c}

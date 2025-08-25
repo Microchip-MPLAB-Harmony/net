@@ -549,10 +549,12 @@ static __inline__ uint16_t* __attribute__((always_inline)) FC_Cptr82Ptr16(const 
     union
     {
         const uint8_t* cptr8;
+        uintptr_t      uPtr;
         uint16_t *     ptr16;
     }U_CPTR8_PTR16;
 
     U_CPTR8_PTR16.cptr8 = cptr8;
+    TCPIPStack_Assert((U_CPTR8_PTR16.uPtr & 0x1U) == 0U, __FILE__, __func__, __LINE__);
     return U_CPTR8_PTR16.ptr16; 
 }
 

@@ -101,7 +101,7 @@ void macDrvrLibDescriptorsPoolClear( MAC_DRIVER *  pMacDrvr )
 {
 #if defined( DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0 ) || defined( DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0 )
     if( pMacDrvr->macIx == 0U)
-    {
+    {    
         (void)memset( &EMAC0_DcptArray, 0, sizeof( EMAC0_DcptArray ) );
     }
 #endif
@@ -726,8 +726,6 @@ static MAC_DRVR_RESULT rxExtractPacket( MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAM
 {
     TCPIP_MAC_PACKET *          pMacPacket;
     TCPIP_MAC_DATA_SEGMENT *    pDSeg;
-    uint8_t *                   pSegBuff;
-    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap;
     uint16_t                    bytesRemaining;
     uint16_t                    extractSize;
     uint16_t                    bufferCount = pFrameInfo->bufferCount;
@@ -735,11 +733,7 @@ static MAC_DRVR_RESULT rxExtractPacket( MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAM
     MAC_DRVR_RESULT             retval = MAC_DRVR_RES_NO_PACKET;
 
     // extract pMacPacket using the segment buffer
-
-    pSegBuff = (uint8_t*)(EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val);
-    // get packet pointer from buffer gap descriptor
-    pGap = FC_U8Ptr2GapDcpt(pSegBuff + pMacDrvr->gapDcptOffset);
-    pMacPacket = pGap->segmentPktPtr;
+    pMacPacket = DRV_EMAC_Buff2PktPtr(pMacDrvr, pMacDrvr->pRxDesc[ ii ].bufferAddress.val, TCPIP_MAC_RETRIEVE_RX);
 
     if( pMacPacket != NULL)
     {
@@ -784,10 +778,7 @@ static MAC_DRVR_RESULT rxExtractPacket( MAC_DRIVER *  pMacDrvr, MAC_DRVR_RX_FRAM
                 pMacPacket->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_SPLIT;
                 ii = (uint16_t)moduloIncrement( (uint32_t)ii, (uint32_t)pMacDrvr->config.nRxDescCnt );
                 // extract pMacPacket using the segLoad buffer
-                pSegBuff = (uint8_t*)(EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val);
-                // get packet pointer from buffer gap descriptor
-                pGap = FC_U8Ptr2GapDcpt(pSegBuff + pMacDrvr->gapDcptOffset);
-                pTemp = pGap->segmentPktPtr;
+                pTemp = DRV_EMAC_Buff2PktPtr(pMacDrvr, pMacDrvr->pRxDesc[ ii ].bufferAddress.val, TCPIP_MAC_RETRIEVE_RX);
 
                 pDSeg->next = pTemp->pDSeg;
                 pDSeg = pDSeg->next;
@@ -849,9 +840,8 @@ static void rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
             }
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
-            // extract the packet pointer using the segment gap descriptor
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_U8Ptr2GapDcpt(pDSegNext->segBuffer + pMacDrvr->gapDcptOffset);
-            pMacPacket = pGap->segmentPktPtr;
+            // extract the packet pointer 
+            pMacPacket = DRV_EMAC_Buff2PktPtr(pMacDrvr, (uintptr_t)pDSegNext->segBuffer, TCPIP_MAC_RETRIEVE_RX);
         }
     }
     else

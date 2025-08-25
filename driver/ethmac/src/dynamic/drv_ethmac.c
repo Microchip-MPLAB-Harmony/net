@@ -277,18 +277,6 @@ static __inline__ SYS_MODULE_INIT* __attribute__((always_inline)) FC_PhyInit2Mod
     return U_MOD_PHY.pModinit;
 }
 
-static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT * __attribute__((always_inline)) FC_Ptr2SegGapDsc(uint8_t * pPkt)
-{
-    union
-    {
-        uint8_t * pPtr_8;; 
-        TCPIP_MAC_SEGMENT_GAP_DCPT * pSegGapDsc;              
-    }U_PTR8_SEGGAPDSC;
-
-    U_PTR8_SEGGAPDSC.pPtr_8 = pPkt;
-    return U_PTR8_SEGGAPDSC.pSegGapDsc;
-}
-
 static __inline__ TCPIP_MAC_PACKET_RX_STAT * __attribute__((always_inline)) FC_Eth2TcipRxStat(DRV_ETHMAC_PKT_STAT_RX const * pRxStat)
 {
     union
@@ -371,6 +359,30 @@ static void F_DRV_ETHMAC_CacheInvalidate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 
 }
 #endif  // defined(__PIC32MZ__)
+
+// helper to retrieve a packet pointer from a buffer pointer
+static TCPIP_MAC_PACKET * F_DRV_ETHMAC_Buff2PktPtr(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint8_t * pBuff, TCPIP_MAC_RETRIEVE_REQUEST retrReq)
+{
+    if(pMacD->mData.pktRetrF != NULL)
+    {
+        return pMacD->mData.pktRetrF(pBuff, retrReq);
+    }
+
+    // regular pointer recovery
+    union
+    {
+        uint8_t * u8Ptr; 
+        uintptr_t uiPtr;
+        TCPIP_MAC_SEGMENT_GAP_DCPT * pGap;              
+    }U_PTR8_SEG_GAP_DSC;
+
+    U_PTR8_SEG_GAP_DSC.u8Ptr = pBuff;
+    U_PTR8_SEG_GAP_DSC.uiPtr &= pMacD->mData.dataOffsetMask;    // adjust the pointer to remove the data offset
+    U_PTR8_SEG_GAP_DSC.u8Ptr += pMacD->mData.gapDcptOffset;     // add the gap descriptor
+
+    return U_PTR8_SEG_GAP_DSC.pGap->segmentPktPtr;
+}
+
 
 
 /*
@@ -479,6 +491,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     pMacD->mData.pktAllocF = macControl->pktAllocF;
     pMacD->mData.pktFreeF = macControl->pktFreeF;
     pMacD->mData.pktAckF = macControl->pktAckF;
+    pMacD->mData.pktRetrF = macControl->retrieveF;
 
     pMacD->mData.macSynchF = macControl->synchF;
 
@@ -954,9 +967,7 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
         pLastDcpt = pRootDcpt;
         while((pCurrDcpt != NULL) && (pCurrDcpt->pBuff != NULL))
         {
-            uint8_t* segBuff = (uint8_t*)(FC_VoidPtr2Uint(pCurrDcpt->pBuff) & pMacD->mData.dataOffsetMask);
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
-            pCurrPkt = pGap->segmentPktPtr;
+            pCurrPkt = F_DRV_ETHMAC_Buff2PktPtr(pMacD, pCurrDcpt->pBuff, TCPIP_MAC_RETRIEVE_RX); 
                 
             pCurrDSeg = pCurrPkt->pDSeg;
             pCurrDSeg->segLen = pCurrDcpt->nBytes;
@@ -982,9 +993,7 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
             pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_SPLIT;
         } 
 #else
-        uint8_t* segBuff = (uint8_t*)(FC_VoidPtr2Uint(pRootDcpt->pBuff) & pMacD->mData.dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
-        pRxPkt = pGap->segmentPktPtr;
+        pRxPkt = F_DRV_ETHMAC_Buff2PktPtr(pMacD, pRootDcpt->pBuff, TCPIP_MAC_RETRIEVE_RX); 
         pRxPkt->pDSeg->next = NULL;
         // adjust the last segment for FCS size
         pLastDcpt->nBytes -= 4;
@@ -992,15 +1001,10 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
 
         // no maintenance of the total packet length
         // could be obtained through pPktStat 
-        pRxPkt->pDSeg->segLen = pRootDcpt->nBytes - (uint16_t)(sizeof(TCPIP_MAC_ETHERNET_HEADER));
-        // Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
-        pRxPkt->pMacLayer = pRxPkt->pDSeg->segLoad;
-        pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        pRxPkt->pDSeg->segLen = pRootDcpt->nBytes;
 
         pRxPkt->tStamp = SYS_TMR_TickCountGet();
         pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
-
-
 
         pRxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_CAST_MASK;
         if((pRxPktStat->bMatch) != 0U)
@@ -1587,9 +1591,8 @@ static void F_MACTxPacketAckCallback(void* pBuff, void* fParam)
     DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)fParam;
 
     // restore packet the buffer belongs to
-    uint8_t* segBuff = (uint8_t*)(FC_VoidPtr2Uint(pBuff) & pMacD->mData.dataOffsetMask);
-    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
-    TCPIP_MAC_PACKET* ptrPacket = pGap->segmentPktPtr;
+    TCPIP_MAC_PACKET* ptrPacket;
+    ptrPacket = F_DRV_ETHMAC_Buff2PktPtr(pMacD, pBuff, TCPIP_MAC_RETRIEVE_TX); 
 
     // acknowledge the packet
     (*pMacD->mData.pktAckF)(ptrPacket, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_THIS_MODULE_ID);
@@ -1753,11 +1756,7 @@ static void F_MacTxFreeCallback(  void* ptr, void* param )
     uint8_t*    pTxBuff = (uint8_t*)DRV_ETHMAC_LibDescriptorGetBuffer(pMacD, ptr);
     if(pTxBuff != NULL)
     {
-        // check if the payload offset is actually used for TX
-        uint8_t* segBuff = (uint8_t*)((uint32_t)pTxBuff & pMacD->mData.dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
-        pTxPkt = pGap->segmentPktPtr;
-
+        pTxPkt = F_DRV_ETHMAC_Buff2PktPtr(pMacD, pTxBuff, TCPIP_MAC_RETRIEVE_TX); 
         (*pMacD->mData.pktAckF)(pTxPkt, TCPIP_MAC_PKT_ACK_NET_DOWN, TCPIP_THIS_MODULE_ID);
     }
 
@@ -1777,9 +1776,7 @@ static void F_MacRxFreeCallback(  void* ptr, void* param )
     uint8_t*    pRxBuff = (uint8_t*)DRV_ETHMAC_LibDescriptorGetBuffer(pMacD, ptr);
     if(pRxBuff != NULL)
     {
-        uint8_t* segBuff = (uint8_t*)((uint32_t)pRxBuff & pMacD->mData.dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(segBuff + pMacD->mData.gapDcptOffset);
-        pRxPkt = pGap->segmentPktPtr;
+        pRxPkt = F_DRV_ETHMAC_Buff2PktPtr(pMacD, pRxBuff, TCPIP_MAC_RETRIEVE_RX); 
         pRxPkt->pDSeg->next = NULL;     // break the ETH MAC run time chaining
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)
         (*pMacD->mData.pktFreeFDbg)(pRxPkt, TCPIP_THIS_MODULE_ID);
@@ -1867,8 +1864,7 @@ static void F_MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
         }
 
         // extract packet the segment belongs to
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr2SegGapDsc(pSeg->segBuffer + pMacD->mData.gapDcptOffset);
-        pCurrPkt = pGap->segmentPktPtr;
+        pCurrPkt = F_DRV_ETHMAC_Buff2PktPtr(pMacD, pSeg->segBuffer, TCPIP_MAC_RETRIEVE_RX); 
 
         if(isMacDead || (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY) == 0)
         {   // free the packet this segment belongs to

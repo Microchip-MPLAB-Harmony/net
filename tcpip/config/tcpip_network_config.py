@@ -252,6 +252,22 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetPwrMode.setDisplayMode("Key")
     tcpipNetPwrMode.setOutputMode("Key")
     tcpipNetPwrMode.setDefaultValue(0)
+
+    # VLAN ID
+    tcpipVlanSetId = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_NETWORK_VLAN_ID_IDX"+str(index), tcpipNetAdvSettings)
+    tcpipVlanSetId.setHelp("mcc_h3_netconfig_configurations")
+    tcpipVlanSetId.setLabel("VLAN ID")
+    tcpipVlanSetId.setVisible(True)
+    tcpipVlanSetId.setDefaultValue(0)
+    tcpipVlanSetId.setDependencies(tcpipNetConfigMenuVisible, ["tcpipStackComponent.TCPIP_STACK_VLAN_SUPPORT"])
+
+    # VLAN PCP
+    tcpipVlanSetPcp = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_NETWORK_VLAN_PCP_IDX"+str(index), tcpipNetAdvSettings)
+    tcpipVlanSetPcp.setHelp("mcc_h3_netconfig_configurations")
+    tcpipVlanSetPcp.setLabel("VLAN PCP")
+    tcpipVlanSetPcp.setVisible(True)
+    tcpipVlanSetPcp.setDefaultValue(0)
+    tcpipVlanSetPcp.setDependencies(tcpipNetConfigMenuVisible, ["tcpipStackComponent.TCPIP_STACK_VLAN_SUPPORT"])
     
     tcpipNetConfigSysConfigFile = tcpipNetConfigComponent.createFileSymbol("TCPIP_NETWORK_CONFIG", None)
     tcpipNetConfigSysConfigFile.setType("STRING")

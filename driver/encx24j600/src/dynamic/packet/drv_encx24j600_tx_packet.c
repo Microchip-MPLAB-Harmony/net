@@ -220,7 +220,7 @@ int32_t DRV_ENCX24J600_TxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvIns
                     }
 
                     pkt->pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
-                    (*pkt->pkt->ackFunc)(pkt->pkt, pkt->pkt->ackParam);
+                    pDrvInst->stackCfg.pktAckF(pkt->pkt, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_MODULE_MAC_ENCJ600);
                     DRV_ENCX24J600_SetEvent(pDrvInst, TCPIP_MAC_EV_TX_DONE);
                     pkt->pkt = NULL;
                     DRV_ENCX24J600_TxAck(pDrvInst, count);

@@ -56,6 +56,7 @@ Microchip or any third party.
 #define TCPIP_ETHER_TYPE_IPV6       (0x86DDu)
 #define TCPIP_ETHER_TYPE_ARP        (0x0806u)
 #define TCPIP_ETHER_TYPE_LLDP       (0x88CCu)
+#define TCPIP_ETHER_TYPE_C_TPID     (0x8100u)   // C-VLAN TPID
 #define TCPIP_ETHER_TYPE_UNKNOWN    (0xFFFFu)
 
 // minimum timeout (maximum rate) for link check, ms
@@ -68,6 +69,11 @@ Microchip or any third party.
 #else
 #define M_TCPIP_STACK_LINK_RATE  TCPIP_STACK_LINK_RATE       // user value
 #endif
+
+// check mask for valid vlan Id - 12 bits allowed 
+#define M_TCPIP_STACK_VLAN_ID_MASK  0xf000U
+// check mask for valid vlan PCP - 3 bits allowed 
+#define M_TCPIP_STACK_VLAN_PCP_MASK 0xf8U
 
 // module signal/timeout/asynchronous event handler
 // the stack manager calls it when there's an signal/tmo/asynchronous event pending
@@ -180,6 +186,19 @@ typedef struct
     uint16_t        startFlags;     // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
     uint16_t        pad;            // not used, padding
 #endif
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+    uint32_t        vlanTxCnt;
+    uint32_t        vAdjustTxCnt;
+    uint32_t        vOkTxCnt;
+    uint32_t        vRxTxCnt;
+    uint32_t        vlanRxHitCnt;
+    uint32_t        vlanRxMissCnt;
+    uint32_t        vUntaggedRxCnt;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+    uint16_t        vlanId;         // VID for this interface
+    uint8_t         vlanPcp;        // VLAN PCP for this interface
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 }TCPIP_STACK_NET_IF_DCPT;
 
 
@@ -222,6 +241,19 @@ typedef struct S_tag_TCPIP_NET_IF
         uint16_t        startFlags;     // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
         uint16_t        pad;            // not used, padding
 #endif
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        uint32_t        vlanTxCnt;
+        uint32_t        vAdjustTxCnt;
+        uint32_t        vOkTxCnt;
+        uint32_t        vRxTxCnt;
+        uint32_t        vlanRxHitCnt;
+        uint32_t        vlanRxMissCnt;
+        uint32_t        vUntaggedRxCnt;
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
+        uint16_t        vlanId;         // VID for this interface
+        uint8_t         vlanPcp;        // VLAN PCP for this interface
+#endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
     };
 
     // NOTE the alignmment!
@@ -273,6 +305,9 @@ typedef struct S_tag_TCPIP_NET_IF
     }exFlags;                               // additional extended flags      
     uint8_t             macType;            // a TCPIP_MAC_TYPE value: ETH, Wi-Fi, etc; 
 
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    uint16_t            priIfIx;            // primary interface index, [0, nIfs - nAliases]
+#endif // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
     uint8_t             bridgePort;         // bridge port this interface belongs to; < 256
     char                ifName[7];          // native interface name + \0
 } TCPIP_NET_IF;
@@ -804,6 +839,23 @@ static __inline__ uint8_t  __attribute__((always_inline)) TCPIPStack_RxPriNum(co
     return (pNetIf != NULL) ? pNetIf->rxPriNum : 0U;
 }
 
+#if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
+// helper to map an incoming packet to the interface it belongs to
+// based on the incoming vlanId
+TCPIP_NET_IF* F_TCPIPMapVlanInterface(const TCPIP_NET_IF* pInIf, uint16_t vlanId);
+
+static __inline__  uint16_t __attribute__((always_inline)) F_TCPIP_NetVlanId(const TCPIP_NET_IF* pNetIf)
+{
+    return (pNetIf != NULL) ? pNetIf->vlanId : 0U;
+}
+
+static __inline__  uint8_t __attribute__((always_inline)) F_TCPIP_NetVlanPcp(const TCPIP_NET_IF* pNetIf)
+{
+    return (pNetIf != NULL) ? pNetIf->vlanPcp : 0U;
+}
+
+
+#endif // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 
 // local time keeping
 uint32_t TCPIP_SecCountGet(void);

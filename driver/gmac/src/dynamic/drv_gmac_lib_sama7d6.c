@@ -742,7 +742,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     TCPIP_MAC_PACKET* pPkt = 0;
 
-    uint8_t* pbuff = 0;    
     uint16_t buffer_count = 0;
     uint16_t buffer_start_index = 0;
     uint16_t buffer_end_index = 0;
@@ -772,12 +771,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             buffer_end_index = pTxAckQueueNode->endIndex;
 
             //get pPkt from descriptor with start index
-            // get aligned buffer address from Tx Descriptor Buffer Address
-            pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
-            // get packet address from buffer address
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData.dcptOffset);
             // keep this packet address for acknowledgment as first buffer of frame has parent pkt address
-            pPkt = pGap->segmentPktPtr;
+            pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMACDrv, pTxDesc[buffer_start_index].tx_desc_buffaddr, TCPIP_MAC_RETRIEVE_TX);
 
             while(buffer_count--)
             {
@@ -860,15 +855,11 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     uint16_t tailIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail;
     uint16_t headIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead;
-    uint8_t* pbuff = 0;          
     
     while(tailIndex != headIndex)
     {
-        // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
         // get packet address from buffer address
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData.dcptOffset);
-        pPkt = pGap->segmentPktPtr;
+        pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMACDrv, pTxDesc[tailIndex].tx_desc_buffaddr, TCPIP_MAC_RETRIEVE_TX);
         
         pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
         // Tx Callback
@@ -891,7 +882,6 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
 {
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     TCPIP_MAC_PACKET* pPkt = 0;
-    uint8_t* pbuff = 0;    
     uint16_t buffer_count = 0;
     uint16_t buffer_start_index = 0;
     uint16_t buffer_end_index = 0;
@@ -915,12 +905,8 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
         buffer_end_index = pTxAckQueueNode->endIndex;
 
         //get pPkt from descriptor with start index
-        // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
-        // get packet address from buffer address
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData.dcptOffset);
         // keep this packet address for acknowledgment as first buffer of frame has parent pkt address
-        pPkt = pGap->segmentPktPtr;
+        pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMACDrv, pTxDesc[buffer_start_index].tx_desc_buffaddr, TCPIP_MAC_RETRIEVE_TX);
 
         while(buffer_count--)
         {
@@ -1710,8 +1696,7 @@ static void F_MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
             // extract the packet pointer using the segment load buffer
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData.dcptOffset);
-            pPkt = pGap->segmentPktPtr;
+            pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMacDrv, (uintptr_t)pDSegNext->segBuffer, TCPIP_MAC_RETRIEVE_RX);
         }   
     }
 }

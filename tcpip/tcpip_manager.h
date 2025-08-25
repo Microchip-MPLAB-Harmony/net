@@ -2263,6 +2263,36 @@ uint8_t         TCPIP_STACK_MacTxPriGet(TCPIP_NET_HANDLE netH);
  */
 uint8_t         TCPIP_STACK_MacRxPriGet(TCPIP_NET_HANDLE netH);
 
+//*********************************************************************
+/*
+   Function:        
+    bool      TCPIP_STACK_NetVlanCfgGet(TCPIP_NET_HANDLE netH, TCPIP_NETWORK_VLAN_CONFIG* pVlanCfg);
+  
+   Summary:
+    Get the VLAN configuration of a network interface.
+
+   Description:
+    This function returns the VLAN configuration of the specified network interface.
+  
+   Precondition:    
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+    The network interface should be up and running.
+  
+   Parameters:      
+    netH    - handle of the interface to use
+    pVlanCfg - address to store the VLAN configuration data
+  
+   Returns:         
+    true - if the call was successful
+    false - not existent interface or VLAN functionality is not enabled
+                    
+  
+   Remarks:            
+    None
+ */
+bool      TCPIP_STACK_NetVlanCfgGet(TCPIP_NET_HANDLE netH, TCPIP_NETWORK_VLAN_CONFIG* pVlanCfg);
+
 
 //*******************************************************************************
 /*

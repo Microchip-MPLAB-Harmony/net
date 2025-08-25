@@ -236,7 +236,7 @@ typedef struct
     uint16_t                        gapDcptSize;           // gap descriptor size
     // control flags from the stack
     uint16_t                        controlFlags;
-
+    TCPIP_MAC_PKT_RetrieveF         pktRetrF;
 
 
     // general stuff

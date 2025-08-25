@@ -132,7 +132,7 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvIns
             {
                 pkt->operation = ret;
                 pkt->state = DRV_ENCX24J600_RX_WAIT_FOR_READ;
-                pkt->pkt->pDSeg->segLen = (uint16_t)pkt->rsv.rxByteCount - 4U - (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
+                pkt->pkt->pDSeg->segLen = (uint16_t)pkt->rsv.rxByteCount - 4U; // remove FCS
             }
             break;
 
@@ -141,8 +141,6 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct S_DRV_ENCX24J600_DriverInfo * pDrvIns
             {
                 break;
             }
-            pkt->pkt->pMacLayer = pkt->pkt->pDSeg->segLoad;
-            pkt->pkt->pNetLayer = pkt->pkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
             pkt->state = DRV_ENCX24J600_RX_SET_ERXTAIL;
             break;
 

@@ -1329,5 +1329,10 @@ uint32_t DRV_PIC32CGMAC_LibGetRxIPHdrCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv)
 uint32_t DRV_PIC32CGMAC_LibGetRxTCPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
 uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
 // *****************************************************************************
+
+// helper to retrieve the RX packet pointer from a RX buffer pointer
+TCPIP_MAC_PACKET * DRV_PIC32CGMAC_Buff2PktPtr(DRV_GMAC_DRIVER * pMACDrv, uintptr_t buffAdd, TCPIP_MAC_RETRIEVE_REQUEST retrReq);
+
+
 #endif  // H_DRV_PIC32CGMAC_LIB_H
 

@@ -212,6 +212,8 @@ typedef struct
     
     TCPIP_MAC_PKT_AckF      pktAckF;
     
+    TCPIP_MAC_PKT_RetrieveF pktRetrF;
+    
     // synchronization
     TCPIP_MAC_SynchReqF     macSynchF;
 

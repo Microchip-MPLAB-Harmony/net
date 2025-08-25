@@ -1357,7 +1357,6 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     }
     (void)memcpy(&macHdr->SourceMACAddr, FC_CUptr2CMacAdd(TCPIPStack_NetMACAddressGet(pFwdIf)), sizeof(macHdr->SourceMACAddr));
     pFwdPkt->pDSeg->segLen += (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER);
-    pFwdPkt->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_TX; 
 
     // adjust the TTL and recalculate the IP checksum
     IPV4_HEADER_BARE* pHeader = FC_U8Ptr2HdrBare(pFwdPkt->pNetLayer);
@@ -3585,7 +3584,6 @@ TCPIP_IPV4_FILTER_TYPE TCPIP_IPV4_PacketFilterClear(TCPIP_IPV4_FILTER_TYPE filtT
 //          - the destination addresses is set as the MAC packet source address
 //          - the source address is the MAC address of the coresponding packet interface (which should be set!) 
 //          - data segment is re-adjusted with the MAC header length
-// TCPIP_MAC_PKT_FLAG_TX flag is set
 void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum, bool setMac)
 {
     IPV4_HEADER_BARE* pIpv4Hdr;
@@ -3623,8 +3621,6 @@ void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum
 
         pRxPkt->pDSeg->segLen += (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER);
     }
-
-    pRxPkt->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_TX; 
 }
 
 bool  TCPIP_IPV4_MacPacketTransmit(TCPIP_MAC_PACKET* pPkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR* pDestAddress)

@@ -488,6 +488,14 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackAliasInterface.setDescription("Enable Alias Interfaces Support")
     tcpipStackAliasInterface.setDefaultValue(False)
 
+    # Enable VLAN Support
+    tcpipStackVlanSupport= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_VLAN_SUPPORT", tcpipStackAdvSettings)
+    tcpipStackVlanSupport.setHelp("mcc_h3_manager_configurations")
+    tcpipStackVlanSupport.setLabel("Enable VLAN Support")
+    tcpipStackVlanSupport.setVisible(True)
+    tcpipStackVlanSupport.setDescription("Enable VLAN Interfaces Support")
+    tcpipStackVlanSupport.setDefaultValue(False)
+
     # Enable Packet Logger
     tcpipStackPktLogEnable= tcpipStackComponent.createBooleanSymbol("TCPIP_PACKET_LOG_ENABLE", tcpipStackAdvSettings)
     tcpipStackPktLogEnable.setHelp("mcc_h3_manager_configurations")

@@ -117,17 +117,6 @@ static __inline__ DRV_PIC32CGMAC_SGL_LIST_NODE * __attribute__((always_inline)) 
     U_DSCIDX_NODE.pTxDscIdx = txDsc;
     return U_DSCIDX_NODE.pNode;
 }
-static __inline__ TCPIP_MAC_SEGMENT_GAP_DCPT * __attribute__((always_inline)) FC_Ptr8toSegGapDsc(uint8_t * pPkt)
-{
-    union
-    {
-        uint8_t * pPtr_8;; 
-        TCPIP_MAC_SEGMENT_GAP_DCPT * pSegGapDsc;              
-    }U_PTR8_SEGGAPDSC;
-
-    U_PTR8_SEGGAPDSC.pPtr_8 = pPkt;
-    return U_PTR8_SEGGAPDSC.pSegGapDsc;
-}
 static __inline__ DRV_GMAC_MAC_ADDR* __attribute__((always_inline)) FC_MacAddr2GmacAddr(TCPIP_MAC_ADDR const * macaddr)
 {
     union
@@ -626,7 +615,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     TCPIP_MAC_PACKET* pPkt = NULL;
 
-    uint8_t* pbuff = NULL;    
     uint16_t buffer_count = 0;
     uint16_t buffer_start_index = 0;
     uint16_t buffer_end_index = 0;
@@ -655,13 +643,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             //get end index
             buffer_end_index = pTxAckQueueNode->endIndex;
 
-            //get pPkt from descriptor with start index
-            // get aligned buffer address from Tx Descriptor Buffer Address
-            pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
-            // get packet address from buffer address
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr8toSegGapDsc(pbuff + pMACDrv->sGmacData.dcptOffset);
+            // get pPkt from descriptor with start index
             // keep this packet address for acknowledgment as first buffer of frame has parent pkt address
-            pPkt = pGap->segmentPktPtr;
+            pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMACDrv, pTxDesc[buffer_start_index].tx_desc_buffaddr, TCPIP_MAC_RETRIEVE_TX);
 
             while((buffer_count--) != 0U)
             {
@@ -744,15 +728,11 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     uint16_t tailIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail;
     uint16_t headIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead;
-    uint8_t* pbuff = NULL;
 
     while(tailIndex != headIndex)
     {
-        // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
-        // get packet address from buffer address
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr8toSegGapDsc(pbuff + pMACDrv->sGmacData.dcptOffset);
-        pPkt = pGap->segmentPktPtr;
+        // get packet address from Tx Descriptor Buffer Address
+        pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMACDrv, pTxDesc[tailIndex].tx_desc_buffaddr, TCPIP_MAC_RETRIEVE_TX);
 
         pPkt->pktFlags &= ~(uint32_t)TCPIP_MAC_PKT_FLAG_QUEUED;
         // Tx Callback
@@ -775,7 +755,6 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
 {
     DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     TCPIP_MAC_PACKET* pPkt = NULL;
-    uint8_t* pbuff = NULL;    
     uint16_t buffer_count = 0;
     uint16_t buffer_start_index = 0;
     uint16_t buffer_end_index = 0;
@@ -798,13 +777,9 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
         //get end index
         buffer_end_index = pTxAckQueueNode->endIndex;
 
-        //get pPkt from descriptor with start index
-        // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[buffer_start_index].tx_desc_buffaddr & pMACDrv->sGmacData.dataOffsetMask);
-        // get packet address from buffer address
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr8toSegGapDsc(pbuff + pMACDrv->sGmacData.dcptOffset);
+        // get pPkt from Tx Descriptor Buffer Address
         // keep this packet address for acknowledgment as first buffer of frame has parent pkt address
-        pPkt = pGap->segmentPktPtr;
+        pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMACDrv, pTxDesc[buffer_start_index].tx_desc_buffaddr, TCPIP_MAC_RETRIEVE_TX);
 
         while((buffer_count--) != 0U)
         {
@@ -1275,8 +1250,7 @@ static void MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
             // extract the packet pointer using the segment load buffer
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = FC_Ptr8toSegGapDsc(pDSegNext->segBuffer + pMacDrv->sGmacData.dcptOffset);
-            pPkt = pGap->segmentPktPtr;
+            pPkt = DRV_PIC32CGMAC_Buff2PktPtr(pMacDrv, (uintptr_t)pDSegNext->segBuffer, TCPIP_MAC_RETRIEVE_RX);
         }
     }
 }

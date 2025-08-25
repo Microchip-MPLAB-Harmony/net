@@ -780,6 +780,9 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
 <#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${i?string}"]?has_content >
 <#assign network_ipv6_idx = "tcpipNetConfig_${i}.TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${i}"?eval>
 </#if>
+
+
+
 <#if network_config_idx??>
 <#if network_config_idx == true>
     /*** Network Configuration Index ${i} ***/
@@ -801,6 +804,11 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
         .ipv6PrefixLen = TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX${i},
         .ipv6Gateway = TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${i},
 </#if>
+</#if>
+
+<#if (TCPIP_STACK_VLAN_SUPPORT?has_content) && (TCPIP_STACK_VLAN_SUPPORT == true)>
+        .vlanId = TCPIP_NETWORK_VLAN_ID_IDX${i}, 
+        .vlanPcp = TCPIP_NETWORK_VLAN_PCP_IDX${i}, 
 </#if>
     },
 </#if>

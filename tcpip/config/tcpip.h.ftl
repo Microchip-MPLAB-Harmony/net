@@ -464,31 +464,40 @@ typedef enum
     TCPIP_NETWORK_CONFIG_MULTICAST_ON         = 0x0020 ,   
     /* Packet logging is enabled on this Interface */
     TCPIP_NETWORK_CONFIG_PKT_LOG_ON           = 0x0040 ,   
+    /* VLAN Drop Eligibility Indicator flag
+       If set and the VLAN traffic is enabled, the traffic on the vlan network is drop eligible.
+       Default should not be set */
+    TCPIP_NETWORK_CONFIG_VLAN_DEI             = 0x0080 ,   
+    /* VLAN use the NULL vlan ID flag
+       If set and VLAN traffic is enabled, the untagged traffic is transmitted with VID == 0.
+       Otherwise the untagged traffic does not carry the VID.
+       Default is not set */
+    TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL    = 0x0100 ,   
 
     /* the network configuration contains an IPv6 static address and subnet prefix length */
-    TCPIP_NETWORK_CONFIG_IPV6_ADDRESS         = 0x0100 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_ADDRESS         = 0x0200 ,   
 
     /* G3-PLC IPv6 general interface flags */
     /* the network will be part of a G3-PLC network */
-    TCPIP_NETWORK_CONFIG_IPV6_G3_NET          = 0x0200 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_G3_NET          = 0x0400 ,   
 
     /* The IPv6 will suppress the Duplicate Address Detection on this interface */
-    TCPIP_NETWORK_CONFIG_IPV6_NO_DAD          = 0x0400 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_NO_DAD          = 0x0800 ,   
     
     /* G3-PLC IPv6 router/coordinator interface flags */
     /* the network will act as an IPv6 border router/coordinator, replying to solicitations */
-    TCPIP_NETWORK_CONFIG_IPV6_ROUTER          = 0x0800 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_ROUTER          = 0x1000 ,   
 
     /* when configured as an IPv6 router, sending advertisements is enabled  */
-    TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED     = 0x1000 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED     = 0x2000 ,   
 
     /* Suppress the RS (Router Solicitation) messages on this interface */
-    TCPIP_NETWORK_CONFIG_IPV6_NO_RS           = 0x2000 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_NO_RS           = 0x4000 ,   
     
     /* G3-PLC IPv6 device interface flags */
     /* Send RS messages to a router unicast address rather than multicast.
       By default the 'all IPv6 routers' multicast address: 'ff02::02' is used */
-    TCPIP_NETWORK_CONFIG_IPV6_UNICAST_RS      = 0x4000 ,   
+    TCPIP_NETWORK_CONFIG_IPV6_UNICAST_RS      = 0x8000 ,   
 
     /* add other configuration flags here */
 }TCPIP_NETWORK_CONFIG_FLAGS;
@@ -520,33 +529,41 @@ struct TCPIP_MAC_OBJECT_TYPE;
     for a specific interface.
 
   Remarks:
-    IPv4 aliased interfaces can be created by specifying the same MAC object member
+    Aliased interfaces can be created by specifying the same MAC object member
     TCPIP_NETWORK_CONFIG.pMacObject. 
     An aliased interface is one that shares the same physical interface
     and MAC object with a primary interface.
 
-    Note that the .macAddr is irrelevant for an IPv4 aliased interface.
-    The first interface fully configured will be the primary interface, others will
-    be aliases.
+        Note that the .macAddr is irrelevant for an aliased interface.
+        The first interface fully configured will be the primary interface, others will
+        be aliases.
 
-    An IPv4 alias interface will allow, for example, 
-    having a different static/dynamic IPv4 address on the same physical interface.
+        An alias interface will allow, for example, 
+        having a different static/dynamic IPv4 address on the same physical interface.
 
-    Note that the stack won't allow initialization of multiple interfaces
-    with the same static IPv4 address.
+        Note that the stack won't allow initialization of multiple interfaces
+        with the same static IPv4 address.
 
-    It is also recommended that each interface has a different host name.
+        It is also recommended that each interface has a different host name.
 
-    For an IPv4 alias interface .powerMode ==  TCPIP_STACK_IF_POWER_DOWN can be used to prevent
-    the alias to be started when the stack is initialized and the primary interfaces go up.
- 
-    A primary interface currently supports only the
-    TCPIP_STACK_IF_POWER_FULL and TCPIP_STACK_IF_POWER_DOWN power modes.
+        For an IPv4 alias interface .powerMode ==  TCPIP_STACK_IF_POWER_DOWN can be used to prevent
+        the alias to be started when the stack is initialized and the primary interfaces go up.
+     
+        A primary interface currently supports only the
+        TCPIP_STACK_IF_POWER_FULL and TCPIP_STACK_IF_POWER_DOWN power modes.
 
-    Alias interfaces are not currently supported on IPv6.
+        Alias interfaces are not currently supported on IPv6.
 
-    Currently a broadcast message received (on a primary interface)
-    is not duplicated on all aliases but it will appear only on the primary interface. 
+        Currently a broadcast message received (on a primary interface)
+        is not duplicated on all aliases but it will appear only on the primary interface. 
+
+        The symbol TCPIP_STACK_ALIAS_INTERFACE_SUPPORT has to be defined and != 0
+        for alias interface support
+
+    An interface with vlanId != 0 is a VLAN interface.
+        A VLAN interface will process only VLAN tagged frames.
+        If untagged traffic is required on the same physical wire, a virtual interface should be used.
+        Usually the primary interface should be the untagged one and an alias the VLAN one.
 */
 typedef struct
 {
@@ -611,6 +628,20 @@ typedef struct
     /* IPv6 DNS to use; only if TCPIP_NETWORK_CONFIG_IPV6_ADDRESS specified
        can be NULL if not needed */
     const char*     ipv6Dns; 
+
+    /* VLAN ID (VID) to be used for this interface */
+    /* This is a 12 bit identifier for the C-VLAN network interface */
+    /* A value of 0 (the NULL VID) means that no VID is used. Default case */
+    /* Note: Some values are reserved and should NOT be used:
+            - 0x01: The default Port VID for ingress Bridge Port
+            - 0x02: The default SR (Stream Reservation) Port VID
+            - 0xFFF: Reserved for implementation use. */
+    uint16_t        vlanId;
+
+    /* VLAN Priotity Code point */
+    /* A 3 bit priority value, 0- 7.  Should be 0, default value */ 
+    uint8_t         vlanPcp;
+
 }TCPIP_NETWORK_CONFIG;
 
 // *****************************************************************************
@@ -711,6 +742,39 @@ typedef struct TCPIP_STACK_INIT
     /* initialization callback */
     TCPIP_STACK_INIT_CALLBACK           initCback;
 }TCPIP_STACK_INIT;
+
+// *****************************************************************************
+/* VLAN Configuration data
+
+  Summary:
+    Defines the VlAN specific data for a network interface.
+
+  Description:
+    This data type defines the VLAN configuration data for a specific interface.
+
+  Remarks:
+    None
+*/
+typedef struct
+{
+    /* VLAN ID (VID) of this interface */
+    /* This is a 12 bit identifier for the C-VLAN network interface */
+    /* A value of 0 (the NULL VID) means that no VID is used. */
+    uint16_t        id;
+
+    /* VLAN Priotity Code point */
+    /* A 3 bit priority value, 0- 7.  Normally 0 */ 
+    uint8_t         pcp;
+
+    /* VLAN Drop Eligibility Indicator flag. 
+       Boolean value; Normally 0/false */
+    uint8_t         dei;
+
+    /* VLAN use NULL VID flag. 
+       Boolean value 0/1 */
+    uint8_t         useNullVid;
+
+}TCPIP_NETWORK_VLAN_CONFIG;
 
 #ifdef __cplusplus
 }
