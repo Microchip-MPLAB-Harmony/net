@@ -52,6 +52,7 @@ ____
 | ---------------------------------------- | ------------------- | ----------- |--------------- |
 | TCP/IP Stack Plugin                      | TCP/IP Configurator | The TCP/IP Stack Configurator Plugin UI | ![app-beta](https://img.shields.io/badge/plugin-production-green?style=plastic) |
 | TCP/IP Library General                   |  TCPIP CORE         | The core functions for the working of MPLAB® Harmony TCP/IP Stack is part of this Module | ![app-beta](https://img.shields.io/badge/middleware-production-green?style=plastic) |
+|                                          |  VLAN Support       | Support for tagged and un-tagged frames in the stack.              | ![app-beta](https://img.shields.io/badge/middleware-beta-yellow?style=plastic) |
 |                                          |  NETCONFIG          | TCP/IP Stack Network Configuration                                                       | ![app-beta](https://img.shields.io/badge/middleware-production-green?style=plastic) |
 |                                          |  TCPIP CMD          | TCP/IP Stack Commands                                                                    | ![app-beta](https://img.shields.io/badge/middleware-production-green?style=plastic) |
 | TCP/IP Library Application Layer         |  ANNOUNCE           | TCP/IP Stack Library Announce Module for Microchip Devices                | ![app-beta](https://img.shields.io/badge/middleware-production-green?style=plastic) |
