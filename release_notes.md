@@ -3,7 +3,7 @@
 ### ADDITIONS AND UPDATES FOR v3.14.3:
 
 - **New Features**
-	- None
+    - Addition of VLAN support - beta
 
 - **Applications**
   - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
@@ -18,8 +18,8 @@
         | GMAC driver   | Fix for the PIC32CZ GMAC driver name |
         | GMAC driver   | PHY configuration fix for PIC32CK_SG/GC |
         | EMAC driver   | Fix for the EMAC driver descriptor pool clear |
-        | TCP/IP stack  | Provided initial/beta VLAN support |
         | WS Client     | Fix for minimum payload length for medium frames |
+        | TCP/IP stack  | Provided initial/beta VLAN support |
         
 
 ### TESTED WITH:
