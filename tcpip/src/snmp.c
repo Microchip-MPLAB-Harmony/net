@@ -904,7 +904,7 @@ static SNMP_STACK_ERROR TCPIP_SNMP_inputPacketProcessAndRespond(void)
     PDU_INFO pduInfoDB; //received pdu information database
     char community[TCPIP_SNMP_COMMUNITY_MAX_LEN+1];
     uint8_t communityLen=0;
-    bool lbReturn;
+    bool lbReturn = false;
     UDP_SOCKET     s;
 
     s = gSnmpDcpt.skt;
@@ -3112,7 +3112,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         successor=repeatCntr;
                         // Decode variable length structure
                         temp = TCPIP_SNMP_StructureIsValid(&tempLen.Val);
-                        if ( temp != 0U )
+                        if ( temp == 0U )
                         {
                             break;
                         }
@@ -3309,7 +3309,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
         /*If all the variables are processed and the repsonse pdu is updated with
           the number of variable responses ought to be in the response; you are done
           with the request pdu processing. Else continue to processing.*/
-        if((Getbulk_N==0u && noOfVarToBeInResponse==0u)||(bSnmpGenError))
+        if((Getbulk_N==0u && noOfVarToBeInResponse==0u && (smSnmp > (int)SM_NON_REPETITIONS))||(bSnmpGenError))
         {
             smSnmp=(int)SM_PKT_STRUCT_LEN_OFFSET;
             break;

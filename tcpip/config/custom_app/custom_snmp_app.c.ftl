@@ -774,8 +774,9 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
                     userIndex = 0;
                 }
             }
+			else
 #endif
-            else if(TCPIP_SNMP_TRAPTypeGet())
+            if(TCPIP_SNMP_TRAPTypeGet())
             {
                 TCPIP_SNMP_TrapSendFlagSet(true);
                 if(snmpTrapIpAddresstype == IPV4_SNMP_TRAP)
@@ -2345,12 +2346,8 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
 </#if>
 
     // Convert potentiometer result into ASCII string
-<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && ((tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME70") ||  (tcpipStack.TCPIP_DEVICE_FAMILY  == "SAMV71") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32CZCA7") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME54") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))) >
 	randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
     uitoa(randPotVal, AN0String);
-<#else>
-	uitoa((uint16_t) ADC1BUF0, AN0String);
-</#if>
 
 
     myRef = *ref;
