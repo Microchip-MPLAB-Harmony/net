@@ -35,19 +35,26 @@ Microchip or any third party.
  *                 Driver Overrides                                         *
  ****************************************************************************/
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh );
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex );
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
+// specific initialization
+static SYS_MODULE_OBJ LAN9303_Initialize ( const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init );
 
+// LAN 9303 has 2 external ports (1 and 2)
+// The internal port always returns the link up
+// The link status procedure is modified
+static DRV_ETHPHY_RESULT    LAN9303_LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh );
+
+static DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
+
+// own version of the tasks function
+static void LAN9303_Tasks( SYS_MODULE_OBJ object );
 
 const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303 = 
 {
-         .phy_Initialize =             &DRV_ETHPHY_Initialize,
+         .phy_Initialize =             &LAN9303_Initialize,
          .phy_Reinitialize =           &DRV_ETHPHY_Reinitialize,
          .phy_Deinitialize =           &DRV_ETHPHY_Deinitialize,
          .phy_Status =                 &DRV_ETHPHY_Status,
-         .phy_Tasks =                  &DRV_ETHPHY_Tasks,
+         .phy_Tasks =                  &LAN9303_Tasks,
          .phy_Open =                   &DRV_ETHPHY_Open,
          .phy_Close =                  &DRV_ETHPHY_Close,
          .phy_ClientStatus =           &DRV_ETHPHY_ClientStatus,
@@ -55,11 +62,11 @@ const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303 =
          .phy_ClientOperationAbort =   &DRV_ETHPHY_ClientOperationAbort,
          .phy_PhyAddressGet =          &DRV_ETHPHY_Lan9303PhyAddressGet,
          .phy_Setup =                  &DRV_ETHPHY_Setup,
-         .phy_RestartNegotiation =     &DRV_ETHPHY_Lan9303RestartNegotiation,
+         .phy_RestartNegotiation =     &DRV_ETHPHY_RestartNegotiation,
          .phy_HWConfigFlagsGet =       &DRV_ETHPHY_HWConfigFlagsGet,
-         .phy_NegotiationIsComplete =  &DRV_ETHPHY_Lan9303NegotiationIsComplete,
+         .phy_NegotiationIsComplete =  &DRV_ETHPHY_NegotiationIsComplete,
          .phy_NegotiationResultGet =   &DRV_ETHPHY_NegotiationResultGet,
-         .phy_LinkStatusGet =          &DRV_ETHPHY_Lan9303LinkStatusGet,
+         .phy_LinkStatusGet =          &LAN9303_LinkStatusGet,
          .phy_Reset =                  &DRV_ETHPHY_Reset,
          .phy_VendorDataGet =          &DRV_ETHPHY_VendorDataGet,
          .phy_VendorDataSet =          &DRV_ETHPHY_VendorDataSet,
@@ -68,17 +75,319 @@ const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303 =
          .phy_VendorSMIWriteStart =    &DRV_ETHPHY_VendorSMIWriteStart,
 };
 
-#define LAND9303_LINK_STATUS_INDEX 0
+// specific stuff
+//
+
+// number of =external ports, port 1 and 2
+#define M_LAN9303_EXT_PORTS          2U
+
+// offset of the external port address from the virtual PHY address
+#define M_LAN9303_PORT_ADD_OFFSET    1U
+//  PHY_1 address == Virt PhyAddress + 1
+//  PHY_2 address == Virt PhyAddress + 2
+//  Note: No support for now if the addresses have been changed at run time!
+
+// status of an MIIM operation initiated by LAN9303
+typedef enum
+{
+    LAN9303_TASK_OP_IDLE    = 0,
+    LAN9303_TASK_OP_LINK_START,
+    LAN9303_TASK_OP_LINK_WAIT_READ,
+
+}LAN9303_TASK_OP_TYPE;
+#define LAN9303_TASK_OP_LINK_END    LAN9303_TASK_OP_LINK_WAIT_READ
+
+static void F_LAN9303_MiimNewOpSet(DRV_ETHPHY_CLIENT_OBJ* hClientObj, LAN9303_TASK_OP_TYPE type);
+static void F_LAN9303_MiimOpAbort(DRV_ETHPHY_CLIENT_OBJ* hClientObj);
+static void F_LAN9303_MiimOpClear(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void F_LAN9303_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 
 
+static LAN9303_TASK_OP_TYPE         lan9303_task_op_type;                   // current running MIIM operation in the LAN9303 task routine 
 
-static DRV_MIIM_OPERATION_HANDLE lan9303OperationsHandles[3] = {0};
-static uint16_t lan9303OperationResults[3] = {0};
+// since the MIIM operations do not occur in parallel, these variables can be shared
+static DRV_MIIM_OPERATION_HANDLE    lan9303_miim_oph[M_LAN9303_EXT_PORTS];   // handle of the current MIIM operations, one for each port
+static DRV_MIIM_RESULT              lan9303_miim_res[M_LAN9303_EXT_PORTS];   // result of each MIIM operation
+static uint32_t                     lan9303_miim_data[M_LAN9303_EXT_PORTS];  // MIIM data read 
+
+static __inline__ void __attribute__((always_inline)) F_LAN9303_OpTypeSet(LAN9303_TASK_OP_TYPE opStat)
+{ 
+    lan9303_task_op_type = opStat;
+}
 
 
 /****************************************************************************
  *                 interface functions
  ****************************************************************************/
+
+//********************** PHY object functionality
+
+static SYS_MODULE_OBJ LAN9303_Initialize ( const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init )
+{
+    SYS_MODULE_OBJ phyObj = DRV_ETHPHY_Initialize(index, init);
+    //
+    F_LAN9303_OpTypeSet(LAN9303_TASK_OP_IDLE);
+    F_LAN9303_MiimOpClear(NULL);
+
+    return phyObj;
+}
+
+// regular PHY task routine
+// overridden here because some LAN9303 functionality is specific
+static void LAN9303_Tasks( SYS_MODULE_OBJ object )
+{
+    /* Check for the valid driver object passed */
+    union
+    {
+        SYS_MODULE_OBJ object;
+        void* pVoid;
+    }U_OBJ_VPTR;
+
+    U_OBJ_VPTR.object = object;
+
+    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(U_OBJ_VPTR.pVoid);
+    if(phyInst != NULL)
+    {
+        DRV_ETHPHY_CLIENT_OBJ* hClientObj = &phyInst->objClient;
+        if(hClientObj->clientInUse != 0U)
+        {   // active client
+            if(LAN9303_TASK_OP_LINK_START <= lan9303_task_op_type && lan9303_task_op_type <= LAN9303_TASK_OP_LINK_END)
+            {    // link status procedure
+                F_LAN9303_LinkTask(hClientObj);
+            }
+            else
+            {   // regular processing
+                DRV_ETHPHY_Tasks(object);
+            }
+        }
+    }
+}
+
+// task routine for checking the link status
+static void F_LAN9303_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+{
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+    static int linkReported = 0;
+    static int errorReported = 0;
+#endif  // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+        //
+    DRV_MIIM_OPERATION_HANDLE miimOpHandle;
+    DRV_MIIM_RESULT miimRes;
+    DRV_ETHPHY_LINK_STATUS  linkStat;
+    DRV_ETHPHY_LINK_STATUS* pLinkStat;
+    BMSTATbits_t  bmstat_b;
+    uint16_t    ix;
+    bool    opFailed, opPending;
+
+    switch(lan9303_task_op_type)
+    {
+        case LAN9303_TASK_OP_LINK_START:
+            // start a read of the PHY 1 + 2 status
+            opFailed = false;
+            for(ix = 0; ix < M_LAN9303_EXT_PORTS; ix++)
+            {
+                miimOpHandle = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + ix + (uint16_t)M_LAN9303_PORT_ADD_OFFSET, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
+                if(miimOpHandle == NULL)
+                {   // read operation failed
+                    F_LAN9303_MiimOpAbort(hClientObj);
+                    F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+                    if(errorReported == 0)
+                    {
+                        SYS_CONSOLE_MESSAGE("LAN9303 Link - MIIM Read BMSTAT FAILED - no handle!\r\n");
+                        errorReported++;
+                    }
+#endif  // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+                    opFailed = true;
+                    break;
+                }
+
+                // op success
+            lan9303_miim_oph[ix] = miimOpHandle;
+            }
+
+            if(opFailed == false)
+            {   // both op success
+                F_LAN9303_OpTypeSet(LAN9303_TASK_OP_LINK_WAIT_READ);
+            }
+            break;
+
+        case LAN9303_TASK_OP_LINK_WAIT_READ:
+            // wait for the operation to complete
+            opFailed = false;
+            opPending = false;
+            for(ix = 0; ix < M_LAN9303_EXT_PORTS; ix++)
+            {
+                if(lan9303_miim_res[ix] == DRV_MIIM_RES_PENDING)
+                {   // needs to be updated
+                    miimRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303_miim_oph[ix], lan9303_miim_data + ix);
+                    if((int)miimRes < 0)
+                    {
+                        F_LAN9303_MiimOpAbort(hClientObj);
+                        F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+                        if(errorReported == 0)
+                        {
+                            SYS_CONSOLE_PRINT("LAN9303 Link - MIIM Read BMSTAT FAILED: res %d\r\n", miimRes);
+                            errorReported++;
+                        }
+#endif  // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+                        opFailed = true;
+                        break;
+                    }
+                    else if(miimRes == DRV_MIIM_RES_PENDING)
+                    {   // at least one operation not completed; wait
+                        opPending = true;
+                        break;
+                    }
+                    else
+                    {
+                        // OK
+                    }
+                    // done
+                    lan9303_miim_res[ix] = miimRes;
+                }
+            }
+
+            if(opFailed || opPending)
+            {   // either error or not done
+                break;
+            }
+
+            // successfully read both PHYs BMSTAT
+            linkStat = DRV_ETHPHY_LINK_ST_DOWN;     // if no port up
+            for(ix = 0; ix < M_LAN9303_EXT_PORTS; ix++)
+            {
+                bmstat_b.w = (uint16_t)lan9303_miim_data[ix];
+                if(bmstat_b.LINK_STAT == 1U)
+                {   // link up
+                    linkStat = DRV_ETHPHY_LINK_ST_UP;
+                    break;
+                }
+            }
+
+            pLinkStat = (DRV_ETHPHY_LINK_STATUS*)hClientObj->operParam;
+            if(pLinkStat != NULL)
+            {
+                *pLinkStat = linkStat;
+            }
+            F_LAN9303_MiimNewOpSet(hClientObj, LAN9303_TASK_OP_IDLE);
+            F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+            if(linkReported == 0)
+            {
+                SYS_CONSOLE_MESSAGE("LAN9303 Link: Task completed\r\n"); 
+                linkReported++;
+                errorReported = 0;
+            }
+#endif  // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+            break;
+
+
+        default:
+            // should not happen
+            F_ETHPHY_AssertCond(false, __func__, __LINE__);
+            break;
+    }
+}
+
+static void F_LAN9303_MiimOpClear(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+{
+    size_t ix;
+
+    for(ix = 0; ix < M_LAN9303_EXT_PORTS; ix++)
+    {
+        lan9303_miim_oph[ix] = NULL;    // clear any previous op handle
+        lan9303_miim_res[ix] = DRV_MIIM_RES_PENDING;   // set initial MIIM operation result
+    }
+}
+
+static void F_LAN9303_MiimOpAbort(DRV_ETHPHY_CLIENT_OBJ* hClientObj)
+{
+    size_t ix;
+
+    for(ix = 0; ix < M_LAN9303_EXT_PORTS; ix++)
+    {
+        if(lan9303_miim_oph[ix] != NULL)
+        {
+            (void)DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303_miim_oph[ix]);  
+            lan9303_miim_oph[ix] = NULL;
+        }
+    }
+
+    F_LAN9303_OpTypeSet(LAN9303_TASK_OP_IDLE);
+}
+
+static void F_LAN9303_MiimNewOpSet(DRV_ETHPHY_CLIENT_OBJ* hClientObj, LAN9303_TASK_OP_TYPE type)
+{
+    F_LAN9303_MiimOpClear(hClientObj);
+    F_LAN9303_OpTypeSet(type);
+}
+
+// to get the result of this operation the MAC driver calls DRV_ETHPHY_ClientOperationResult()
+// the actual work is done in the task routine, F_LAN9303_LinkTask() in this case  
+static DRV_ETHPHY_RESULT LAN9303_LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh )
+{
+    (void)portIndex;
+    // basic sanity check
+    if(pLinkStat == NULL)
+    {
+        return DRV_ETHPHY_RES_OPERATION_ERR;
+    }
+
+    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
+
+    /* Check for the Client validity */
+    if(hClientObj != NULL)
+    {
+        DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(hClientObj->hDriver);
+        if(phyInst != NULL)
+        {
+            if(hClientObj->status != (int16_t)DRV_ETHPHY_CLIENT_STATUS_READY || lan9303_task_op_type != LAN9303_TASK_OP_IDLE)
+            {   // another op going on
+                return DRV_ETHPHY_RES_NOT_READY_ERR;
+            }
+
+            hClientObj->operParam = (uintptr_t)pLinkStat;
+            hClientObj->operReg[0] = refresh ? 1U : 0U;
+            F_ETHPHY_SetOperStart(hClientObj, PHY_CLIENT_OP_TYPE_LINK_STAT, DRV_ETHPHY_RES_PENDING);
+            F_LAN9303_MiimNewOpSet(hClientObj, LAN9303_TASK_OP_LINK_START);
+
+            return DRV_ETHPHY_RES_PENDING;
+        }
+    }
+
+    return DRV_ETHPHY_RES_HANDLE_ERR;
+}
+
+static DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
+{
+    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
+    if (portIndex > DRV_ETHPHY_INF_IDX_PORT_2)
+    {
+        return DRV_ETHPHY_RES_HANDLE_ERR;        
+    }
+    
+    /* Check for the Client validity */
+    if(hClientObj == NULL)
+    {
+        return DRV_ETHPHY_RES_HANDLE_ERR;
+    }
+    if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
+    {
+        *pPhyAddress = (int)hClientObj->smiPhyAddress;
+        return DRV_ETHPHY_RES_OK;
+    }
+    
+    
+    *pPhyAddress = (int)hClientObj->smiPhyAddress + (int)portIndex - 1;
+    return DRV_ETHPHY_RES_OK; 
+}
+
+// the vendor specific DRV_ETHPHY_OBJECT
+// these routines get called by the PHY driver during the setup procedure 
+// PHY driver calls from its task until they return OK or error
+
 
 static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle, uint16_t rIx, uint16_t val);
 
@@ -99,9 +408,6 @@ static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_O
  * Overview:        This function configures the PHY in one of MII/RMII operation modes.
  *
  *****************************************************************************/
-
-
-
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj,DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
 #if defined(LAN9303_CMD_PROCESSOR) && (LAN9303_CMD_PROCESSOR != 0)
@@ -197,230 +503,6 @@ static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_O
 
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh )
-{
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if (portIndex > DRV_ETHPHY_INF_IDX_PORT_2)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;        
-    }
-    
-    /* Check for the Client validity */
-    if(hClientObj == NULL)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-    
-    int x = 0;
-    for (x = 0; x < 3; x++)
-    {
-        if (lan9303OperationsHandles[x] != NULL)
-        {
-            uint32_t opResults;
-            DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303OperationsHandles[x], &opResults);
-            if (mmiRes == DRV_MIIM_RES_OK)
-            {
-                lan9303OperationResults[x] = (uint16_t)opResults;
-                lan9303OperationsHandles[x] = NULL;
-            }
-            else if (mmiRes != DRV_MIIM_RES_PENDING)
-            {
-                (void)DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
-                lan9303OperationsHandles[x] = NULL;              
-            }
-            else
-            {
-                // OK
-            }
-        }
-    }
-    
-    if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
-    {
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] == NULL)
-        {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_1 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
-        }
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] == NULL)
-        {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_2 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
-        }
-        BMSTATbits_t b1, b2;
-        b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
-        b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
-        if (b1.LINK_STAT != 0U || b2.LINK_STAT != 0U)
-        {
-            *pLinkStat = DRV_ETHPHY_LINK_ST_UP;
-        }
-        else
-        {
-            *pLinkStat = DRV_ETHPHY_LINK_ST_DOWN;
-        }
-        if (b1.REM_FAULT != 0U || b2.REM_FAULT != 0U)
-        {
-            uint32_t linkStat = (uint32_t)*pLinkStat;
-            linkStat |= (uint32_t)DRV_ETHPHY_LINK_ST_REMOTE_FAULT; 
-            *pLinkStat = (DRV_ETHPHY_LINK_STATUS)linkStat;
-        }
-        return DRV_ETHPHY_RES_PENDING;        
-    }
-    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] == NULL)
-    {
-        lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)portIndex - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
-    }
-    BMSTATbits_t b1;
-    b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1];
-    if (b1.LINK_STAT != 0U)
-    {
-        *pLinkStat = DRV_ETHPHY_LINK_ST_UP;
-    }
-    else
-    {
-        *pLinkStat = DRV_ETHPHY_LINK_ST_DOWN;
-    }
-    if (b1.REM_FAULT != 0U)
-    {
-        uint32_t linkStat = (uint32_t)*pLinkStat;
-        linkStat |= (uint32_t)DRV_ETHPHY_LINK_ST_REMOTE_FAULT; 
-        *pLinkStat = (DRV_ETHPHY_LINK_STATUS)linkStat;
-    }    
-    return DRV_ETHPHY_RES_PENDING;            
-}
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
-{
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-    if (portIndex > DRV_ETHPHY_INF_IDX_PORT_2)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;        
-    }
-    
-    /* Check for the Client validity */
-    if(hClientObj == NULL)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-    if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
-    {
-        *pPhyAddress = (int)hClientObj->smiPhyAddress;
-        return DRV_ETHPHY_RES_OK;
-    }
-    
-    
-    *pPhyAddress = (int)hClientObj->smiPhyAddress + (int)portIndex - 1;
-    return DRV_ETHPHY_RES_OK; 
-}
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex )
-{
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-    BMSTATbits_t b1, b2;
-    b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
-    b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
-    
-
-    if (portIndex == DRV_ETHPHY_INF_IDX_PORT_1 || portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
-    {
-        if (b1.AN_ABLE == 0U)
-        {
-            return DRV_ETHPHY_RES_OPERATION_ERR;
-        }
-        (void)DRV_MIIM_Write(hClientObj->miimHandle, (uint16_t)PHY_REG_BMCON, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_1 - 1U, BMCON_AN_ENABLE_MASK | BMCON_AN_RESTART_MASK, DRV_MIIM_OPERATION_FLAG_DISCARD, NULL);       
-    }
-    if (portIndex == DRV_ETHPHY_INF_IDX_PORT_2 || portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
-    {
-        if (b2.AN_ABLE == 0U)
-        {
-            return DRV_ETHPHY_RES_OPERATION_ERR;
-        }
-        (void)DRV_MIIM_Write(hClientObj->miimHandle, (uint16_t)PHY_REG_BMCON, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_2 - 1U, BMCON_AN_ENABLE_MASK | BMCON_AN_RESTART_MASK, DRV_MIIM_OPERATION_FLAG_DISCARD, NULL);       
-    }
-    
-    return DRV_ETHPHY_RES_PENDING;
-}
-DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete )
-{
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if (portIndex > DRV_ETHPHY_INF_IDX_PORT_2)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;        
-    }
-    
-    /* Check for the Client validity */
-    if(hClientObj == NULL)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-    
-    int x = 0;
-    for (x = 0; x < 3; x++)
-    {
-        if (lan9303OperationsHandles[x] != NULL)
-        {
-            uint32_t opResults;
-            DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303OperationsHandles[x], &opResults);
-            if (mmiRes == DRV_MIIM_RES_OK)
-            {
-                lan9303OperationResults[x] = (uint16_t)opResults;
-                lan9303OperationsHandles[x] = NULL;
-            }
-            else if (mmiRes != DRV_MIIM_RES_PENDING)
-            {
-                (void)DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
-                lan9303OperationsHandles[x] = NULL;                
-            }
-            else
-            {
-                // OK
-            }
-        }
-    }
-    if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
-    {
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] == NULL)
-        {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_1 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
-        }
-        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] == NULL)
-        {
-            lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)DRV_ETHPHY_INF_IDX_PORT_2 - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
-        }
-        BMSTATbits_t b1, b2;
-        b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
-        b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
-        if (b1.LINK_STAT != 0U)
-        {
-            if (b1.AN_COMPLETE == 0U)
-            {
-                return DRV_ETHPHY_RES_PENDING;
-            }
-        }
-        if (b2.LINK_STAT != 0U)
-        {
-            if (b2.AN_COMPLETE == 0U)
-            {
-                return DRV_ETHPHY_RES_PENDING;
-            }            
-        }
-        return DRV_ETHPHY_RES_OK;
-    }
-    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] == NULL)
-    {
-        lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + (uint16_t)portIndex - 1U, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
-    }
-    BMSTATbits_t b1;
-    b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + (int)portIndex - 1];
-    if (b1.LINK_STAT != 0U)
-    {
-        if (b1.AN_COMPLETE == 0U)
-        {
-            return DRV_ETHPHY_RES_PENDING;
-        }
-        return DRV_ETHPHY_RES_OK;
-    }
-    return DRV_ETHPHY_RES_PENDING;              
-}
 

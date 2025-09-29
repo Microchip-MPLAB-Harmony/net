@@ -209,7 +209,7 @@ static const F_DRV_ETHMAC_LinkStateF DRV_ETHMAC_LinkStateTbl[] =
 {
     &F_DRV_ETHMAC_LinkStateStartLink,     // DRV_ETHMAC_LINK_CHECK_START_LINK
     &F_DRV_ETHMAC_LinkStateGetLink,       // DRV_ETHMAC_LINK_CHECK_GET_LINK
-    &F_DRV_ETHMAC_LinkStateWaitLinkUp,       // DRV_ETHMAC_LINK_CHECK_WAIT_LINK_UP
+    &F_DRV_ETHMAC_LinkStateWaitLinkUp,    // DRV_ETHMAC_LINK_CHECK_WAIT_LINK_UP
     &F_DRV_ETHMAC_LinkStateNegComplete,   // DRV_ETHMAC_LINK_CHECK_NEG_COMPLETE
     &F_DRV_ETHMAC_LinkStateNegResult,     // DRV_ETHMAC_LINK_CHECK_NEG_RESULT
 };
@@ -1042,7 +1042,6 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
 
 
 // verify the link status
-
 bool DRV_ETHMAC_PIC32MACLinkCheck(DRV_HANDLE hMac)
 {
     DRV_ETHMAC_INSTANCE_DCPT* pMacD = PIC32HandleToMacInst(hMac);
@@ -1069,6 +1068,7 @@ static void F_DRV_ETHMAC_LinkStateDown(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
     pMacD->mData.linkCheckState = DRV_ETHMAC_LINK_CHECK_START_LINK;
 }
 
+// DRV_ETHMAC_LINK_CHECK_START_LINK
 static void F_DRV_ETHMAC_LinkStateStartLink(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     DRV_ETHPHY_RESULT phyRes;
@@ -1085,6 +1085,7 @@ static void F_DRV_ETHMAC_LinkStateStartLink(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 
 }
 
+// DRV_ETHMAC_LINK_CHECK_GET_LINK
 static void F_DRV_ETHMAC_LinkStateGetLink(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     DRV_ETHPHY_CLIENT_STATUS phyStat;
@@ -1127,6 +1128,7 @@ static void F_DRV_ETHMAC_LinkStateGetLink(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 }
 
 // ok, the link is coming up
+// DRV_ETHMAC_LINK_CHECK_WAIT_LINK_UP
 static void F_DRV_ETHMAC_LinkStateWaitLinkUp(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     DRV_ETHPHY_RESULT   phyRes;
@@ -1164,6 +1166,7 @@ static void F_DRV_ETHMAC_LinkStateWaitLinkUp(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
     }
 }
 
+//DRV_ETHMAC_LINK_CHECK_NEG_COMPLETE
 static void F_DRV_ETHMAC_LinkStateNegComplete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     DRV_ETHPHY_CLIENT_STATUS phyStat;
@@ -1197,6 +1200,7 @@ static void F_DRV_ETHMAC_LinkStateNegComplete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 }
 
 
+// DRV_ETHMAC_LINK_CHECK_NEG_RESULT
 static void F_DRV_ETHMAC_LinkStateNegResult(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     DRV_ETHPHY_CLIENT_STATUS phyStat;

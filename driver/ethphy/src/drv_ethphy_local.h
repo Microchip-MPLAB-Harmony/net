@@ -68,6 +68,7 @@ Microchip or any third party.
 #define DRV_PHY_DEBUG_MASK_SETUP            (0x0010)    // display setup process
 #define DRV_PHY_DEBUG_MASK_MDIX             (0x0020)    // display MDIX process
 #define DRV_PHY_DEBUG_MASK_LINK             (0x0040)    // display link process
+#define DRV_PHY_DEBUG_MASK_NEG              (0x0080)    // display negotiation process
 
 
 // enable IPV4 debugging levels

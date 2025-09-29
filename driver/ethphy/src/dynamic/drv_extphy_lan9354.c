@@ -267,6 +267,12 @@ static DRV_ETHPHY_RESULT LAN9354_Setup( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pS
 static DRV_ETHPHY_RESULT LAN9354_LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh )
 {
     (void)portIndex;
+    // basic sanity check
+    if(pLinkStat == NULL)
+    {
+        return DRV_ETHPHY_RES_OPERATION_ERR;
+    }
+
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
 
     /* Check for the Client validity */
@@ -278,12 +284,6 @@ static DRV_ETHPHY_RESULT LAN9354_LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_IN
             if(hClientObj->status != (int16_t)DRV_ETHPHY_CLIENT_STATUS_READY || lan9354_task_op_type != LAN9354_TASK_OP_IDLE)
             {   // another op going on
                 return DRV_ETHPHY_RES_NOT_READY_ERR;
-            }
-
-            // basic sanity check
-            if(pLinkStat == NULL)
-            {
-                return DRV_ETHPHY_RES_OPERATION_ERR;
             }
 
             hClientObj->operParam = (uintptr_t)pLinkStat;
@@ -468,11 +468,13 @@ static void F_LAN9354_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     DRV_ETHPHY_LINK_STATUS* pLinkStat;
     BMSTATbits_t  bmstat_b;
     uint16_t    ix;
+    bool    opFailed, opPending;
 
     switch(lan9354_task_op_type)
     {
         case LAN9354_TASK_OP_LINK_START:
             // start a read of the PHY A + B status
+            opFailed = false;
             for(ix = 0; ix < M_LAN9354_EXT_PORTS; ix++)
             {
                 miimOpHandle = DRV_MIIM_Read(hClientObj->miimHandle, (uint16_t)PHY_REG_BMSTAT, hClientObj->smiPhyAddress + ix + (uint16_t)M_LAN9354_PORT_ADD_OFFSET, DRV_MIIM_OPERATION_FLAG_NONE, NULL);
@@ -487,6 +489,7 @@ static void F_LAN9354_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj)
                         errorReported++;
                     }
 #endif  // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+                    opFailed = true;
                     break;
                 }
 
@@ -494,12 +497,16 @@ static void F_LAN9354_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             lan9354_miim_oph[ix] = miimOpHandle;
             }
 
-            // both op success
-            F_LAN9354_OpTypeSet(LAN9354_TASK_OP_LINK_WAIT_READ);
+            if(opFailed == false)
+            {   // both op success
+                F_LAN9354_OpTypeSet(LAN9354_TASK_OP_LINK_WAIT_READ);
+            }
             break;
 
         case LAN9354_TASK_OP_LINK_WAIT_READ:
             // wait for the operation to complete
+            opFailed = false;
+            opPending = false;
             for(ix = 0; ix < M_LAN9354_EXT_PORTS; ix++)
             {
                 if(lan9354_miim_res[ix] == DRV_MIIM_RES_PENDING)
@@ -516,10 +523,12 @@ static void F_LAN9354_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj)
                             errorReported++;
                         }
 #endif  // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_LINK) != 0)
+                        opFailed = true;
                         break;
                     }
                     else if(miimRes == DRV_MIIM_RES_PENDING)
                     {   // at least one operation not completed; wait
+                        opPending = true;
                         break;
                     }
                     else
@@ -529,6 +538,11 @@ static void F_LAN9354_LinkTask( DRV_ETHPHY_CLIENT_OBJ * hClientObj)
                     // done
                     lan9354_miim_res[ix] = miimRes;
                 }
+            }
+
+            if(opFailed || opPending)
+            {   // either error or not done
+                break;
             }
 
             // successfully read both PHYs BMSTAT
