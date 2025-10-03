@@ -1,4 +1,45 @@
 # Microchip MPLAB® Harmony 3 Release Notes
+## Net Release v3.14.4 (October, 2025)
+### ADDITIONS AND UPDATES FOR v3.14.4:
+
+- **Applications**
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
+
+
+- **Improvements and Bug Fixes**
+	-	The following table provides the list of improvements and bug fixes in the v3.14.4 release:
+
+		| Module        | Description |
+		| ------------- | ----------- |
+        | SNMP          | Fixed the SNMP generation errors and state machine flow |
+        | PHY driver    | Updated LAN9303, LAN9354 and KSZ8853 driver code for proper detection of the link |
+        | readme.md     | Added missing entries for SAM9X7, SAMA7G5, PIC32CX SG41 and PIC32CK SG_GC net apps repos |
+        
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.25](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.60](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.14.4
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.5.2 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.15.5
+- Harmony csp repository, v3.23.0
+- Harmony bsp repository, v3.23.0
+- Harmony crypto repository, v3.8.2
+- harmony-services repository, v1.5.0
+- wolfMQTT v1.19.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.19.2) for demos requiring wolfMQTT support
+- wolfSSL v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring encryption wolfSSL support
+
+
+# Microchip MPLAB® Harmony 3 Release Notes
 ## Net Release v3.14.3 (August, 2025)
 ### ADDITIONS AND UPDATES FOR v3.14.3:
 
