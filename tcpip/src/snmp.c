@@ -2355,6 +2355,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
 
     bool doRet = false;
+    bool doCheck = true;
 
     while(true)
     {
@@ -2393,6 +2394,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }
 
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_RESPONSE_PDU_LEN_OFFSET:
@@ -2416,6 +2418,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)(pduDbPtr->requestID&0xFFU),snmpPutData);
 
                 smSnmp++;
+                doCheck = false;
                 break;
             
             case (int)SM_ERROR_STATUS_OFFSET :
@@ -2427,6 +2430,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 errorStatusOffset = snmpPutData->length;
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(0,snmpPutData);                    // Placeholder.
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_ERROR_INDEX_OFFSET :
@@ -2441,6 +2445,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 errorStatus = SNMP_NO_ERR;
 
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_FIND_NO_OF_REQUESTED_VARBINDS:
@@ -2456,6 +2461,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 noOfOIDsInReq=TCPIP_SNMP_OIDsCountGet(varBindingLen.Val);
 
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_FIND_NO_OF_RESPONSE_VARBINDS:
@@ -2482,6 +2488,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 noOfVarToBeInResponse = Getbulk_N + (Getbulk_M * Getbulk_R);//Refer RFC 3416
 
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_VARBIND_STRUCT_OFFSET:
@@ -2498,6 +2505,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 varBindLen.Val = 0;
 
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_VARSTRUCT_LEN_OFFSET:
@@ -2569,6 +2577,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                     snmpPutData->length=snmpPutData->length+4U;
                 }
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_POPULATE_REQ_OID:
@@ -2660,6 +2669,12 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                     SnmpStackDcptMemStubPtr->gGenericTrapNotification=(uint8_t)AUTH_FAILURE;
                     SnmpStackDcptMemStubPtr->gSendTrapFlag=true;
                 }
+                
+                if(smSnmp!=SM_PKT_STRUCT_LEN_OFFSET && smSnmp!=SM_VARSTRUCT_LEN_OFFSET)
+                {
+                    doCheck = false;    
+                }
+                
                 break;
             
             case (int)SM_FIND_OID_IN_MIB:
@@ -2788,6 +2803,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                     break;
                 }
                 smSnmp++;
+                doCheck = false;
                 break;
 
             case (int)SM_NON_REPETITIONS:
@@ -3055,6 +3071,8 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
             case (int)SM_MAX_REPETITIONS:
 
+                doCheck = true;
+                
                 /*Process each variable in request as Get_Next for
                   Getbulk_M (Max_repetition) times */
                 for(repeatCntr=0;repeatCntr<Getbulk_M;repeatCntr++)
@@ -3309,7 +3327,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
         /*If all the variables are processed and the repsonse pdu is updated with
           the number of variable responses ought to be in the response; you are done
           with the request pdu processing. Else continue to processing.*/
-        if((Getbulk_N==0u && noOfVarToBeInResponse==0u && (smSnmp > (int)SM_NON_REPETITIONS))||(bSnmpGenError))
+        if((Getbulk_N==0u && noOfVarToBeInResponse==0u && (doCheck == true))||(bSnmpGenError))
         {
             smSnmp=(int)SM_PKT_STRUCT_LEN_OFFSET;
             break;
