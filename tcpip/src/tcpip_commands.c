@@ -3557,7 +3557,7 @@ static void F_Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
             pRegEntry = regEntries;
             for(jx = 0; jx < hwEntries && jx < sizeof(regEntries)/sizeof(*regEntries); jx++)
             {
-                (void)strncpy(entryName, pRegEntry->registerName, sizeof(entryName) - 1U);
+                (void)memcpy(entryName, pRegEntry->registerName, sizeof(entryName) - 1U);
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t %s: 0x%x\r\n", entryName, pRegEntry->registerValue);
                 pRegEntry++;
             }

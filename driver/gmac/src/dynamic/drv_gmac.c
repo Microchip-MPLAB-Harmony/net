@@ -1393,7 +1393,8 @@ TCPIP_MAC_RES DRV_GMAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTI
         pHwRegDcpt = macPIC32CHwRegDcpt;
         for(ix = 0; ix < regLim; ix++)
         {
-            (void)strncpy(pRegEntries->registerName, pHwRegDcpt->regName, sizeof(pRegEntries->registerName));
+            (void)memcpy(pRegEntries->registerName, pHwRegDcpt->regName, sizeof(pRegEntries->registerName) - 1U);
+            pRegEntries->registerName[sizeof(pRegEntries->registerName) - 1U] = '\0';
             pRegEntries->registerValue = (*pHwRegDcpt->regFunc)(pMACDrv);
             pRegEntries++;
             pHwRegDcpt++;
