@@ -411,15 +411,21 @@ int DRV_ETHMAC_LibDescriptorsPoolRemove (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  int n
 {
     DRV_ETHMAC_DCPT_LIST*   pList;
     DRV_ETHMAC_DCPT_NODE*  pN;
+    void (*lockF)(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
+    void (*unlockF)(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
     int     removed=0;
 
     if(dType == DRV_ETHMAC_DCPT_TYPE_TX)
     {
         pList=pMacD->mData.EnetTxFreePtr;
+        lockF = &F_DRV_ETHMAC_TxLock;
+        unlockF = &F_DRV_ETHMAC_TxUnlock;
     }
     else if(dType == DRV_ETHMAC_DCPT_TYPE_RX)
     {
         pList=pMacD->mData.EnetRxFreePtr;
+        lockF = &F_DRV_ETHMAC_RxLock;
+        unlockF = &F_DRV_ETHMAC_RxUnlock;
     }
     else
     {
@@ -428,7 +434,9 @@ int DRV_ETHMAC_LibDescriptorsPoolRemove (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  int n
 
     while(nDescriptors-- != 0)
     {
+        lockF(pMacD);
         pN=DRV_ETHMAC_LIB_ListRemoveHead(pList);
+        unlockF(pMacD);
         if(pN == NULL)
         {
             break;
@@ -667,7 +675,9 @@ static DRV_ETHMAC_RESULT F_EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, con
         return DRV_ETHMAC_RES_USPACE_ERR;
     }
 
+    F_DRV_ETHMAC_TxLock(pMacD);
     pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pMacD->mData.EnetTxFreePtr);
+    F_DRV_ETHMAC_TxUnlock(pMacD);
 
     if(pEDcpt != NULL)
     {   // ok valid descriptor
@@ -742,6 +752,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
     pNewList = DRV_ETHMAC_LIB_ListInit(F_EthAlignAdjust(newList));
 
     res=F_EthTxSchedBuffer(pMacD, pBuff, nBytes, pNewList);
+    F_DRV_ETHMAC_TxLock(pMacD);
     if(res==DRV_ETHMAC_RES_OK)
     {
         F_EthTxSchedList(pMacD, pNewList);
@@ -754,6 +765,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
     {
         /* Do Nothing */
     }
+    F_DRV_ETHMAC_TxUnlock(pMacD);
 
     return res;
 
@@ -780,6 +792,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
     }
 
 
+    F_DRV_ETHMAC_TxLock(pMacD);
     if(res==DRV_ETHMAC_RES_OK)
     {   // all's well
         F_EthTxSchedList(pMacD, pNewList);
@@ -793,6 +806,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
         /* Do Nothing */
     }
 
+    F_DRV_ETHMAC_TxUnlock(pMacD);
     return res;
 
 }
