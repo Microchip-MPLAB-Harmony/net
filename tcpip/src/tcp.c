@@ -4574,7 +4574,33 @@ static TCB_STUB* F_TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * 
                 // For listening ports, check if this is the correct port
                 if(pSkt->remoteHash == h->DestPort && partialSkt == NULL)
                 {
-                    partialSkt = pSkt;
+                    if(pSkt->flags.forceRemPort == 0U || pSkt->remotePort == h->SourcePort)
+                    {
+                        if(pSkt->flags.forceRemAdd == 0U)
+                        {
+                            partialSkt = pSkt;
+                        }
+#if defined (TCPIP_STACK_USE_IPV4)
+                        else if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4 && (pSkt->destAddress.Val == ((const IPV4_ADDR *)remoteIP)->Val))
+                        {
+                            partialSkt = pSkt;
+                        }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+#if defined (TCPIP_STACK_USE_IPV6)
+                        else if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
+                        {
+                            const IPV6_ADDR* pDstAddr = TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt);
+                            if (memcmp (pDstAddr->v, FC_Cvptr2Uptr(remoteIP), sizeof (IPV6_ADDR)) == 0)
+                            {
+                                partialSkt = pSkt;
+                            }
+                        }
+#endif  // defined (TCPIP_STACK_USE_IPV6)
+                        else
+                        {
+                            // no partial match
+                        }
+                    }
                 }
                 continue;
             }
@@ -4660,6 +4686,9 @@ static TCB_STUB* F_TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * 
             case IP_ADDRESS_TYPE_IPV4:
                 // IPv4 lazy allocation
                 pSkt->destAddress.Val = ((const IPV4_ADDR *)remoteIP)->Val;
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SET_DEST_ADD) != 0)
+                SYS_CONSOLE_PRINT("TCP Part Match set dest add to: 0x%08x, ix: %d\r\n", pSkt->destAddress.Val, pSkt->sktIx);
+#endif  //  ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SET_DEST_ADD) != 0)
                 break;
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
@@ -4770,9 +4799,15 @@ static void F_TcpSocketSetIdleState(TCB_STUB* pSkt)
     pSkt->maxRemoteWindow = 1;
 
 
-    // Note : no result of the explicit binding is maintained!
-    pSkt->remotePort = 0;
-    pSkt->destAddress.Val = 0;
+    // maintain explicit binding settings (server sockets only)
+    if(pSkt->flags.forceRemAdd == 0U)
+    {
+        pSkt->destAddress.Val = 0;
+    }
+    if(pSkt->flags.forceRemPort == 0U)
+    {
+        pSkt->remotePort = 0;
+    }
     pSkt->keepAliveCount = 0;
     // restore initial settings
     pSkt->addType = (uint8_t)((IP_ADDRESS_TYPE)pSkt->flags.openAddType);
@@ -6606,11 +6641,12 @@ bool TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT rem
     if(pSkt != NULL && !F_TCP_IsConnected(pSkt))
     {
 
-        if(remoteAddress == NULL || TCPIP_TCP_DestinationIPAddressSet(hTCP, addType, remoteAddress) == true)
+        if(remoteAddress == NULL || TCPIP_TCP_DestinationIPAddressSet(hTCP, addType, remoteAddress, true) == true)
         {
             if(remotePort != 0U)
             {
                 pSkt->remotePort = remotePort;
+                pSkt->flags.forceRemPort = 1;   // Note: relevant for server sockets only
             }
             return true;
         }
@@ -6801,7 +6837,7 @@ bool TCPIP_TCP_OptionsGet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optPa
 #endif  // (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
 
 
-bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* remoteAddress)
+bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP_MULTI_ADDRESS* remoteAddress, bool srvForced)
 {
     TCB_STUB* pSkt; 
 
@@ -6820,6 +6856,10 @@ bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP
             if(pSkt->pV6Pkt != NULL)
             {
                 TCPIP_IPV6_DestAddressSet (pSkt->pV6Pkt, &remoteAddress->v6Add);
+                if(srvForced)
+                {   // Note: relevant for server sockets only
+                    pSkt->flags.forceRemAdd = 1;
+                }
                 return true;
             }
             break;
@@ -6830,6 +6870,13 @@ bool TCPIP_TCP_DestinationIPAddressSet(TCP_SOCKET s, IP_ADDRESS_TYPE addType, IP
         if (pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
         {
             pSkt->destAddress.Val = remoteAddress->v4Add.Val;
+            if(srvForced)
+            {   // Note: relevant for server sockets only
+                pSkt->flags.forceRemAdd = 1;
+            }
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SET_DEST_ADD) != 0)
+            SYS_CONSOLE_PRINT("TCP set dest add: 0x%08x, ix: %d\r\n", pSkt->destAddress.Val, pSkt->sktIx);
+#endif  //  ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SET_DEST_ADD) != 0)
             return true;
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)

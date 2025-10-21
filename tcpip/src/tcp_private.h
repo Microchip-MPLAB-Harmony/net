@@ -55,6 +55,7 @@ Microchip or any third party.
 #define TCPIP_TCP_DEBUG_MASK_TRACE_STATE    (0x0002)
 #define TCPIP_TCP_DEBUG_MASK_SEQ            (0x0004)
 #define TCPIP_TCP_DEBUG_MASK_HANDLE_SEG     (0x0008)
+#define TCPIP_TCP_DEBUG_MASK_SET_DEST_ADD   (0x0010)
 
 #define TCPIP_TCP_DEBUG_MASK_RX_CHECK       (0x0100)
 
@@ -228,8 +229,8 @@ typedef struct
             unsigned int openBindIf     : 1;                // socket is bound to interface when opened 
             unsigned int openBindAdd    : 1;                // socket is bound to address when opened 
             unsigned int halfThresFlush : 1;                // when set, socket will flush at half TX buffer threshold
-            unsigned int res1           : 1;                // not used
-            unsigned int res2           : 1;                // not used
+            unsigned int forceRemAdd    : 1;                // forced remote/destination address: server socket remote bound
+            unsigned int forceRemPort   : 1;                // forced remote/destination port: server socket remote bound
         } flags;
     };
     uint8_t             dscp;                        // socket DSCP value

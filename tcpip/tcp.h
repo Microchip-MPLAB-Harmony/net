@@ -725,6 +725,11 @@ bool  TCPIP_TCP_Bind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT localPor
 
     The call will fail if the socket is already connected (both server and client sockets).
 
+    For a server socket:
+        - Binding to a remote port value should not make much sense. Use cautiously.
+        - Once remotely bound, the socket will have to be closed to remove the binding.
+          Currently there's no option to do that on a listening socket
+
   */
 bool  TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT remotePort, 
                            IP_MULTI_ADDRESS* remoteAddress);
