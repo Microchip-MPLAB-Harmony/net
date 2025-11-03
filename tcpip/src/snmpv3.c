@@ -2174,7 +2174,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                 }
                 //noOfVarbindreq = Getbulk_N + (Getbulk_M * Getbulk_R);//Refer RFC 3416
 
-                smSnmp++;
+                smSnmp = SM_VARSTRUCT_LEN_OFFSET;
                 break;
 
             case (int)SM_VARSTRUCT_LEN_OFFSET:
@@ -2762,7 +2762,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
             return retRes;
         }
 
-        if(noOfVarbindreq == 0U)
+        if((noOfVarbindreq == 0U) && (smSnmp != SM_FIND_OID_IN_MIB) && (smSnmp != SM_NON_REPETITIONS))
         {
             break;
         }
