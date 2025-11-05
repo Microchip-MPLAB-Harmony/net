@@ -720,6 +720,7 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
                     }
                     else
                     {
+                        trapIndex++;
                         continue;
                     }
                     analogPotVal.byte = (uint8_t)APP_LED_1StateGet();//BSP_LEDStateGet(APP_LED_1);
@@ -823,6 +824,7 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
             }
         }
         potReadLock = false;
+        trapIndex++;
     }
 
     //Try for max 5 seconds to send TRAP, do not get block in while()

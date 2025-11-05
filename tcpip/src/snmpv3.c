@@ -1294,6 +1294,7 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(
 
         default:
             // OK
+            res = false;
             break;
     }
     return res;
@@ -3386,7 +3387,7 @@ static uint8_t TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(uint8_t targetIndex)
     uint8_t i=0;
 
     trapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet((STD_BASED_SNMPV3_SECURITY_LEVEL)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityLevelType);
-    if(trapSecurityLevel == (uint8_t)AUTH_INVALID)
+    if(trapSecurityLevel == (uint8_t)INVALID_MSG)
     {
         return INVALID_INDEX;
     }
@@ -3467,7 +3468,7 @@ bool TCPIP_SNMPv3_CmprTrapSecNameAndSecLvlWithUSMDb(uint8_t tragetIndex,
     uint8_t i=0;
 
     trapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet(securityLevel);
-    if(trapSecurityLevel == (uint8_t)AUTH_INVALID)
+    if(trapSecurityLevel == (uint8_t)INVALID_MSG)
     {
         return false;
     }
@@ -3541,7 +3542,7 @@ uint8_t TCPIP_SNMPv3_TrapSecurityLevelGet(STD_BASED_SNMPV3_SECURITY_LEVEL securi
             tempSecurityLevel = (uint8_t)NO_REPORT_PRIVACY_AND_AUTH_PROVIDED;
             break;
         default:
-            tempSecurityLevel = (uint8_t)AUTH_INVALID;
+            tempSecurityLevel = (uint8_t)INVALID_MSG; 
             break;
     }
     return tempSecurityLevel;
@@ -4354,7 +4355,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     //validate the trap user security name , message processing model 
     //, security model and the security level
     gSNMPV3TrapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet(Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityLevelType);
-    if( gSNMPV3TrapSecurityLevel == (uint8_t)AUTH_INVALID)
+    if( gSNMPV3TrapSecurityLevel == (uint8_t)INVALID_MSG)
     {
         return false;
     }
