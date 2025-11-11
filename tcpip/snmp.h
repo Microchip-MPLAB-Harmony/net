@@ -101,6 +101,12 @@ Microchip or any third party.
 /*This macro is used for SNMP version 3 with authentication and privacy  */
 #define SNMP_V3         (3)
 
+/* This macro is used for configuring SNMP version 1, 2c, 3 */
+#define SNMP_V1_V2C_V3		(0)
+
+/* This macro is used for Configuring SNMP version 3*/
+#define SNMP_V3_ONLY        (1)
+
 
 // *****************************************************************************
 /*
@@ -1505,6 +1511,54 @@ bool TCPIP_SNMP_IsTrapEnabled(void);
     This function is used by the customer function.
 */
 bool TCPIP_SNMP_ValidateTrapIntf(TCPIP_NET_HANDLE pIf);
+
+//****************************************************************************
+/*
+  Function:
+    bool  TCPIP_SNMP_SnmpVersionSet(uint8_t snmpVer);
+
+  Summary:
+    Sets the SNMP version to be supported.
+
+  Description:
+    This function is used to set the SNMP version to be supported.
+
+  Precondition  :
+    TCPIP_SNMP_Initialize is already called.
+
+  Parameters:
+    snmpVer  -  Snmp version - SNMP_V1_V2C_V3. or SNMP_V3_ONLY
+
+  Returns:
+    - true  - if the snmpVer is valid
+    - false - if the snmpVer is invalid
+
+  Remarks:
+    None.
+ */
+bool  TCPIP_SNMP_SnmpVersionSet(uint8_t snmpVer);
+
+//****************************************************************************
+/*
+  Function:
+    uint8_t  TCPIP_SNMP_SnmpVersionGet();
+
+  Summary:
+    Gets the SNMP version supported.
+
+  Description:
+    This function is used to get the SNMP version supported by the Agent.
+
+  Precondition  :
+    TCPIP_SNMP_Initialize is already called.
+
+  Return:
+    Snmp version - SNMP_V1_V2C_V3. or SNMP_V3_ONLY
+
+  Remarks:
+    None.
+ */
+uint8_t  TCPIP_SNMP_SnmpVersionGet();
 
 // *****************************************************************************
 /*

@@ -21,6 +21,7 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 """
 
+TCPIP_SNMP_VERSION_TYPE = ["SNMP_V1_V2C_V3", "SNMP_V3_ONLY"]
 TCPIP_SNMP_VERSIONS = ["SNMP_V1", "SNMP_V2C", "SNMP_V3"]
 tcpipSnmpMaxCommNum = 3
 tcpipSnmpConfigNumPrev = 3
@@ -55,6 +56,14 @@ def instantiateComponent(tcpipSnmpComponent):
     tcpipSnmpBibFileName.setVisible(True)
     tcpipSnmpBibFileName.setDescription("BIB file name")
     tcpipSnmpBibFileName.setDefaultValue("snmp.bib")
+
+    # Snmp Version Type
+    tcpipSnmpCfgVersion = tcpipSnmpComponent.createComboSymbol("TCPIP_SNMP_CFG_VERSION", None, TCPIP_SNMP_VERSION_TYPE)
+    tcpipSnmpCfgVersion.setHelp("mcc_h3_manager_configurations")
+    tcpipSnmpCfgVersion.setLabel("Snmp Version Type")
+    tcpipSnmpCfgVersion.setVisible(True)
+    tcpipSnmpCfgVersion.setDescription("Snmp Version Type")
+    tcpipSnmpCfgVersion.setDefaultValue("SNMP_V1_V2C_V3")
 
     # Maximum SNMP message size
     tcpipSnmpMsgSizeMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_MAX_MSG_SIZE", None)

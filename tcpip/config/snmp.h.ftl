@@ -54,6 +54,14 @@ Microchip or any third party.
 <#else>
 #define TCPIP_SNMP_BIB_FILE_NAME 					0
 </#if>
+<#if (TCPIP_SNMP_CFG_VERSION)?has_content>
+<#if (TCPIP_SNMP_CFG_VERSION) == "SNMP_V1_V2C_V3">
+#define TCPIP_SNMP_CFG_VERSION						SNMP_V1_V2C_V3
+<#else>
+#define TCPIP_SNMP_CFG_VERSION						SNMP_V3_ONLY
+</#if>
+</#if>
+
 #define TCPIP_SNMP_OID_MAX_LEN						${TCPIP_SNMP_OID_MAX_LEN}
 #define TCPIP_SNMP_MAX_MSG_SIZE 					${TCPIP_SNMP_MAX_MSG_SIZE}
 #define TCPIP_SNMP_MAX_NON_REC_ID_OID 				${TCPIP_SNMP_MAX_NON_REC_ID_OID}

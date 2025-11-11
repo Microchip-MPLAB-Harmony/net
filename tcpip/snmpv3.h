@@ -433,6 +433,8 @@ typedef struct
     // But this usage should be discouraged because it gives SNMP Server access
     // to all system files.
     const char* mountPath;
+
+    uint8_t snmpVersionType; /* v1_v2c_v3 Agent supports all 3 versions, v3_only - Agent wont respond to any of the v1 or v2 messages */
 } TCPIP_SNMP_MODULE_CONFIG;
 
 // *****************************************************************************

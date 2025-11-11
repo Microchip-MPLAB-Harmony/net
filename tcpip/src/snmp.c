@@ -439,6 +439,7 @@ bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const
         gSnmpDcpt.snmp_trapv2_use = snmpData->snmp_trapv2_use;
         gSnmpDcpt.snmpv3_trapv1v2_use = snmpData->snmpv3_trapv1v2_use;
         gSnmpDcpt.pSnmpIf = NULL;
+		gSnmpDcpt.snmpVersionType = snmpData->snmpVersionType;
         
 // SNMP initialization
         (void)F_SNMP_CommunityConfiguration(snmpData);
@@ -952,6 +953,10 @@ static SNMP_STACK_ERROR TCPIP_SNMP_inputPacketProcessAndRespond(void)
 
     if(pduInfoDB.snmpVersion != (uint8_t)SNMP_V3)
     {
+		if (gSnmpDcpt.snmpVersionType == SNMP_V3_ONLY)
+        {
+            return SNMP_STACK_FAIL;
+        }
         if ( snmpErr != SNMP_NO_ERR)
         {
             return SNMP_STACK_FAIL;
@@ -5996,6 +6001,11 @@ bool  TCPIP_SNMP_ReadCommunityGet(int index,int len, uint8_t *dest)
 bool  TCPIP_SNMP_WriteCommunitySet(int index,int len, uint8_t * src)
 {
 
+	if (gSnmpDcpt.snmpVersionType == SNMP_V3_ONLY)
+	{
+		return false;
+	}
+
     if((src == NULL) || (len==0)|| (SnmpStackDcptMemStubPtr==NULL))
     {
         return false;
@@ -6026,6 +6036,11 @@ bool  TCPIP_SNMP_WriteCommunitySet(int index,int len, uint8_t * src)
 bool  TCPIP_SNMP_ReadCommunitySet(int index,int len, uint8_t * src)
 {
 
+	if (gSnmpDcpt.snmpVersionType == SNMP_V3_ONLY)
+	{
+		return false;
+	}
+
     if((src == NULL) || (len==0) || (SnmpStackDcptMemStubPtr==NULL))
     {
         return false;
@@ -6053,6 +6068,21 @@ bool  TCPIP_SNMP_ReadCommunitySet(int index,int len, uint8_t * src)
     return true;
 }
 
+bool  TCPIP_SNMP_SnmpVersionSet(uint8_t snmpVer)
+{
+	if ((snmpVer == SNMP_V3_ONLY) || (snmpVer == SNMP_V1_V2C_V3))
+	{
+		gSnmpDcpt.snmpVersionType = snmpVer;
+		return true;
+	}
+	
+	return false;
+}
+
+uint8_t  TCPIP_SNMP_SnmpVersionGet()
+{
+	return gSnmpDcpt.snmpVersionType;
+}
 
 /****************************************************************************
 Function:

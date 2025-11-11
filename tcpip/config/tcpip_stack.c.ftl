@@ -656,6 +656,7 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
     .trap_target_config     = NULL,
 </#if>
     .mountPath              = TCPIP_SNMP_MOUNT_POINT,
+	.snmpVersionType		= TCPIP_SNMP_CFG_VERSION,
 };
 </#if>
 
