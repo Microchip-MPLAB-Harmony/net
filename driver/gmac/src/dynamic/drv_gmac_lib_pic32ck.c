@@ -199,6 +199,7 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
         {
             ;
         }
+        pGmacRegs->ETH_NCFGR |= ETH_NCFGR_GIGE(1);
     }
     else if (((uint32_t)pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & (uint32_t)DRV_ETHPHY_CFG_MII)!= 0U)//MII Mode
     {
