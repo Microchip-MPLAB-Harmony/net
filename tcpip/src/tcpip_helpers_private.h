@@ -126,6 +126,18 @@ static __inline__ TCPIP_MAC_ETHERNET_HEADER* __attribute__((always_inline)) FC_U
     return U_UPTR_MAC_ETH_HDR.pHdr;
 }
 
+static __inline__ TCPIP_MAC_ETHERNET_VLAN_HEADER* __attribute__((always_inline)) FC_Uptr2MacEthVlanHdr(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t*    uptr;
+        TCPIP_MAC_ETHERNET_VLAN_HEADER* pHdr;
+    }U_UPTR_MAC_ETH_HDR;
+
+    U_UPTR_MAC_ETH_HDR.uptr = uptr;
+    return U_UPTR_MAC_ETH_HDR.pHdr;
+}
+
 static __inline__ int32_t __attribute__((always_inline)) FC_Ui322I32(uint32_t u32Val)
 {
     union

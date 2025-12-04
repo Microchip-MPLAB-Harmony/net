@@ -49,7 +49,6 @@ Microchip or any third party.
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdarg.h>
 
 #include "tcpip/tcpip_mac.h"
 

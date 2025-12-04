@@ -2476,14 +2476,14 @@ static void F_TCPIP_PKT_VlanAdjust(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET 
     {   // true/NULL vlan packet
         TCPIP_8021Q_TAG vlanTag;
         pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
-        TCPIP_MAC_ETHERNET_VLAN_HEADER* pVlanHdr = (TCPIP_MAC_ETHERNET_VLAN_HEADER*)ptrPacket->pMacLayer;
-        TCPIP_MAC_ETHERNET_HEADER* pEthHdr = (TCPIP_MAC_ETHERNET_HEADER*)ptrPacket->pMacLayer;
+        TCPIP_MAC_ETHERNET_VLAN_HEADER* pVlanHdr = FC_Uptr2MacEthVlanHdr(ptrPacket->pMacLayer);
+        TCPIP_MAC_ETHERNET_HEADER* pEthHdr = FC_Uptr2MacEthHdr(ptrPacket->pMacLayer);
         pVlanHdr->Type = pEthHdr->Type;
 
         pVlanHdr->vlanTag.tpid = TCPIP_Helper_htons(TCPIP_ETHER_TYPE_C_TPID);
         vlanTag.vid = pNetIf->vlanId;
         vlanTag.pcp = pNetIf->vlanPcp;
-        vlanTag.dei = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI) == 0U ? 0 : 1;
+        vlanTag.dei = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI) == 0U ? 0U : 1U;
         pVlanHdr->vlanTag.tci = TCPIP_Helper_htons(vlanTag.tci);
 #if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
         pStatIf->vlanTxCnt++;
@@ -2584,7 +2584,7 @@ static uint32_t F_TCPIPProcessMacPackets(bool signal_t)
             TCPIP_NET_IF* pNetIf = FC_Cvptr2NetIf(pRxPkt->pktIf);
             if(frameType == TCPIP_ETHER_TYPE_C_TPID)
             {   // VLAN tagged packet
-                TCPIP_MAC_ETHERNET_VLAN_HEADER* pVlanHdr = (TCPIP_MAC_ETHERNET_VLAN_HEADER*)pRxPkt->pMacLayer;
+                TCPIP_MAC_ETHERNET_VLAN_HEADER* pVlanHdr = FC_Uptr2MacEthVlanHdr(pRxPkt->pMacLayer);
                 vlanTag.tci = TCPIP_Helper_ntohs(pVlanHdr->vlanTag.tci); 
                 TCPIP_NET_IF* pVlanIf = F_TCPIPMapVlanInterface(pNetIf, vlanTag.vid);  
                 if(pVlanIf == NULL)
@@ -5414,12 +5414,12 @@ bool TCPIP_STACK_NetVlanCfgGet(TCPIP_NET_HANDLE netH, TCPIP_NETWORK_VLAN_CONFIG*
     TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(netH);
     if(pNetIf != NULL)
     {
-        if(pVlanCfg)
+        if(pVlanCfg != NULL)
         {
             pVlanCfg->id = F_TCPIP_NetVlanId(pNetIf);
             pVlanCfg->pcp = F_TCPIP_NetVlanPcp(pNetIf);
-            pVlanCfg->dei = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI) == 0U ? 0 : 1;
-            pVlanCfg->useNullVid = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) == 0U ? 0 : 1;
+            pVlanCfg->dei = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_DEI) == 0U ? 0U : 1U;
+            pVlanCfg->useNullVid = (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) == 0U ? 0U : 1U;
         }
         return true;
     }

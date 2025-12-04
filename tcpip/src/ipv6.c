@@ -4597,12 +4597,12 @@ static void MACSetReadPtrInRx(TCPIP_MAC_PACKET* pRxPkt, uint16_t offset)
 #if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
     if((pRxPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_RX_TAGGED) != 0U)
     {
-        ethHdrSize = sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
+        ethHdrSize = (uint16_t)sizeof(TCPIP_MAC_ETHERNET_VLAN_HEADER);
     }
     else
 #endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
     {
-        ethHdrSize = sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        ethHdrSize = (uint16_t)sizeof(TCPIP_MAC_ETHERNET_HEADER);
     }
 
     pRxPkt->pNetLayer = pRxPkt->pMacLayer + ethHdrSize + offset;

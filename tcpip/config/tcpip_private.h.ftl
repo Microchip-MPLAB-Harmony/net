@@ -95,7 +95,8 @@ Microchip or any third party.
 #define M_TCPIP_STACK_DEBUG_MASK_VCHK_SEGB  0x04    // check VLAN MAC packets segment buffer - internal debugging
 #define M_TCPIP_STACK_DEBUG_MASK_VCHK_XPKT  0x08    // check the VLAN MAC extracted packets - internal debugging
 #define M_TCPIP_STACK_DEBUG_MASK_VRETR_F    0x10    // check the retrieve functionality of VLAN MAC packets - internal debugging
-#define M_TCPIP_STACK_DEBUG_MASK_VTRACE     0x20    // trace VLAN MAC packets - internal debugging
+#define M_TCPIP_STACK_DEBUG_MASK_VCHK_PKT   0x20    // trace VLAN MAC packets - internal debugging
+#define M_TCPIP_STACK_DEBUG_MASK_VTRACE     0x40    // trace VLAN MAC packets - internal debugging
 #define M_TCPIP_STACK_DEBUG_VTRACE_SIZE     16      // VLAN trace size
 
 

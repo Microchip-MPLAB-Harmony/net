@@ -111,6 +111,7 @@ static TCPIP_STACK_HEAP_RES   FS_TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH
 static void*            FS_TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes);
 static void*            FS_TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize);
 static size_t           FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff);
+static size_t           FS_DoHeapFree(TCPIP_HEAP_DCPT* hDcpt, u_iHeadNode* ptr);
 
 static size_t           FS_TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
 static size_t           FS_TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
@@ -444,9 +445,7 @@ static void* FS_TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, 
 static size_t FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
 {  
     TCPIP_HEAP_DCPT*  hDcpt;
-    u_iHeadNode   *hdr,*ptr;
-    int         fail;
-    size_t      freedUnits;
+    u_iHeadNode* ptr;
 
     hDcpt = FS_TCPIP_HEAP_ObjDcpt(heapH);
 
@@ -458,12 +457,21 @@ static size_t FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuf
     ptr = FC_Cvptr2HeadNode(pBuff) - 1;
 
     (void)OSAL_SEM_Pend(&hDcpt->heapSemaphore, OSAL_WAIT_FOREVER);
+    size_t res = FS_DoHeapFree(hDcpt, ptr);
+    (void)OSAL_SEM_Post(&hDcpt->heapSemaphore);
+    return res;
+}
+
+static size_t FS_DoHeapFree(TCPIP_HEAP_DCPT* hDcpt, u_iHeadNode* ptr)
+{
+    int         fail;
+    size_t      freedUnits;
+    u_iHeadNode* hdr;
 
 #ifdef TCPIP_STACK_DRAM_DEBUG_ENABLE
     if((uint8_t*)ptr < (uint8_t*)hDcpt->heapStart || (uint8_t*)(ptr + ptr->units) > (uint8_t*)hDcpt->heapEnd)
     {
         hDcpt->lastHeapErr = TCPIP_STACK_HEAP_RES_PTR_ERR;   // not one of our pointers!!!
-        (void)OSAL_SEM_Post(&hDcpt->heapSemaphore);
         return 0;
     }
 #endif
@@ -566,12 +574,10 @@ static size_t FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuf
     if(fail != 0)
     {
         hDcpt->lastHeapErr = TCPIP_STACK_HEAP_RES_PTR_ERR;   // corrupted pointer!!!
-        (void)OSAL_SEM_Post(&hDcpt->heapSemaphore);
         return 0;
     }
     
     hDcpt->heapAllocatedUnits -= freedUnits;
-    (void)OSAL_SEM_Post(&hDcpt->heapSemaphore);
     return freedUnits * sizeof(u_iHeadNode);
 }
 
