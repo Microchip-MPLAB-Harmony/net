@@ -49,6 +49,8 @@ Microchip or any third party.
 #define H_SNMP_PRIVATE_H_
 
 
+#define SNMP_DEBUG 0 // change to 1 to enable debug messages for SNMP 
+
 /*
  * This macro is used to calculate the LENGTH from a Integer  Signed value.
  */

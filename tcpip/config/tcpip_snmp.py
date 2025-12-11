@@ -195,7 +195,7 @@ def instantiateComponent(tcpipSnmpComponent):
     tcpipSnmpOldLenMax.setLabel("Maximum OID Length")
     tcpipSnmpOldLenMax.setVisible(True)
     tcpipSnmpOldLenMax.setDescription("Maximum OID Length")
-    tcpipSnmpOldLenMax.setDefaultValue(18)
+    tcpipSnmpOldLenMax.setDefaultValue(20)
 
     # Maximum non record OID ID
     tcpipSnmpNonRecOldIdMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_MAX_NON_REC_ID_OID", tcpipSnmpAdvSettings)

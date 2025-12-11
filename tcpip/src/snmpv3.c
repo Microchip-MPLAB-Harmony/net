@@ -120,6 +120,8 @@ static void TCPIP_SNMPv3_EngineBootsRcrdUpdate(void);
 static uint8_t TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(uint8_t targetIndex);
 static bool TCPIP_SNMPv3_TrapMsgHeaderPDU(unsigned int targetIndex);
 
+extern void TCPIP_SNMP_MergeNodesOfOID(uint8_t *oidValuePtr, uint8_t *OIDLen);
+
 uint16_t F_SNMPv3_Header_Length(void)
 {
     uint16_t snmpv3Headerlength=0U;
@@ -2233,10 +2235,29 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                 break;
 
             case (int)SM_FIND_OID_IN_MIB:
+            {
+                uint8_t tmp_len = OIDlen;
+                uint8_t CorrOIDValue[50] = {0};
+                memcpy(CorrOIDValue, OIDValue, OIDlen);
+                
+                while(tmp_len)
+                {
+                    CorrOIDValue[tmp_len+1] = CorrOIDValue[tmp_len];
+                    tmp_len--;
+                }
 
-                /* Search for the requested OID in the MIB database with the agent.*/
+                CorrOIDValue[1] = CorrOIDValue[0]%40;
+                CorrOIDValue[0] = CorrOIDValue[0]/40;
+                tmp_len = OIDlen + 1;
+
                 //Searching the requested OID in the MIB database
-                oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,OIDValue, OIDlen, &OIDInfo);
+                oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,CorrOIDValue, tmp_len, &OIDInfo);
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\n%s(): CorrOIDValue =", __FUNCTION__);
+                for(int k =0; k < tmp_len; k++)
+                    SYS_CONSOLE_PRINT(" %x", CorrOIDValue[k]);
+                #endif
+
                 if(TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr) != true)
                 {    
                     bSnmpV3GetBulkResError = true;
@@ -2307,7 +2328,8 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                     break;
                 }
                 smSnmp++;
-                break;
+            }
+            break;
 
             case (int)SM_NON_REPETITIONS:
 
@@ -2594,7 +2616,22 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                             }
                         }
 
-                        oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,OIDValue, OIDlen, &OIDInfo);
+                        uint8_t tmp_len = OIDlen;
+                        uint8_t CorrOIDValue[50] = {0};
+                        memcpy(CorrOIDValue, OIDValue, OIDlen);
+
+                        while(tmp_len)
+                        {
+                            CorrOIDValue[tmp_len+1] = CorrOIDValue[tmp_len];
+                            tmp_len--;
+                        }
+
+                        CorrOIDValue[1] = CorrOIDValue[0]%40;
+                        CorrOIDValue[0] = CorrOIDValue[0]/40;
+                        tmp_len = OIDlen + 1;
+
+                        //Searching the requested OID in the MIB database
+                        oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr, CorrOIDValue, tmp_len, &OIDInfo);
                         if(oidLookUpRet == (uint8_t)SNMP_END_OF_MIB_VIEW)
                         {
                             tempRet = TCPIP_SNMP_NextLeafGet(TCPIP_SNMP_FileDescrGet(),&OIDInfo) ? 1U : 0U;
@@ -3800,8 +3837,6 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     uint8_t         OIDLen=0; 
     uint8_t         len=0;
     uint8_t         OIDValue[TCPIP_SNMP_OID_MAX_LEN];
-    uint8_t             snmptrap_oids[]  = {0x2bU,6U,1U,6U,3U,1U,1U,4U,1U }; /* len=10 */
-    uint8_t         sysUpTime_oids[] = {0x2bU,6U,1U,2U,1U,1U,3U}; /* len = 8 */
     uint8_t             i=0;
     uint16_t            contextIDlen=0;
     uint16_t            contextNameLength=0;
@@ -3815,6 +3850,8 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     TCPIP_UINT16_VAL        varBindLen = {0};
     uint8_t             USM_Index=0,temp_index=0;
     SNMPV3_PRIV_PROT_TYPE       usmPrivType = SNMPV3_NO_PRIV;
+    uint8_t snmptrap_oids[]  = {0x2bU,6,1,6,3,1,1,4,1 }; /* len=10 */
+    uint8_t sysUpTime_oids[] = {0x2bU,6,1,2,1,1,3}; /* len = 8 */
 
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;
@@ -3982,6 +4019,9 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             {
                 return false;
             }
+
+            TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
+            
             (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
             len = OIDLen;
             (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
@@ -4023,12 +4063,27 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
             (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,(uint8_t*)&len,1);
             OIDLen = len;
-            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
+            OIDLen--;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len-1,dynTrapScopedPduBuf);
+
             while( len--  != 0U)
             {
                 uint8_t c;
+                static uint8_t merged_node = 0;
                 (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
+                if(len == OIDLen)
+                {
+                    merged_node = c;
+                }
+                else if (len == (OIDLen - 1))
+                {
+                    c = c + merged_node * 40;
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
+                }
+                else
+                {
                 (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
+            }
             }
 
                     // This agent's IP address.
@@ -4073,6 +4128,8 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
                return false;
             }
 
+            TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
+            
             // Copy OID string into packet.
             (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
             (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen+1U),dynTrapScopedPduBuf);
@@ -4150,6 +4207,9 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
         {
             return false;
         }
+
+        TCPIP_SNMP_MergeNodesOfOID(ptr, &OIDLen);
+        
         // Copy OID string into PDU.
         (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
         (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1U,dynTrapScopedPduBuf);
@@ -4177,13 +4237,27 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
         
         (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&len,1);        
         OIDLen = len;
-        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
-        while( OIDLen--  != 0U)
+        OIDLen--;
+        
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len-1,dynTrapScopedPduBuf);
+        while( len--  != 0U)
         {
             uint8_t c;          
+            static uint8_t merged_node = 0;
             (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
-            
+            if(len == OIDLen)
+            {
+                merged_node = c;
+            }
+            else if (len == (OIDLen - 1))
+            {
+                c = c + merged_node * 40;
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
+            }
+            else
+            {
             (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
+        }
         }
         tempOffset = dynTrapScopedPduBuf->length;
         //set the snmp varbind trap offset
@@ -4206,6 +4280,7 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             return false;
         }
         ptr = OIDValue;
+        TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
 
         // Copy OID string into packet.
         (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
@@ -4352,6 +4427,9 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
 
+    #if (SNMP_DEBUG != 0)
+    SYS_CONSOLE_PRINT("\r\n%s(): Enter(%d)", __FUNCTION__, __LINE__);
+    #endif
     //validate the trap user security name , message processing model 
     //, security model and the security level
     gSNMPV3TrapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet(Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityLevelType);
@@ -4378,7 +4456,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
             return false;
         }
     }
-    if(TCPIP_SNMPv3_TrapScopedPDU(var,val,index,targetIndex) != true)
+    if(TCPIP_SNMPv3_TrapScopedPDU(var, val, index, targetIndex) != true)
     {
         return false;
     }

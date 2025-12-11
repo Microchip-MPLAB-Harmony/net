@@ -202,7 +202,6 @@ typedef union
 /* MISRAC 2012 deviation block end */
 
 
-
 // *****************************************************************************
 /*
   Enumeration:
@@ -315,7 +314,7 @@ typedef enum
 */
 typedef struct
 {
-    uint8_t oidstr[16];
+    uint8_t oidstr[TCPIP_SNMP_OID_MAX_LEN];
     uint8_t version;
 }SNMP_NON_MIB_RECD_INFO;
 
@@ -1210,7 +1209,8 @@ void TCPIP_SNMP_SendFailureTrap(void);
 /*
   Function:
     bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,
-                                SNMP_TRAP_IP_ADDRESS_TYPE eTrapMultiAddressType)
+                                SNMP_TRAP_IP_ADDRESS_TYPE eTrapMultiAddressType, 
+                                uint8_t *snmptrap_oids, uint8_t *sysUpTime_oids)
 
   Summary:
     Creates and sends TRAP PDU.

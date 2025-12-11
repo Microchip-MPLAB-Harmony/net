@@ -168,6 +168,30 @@ uint32_t F_SNMP_BuildIntegerValue(SNMP_VAL inputVal,uint32_t dataLen);
     SNMP v1 and v2c Agent Routines
   ===========================================================================
   ***************************************************************************/
+
+void TCPIP_SNMP_MergeNodesOfOID(uint8_t *oidValuePtr, uint8_t *OIDLen)
+{     
+    int m = 1;
+    int k = 0;
+    int inLen = *OIDLen;
+    
+    #if (SNMP_DEBUG != 0)
+    SYS_CONSOLE_PRINT("\r\n%s(): %d OIDValue = ", __FUNCTION__, __LINE__);
+    for(k = 0; k < inLen; k++)
+        SYS_CONSOLE_PRINT(" %d", oidValuePtr[k]);
+    #endif
+    
+    /* Change the OIDValues to make the first 2 bytes into 1 byte */
+    oidValuePtr[0] = (oidValuePtr[0] * 40) + oidValuePtr[1];
+    while(m != inLen)
+    {
+        oidValuePtr[m] = oidValuePtr[m+1];
+        m++;
+    }
+    
+    *OIDLen = inLen - 1;    
+}
+
 uint8_t TCPIP_SNMP_GetDataFromUDPBuff(TCPIP_SNMP_DATABUF *getbuf)
 {
     uint8_t val = 0;
@@ -963,6 +987,9 @@ static SNMP_STACK_ERROR TCPIP_SNMP_inputPacketProcessAndRespond(void)
         }
         if ( !TCPIP_SNMP_ProcessHeaderGetSet(&pduInfoDB))
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n %s(%d):  Failed exiting", __FUNCTION__, __LINE__); 
+            #endif
             return SNMP_STACK_FAIL;
         }
     }
@@ -1234,8 +1261,6 @@ uint8_t *TCPIP_SNMP_GenericTrapCodeToTrapOID(uint8_t generic_trap_code,uint8_t *
     static  uint8_t linkdown_oid   = {0x2b,6,1,6,3,1,1,5,3};
     static  uint8_t linkup_oid     = {0x2b,6,1,6,3,1,1,5,4};
 */
-    static uint8_t snmptrap_oids[]  = {0x2bU,6,1,6,3,1,1,4,1 };
-
     *len = (uint8_t)sizeof(gen_trap_oid);
     uint8_t* retPtr = gen_trap_oid;
     switch (generic_trap_code) 
@@ -1261,8 +1286,7 @@ uint8_t *TCPIP_SNMP_GenericTrapCodeToTrapOID(uint8_t generic_trap_code,uint8_t *
             break;
 
         case (uint8_t)ENTERPRISE_SPECIFIC:
-            *len = (uint8_t)sizeof(snmptrap_oids);
-            retPtr = snmptrap_oids;
+            /* This will never come */
             break;
 
         default:
@@ -1412,7 +1436,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         // Get complete notification variable OID string.
 
         (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)ASN_OID,snmpTrapPutData);
-        OIDLen = (uint8_t)sizeof(sysUpTime_oids);
+         OIDLen = (uint8_t)sizeof(sysUpTime_oids);
         (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)(OIDLen)+1U,snmpTrapPutData);
         pOIDValue = sysUpTime_oids;
         while( OIDLen-- != 0U)
@@ -1475,6 +1499,9 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         {
             return false;
         }
+
+        TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
+
         (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)ASN_OID,snmpTrapPutData);
         agentIDLen = OIDLen;
         len  = OIDLen;
@@ -1519,6 +1546,9 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         {
             return false;
         }
+
+        TCPIP_SNMP_MergeNodesOfOID(pOIDValue, &OIDLen);
+
         // Copy OID string into PDU.
         (void)TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpTrapPutData);
         (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)(OIDLen)+1U,snmpTrapPutData);
@@ -1550,19 +1580,34 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         }
 
         agentIDLen = len;
-        (void)TCPIP_SNMP_DataCopyToProcessBuffer(agentIDLen,snmpTrapPutData);
+        agentIDLen--;
+        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len - 1,snmpTrapPutData);
+
         while( len-- != 0U)
         {
             uint8_t c;
+            static uint8_t merged_node = 0;
             (void)(*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,(uint8_t*)&c,1U);
+            if(len == agentIDLen)
+            {
+                merged_node = c;
+            }
+            else if (len == (agentIDLen - 1))
+            {
+                c = c + merged_node * 40;
             (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
+        }
+            else
+            {
+                (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
+            }
         }
         tempOffset = snmpTrapPutData->length;
         //set the snmp varbind trap offset
         snmpTrapPutData->length = varPairStructLenOffset;
         // Snmp trap varbind length
         trapVarBindLen.Val = (uint16_t)(2U                   // Agent ID header bytes
-                + (uint16_t)sizeof(snmptrap_oids)
+                + (uint16_t)strlen(snmptrap_oids)
                 + 1U                        // index byte
                 + 2U                      // header
                 + (uint16_t)agentIDLen);                // Agent ID bytes
@@ -1579,6 +1624,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         }
 
         pOIDValue = OIDValue;
+        TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
 
         // Copy OID string into packet.
         (void)TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpTrapPutData);
@@ -1782,17 +1828,31 @@ bool TCPIP_SNMP_TRAPv1Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
     {
         return false;
     }
-
     (void)(*snmpFileShell->fileSeek)(snmpFileShell,snmpTrapFileDescriptr,rec.hData,SYS_FS_SEEK_SET);
     (void)TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpTrapPutData);
     (void)(*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,(uint8_t*)&len,1U);
     agentIDLen = len;
-    (void)TCPIP_SNMP_DataCopyToProcessBuffer(len,snmpTrapPutData);
+    agentIDLen--;
+ 
+    (void)TCPIP_SNMP_DataCopyToProcessBuffer(len-1,snmpTrapPutData);
     while( len-- != 0U)
     {
         uint8_t c;
+        static uint8_t merged_node = 0;
         (void)(*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,&c,1U);
+        if(len == agentIDLen)
+        {
+            merged_node = c;
+        }
+        else if (len == (agentIDLen - 1))
+        {
+            c = c + merged_node * 40;
+            (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
+        }
+        else
+        {
         (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
+    }
     }
     
     // This agent's IP address.
@@ -1839,6 +1899,8 @@ bool TCPIP_SNMP_TRAPv1Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
     {
         return false;
     }
+
+    TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
 
     // Copy OID string into packet.
     (void)TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpTrapPutData);
@@ -2244,6 +2306,9 @@ static bool TCPIP_SNMP_ProcessHeaderGetSet(PDU_INFO* pduDbPtr)
     }
     else if((pduDbPtr->snmpVersion == (uint8_t)SNMP_V2C /*|| pduDbPtr->snmpVersion == (uint8_t)SNMP_V3*/ )&& pduDbPtr->pduType == (uint8_t)GET_BULK_REQUEST )
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\n %s(%d):  ", __FUNCTION__, __LINE__);        
+        #endif
         // Fetch non-repeaters value
         if ( TCPIP_SNMP_VarDataTypeIsValidInteger(&tempData) )
         {
@@ -2251,6 +2316,9 @@ static bool TCPIP_SNMP_ProcessHeaderGetSet(PDU_INFO* pduDbPtr)
         }
         else
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed exiting", __FUNCTION__, __LINE__);        
+            #endif
             return false;
         }
 
@@ -2261,6 +2329,9 @@ static bool TCPIP_SNMP_ProcessHeaderGetSet(PDU_INFO* pduDbPtr)
         }
         else
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed exiting", __FUNCTION__, __LINE__);        
+            #endif
             return false;
         }
     }
@@ -2470,6 +2541,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 Getbulk_N = noOfOIDsInReq; Getbulk_M=0; Getbulk_R=0;
                 if(((pduDbPtr->snmpVersion == (uint8_t)SNMP_V2C)|| (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)) && (pduDbPtr->pduType == (uint8_t)GET_BULK_REQUEST))
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n %s(%d):  ", __FUNCTION__, __LINE__);        
+                    #endif
                     if((pduDbPtr->nonRepeators) <= noOfOIDsInReq)
                     {
                         Getbulk_N = pduDbPtr->nonRepeators;
@@ -2487,6 +2561,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 noOfVarToBeInResponse = Getbulk_N + (Getbulk_M * Getbulk_R);//Refer RFC 3416
 
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\r\n %s(%d):  noOfVarToBeInResponse = %d ; Getbulk_N = %d ; Getbulk_M = %d ; Getbulk_R = %d", 
+                        __FUNCTION__, __LINE__, noOfVarToBeInResponse, Getbulk_N, Getbulk_M, Getbulk_R);        
+                #endif
                 smSnmp++;
                 break;
 
@@ -2527,20 +2605,37 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         (void)(*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&len,1U);
 
                         agentIDLen = len;
-                        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len,snmpPutData);
+                        agentIDLen--;
+                        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len-1,snmpPutData);
+
                         while( len-- != 0U)
                         {
                             uint8_t c;
+                            static uint8_t merged_node = 0;
 
                             (void)(*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&c,1U);
-
+                            if(len == agentIDLen)
+                            {
+                                merged_node = c;
+                            }
+                            else if (len == (agentIDLen - 1))
+                            {
+                                c = c + merged_node * 40;
+                                (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpPutData);
+                            }
+                            else
+                            {
                             (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpPutData);
                         }
-
+                        }
                     }
                     else
                     #endif
                     {
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  in else of if((pduDbPtr->snmpVersion == (uint8_t)SNMP_V3))", 
+                                __FUNCTION__, __LINE__);        
+                        #endif
                         prevSnmpRxOffset=SNMPRxOffset;
                         smSnmp=(int)SM_MAX_REPETITIONS;
                         varStructLenOffset = snmpPutData->length;
@@ -2561,6 +2656,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 temp = TCPIP_SNMP_StructureIsValid(&tempLen.Val);
                 if ( temp == 0U )
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                    #endif
                     TCPIP_SNMP_ErrorStatusSet(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,snmpPutData);
                     bSnmpGenError = true;
                     doCheck = true;
@@ -2586,16 +2684,27 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 // Decode next object
                 if ( !TCPIP_SNMP_OIDIsValid(OIDValue, &OIDLen) )
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                    #endif
                     TCPIP_SNMP_ErrorStatusSet(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,snmpPutData);
                     bSnmpGenError = true;
                     doCheck = true;
                     break;
                 }
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\nIn SM_POPULATE_REQ_OID OIDValue =");
+                for(int k =0; k < OIDLen; k++)
+                    SYS_CONSOLE_PRINT(" %x", OIDValue[k]);
+                #endif
                 // For Get & Get-Next, value must be NULL.
                 if ( pduDbPtr->pduType != (uint8_t)SET_REQUEST )
                 {
                     if ( !TCPIP_SNMP_DataIsASNNull() )
                     {
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                        #endif
                         doRet = true;
                         break;
                     }
@@ -2672,6 +2781,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 
                 if(smSnmp==SM_PKT_STRUCT_LEN_OFFSET || smSnmp==SM_VARSTRUCT_LEN_OFFSET)
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                    #endif
                     doCheck = true;    
                 }
                 
@@ -2693,11 +2805,33 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 noOfVarToBeInResponse--;
 
+                uint8_t tmp_len = OIDLen;
+                uint8_t CorrOIDValue[50] = {0};
+                memcpy(CorrOIDValue, OIDValue, OIDLen);
+                
+                while(tmp_len)
+                {
+                    CorrOIDValue[tmp_len+1] = CorrOIDValue[tmp_len];
+                    tmp_len--;
+                }
+
+                CorrOIDValue[1] = CorrOIDValue[0]%40;
+                CorrOIDValue[0] = CorrOIDValue[0]/40;
+                tmp_len = OIDLen + 1;
+
                 //Searching the requested OID in the MIB database
-                oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(snmpFileDescrptr,pduDbPtr,OIDValue, OIDLen, &OIDInfo);
+                oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(snmpFileDescrptr,pduDbPtr,CorrOIDValue, tmp_len, &OIDInfo);
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\nCorrOIDValue =");
+                for(int k =0; k < tmp_len; k++)
+                    SYS_CONSOLE_PRINT(" %x", CorrOIDValue[k]);
+                #endif
 
                 if(oidLookUpRet != (uint8_t)true /*&& (pduDbPtr->pduType != (uint8_t)GET_NEXT_REQUEST) */&& (pduDbPtr->pduType != (uint8_t)GET_BULK_REQUEST))
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\nDid not Find the OID in MIB");
+                    #endif
                     snmpPutData->length = varStructLenOffset;
 
                     // Put corresponding variable response structure
@@ -2803,6 +2937,12 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                     doCheck = true;
                     break;
                 }
+                else
+                {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\nFound the OID in MIB");
+                    #endif
+                }
                 smSnmp++;
                 break;
 
@@ -2841,6 +2981,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                          * error-index field is set to the index of the failed
                          * variable binding.
                          */
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                        #endif
                         errorStatus = SNMP_NO_CREATION;
                         smSnmp=(int)SM_PKT_STRUCT_LEN_OFFSET;
                         doRet = true;
@@ -2872,6 +3015,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                     if ( errorStatus != SNMP_NO_ERR )
                     {
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                        #endif
                         //SET var command failed. Update the error status.
                         TCPIP_SNMP_ErrorStatusSet(errorStatusOffset,
                         errorIndexOffset,
@@ -2932,6 +3078,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }
                 else if((pduDbPtr->pduType == (uint8_t)SNMP_GET_NEXT)|| ((pduDbPtr->pduType == (uint8_t)SNMP_V2C_GET_BULK) && (oidLookUpRet == 0U)))
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n %s(%d):  b4 TCPIP_SNMP_ProcessGetNextVar", __FUNCTION__, __LINE__);
+                    #endif
                     temp=TCPIP_SNMP_ProcessGetNextVar(&OIDInfo,pduDbPtr);
 
                     //If Get Next command failed
@@ -2940,6 +3089,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         templen=OIDLen;
                         ptroid=OIDValue;
 
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  TCPIP_SNMP_ProcessGetNextVar failed", __FUNCTION__, __LINE__);
+                        #endif
                         if(SnmpStackDcptMemStubPtr->appendZeroToOID != 0U)
                         {
                             (void)TCPIP_SNMP_DataCopyToProcessBuffer(OIDLen+1U,snmpPutData);//for appending "0"
@@ -2973,6 +3125,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 {
                     if(pduDbPtr->snmpVersion == (uint8_t)SNMP_V1)
                     {
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                        #endif
                         errorStatus = SNMP_NO_SUCH_NAME;
                         TCPIP_SNMP_ErrorStatusSet(errorStatusOffset,errorIndexOffset,SNMP_NO_SUCH_NAME,
                                                varIndex,snmpPutData);
@@ -3013,6 +3168,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }
                 else if((pduDbPtr->pduType == (uint8_t)SNMP_GET_NEXT)|| ((pduDbPtr->pduType == (uint8_t)SNMP_V2C_GET_BULK) && (oidLookUpRet == 0U)))
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n %s(%d):  Entered here", __FUNCTION__, __LINE__);
+                    #endif
                     if(SnmpStackDcptMemStubPtr->getZeroInstance)
                     {
                         varPairLen.Val += ((uint16_t)temp+2U);
@@ -3051,6 +3209,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 {
                     if((varStructLenOffset - tempTxOffset) >= (uint16_t)TCPIP_SNMP_MAX_MSG_SIZE)
                     {
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                        #endif
                         getbulkOverFlowFlag = true;
                         doCheck = true;
                         break;
@@ -3093,6 +3254,16 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         {
                             noOfVarToBeInResponse--;
                             temp = TCPIP_SNMP_StructureIsValid(&tempLen.Val);
+                            if ( temp == 0U )
+                            {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
+                                TCPIP_SNMP_ErrorStatusSet(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,snmpPutData);
+                                bSnmpGenError = true;
+                                doCheck = true;
+                                break;
+                            }
 
                             if(varBindCntr!=Getbulk_R)
                             {
@@ -3110,22 +3281,34 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         snmpPutData->length = varStructLenOffset;
                         if(TCPIP_SNMP_DataCopyToProcessBuffer(STRUCTURE,snmpPutData)!= true)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
                         if(TCPIP_SNMP_DataCopyToProcessBuffer(0x82U,snmpPutData)!= true)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
                         varStructLenOffset= snmpPutData->length;
                         if(TCPIP_SNMP_DataCopyToProcessBuffer(0x00U,snmpPutData)!= true)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
                         if(TCPIP_SNMP_DataCopyToProcessBuffer(0x00U,snmpPutData)!= true)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
@@ -3134,12 +3317,18 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         temp = TCPIP_SNMP_StructureIsValid(&tempLen.Val);
                         if ( temp == 0U )
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             break;
                         }
 
                         // Decode next object
                         if ( !TCPIP_SNMP_OIDIsValid(OIDValue, &OIDLen) )
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             TCPIP_SNMP_ErrorStatusSet(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,snmpPutData);
                             bSnmpGenError = true;
                             break;
@@ -3156,17 +3345,46 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             }
                         }
 
-                        oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(snmpFileDescrptr,pduDbPtr,OIDValue, OIDLen, &OIDInfo);
+                        uint8_t tmp_len = OIDLen;
+                        uint8_t CorrOIDValue[50] = {0};
+                        memcpy(CorrOIDValue, OIDValue, OIDLen);
+
+                        while(tmp_len)
+                        {
+                            CorrOIDValue[tmp_len+1] = CorrOIDValue[tmp_len];
+                            tmp_len--;
+                        }
+
+                        CorrOIDValue[1] = CorrOIDValue[0]%40;
+                        CorrOIDValue[0] = CorrOIDValue[0]/40;
+                        tmp_len = OIDLen + 1;
+
+                        //Searching the requested OID in the MIB database
+                        oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(snmpFileDescrptr,pduDbPtr,CorrOIDValue, tmp_len, &OIDInfo);
+                        #if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\nCorrOIDValue =");
+                        for(int k =0; k < tmp_len; k++)
+                            SYS_CONSOLE_PRINT(" %x", CorrOIDValue[k]);
+                        #endif
                         if(oidLookUpRet == (uint8_t)SNMP_END_OF_MIB_VIEW)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d): ", __FUNCTION__, __LINE__);        
+                            #endif
                             temp = (uint8_t)TCPIP_SNMP_NextLeafGet(snmpFileDescrptr,&OIDInfo);
                         }
                         if(oidLookUpRet == 0U)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d): ", __FUNCTION__, __LINE__);        
+                            #endif
                             templen=OIDLen;
                             ptroid=OIDValue;
                             if(TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpPutData)!= true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
@@ -3175,6 +3393,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             {
                                 if(TCPIP_SNMP_DataCopyToProcessBuffer(OIDLen+1U,snmpPutData)!= true)//for appending "0"
                                 {
+                                    #if (SNMP_DEBUG != 0)
+                                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                    #endif
                                     getbulkOverFlowFlag = true;
                                     break;
                                 }
@@ -3184,6 +3405,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             {
                                 if(TCPIP_SNMP_DataCopyToProcessBuffer(OIDLen,snmpPutData)!= true)
                                 {
+                                    #if (SNMP_DEBUG != 0)
+                                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                    #endif
                                     getbulkOverFlowFlag = true;
                                     break;
                                 }
@@ -3194,6 +3418,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             {
                                 if(TCPIP_SNMP_DataCopyToProcessBuffer(*ptroid++,snmpPutData)!= true)
                                 {
+                                    #if (SNMP_DEBUG != 0)
+                                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                    #endif
                                     getbulkOverFlowFlag = true;
                                     break;
                                 }
@@ -3203,6 +3430,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             {
                                 if(TCPIP_SNMP_DataCopyToProcessBuffer(0x00U,snmpPutData)!= true)
                                 {
+                                    #if (SNMP_DEBUG != 0)
+                                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                    #endif
                                     getbulkOverFlowFlag = true;
                                     break;
                                 }
@@ -3210,11 +3440,17 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                             if(TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)SNMP_END_OF_MIB_VIEW,snmpPutData)!= true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
                             if(TCPIP_SNMP_DataCopyToProcessBuffer(0x00U,snmpPutData)!= true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
@@ -3241,11 +3477,17 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             ptroid=OIDValue;
                             if(TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpPutData)!=true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
                             if(TCPIP_SNMP_DataCopyToProcessBuffer(OIDLen,snmpPutData)!= true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
@@ -3255,6 +3497,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             {
                                 if(TCPIP_SNMP_DataCopyToProcessBuffer(*ptroid++,snmpPutData)!= true)
                                 {
+                                    #if (SNMP_DEBUG != 0)
+                                    SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                    #endif
                                     getbulkOverFlowFlag = true;
                                     break;
                                 }
@@ -3265,11 +3510,17 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                             if(TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)SNMP_END_OF_MIB_VIEW,snmpPutData)!=true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
                             if(TCPIP_SNMP_DataCopyToProcessBuffer(0x00U,snmpPutData)!= true)
                             {
+                                #if (SNMP_DEBUG != 0)
+                                SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                                #endif
                                 getbulkOverFlowFlag = true;
                                 break;
                             }
@@ -3293,11 +3544,17 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         snmpPutData->length = varStructLenOffset;
                         if(TCPIP_SNMP_DataCopyToProcessBuffer(varPairLen.v[1],snmpPutData)!=true)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
                         if(TCPIP_SNMP_DataCopyToProcessBuffer(varPairLen.v[0],snmpPutData)!=true)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
@@ -3306,6 +3563,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         varStructLenOffset = snmpPutData->length;
                         if((varStructLenOffset - tempTxOffset) > (uint16_t)TCPIP_SNMP_MAX_MSG_SIZE)
                         {
+                            #if (SNMP_DEBUG != 0)
+                            SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
+                            #endif
                             getbulkOverFlowFlag = true;
                             break;
                         }
@@ -3323,6 +3583,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
         if(doRet)
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n %s(%d):  exiting from if(doRet)", __FUNCTION__, __LINE__);        
+            #endif
             return false;
         }
 
@@ -3331,6 +3594,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
           with the request pdu processing. Else continue to processing.*/
         if((Getbulk_N==0u && noOfVarToBeInResponse==0u && (doCheck == true))||(bSnmpGenError))
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n %s(%d): Exiting from function with bSnmpGenError = %d", __FUNCTION__, __LINE__, bSnmpGenError);        
+            #endif
             smSnmp=(int)SM_PKT_STRUCT_LEN_OFFSET;
             break;
         }
@@ -3542,8 +3808,16 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
     // Get next leaf only if this OID is a parent or a simple leaf node.
     if ( rec->nodeInfo.Flags.bIsParent != 0U || (rec->nodeInfo.Flags.bIsParent == 0U && rec->nodeInfo.Flags.bIsSequence == 0U) )
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\n%s(): %d : b4 calling TCPIP_SNMP_NextLeafGet() - rec->oid= %d ; rec->id = %d", 
+                            __FUNCTION__, __LINE__, rec->oid, rec->id);
+        #endif
         if ( !TCPIP_SNMP_NextLeafGet(snmpFileDescrptr,rec))
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n%s(): %d : TCPIP_SNMP_NextLeafGet() failed", 
+                            __FUNCTION__, __LINE__);
+            #endif
             return 0U;
         }
     }
@@ -3551,17 +3825,28 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
     // Get complete OID string from oid record.
     if ( !TCPIP_SNMP_OIDStringGetByAddr(snmpFileDescrptr,rec, OIDValue, &OIDLen))
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\n%s(): %d : TCPIP_SNMP_OIDStringGetByAddr() failed", 
+                        __FUNCTION__, __LINE__);
+        #endif
         return 0U;
     }
-    
     //to validate the REC ID is present or not
     // do while loop till find find a valid entry.
     while(true)
     {
+        TCPIP_SNMP_MergeNodesOfOID(OIDValue, &OIDLen);
+    
         if(TCPIP_SNMP_RecordIDValidation(pduDbPtr->snmpVersion,rec->nodeInfo.Flags.bIsIDPresent != 0U,(uint16_t)rec->id,OIDValue,OIDLen) != true)
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_RecordIDValidation failed", __FUNCTION__, __LINE__);
+            #endif
             if(!TCPIP_SNMP_NextLeafGet(snmpFileDescrptr,rec))
             {
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_NextLeafGet failed", __FUNCTION__, __LINE__);
+                #endif
                 return 0U;
             }
             else
@@ -3569,12 +3854,18 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
                 // Get complete OID string from oid record.
                 if ( !TCPIP_SNMP_OIDStringGetByAddr(snmpFileDescrptr,rec, OIDValue, &OIDLen))
                 {
+                    #if (SNMP_DEBUG != 0)
+                    SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_OIDStringGetByAddr failed", __FUNCTION__, __LINE__);
+                    #endif
                     return 0U;
                 }
             }
         }
         else
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_RecordIDValidation passed", __FUNCTION__, __LINE__);
+            #endif
             break;
         }
     }
@@ -3583,6 +3874,9 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
     {
         if(rec->nodeInfo.Flags.bIsSequence == 0U)
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : rec->nodeInfo.Flags.bIsSequence = 0", __FUNCTION__, __LINE__);
+            #endif
             break;
         }
         // Need to fetch index information from MIB and prepare complete OID+
@@ -3620,26 +3914,60 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
         {
             if ( !TCPIP_SNMP_NextLeafGet(snmpFileDescrptr,rec))
             {
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_NextLeafGet failed", __FUNCTION__, __LINE__);
+                #endif
                 return 0U;
             }
-            
             if (!TCPIP_SNMP_OIDStringGetByAddr(snmpFileDescrptr,rec, OIDValue, &OIDLen))
-            {   
+            {
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_OIDStringGetByAddr failed", __FUNCTION__, __LINE__);
+                #endif
                 return 0U;
             }
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n%s(): %d OIDValue = ", __FUNCTION__, __LINE__);
+            for(int k = 0; k < OIDLen; k++)
+                SYS_CONSOLE_PRINT(" %d", OIDValue[k]);
+            #endif
+
+            /* Change the OIDValues to make the first 2 bytes into 1 byte */
+            OIDValue[0] = (OIDValue[0] * 40) + OIDValue[1];
+            int m = 1;
+            while(m != OIDLen)
+            {
+                OIDValue[m] = OIDValue[m+1];
+                m++;
+            }
+
+            OIDLen--;
+            
             if(TCPIP_SNMP_RecordIDValidation(pduDbPtr->snmpVersion,rec->nodeInfo.Flags.bIsIDPresent != 0U,(uint16_t)rec->id,OIDValue,OIDLen) != true)
             {
+                #if (SNMP_DEBUG != 0)
+                SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_RecordIDValidation failed", __FUNCTION__, __LINE__);
+                #endif
                 continue;
             }
         }
         else
         {
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\n%s(): Line # %d : TCPIP_SNMP_NextIndexGet failed", __FUNCTION__, __LINE__);
+            #endif
             break;
         }
     }
 
+    #if (SNMP_DEBUG != 0)
+    SYS_CONSOLE_PRINT("\r\n%s(): %d OIDValue = ", __FUNCTION__, __LINE__);
+    for(int k = 0; k < OIDLen; k++)
+        SYS_CONSOLE_PRINT(" %d", OIDValue[k]);
+    #endif
+    
     // Copy complete OID string to create response packet.
-    pOIDValue = OIDValue;   
+    pOIDValue = OIDValue;
     temp.v[0] = OIDLen;
     if(pduDbPtr->snmpVersion != (uint8_t)SNMP_V3)
     {
@@ -3933,6 +4261,8 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
         return 0U;
     }
 
+    TCPIP_SNMP_MergeNodesOfOID(oidValuePtr, &OIDLen);
+    
     //to validate the REC ID is present or not
     while(true)
     {
@@ -3949,6 +4279,8 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
                 {
                     return 0U;
                 }
+
+                TCPIP_SNMP_MergeNodesOfOID(oidValuePtr, &OIDLen);
             }
         }
         else
@@ -4009,6 +4341,8 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
             {
                 continue;
             }
+
+            TCPIP_SNMP_MergeNodesOfOID(oidValuePtr, &OIDLen);
         }
         else
         {
