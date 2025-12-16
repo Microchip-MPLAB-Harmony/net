@@ -1047,7 +1047,7 @@ static void F_DRV_GMAC_LinkStateStartLink(DRV_GMAC_DRIVER * pMACDrv)
     DRV_ETHPHY_RESULT phyRes;    
    
     phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->phy_LinkStatusGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData.negResult.linkStatus, false);
-    if((int32_t)phyRes < 0U)
+    if((int32_t)phyRes < 0)
     {   // some error occurred
         F_DRV_GMAC_LinkStateDown(pMACDrv);
         return;
@@ -1126,7 +1126,7 @@ static void F_DRV_GMAC_LinkStateWaitLinkUp(DRV_GMAC_DRIVER * pMACDrv)
     // after the re-negotiation is done
     // wait for negotiation complete
     phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->phy_NegotiationIsComplete(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, false);
-    if((int32_t)phyRes < 0U)
+    if((int32_t)phyRes < 0)
     {   // some error occurred
         F_DRV_GMAC_LinkStateDown(pMACDrv);
     }
@@ -1159,7 +1159,7 @@ static void F_DRV_GMAC_LinkStateNegComplete(DRV_GMAC_DRIVER * pMACDrv)
 
     phyRes = pPhyBase->phy_NegotiationResultGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData.negResult);
 
-    if((int32_t)phyRes < 0U)
+    if((int32_t)phyRes < 0)
     {   // some error occurred
         F_DRV_GMAC_LinkStateDown(pMACDrv);
     }
@@ -2290,7 +2290,7 @@ static SYS_MODULE_OBJ F_DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv)
         
     phyInitRes = pPhyBase->phy_Setup(hPhyClient, &phySetup, &pMACDrv->sGmacData.linkResFlags);
     
-    if((int32_t)phyInitRes < 0U)
+    if((int32_t)phyInitRes < 0)
     {   // some error occurred
         initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
         return (uint32_t)initRes;

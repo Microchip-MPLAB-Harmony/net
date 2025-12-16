@@ -880,7 +880,7 @@ static void F_Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
             return;
         }
         startIx = (size_t)TCPIP_STACK_NetIndexGet(netH); 
-        endIx = startIx + 1;
+        endIx = startIx + 1U;
     }
     else
     {

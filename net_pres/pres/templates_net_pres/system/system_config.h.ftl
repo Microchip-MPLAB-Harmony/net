@@ -26,6 +26,7 @@ Microchip or any third party.
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE 1
 #define NET_PRES_NUM_SOCKETS ${NET_PRES_SOCKETS}
+#define NET_PRES_LOG_VERBOSE 0
 
 <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
     <#lt>/* Net Pres RTOS Configurations*/

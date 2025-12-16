@@ -43,6 +43,12 @@ Microchip or any third party.
 #include "wolfssl/wolfcrypt/logging.h"
 #include "wolfssl/wolfcrypt/random.h"
 
+#if !defined(NET_PRES_LOG_VERBOSE) || (NET_PRES_LOG_VERBOSE == 0)
+#include <errno.h>
+#include <error-ssl.h>
+#endif  // !defined(NET_PRES_LOG_VERBOSE) || (NET_PRES_LOG_VERBOSE == 0)
+
+
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX0>	
 #include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX0}"
 </#if>
@@ -179,7 +185,11 @@ int g_NewCertFormat;
 
 <#assign netPresUseWolfSSLDebugLog= "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 <#if netPresUseWolfSSLDebugLog?has_content && netPresUseWolfSSLDebugLog == true>
-void Net_Prov${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
+/* MISRA C-2012 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_21_6_NET_DR_3 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_NET_DR_3" 
+static void Net_Prov${TYPE}${CONNECTION}Log${INST}(const int level, const char * const message)
 {
 	<#assign num = "NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS"?eval>
 	static char dataBuff[${num}][120];
@@ -188,7 +198,31 @@ void Net_Prov${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
 	{
 		return;
 	}
-	snprintf(dataBuff[bufNum], 120, "wolfSSL (%d): %s\r\n", level, message);
+
+#if !defined(NET_PRES_LOG_VERBOSE) || (NET_PRES_LOG_VERBOSE == 0)
+    char* err = strstr(message, "error =");
+    if(err == NULL)
+    {   // not an error message
+        return;
+    }
+
+    err += strlen("error =");   // skip to the end of string
+
+    errno = 0;    
+    int wolfErr = strtol(err, NULL, 10);
+    
+    if(errno != 0)
+    {   // range error 
+        return;
+    }
+
+    if(wolfErr >= 0 || wolfErr == (int)WANT_READ || wolfErr == (int)WANT_WRITE)
+    {   // not an error or standard wolfSSL READ/WRITE notifications
+        return;
+    }
+#endif  // !defined(NET_PRES_LOG_VERBOSE) || (NET_PRES_LOG_VERBOSE == 0)
+    
+	(void)snprintf(dataBuff[bufNum], 120, "wolfSSL (%d): %s\r\n", level, message);
 	SYS_CONSOLE_MESSAGE(dataBuff[bufNum]);
 	bufNum ++;
 	if (bufNum == ${num})
@@ -196,8 +230,11 @@ void Net_Prov${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
 		bufNum = 0;
 	}
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 </#if>
-		
+
 bool Net_Prov${TYPE}${CONNECTION}Init${INST}(struct S_NET_PRES_TransportObject * transObject)
 {
 	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
@@ -231,8 +268,8 @@ bool Net_Prov${TYPE}${CONNECTION}Init${INST}(struct S_NET_PRES_TransportObject *
         (void)wolfSSL_Init();
 		<#assign netPresUseWolfSSLDebugLog= "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 		<#if netPresUseWolfSSLDebugLog?has_content && netPresUseWolfSSLDebugLog == true>
-		wolfSSL_SetLoggingCb(Net_Prov${TYPE}${CONNECTION}Log${INST});
-		wolfSSL_Debugging_ON();
+		(void)wolfSSL_SetLoggingCb(&Net_Prov${TYPE}${CONNECTION}Log${INST});
+		(void)wolfSSL_Debugging_ON();
 		</#if>
         net_pres_wolfsslUsers++;
     }
