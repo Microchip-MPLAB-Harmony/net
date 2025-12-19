@@ -571,12 +571,12 @@ static void CmdMqttRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, AP
     MqttChangeBufferSize(pCmdIO, argc, argv, pMqttCtx, false);
 }
 
-/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
-/* MISRA C-2012 Directive 4.12 deviated:1 Deviation record ID -  H3_MISRAC_2012_D_4_12_NET_DR_18 */
+/* MISRA C-2023 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_3_NET_DR_7 */
+/* MISRA C-2023 Directive 4.12 deviated:1 Deviation record ID -  H3_MISRAC_2023_D_4_12_NET_DR_18 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Directive 4.12" "H3_MISRAC_2012_D_4_12_NET_DR_18" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.3" "H3_MISRAC_2023_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Directive 4.12" "H3_MISRAC_2023_D_4_12_NET_DR_18" 
 static void MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx, bool isTx)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
@@ -635,10 +635,10 @@ static void MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: %s buffer size is: %d\r\n", isTx? "TX" : "RX", pMqttCtx->txBuffSize);
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
-#pragma coverity compliance end_block "MISRA C-2012 Directive 4.12"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2023 Directive 4.12"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 static void CmdMqttClean(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)

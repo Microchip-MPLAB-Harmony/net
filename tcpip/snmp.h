@@ -172,10 +172,10 @@ typedef enum
     IPV6_SNMP_TRAP,
 }SNMP_TRAP_IP_ADDRESS_TYPE;
 
-/* MISRA C-2012 Rule 5.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_6_NET_DR_14 */
+/* MISRA C-2023 Rule 5.6 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_5_6_NET_DR_14 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.6" "H3_MISRAC_2012_R_5_6_NET_DR_14" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 5.6" "H3_MISRAC_2023_R_5_6_NET_DR_14" 
 // *****************************************************************************
 /*
   Union:
@@ -197,9 +197,9 @@ typedef union
     uint8_t  byte;                  //byte value
     uint8_t  v[sizeof(uint32_t)];   //byte array
 } SNMP_VAL;
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 // *****************************************************************************

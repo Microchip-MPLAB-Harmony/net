@@ -716,10 +716,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 };
 
 #if defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((M_TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
-/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+/* MISRA C-2023 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_3_NET_DR_7 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.3" "H3_MISRAC_2023_R_21_3_NET_DR_7" 
 #endif  //  defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((M_TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
 {
@@ -794,17 +794,17 @@ bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
     return true;
 }
 #if defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((M_TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.3"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 #endif // defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((M_TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
 
 #if (M_TCPIP_STACK_DOWN_OPERATION != 0)
 #if defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
-/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+/* MISRA C-2023 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_3_NET_DR_7 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.3" "H3_MISRAC_2023_R_21_3_NET_DR_7" 
 #endif  // defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 void TCPIP_Commands_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 {
@@ -843,9 +843,9 @@ void TCPIP_Commands_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     }
 }
 #if defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.3"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 #endif  // defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 #endif  // (M_TCPIP_STACK_DOWN_OPERATION != 0)
 

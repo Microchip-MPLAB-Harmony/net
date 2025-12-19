@@ -55,10 +55,10 @@ Microchip or any third party.
 extern "C" {
 #endif
 
-/* MISRA C-2012 Rule 5.2 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_5_2_NET_DR_6 */
+/* MISRA C-2023 Rule 5.2 deviated:3 Deviation record ID -  H3_MISRAC_2023_R_5_2_NET_DR_6 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_NET_DR_6" 
+#pragma coverity compliance block deviate:3 "MISRA C-2023 Rule 5.2" "H3_MISRAC_2023_R_5_2_NET_DR_6" 
 // *****************************************************************************
 /*
   Enumeration:
@@ -116,9 +116,9 @@ typedef enum
     NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER = (NET_PRES_SKT_DATAGRAM | 
                                               NET_PRES_SKT_SERVER)
 } NET_PRES_SKT_T;
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.2"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 // *****************************************************************************
 /*

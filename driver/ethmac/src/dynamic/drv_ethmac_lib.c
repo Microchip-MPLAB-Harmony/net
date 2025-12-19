@@ -479,10 +479,10 @@ void DRV_ETHMAC_LibDescriptorsPoolCleanUp(DRV_ETHMAC_INSTANCE_DCPT* pMacD,  DRV_
 }
 
 
-/* MISRA C-2012 Rule 11.6 deviated:6 Deviation record ID -  H3_MISRAC_2012_R_11_6_NET_DR_9 */
+/* MISRA C-2023 Rule 11.6 deviated:6 Deviation record ID -  H3_MISRAC_2023_R_11_6_NET_DR_9 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:6 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_NET_DR_9" 
+#pragma coverity compliance block deviate:6 "MISRA C-2023 Rule 11.6" "H3_MISRAC_2023_R_11_6_NET_DR_9" 
 
 /*******************************************************************************
   Function:
@@ -1250,9 +1250,9 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV
     return res;
 
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 11.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 11.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, uint32_t* pnBuffs)
 {

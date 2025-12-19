@@ -304,10 +304,10 @@ typedef enum
 typedef const void*     TCPIP_HTTP_NET_CONN_HANDLE;
 
 
-/* MISRA C-2012 Rule 5.2 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_5_2_NET_DR_6 */
+/* MISRA C-2023 Rule 5.2 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_5_2_NET_DR_6 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_NET_DR_6" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 5.2" "H3_MISRAC_2023_R_5_2_NET_DR_6" 
 // HTTP module configuration flags
 // Multiple flags can be OR-ed
 typedef enum
@@ -335,9 +335,9 @@ typedef enum
     TCPIP_HTTP_NET_MODULE_FLAG_SECURE_DEFAULT       = 0x00,     //  HTTP security is based on the port numbers
 
 }TCPIP_HTTP_NET_MODULE_FLAGS;
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.2"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 // HTTP module dynamic configuration data
 typedef struct

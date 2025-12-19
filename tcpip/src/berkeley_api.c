@@ -216,10 +216,10 @@ static __inline__  struct in6_addr*  __attribute__((always_inline)) FC_U8Ptr2In6
     return U_U8_IN6_PTR.in6_ptr;
 }
 
-/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+/* MISRA C-2023 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_3_NET_DR_7 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.3" "H3_MISRAC_2023_R_21_3_NET_DR_7" 
 static __inline__ void* __attribute__((always_inline)) F_BsdCalloc (size_t items, size_t itemSize)
 {
     return TCPIP_STACK_CALLOC_FUNC(items, itemSize);
@@ -229,9 +229,9 @@ static __inline__ void __attribute__((always_inline)) F_BsdFree(void* ptr)
 {
     TCPIP_STACK_FREE_FUNC(ptr);
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.3"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 // validates the socket and returns the pointer to the internal BSDSocket
 // returns 0 if error

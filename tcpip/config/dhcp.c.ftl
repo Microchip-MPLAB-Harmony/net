@@ -2719,14 +2719,14 @@ static int F_DHCPOptionHostName(const TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPTION_WR
     return -1;
 }
 
-/* MISRA C-2012 Rule 10.1 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_10_1_NET_DR_11 */
-/* MISRA C-2012 Rule 10.2 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_10_2_NET_DR_12 */
-/* MISRA C-2012 Rule 10.4 deviated:4 Deviation record ID -  H3_MISRAC_2012_R_10_4_NET_DR_13 */
+/* MISRA C-2023 Rule 10.1 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_10_1_NET_DR_11 */
+/* MISRA C-2023 Rule 10.2 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_10_2_NET_DR_12 */
+/* MISRA C-2023 Rule 10.4 deviated:4 Deviation record ID -  H3_MISRAC_2023_R_10_4_NET_DR_13 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 10.1" "H3_MISRAC_2012_R_10_1_NET_DR_11" 
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 10.2" "H3_MISRAC_2012_R_10_2_NET_DR_12" 
-#pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 10.4" "H3_MISRAC_2012_R_10_4_NET_DR_13" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 10.1" "H3_MISRAC_2023_R_10_1_NET_DR_11" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 10.2" "H3_MISRAC_2023_R_10_2_NET_DR_12" 
+#pragma coverity compliance block deviate:4 "MISRA C-2023 Rule 10.4" "H3_MISRAC_2023_R_10_4_NET_DR_13" 
 static size_t F_DHCPFormatHostName(unsigned char* destBuffer, const unsigned char* srcBuffer, size_t destSize)
 {
     size_t  ix, len;
@@ -2776,11 +2776,11 @@ static size_t F_DHCPFormatHostName(unsigned char* destBuffer, const unsigned cha
 
     return len;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 10.1"
-#pragma coverity compliance end_block "MISRA C-2012 Rule 10.2"
-#pragma coverity compliance end_block "MISRA C-2012 Rule 10.4"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.2"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.4"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
                 
 static int F_DHCPOptionClientId(const TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPTION_WRITE_DATA* pSendData)

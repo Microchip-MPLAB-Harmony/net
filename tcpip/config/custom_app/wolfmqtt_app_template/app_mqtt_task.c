@@ -156,12 +156,12 @@ static __inline__ size_t __attribute__((always_inline)) FC_MinSize(size_t a, siz
     return (a < b) ? a : b;
 }
 
-/* MISRA C-2012 Rule 21.3 deviated:4 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
-/* MISRA C-2012 Directive 4.12 deviated:2 Deviation record ID -  H3_MISRAC_2012_D_4_12_NET_DR_18 */
+/* MISRA C-2023 Rule 21.3 deviated:4 Deviation record ID -  H3_MISRAC_2023_R_21_3_NET_DR_7 */
+/* MISRA C-2023 Directive 4.12 deviated:2 Deviation record ID -  H3_MISRAC_2023_D_4_12_NET_DR_18 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Directive 4.12" "H3_MISRAC_2012_D_4_12_NET_DR_18" 
+#pragma coverity compliance block deviate:4 "MISRA C-2023 Rule 21.3" "H3_MISRAC_2023_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Directive 4.12" "H3_MISRAC_2023_D_4_12_NET_DR_18" 
 static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
 {
     (void)memset(mqttCtx, 0, sizeof(APP_MQTT_CONTEXT));
@@ -218,16 +218,16 @@ static void APP_MQTT_DeinitContext(APP_MQTT_CONTEXT* mqttCtx)
         mqttCtx->rxBuff = NULL;
     }
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
-#pragma coverity compliance end_block "MISRA C-2012 Directive 4.12"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2023 Directive 4.12"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
-/* MISRA C-2012 Rule 21.6 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_6_NET_DR_3 */
+/* MISRA C-2023 Rule 21.6 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_6_NET_DR_3 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_NET_DR_3" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.6" "H3_MISRAC_2023_R_21_6_NET_DR_3" 
 void APP_MQTT_Task(void)
 {
     APP_MQTT_CONTEXT* mqttCtx = &appMqttCtx;
@@ -781,9 +781,9 @@ void APP_MQTT_Task(void)
             break;
     }
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 static void APP_MQTT_ClientResult(APP_MQTT_CONTEXT* mqttCtx, const char* message, int resCode)

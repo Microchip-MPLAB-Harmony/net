@@ -84,10 +84,10 @@ static void F_TCPIP_HEAP_DataCacheInvalidate(const void* address, size_t nBytes)
     F_TCPIP_HEAP_DataSync();
 }
 
-/* MISRA C-2012 Rule 11.6 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_11_6_NET_DR_9 */
+/* MISRA C-2023 Rule 11.6 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_11_6_NET_DR_9 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_NET_DR_9" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 11.6" "H3_MISRAC_2023_R_11_6_NET_DR_9" 
 const void* F_TCPIP_HEAP_BufferMapNonCached(const void* dataBuff, size_t buffSize)
 {
     if(IS_KVA0(dataBuff))
@@ -108,9 +108,9 @@ const void* F_TCPIP_HEAP_PointerMapCached(const void* ptr)
 
     return ptr;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 11.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 11.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 #else
 const void* F_TCPIP_HEAP_BufferMapNonCached(const void* dataBuff, size_t buffSize)

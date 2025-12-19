@@ -40,14 +40,14 @@ Microchip or any third party.
 #include <stdio.h>
 #include <string.h>
 
-/* MISRA C-2012 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
 #include <stdarg.h>
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 #include "tcpip/src/tcpip_private.h"
 
@@ -2562,12 +2562,12 @@ static TCPIP_HTTP_NET_CONN_STATE F_HTTP_ProcessDisconnect(TCPIP_HTTP_NET_CONN* p
     return HTTP_CONN_STATE_DISCONNECT;
 }
 
-/* MISRA C-2012 Rule 17.1 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
-/* MISRA C-2012 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_21_6_NET_DR_3 */
+/* MISRA C-2023 Rule 17.1 deviated:3 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_21_6_NET_DR_3 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_NET_DR_3" 
+#pragma coverity compliance block deviate:3 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 21.6" "H3_MISRAC_2023_R_21_6_NET_DR_3" 
 static int F_HTTP_HeaderMsg_Print(char* dataBuff, size_t bufferSize, const char* fmt, ...)
 {
     int nChars;
@@ -2588,10 +2588,10 @@ static int F_HTTP_HeaderMsg_Print(char* dataBuff, size_t bufferSize, const char*
 
     return 0;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 
@@ -3158,10 +3158,10 @@ uint16_t TCPIP_HTTP_NET_ConnectionPostSmGet(TCPIP_HTTP_NET_CONN_HANDLE connHandl
     return pHttpCon->smPost;
 }
 
-/* MISRA C-2012 Rule 5.1 deviated:9 Deviation record ID -  H3_MISRAC_2012_R_5_1_NET_DR_10 */
+/* MISRA C-2023 Rule 5.1 deviated:9 Deviation record ID -  H3_MISRAC_2023_R_5_1_NET_DR_10 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:9 "MISRA C-2012 Rule 5.1" "H3_MISRAC_2012_R_5_1_NET_DR_10" 
+#pragma coverity compliance block deviate:9 "MISRA C-2023 Rule 5.1" "H3_MISRAC_2023_R_5_1_NET_DR_10" 
 void TCPIP_HTTP_NET_ConnectionPostSmSet(TCPIP_HTTP_NET_CONN_HANDLE connHandle, uint16_t state)
 {
     TCPIP_HTTP_NET_CONN* pHttpCon = FC_ConnHndl2ConnPtr(connHandle);
@@ -3215,9 +3215,9 @@ uint32_t TCPIP_HTTP_NET_ConnectionByteCountGet(TCPIP_HTTP_NET_CONN_HANDLE connHa
     return pHttpCon->byteCount;
 }
 
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 uint8_t* TCPIP_HTTP_NET_ConnectionDataBufferGet(TCPIP_HTTP_NET_CONN_HANDLE connHandle)
 {

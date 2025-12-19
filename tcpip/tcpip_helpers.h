@@ -375,10 +375,10 @@ static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAdd
 // and reverse
 //
 
-/* MISRA C-2012 Rule 8.6 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_8_6_NET_DR_19 */
+/* MISRA C-2023 Rule 8.6 deviated:3 Deviation record ID -  H3_MISRAC_2023_R_8_6_NET_DR_19 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_NET_DR_19" 
+#pragma coverity compliance block deviate:3 "MISRA C-2023 Rule 8.6" "H3_MISRAC_2023_R_8_6_NET_DR_19" 
 
 // *****************************************************************************
 /*
@@ -439,9 +439,9 @@ static inline uint16_t __attribute__((always_inline)) TCPIP_Helper_htons(uint16_
 
 #define  TCPIP_Helper_ntohs(n)  TCPIP_Helper_htons(n) 
 
-#pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 8.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 //*****************************************************************************
 /*

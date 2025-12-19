@@ -448,10 +448,10 @@ static __inline__ void __attribute__((always_inline)) DRV_ETHMAC_LIB_DataLineFlu
 
 
 #if defined(__PIC32MZ__)
-/* MISRA C-2012 Rule 11.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_11_6_NET_DR_9 */
+/* MISRA C-2023 Rule 11.6 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_11_6_NET_DR_9 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_NET_DR_9" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 11.6" "H3_MISRAC_2023_R_11_6_NET_DR_9" 
 static __inline__ DRV_ETHMAC_DCPT_LIST* __attribute__((always_inline)) DRV_ETHMAC_LIB_ListInit(DRV_ETHMAC_DCPT_LIST* pL)
 {
     DRV_ETHMAC_LIB_DataLineFlush(pL);
@@ -461,9 +461,9 @@ static __inline__ DRV_ETHMAC_DCPT_LIST* __attribute__((always_inline)) DRV_ETHMA
     pNL->tail = NULL;
     return pNL;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 11.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 11.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 #else
 static __inline__ DRV_ETHMAC_DCPT_LIST* __attribute__((always_inline)) DRV_ETHMAC_LIB_ListInit(DRV_ETHMAC_DCPT_LIST* pL)

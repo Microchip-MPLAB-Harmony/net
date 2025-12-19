@@ -94,14 +94,14 @@ Microchip or any third party.
 // 2J is clear screen, 31m is red, 1m is bold
 // 0m is clear all attributes
 
-/* MISRA C-2012 Rule 4.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_4_1_NET_DR_1 */
+/* MISRA C-2023 Rule 4.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_4_1_NET_DR_1 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 4.1" "H3_MISRAC_2012_R_4_1_NET_DR_1" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 4.1" "H3_MISRAC_2023_R_4_1_NET_DR_1" 
 static const char TELNET_START_MSG[] = "\x1b[2J\x1b[31m\x1b[1m Microchip Telnet Server 1.1\x1b[0m\r\n Login: ";
-#pragma coverity compliance end_block "MISRA C-2012 Rule 4.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 4.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 //
 // ask password message
@@ -412,12 +412,12 @@ static void F_Telnet_MSG(const void* cmdIoParam, const char* str)
 }
 
 
-/* MISRA C-2012 Rule 17.1 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
-/* MISRA C-2012 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_21_6_NET_DR_3 */
+/* MISRA C-2023 Rule 17.1 deviated:3 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_21_6_NET_DR_3 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_NET_DR_3" 
+#pragma coverity compliance block deviate:3 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 21.6" "H3_MISRAC_2023_R_21_6_NET_DR_3" 
 // Telnet's print
 static void F_Telnet_PRINT(const void* cmdIoParam, const char* format, ...)
 {
@@ -430,10 +430,10 @@ static void F_Telnet_PRINT(const void* cmdIoParam, const char* format, ...)
 
     F_Telnet_MSG(cmdIoParam, buff);
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 

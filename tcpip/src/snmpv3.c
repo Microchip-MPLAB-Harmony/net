@@ -1126,10 +1126,10 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(char *userName, u
     return SNMPV3_USM_SUCCESS;
 }
 
-/* MISRA C-2012 Rule 5.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_1_NET_DR_10 */
+/* MISRA C-2023 Rule 5.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_5_1_NET_DR_10 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.1" "H3_MISRAC_2012_R_5_1_NET_DR_10" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 5.1" "H3_MISRAC_2023_R_5_1_NET_DR_10" 
 bool TCPIP_SNMPV3_EngineUserDataBaseSet(
     TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType, uint8_t len, 
     uint8_t userIndex,void *val)
@@ -1299,9 +1299,9 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(
     }
     return res;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,uint8_t len,uint8_t userIndex,void *val)

@@ -41,15 +41,15 @@ Microchip or any third party.
 /*******************************************************************************
  * Local Prototypes
  ******************************************************************************/
-/* MISRA C-2012 Rule 8.5 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_8_5_NET_DR_17 */
+/* MISRA C-2023 Rule 8.5 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_8_5_NET_DR_17 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 8.5" "H3_MISRAC_2012_R_8_5_NET_DR_17" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 8.5" "H3_MISRAC_2023_R_8_5_NET_DR_17" 
 void                        EMAC0_InterruptHandler(     void );
 void                        EMAC1_InterruptHandler(     void );
-#pragma coverity compliance end_block "MISRA C-2012 Rule 8.5"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 8.5"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 // PHY related Initialization
 static TCPIP_MAC_RES        macDrvrPhyInitialize(       MAC_DRIVER * pMacDrvr );

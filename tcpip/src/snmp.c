@@ -6515,10 +6515,10 @@ void TCPIP_SNMP_TrapSpecificNotificationGet(uint8_t *specTrap)
     *specTrap = snmpStkDcptMemStubPtr->gSpecificTrapNotification;
 }
 
-/* MISRA C-2012 Rule 5.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_1_NET_DR_10 */
+/* MISRA C-2023 Rule 5.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_5_1_NET_DR_10 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.1" "H3_MISRAC_2012_R_5_1_NET_DR_10" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 5.1" "H3_MISRAC_2023_R_5_1_NET_DR_10" 
 void TCPIP_SNMP_TrapSpecificNotificationSet(uint8_t specTrap,uint8_t genTrap, SNMP_ID trapID)
 {
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo;
@@ -6535,9 +6535,9 @@ void TCPIP_SNMP_TrapSpecificNotificationSet(uint8_t specTrap,uint8_t genTrap, SN
     snmpStkDcptMemStubPtr->gGenericTrapNotification = genTrap;
     snmpStkDcptMemStubPtr->SNMPNotifyInfo.trapIDVar = trapID;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 void TCPIP_SNMP_TrapInterFaceSet(TCPIP_NET_HANDLE netIntf)
 {

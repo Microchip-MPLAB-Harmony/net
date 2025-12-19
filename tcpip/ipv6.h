@@ -178,10 +178,10 @@ typedef enum
 } IPV6_ADDRESS_PREFERENCE;
 
 
-/* MISRA C-2012 Rule 5.2 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_2_NET_DR_6 */
+/* MISRA C-2023 Rule 5.2 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_5_2_NET_DR_6 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_NET_DR_6" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 5.2" "H3_MISRAC_2023_R_5_2_NET_DR_6" 
 // *****************************************************************************
 /* 
   Enumeration: 
@@ -211,9 +211,9 @@ typedef enum
     TYPE_IPV6_BEGINNING_OF_WRITABLE_PART,
     TYPE_IPV6_END_OF_LIST
 } IPV6_SEGMENT_TYPE;
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.2"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 //DOM-IGNORE-BEGIN
 extern const IPV6_ADDR IPV6_FIXED_ADDR_UNSPECIFIED;
@@ -223,10 +223,10 @@ extern const IPV6_ADDR IPV6_SOLICITED_NODE_MULTICAST;
 extern const TCPIP_MAC_ADDR  IPV6_MULTICAST_MAC_ADDRESS;
 //DOM-IGNORE-END
 
-/* MISRA C-2012 Rule 5.5 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_5_5_NET_DR_8 */
+/* MISRA C-2023 Rule 5.5 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_5_5_NET_DR_8 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 5.5" "H3_MISRAC_2012_R_5_5_NET_DR_8" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 5.5" "H3_MISRAC_2023_R_5_5_NET_DR_8" 
 // *****************************************************************************
 /* 
   Type:
@@ -251,15 +251,15 @@ typedef union
         unsigned unrecognizedAction : 2;
     } bits;
 } IPV6_TLV_OPTION_TYPE;
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.5"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.5"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
-/* MISRA C-2012 Rule 5.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_6_NET_DR_14 */
+/* MISRA C-2023 Rule 5.6 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_5_6_NET_DR_14 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.6" "H3_MISRAC_2012_R_5_6_NET_DR_14" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 5.6" "H3_MISRAC_2023_R_5_6_NET_DR_14" 
 // *****************************************************************************
 /* 
   Type:
@@ -284,9 +284,9 @@ typedef union
         unsigned type : 2;
     } bits;
 } IPV6_ADDRESS_TYPE;
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 5.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 // *****************************************************************************

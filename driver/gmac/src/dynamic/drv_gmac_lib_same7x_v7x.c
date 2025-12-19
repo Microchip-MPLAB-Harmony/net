@@ -47,18 +47,18 @@ Microchip or any third party.
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
-/* MISRA C-2012 Rule 8.5 deviated:5 Deviation record ID -  H3_MISRAC_2012_R_8_5_NET_DR_17 */
+/* MISRA C-2023 Rule 8.5 deviated:5 Deviation record ID -  H3_MISRAC_2023_R_8_5_NET_DR_17 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:5 "MISRA C-2012 Rule 8.5" "H3_MISRAC_2012_R_8_5_NET_DR_17" 
+#pragma coverity compliance block deviate:5 "MISRA C-2023 Rule 8.5" "H3_MISRAC_2023_R_8_5_NET_DR_17" 
 void GMAC_Q1_Handler(void);
 void GMAC_Q2_Handler(void);
 void GMAC_Q3_Handler(void);
 void GMAC_Q4_Handler(void);
 void GMAC_Q5_Handler(void);
-#pragma coverity compliance end_block "MISRA C-2012 Rule 8.5"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 8.5"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 static void MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param);

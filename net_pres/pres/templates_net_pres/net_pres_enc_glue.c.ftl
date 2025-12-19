@@ -58,14 +58,14 @@ Microchip or any third party.
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
 #include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX2}"
 </#if>
-/* MISRA C-2012 Rule 8.5 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_8_5_NET_DR_15 */
+/* MISRA C-2023 Rule 8.5 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_8_5_NET_DR_15 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 8.5" "H3_MISRAC_2012_R_8_5_NET_DR_15" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 8.5" "H3_MISRAC_2023_R_8_5_NET_DR_15" 
 extern int CheckAvailableSize(WOLFSSL *ssl, int size);
-#pragma coverity compliance end_block "MISRA C-2012 Rule 8.5"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 8.5"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 <#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
 #include "wolfssl/wolfcrypt/port/atmel/atmel.h"
@@ -963,18 +963,18 @@ typedef struct
     bool isInited;
 }net_pres_wolfsslInfo;
 
-/* MISRA C-2012 Rule 8.4 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_8_4_NET_DR_16 */
+/* MISRA C-2023 Rule 8.4 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_8_4_NET_DR_16 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 8.4" "H3_MISRAC_2012_R_8_4_NET_DR_16" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 8.4" "H3_MISRAC_2023_R_8_4_NET_DR_16" 
 // Temporary fix till crypto library is upgraded to recent wolfssl versions.
 int  InitRng(RNG* rng)
 {
     return wc_InitRng(rng);
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 8.4"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 8.4"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 </#if>
 <#assign numInstance= 1>

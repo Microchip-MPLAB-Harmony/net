@@ -47,14 +47,14 @@ Microchip or any third party.
 #include <ctype.h>
 #include <errno.h>
 
-/* MISRA C-2012 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
 #include <stdarg.h>
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 static bool CheckIpStrEnd(uint8_t ch);
 
@@ -2317,12 +2317,12 @@ bool TCPIP_Helper_SecurePortSet(uint16_t port, bool streamSocket, bool isSecure)
 
 // conversion functions/helpers
 
-/* MISRA C-2012 Rule 17.1 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
-/* MISRA C-2012 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_21_6_NET_DR_3 */
+/* MISRA C-2023 Rule 17.1 deviated:3 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 21.6 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_21_6_NET_DR_3 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_NET_DR_3" 
+#pragma coverity compliance block deviate:3 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 21.6" "H3_MISRAC_2023_R_21_6_NET_DR_3" 
 // safe sprintf function
 int FC_sprintf(char* buff, size_t buffSize, const char* fmt, ...)
 {
@@ -2340,23 +2340,23 @@ int FC_sprintf(char* buff, size_t buffSize, const char* fmt, ...)
     return needBytes;
 }
 
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.6"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
-/* MISRA C-2012 Rule 21.9 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_21_9_NET_DR_4 */
+/* MISRA C-2023 Rule 21.9 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_21_9_NET_DR_4 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.9" "H3_MISRAC_2012_R_21_9_NET_DR_4" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 21.9" "H3_MISRAC_2023_R_21_9_NET_DR_4" 
 // sort function helper
 void FC_Sort (void * base, size_t numElem, size_t elemSize, int (*comparF)(const void* p1, const void* p2))
 {
     qsort(base, numElem, elemSize, comparF);
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.9"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.9"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 // string to int conversion

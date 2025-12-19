@@ -242,10 +242,10 @@ static void F_Shell_ObjectUnlock(SHELL_OBJ_INSTANCE* pShell, SYS_FS_SHELL_RES er
 // API
 //
 
-/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+/* MISRA C-2023 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_3_NET_DR_7 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.3" "H3_MISRAC_2023_R_21_3_NET_DR_7" 
 const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, void*(*shell_malloc_fnc)(size_t nBytes), void(*shell_free_fnc)(void* ptr), SYS_FS_SHELL_RES* pRes)
 {
     size_t rootLen;
@@ -360,9 +360,9 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
 
     return newObj != NULL ? &newObj->obj : NULL;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.3"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 // local object functions implementation
 //

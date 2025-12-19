@@ -39,14 +39,14 @@ Microchip or any third party.
 #include "helpers.h"
 #include "tcpip_types.h"
 
-/* MISRA C-2012 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
 #include <stdarg.h>
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 /*****************************************************************************
   Function:
@@ -231,10 +231,10 @@ uint8_t btohexa_low(uint8_t b)
     return (b > 9u) ? b + 0x61U - 10U : b + 0x30U;    // 0x61 == 'a'; 0x30 == '0'
 }
 
-/* MISRA C-2012 Rule 17.1 deviated:4 Deviation record ID -  H3_MISRAC_2012_R_17_1_NET_DR_2 */
+/* MISRA C-2023 Rule 17.1 deviated:4 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 17.1" "H3_MISRAC_2012_R_17_1_NET_DR_2" 
+#pragma coverity compliance block deviate:4 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
 /*****************************************************************************
   Function:
     char* strncpy_m(char* destStr, size_t destSize, int nStrings, ...)
@@ -297,14 +297,14 @@ size_t strncpy_m(char* destStr, size_t destSize, int nStrings, ...)
     
     return len;
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
-/* MISRA C-2012 Rule 21.13 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_13_NET_DR_5 */
+/* MISRA C-2023 Rule 21.13 deviated:2 Deviation record ID -  H3_MISRAC_2023_R_21_13_NET_DR_5 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.13" "H3_MISRAC_2012_R_21_13_NET_DR_5" 
+#pragma coverity compliance block deviate:2 "MISRA C-2023 Rule 21.13" "H3_MISRAC_2023_R_21_13_NET_DR_5" 
 int stricmp(const char *cs1, const char *cs2)
 {
     if (cs1 == NULL || cs2 == NULL)
@@ -323,9 +323,9 @@ int stricmp(const char *cs1, const char *cs2)
 
     return (c1 - c2); 
 }
-#pragma coverity compliance end_block "MISRA C-2012 Rule 21.13"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 21.13"
 #pragma GCC diagnostic pop
-/* MISRAC 2012 deviation block end */
+/* MISRAC 2023 deviation block end */
 
 
 
