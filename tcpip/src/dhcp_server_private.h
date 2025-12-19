@@ -140,7 +140,7 @@ Microchip or any third party.
 // run time tests
 #define M_TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW    (0x10000)    // ignore the renew message, wait for rebind
 // enable IPV4 debugging levels
-#define M_TCPIP_DHCPS_DEBUG_LEVEL                 (0)
+#define M_TCPIP_DHCPS_DEBUG_LEVEL                 (0x01)
 
 // buffer for RX processing
 // Note: the output reply is assembled here too!

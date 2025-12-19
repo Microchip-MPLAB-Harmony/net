@@ -368,7 +368,7 @@ static const char* T_DHCPS_ClientEvent_Tbl[] =
 #endif  // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
 
 
-static void F_DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
+static void F_DHCPS_EventPrint(const TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
 {
     const char* evStr = "illegal";
     const char* evMsg = "illegal";
@@ -2327,28 +2327,54 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
 
-    if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
-    {   // there should NOT be a server identifier! ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
-        evInfo.flags.infoFmtMask = 1;
-        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
-    }
-    else if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
-    {   // there should NOT be a requested IP address. ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
-        evInfo.flags.infoFmtMask = 1;
-        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_SET;
-    }
-    else if(pHeader->ciaddr != he->ipAddress.Val)
+    while(true)
     {
-        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
-        evInfo.flags.infoFmtMask = 1;
-        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR;
-    } 
-    else
-    {   // all good...
-        // check unicast: renewing, broadcast: rebinding
-        bool bRenew = ((pIDcpt->msgFlags & (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST) == 0U) ? true : false;
+        bool bRenew;
+
+        if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
+        {   // there should NOT be a server identifier! ignore but notify ill formatted message
+            evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
+            break;
+        }
+        // detect RENEWING or INIT_REBOOT based on ciaddr and the UCAST/BCAST message type
+        if((pIDcpt->msgFlags & (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST) == 0U && pHeader->ciaddr == he->ipAddress.Val)
+        {
+            bRenew = true;
+        }
+        else if((pIDcpt->msgFlags & (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST) != 0U && pHeader->ciaddr == 0U)
+        {
+            bRenew = false; // INIT_REBOOT
+        }
+        else
+        {   // format error
+            evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR;
+            break;
+        }
+
+        // one last check: the requested IP address: not allowed in client RENEWING but MUST in INIT_REBOOT
+        if(bRenew)
+        {
+           if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
+           {   // there should NOT be a requested IP address in RENEWING state. ignore but notify ill formatted message
+               evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+               evInfo.flags.infoFmtMask = 1;
+               evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_SET;
+               break;
+           }
+        }
+        else if(pRxOpt->requestAddress.optionType != (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
+        {   // there should be a requested IP address. ignore but notify ill formatted message
+            evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
+            break;
+        }
+
+        // all good...
         he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_ACK;
         newState = TCPIP_DHCPS_LEASE_STATE_BOUND; 
 
@@ -2379,6 +2405,8 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_
         (void)F_DHCPS_SendMessage(he);
 #endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW) != 0) 
         evType = bRenew ? TCPIP_DHCPS_EVENT_REQUEST_RENEW : TCPIP_DHCPS_EVENT_REQUEST_REBIND; 
+        // done
+        break;
     }
 
     F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
