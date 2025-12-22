@@ -104,8 +104,8 @@ Microchip or any third party.
 #define IS_AGENT_PDU(a)         ((a) == GET_REQUEST || \
                                  (a) == GET_NEXT_REQUEST || \
                                  (a) == SET_REQUEST || \
-                                 (a) == SNMP_V2C_GET_BULK)
-#define IS_SNMPV3_AUTH_STRUCTURE(a) ((a) == SNMPV3_ENCRYPTION)
+                                 (a) == (int)SNMP_V2C_GET_BULK)
+#define IS_SNMPV3_AUTH_STRUCTURE(a) ((a) == (uint8_t)SNMPV3_ENCRYPTION)
 
 
 
@@ -394,7 +394,7 @@ uint8_t *TCPIP_SNMP_GenericTrapCodeToTrapOID(uint8_t generic_trap_code,uint8_t *
 bool TCPIP_SNMP_VarDataTypeIsValidInteger(uint32_t* val);
 bool TCPIP_SNMP_NextLeafGet(SYS_FS_HANDLE fileDescr,OID_INFO* rec);
 bool TCPIP_SNMP_OIDStringFindByID(SYS_FS_HANDLE fileDescr,SNMP_ID id, OID_INFO* info, uint8_t* oidString, uint8_t* len);
-bool TCPIP_SNMP_PDUProcessDuplexInit(UDP_SOCKET socket);
+bool TCPIP_SNMP_PDUProcessDuplexInit(UDP_SOCKET skt);
 bool TCPIP_SNMP_DataTypeInfoGet(SNMP_DATA_TYPE dataType, SNMP_DATA_TYPE_INFO *info );
 
 
@@ -536,5 +536,6 @@ void TCPIP_SNMP_FreeMemory(void);
 uint32_t TCPIP_SNMP_GetRXOffset(void);
 void TCPIP_SNMP_SetRXOffset(uint32_t offset);
 void TCPIP_SNMP_CopyOfDataToINUDPBuff(TCPIP_SNMP_DATABUF *getbuf,int val);
+void TCPIP_SNMP_MergeNodesOfOID(uint8_t *oidValuePtr, uint8_t *OIDLen);
 #endif  // H_SNMP_PRIVATE_H_ 
 

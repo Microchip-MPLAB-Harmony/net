@@ -171,25 +171,25 @@ uint32_t F_SNMP_BuildIntegerValue(SNMP_VAL inputVal,uint32_t dataLen);
 
 void TCPIP_SNMP_MergeNodesOfOID(uint8_t *oidValuePtr, uint8_t *OIDLen)
 {     
-    int m = 1;
-    int k = 0;
-    int inLen = *OIDLen;
+    uint8_t m = 1U;
+    uint8_t inLen = *OIDLen;
     
     #if (SNMP_DEBUG != 0)
+    uint8_t k = 0U;
     SYS_CONSOLE_PRINT("\r\n%s(): %d OIDValue = ", __FUNCTION__, __LINE__);
-    for(k = 0; k < inLen; k++)
+    for(k = 0U; k < inLen; k++)
         SYS_CONSOLE_PRINT(" %d", oidValuePtr[k]);
     #endif
     
     /* Change the OIDValues to make the first 2 bytes into 1 byte */
-    oidValuePtr[0] = (oidValuePtr[0] * 40) + oidValuePtr[1];
+    oidValuePtr[0] = (oidValuePtr[0] * 40U) + oidValuePtr[1];
     while(m != inLen)
     {
-        oidValuePtr[m] = oidValuePtr[m+1];
+        oidValuePtr[m] = oidValuePtr[m + 1U];
         m++;
     }
     
-    *OIDLen = inLen - 1;    
+    *OIDLen = (uint8_t)(inLen - 1U);    
 }
 
 uint8_t TCPIP_SNMP_GetDataFromUDPBuff(TCPIP_SNMP_DATABUF *getbuf)
@@ -1581,7 +1581,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
 
         agentIDLen = len;
         agentIDLen--;
-        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len - 1,snmpTrapPutData);
+        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len - 1U,snmpTrapPutData);
 
         while( len-- != 0U)
         {
@@ -1592,9 +1592,9 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
             {
                 merged_node = c;
             }
-            else if (len == (agentIDLen - 1))
+            else if (len == (agentIDLen - 1U))
             {
-                c = c + merged_node * 40;
+                c = c + merged_node * 40U;
             (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
         }
             else
@@ -1834,7 +1834,7 @@ bool TCPIP_SNMP_TRAPv1Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
     agentIDLen = len;
     agentIDLen--;
  
-    (void)TCPIP_SNMP_DataCopyToProcessBuffer(len-1,snmpTrapPutData);
+    (void)TCPIP_SNMP_DataCopyToProcessBuffer(len-1U,snmpTrapPutData);
     while( len-- != 0U)
     {
         uint8_t c;
@@ -1844,9 +1844,9 @@ bool TCPIP_SNMP_TRAPv1Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         {
             merged_node = c;
         }
-        else if (len == (agentIDLen - 1))
+        else if (len == (agentIDLen - 1U))
         {
-            c = c + merged_node * 40;
+            c = c + merged_node * 40U;
             (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
         }
         else
@@ -2441,6 +2441,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
             // Before each variables are processed, prepare necessary header.
 
             case (int)SM_PKT_STRUCT_LEN_OFFSET:
+            {
                 snmpPutData = &SnmpStackDcptMemStubPtr->outPduBufData;
 
                 varPairLen.Val=0x0000U;
@@ -2471,9 +2472,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_RESPONSE_PDU_LEN_OFFSET:
-
+            {
                 // Put PDU type.  SNMP agent's response is always GET RESPONSE
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(GET_RESPONSE,snmpPutData);
 
@@ -2494,9 +2496,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 smSnmp++;
                 break;
-            
-            case (int)SM_ERROR_STATUS_OFFSET :
+            }
 
+            case (int)SM_ERROR_STATUS_OFFSET :
+            {
                 // Put error status.
                 // Since we do not know error status, put place holder until we know it...
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(ASN_INT,snmpPutData);              // Int type
@@ -2505,9 +2508,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(0,snmpPutData);                    // Placeholder.
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_ERROR_INDEX_OFFSET :
-
+            {
                 // Similarly put error index.
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(ASN_INT,snmpPutData);              // Int type
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(1,snmpPutData);                    // One byte long
@@ -2519,9 +2523,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_FIND_NO_OF_REQUESTED_VARBINDS:
-
+            {
                 // Decode variable binding structure
                 if ( TCPIP_SNMP_StructureIsValid(&varBindingLen.Val) == 0U)
                 {
@@ -2534,9 +2539,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_FIND_NO_OF_RESPONSE_VARBINDS:
-
+            {
                 //Calulate number of variables to be responded for the received request
                 Getbulk_N = noOfOIDsInReq; Getbulk_M=0; Getbulk_R=0;
                 if(((pduDbPtr->snmpVersion == (uint8_t)SNMP_V2C)|| (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)) && (pduDbPtr->pduType == (uint8_t)GET_BULK_REQUEST))
@@ -2567,9 +2573,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 #endif
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_VARBIND_STRUCT_OFFSET:
-
+            {
                 // Put variable binding response structure
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(STRUCTURE,snmpPutData);
                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(0x82U,snmpPutData);
@@ -2583,9 +2590,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_VARSTRUCT_LEN_OFFSET:
-
+            {
                 /*  If the getbulk request is received with zero non-repeaters, process
                         variable State Machine jumps to SM_MAX_REPETITIONS. Modify the Rx
                         and Tx offset accordigly. */
@@ -2606,7 +2614,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                         agentIDLen = len;
                         agentIDLen--;
-                        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len-1,snmpPutData);
+                        (void)TCPIP_SNMP_DataCopyToProcessBuffer(len-1U,snmpPutData);
 
                         while( len-- != 0U)
                         {
@@ -2618,9 +2626,9 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             {
                                 merged_node = c;
                             }
-                            else if (len == (agentIDLen - 1))
+                            else if (len == (agentIDLen - 1U))
                             {
-                                c = c + merged_node * 40;
+                                c = c + merged_node * 40U;
                                 (void)TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpPutData);
                             }
                             else
@@ -2676,9 +2684,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_POPULATE_REQ_OID:
-
+            {
             /*  Populate received pdu for the requested OIDs and also create the
                 response pdu on the go.*/
                 // Decode next object
@@ -2779,7 +2788,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                     SnmpStackDcptMemStubPtr->gSendTrapFlag=true;
                 }
                 
-                if(smSnmp==SM_PKT_STRUCT_LEN_OFFSET || smSnmp==SM_VARSTRUCT_LEN_OFFSET)
+                if(smSnmp==(int)SM_PKT_STRUCT_LEN_OFFSET || smSnmp==(int)SM_VARSTRUCT_LEN_OFFSET)
                 {
                     #if (SNMP_DEBUG != 0)
                     SYS_CONSOLE_PRINT("\r\n %s(%d):  failed", __FUNCTION__, __LINE__);        
@@ -2788,9 +2797,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }
                 
                 break;
-            
-            case (int)SM_FIND_OID_IN_MIB:
+            }
 
+            case (int)SM_FIND_OID_IN_MIB:
+            {
                 /* Search for the requested OID in the MIB database with the agent.*/
 
                 if(Getbulk_N!= 0u)
@@ -2807,17 +2817,17 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                 uint8_t tmp_len = OIDLen;
                 uint8_t CorrOIDValue[50] = {0};
-                memcpy(CorrOIDValue, OIDValue, OIDLen);
+                (void)memcpy(CorrOIDValue, OIDValue, OIDLen);
                 
-                while(tmp_len)
+                while(tmp_len != 0U)
                 {
-                    CorrOIDValue[tmp_len+1] = CorrOIDValue[tmp_len];
+                    CorrOIDValue[tmp_len + 1U] = CorrOIDValue[tmp_len];
                     tmp_len--;
                 }
 
-                CorrOIDValue[1] = CorrOIDValue[0]%40;
-                CorrOIDValue[0] = CorrOIDValue[0]/40;
-                tmp_len = OIDLen + 1;
+                CorrOIDValue[1] = CorrOIDValue[0] % 40U;
+                CorrOIDValue[0] = CorrOIDValue[0] / 40U;
+                tmp_len = OIDLen + 1U;
 
                 //Searching the requested OID in the MIB database
                 oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(snmpFileDescrptr,pduDbPtr,CorrOIDValue, tmp_len, &OIDInfo);
@@ -2945,9 +2955,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }
                 smSnmp++;
                 break;
+            }
 
             case (int)SM_NON_REPETITIONS:
-
+            {
                 /*  Variables in get,get_next,set and get_bulk ( non repetition variables)
                         of snmp request are processed in this part of the state machine.*/
 
@@ -3231,9 +3242,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 /* check length*/
                 doCheck = true;
                 break;
+            }
 
             case (int)SM_MAX_REPETITIONS:
-
+            {
                 doCheck = true;
                 
                 /*Process each variable in request as Get_Next for
@@ -3242,7 +3254,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 {
                     SNMPRxOffset=prevSnmpRxOffset;
 
-                    //Process every veriable in the request.
+                    //Process every variable in the request.
                     for(varBindCntr=0;varBindCntr<Getbulk_R;varBindCntr++)
                     {
                         if(varBindCntr==0u)
@@ -3347,17 +3359,17 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                         uint8_t tmp_len = OIDLen;
                         uint8_t CorrOIDValue[50] = {0};
-                        memcpy(CorrOIDValue, OIDValue, OIDLen);
+                        (void)memcpy(CorrOIDValue, OIDValue, OIDLen);
 
-                        while(tmp_len)
+                        while(tmp_len != 0U)
                         {
-                            CorrOIDValue[tmp_len+1] = CorrOIDValue[tmp_len];
+                            CorrOIDValue[tmp_len + 1U] = CorrOIDValue[tmp_len];
                             tmp_len--;
                         }
 
-                        CorrOIDValue[1] = CorrOIDValue[0]%40;
-                        CorrOIDValue[0] = CorrOIDValue[0]/40;
-                        tmp_len = OIDLen + 1;
+                        CorrOIDValue[1] = CorrOIDValue[0] % 40U;
+                        CorrOIDValue[0] = CorrOIDValue[0] / 40U;
+                        tmp_len = OIDLen + 1U;
 
                         //Searching the requested OID in the MIB database
                         oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(snmpFileDescrptr,pduDbPtr,CorrOIDValue, tmp_len, &OIDInfo);
@@ -3575,10 +3587,13 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 }//for(repeatCntr=0;repeatCntr<Getbulk_M;repeatCntr++)
             
                 break;
+            }
 
             default:
+            {
                 // do nothing
                 break;
+            }
         }//end of switch(smSnmp)
 
         if(doRet)
@@ -3933,11 +3948,11 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
             #endif
 
             /* Change the OIDValues to make the first 2 bytes into 1 byte */
-            OIDValue[0] = (OIDValue[0] * 40) + OIDValue[1];
-            int m = 1;
+            OIDValue[0] = (OIDValue[0] * 40U) + OIDValue[1];
+            uint8_t m = 1U;
             while(m != OIDLen)
             {
-                OIDValue[m] = OIDValue[m+1];
+                OIDValue[m] = OIDValue[m + 1U];
                 m++;
             }
 
@@ -5072,7 +5087,7 @@ static bool TCPIP_SNMP_PDUIsValid(SNMP_ACTION* pdu)
 
     // Fetch pdu data type
     tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
-    if ( !IS_AGENT_PDU(tempData) )
+    if ( !IS_AGENT_PDU((int)tempData) )
     {
         return false;
     }
@@ -6413,7 +6428,7 @@ bool  TCPIP_SNMP_SnmpVersionSet(uint8_t snmpVer)
 	return false;
 }
 
-uint8_t  TCPIP_SNMP_SnmpVersionGet()
+uint8_t  TCPIP_SNMP_SnmpVersionGet(void)
 {
 	return gSnmpDcpt.snmpVersionType;
 }

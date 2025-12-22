@@ -102,10 +102,10 @@ Microchip or any third party.
 #define SNMP_V3         (3)
 
 /* This macro is used for configuring SNMP version 1, 2c, 3 */
-#define SNMP_V1_V2C_V3		(0)
+#define SNMP_V1_V2C_V3		(0U)
 
 /* This macro is used for Configuring SNMP version 3*/
-#define SNMP_V3_ONLY        (1)
+#define SNMP_V3_ONLY        (1U)
 
 
 // *****************************************************************************
@@ -1541,7 +1541,7 @@ bool  TCPIP_SNMP_SnmpVersionSet(uint8_t snmpVer);
 //****************************************************************************
 /*
   Function:
-    uint8_t  TCPIP_SNMP_SnmpVersionGet();
+    uint8_t  TCPIP_SNMP_SnmpVersionGet(void);
 
   Summary:
     Gets the SNMP version supported.
@@ -1558,7 +1558,7 @@ bool  TCPIP_SNMP_SnmpVersionSet(uint8_t snmpVer);
   Remarks:
     None.
  */
-uint8_t  TCPIP_SNMP_SnmpVersionGet();
+uint8_t  TCPIP_SNMP_SnmpVersionGet(void);
 
 // *****************************************************************************
 /*
