@@ -1,4 +1,51 @@
 # Microchip MPLAB® Harmony 3 Release Notes
+## Net Release v3.14.5 (January, 2026)
+### ADDITIONS AND UPDATES FOR v3.14.5:
+
+- **Applications**
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
+
+
+- **Improvements and Bug Fixes**
+    -   The following table provides the list of improvements and bug fixes in the v3.14.5 release:
+
+        | Module              | Description |
+        | ------------------- | ----------- |
+        | SNMP/SNMPv3         | Enabled the multiple MIBs support |
+        |                     | Fixed the SNMP state machine flow |
+        |                     | Fixed the issue of SNMPv3 'Get' and 'Get Next' not working |
+        |                     | Fixed the issue of 'Trap' not getting generated |
+        |                     | Fixed the issue of 'SNMPv3 Only' Not Working |
+        |                     | Fixed the MISRA C Violations |
+        | ETHMAC              | Fixed missing synchronization calls to the ETH MAC driver | 
+        | TCP                 | Fixed code for persistent server socket remote binding |
+        | GMAC                | Fixed missing GMAC driver GBit register setting in PIC32CK |
+        | Presentation Layer  | Made net_pres default log setting as 'not verbose' |
+        | DHCP Server         | Fixed INIT_REBOOT/RENEWING states detection for DHCPREQUEST received while BOUND |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.25](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v5.00](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.14.5
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.6.3 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.16.0
+- Harmony csp repository, v3.25.0
+- Harmony bsp repository, v3.24.0
+- Harmony crypto repository, v3.8.2
+- harmony-services repository, v1.5.0
+- wolfMQTT v1.19.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.19.2) for demos requiring wolfMQTT support
+- wolfSSL v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring encryption wolfSSL support
+
+
 ## Net Release v3.14.4 (October, 2025)
 ### ADDITIONS AND UPDATES FOR v3.14.4:
 
