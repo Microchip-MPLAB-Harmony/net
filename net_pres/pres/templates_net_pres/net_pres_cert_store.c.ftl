@@ -50,21 +50,6 @@ Microchip or any third party.
     </#if>
 </#if>
 
-<#if NET_PRES_CERT_STORE_STUBS>
-    <#if NET_PRES_CERT_STORE_STUBS_CLIENT>
-bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
-{
-    return false;
-}
-    </#if>
-    <#if NET_PRES_CERT_STORE_STUBS_SERVER>
-bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
-{
-    return false;
-}
-    </#if>
-</#if>
-
 <#if NET_PRES_BLOB_CERT_REPO>
     <#if NET_PRES_BLOB_CLIENT_SUPPORT>
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
@@ -84,6 +69,15 @@ bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * s
     return true;
 }
     </#if>
+<#else>
+bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
+{
+    return false;
+}
+bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
+{
+    return false;
+}
 </#if>
 
 
