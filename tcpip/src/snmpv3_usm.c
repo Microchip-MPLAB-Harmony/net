@@ -125,7 +125,7 @@ void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
 
-    if(inOutPdu== SNMP_REQUEST_PDU) //init vector for decryption
+    if(inOutPdu== (uint8_t)SNMP_REQUEST_PDU) //init vector for decryption
     {
 
         prvParamPtr=snmpv3EngnDcptMemoryStubPtr->snmpInMsgPrvParamStrng;
@@ -147,14 +147,14 @@ void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
         while(true)
         {
             *decryptPtr++=*(prvParamPtr+j);
-            if(j==7)
+            if(j==7U)
             {
                 break;
             }
             j++;
         }
     }
-    else if(inOutPdu == SNMP_RESPONSE_PDU) //init vector for encryption
+    else if(inOutPdu == (uint8_t)SNMP_RESPONSE_PDU) //init vector for encryption
     {
 
         prvParamPtr=snmpv3EngnDcptMemoryStubPtr->SnmpOutMsgPrvParmStrng;
@@ -174,7 +174,7 @@ void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
         while(true)
         {
             *decryptPtr++=*(prvParamPtr+j);
-            if(j==7)
+            if(j==7U)
             {
                 break;
             }
