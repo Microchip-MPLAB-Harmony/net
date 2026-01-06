@@ -1764,9 +1764,8 @@ static bool F_DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTI
         }
         
         // properly format the clientId to the standard size
-        // and save the actual client ID zise
+        // and save the actual client ID size
         pRxOpt->idSize = F_DHCPS_FormatHashKey(pRxOpt->clientId, pKeySrc, keySize);
-
         return true;
     }
 
@@ -4217,7 +4216,6 @@ static DHCPS_HASH_ENTRY* F_DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDc
         he->clientIdLen = (uint8_t)pRxOpt->idSize;
         (void)memcpy(he->clientId, pRxOpt->clientId, sizeof(he->clientId));
         he->ipAddress.Val = F_IpAddressFromPoolIndex(pIDcpt, ipIndex);
-
     }
     else
     {

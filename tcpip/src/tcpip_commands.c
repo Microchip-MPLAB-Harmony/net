@@ -1213,6 +1213,7 @@ static void F_Command_DHCPsLeaseList(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char
     for(leaseIx = 0; leaseIx < nLeases; leaseIx++)
     {
         TCPIP_DHCPS_LEASE_INFO* pLeaseInfo = &extLeaseInfo.leaseInfo;
+        pLeaseInfo->clientIdLen = (uint8_t)sizeof(pLeaseInfo->clientId); 
         res = TCPIP_DHCPS_LeaseGetInfo(netH, pLeaseInfo, leaseIx);
         if(res ==  TCPIP_DHCPS_RES_UNUSED_INDEX)
         {
