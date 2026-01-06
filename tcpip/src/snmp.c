@@ -2389,6 +2389,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
     uint8_t oidLookUpRet=0;
     uint8_t templen=0;
     uint8_t successor=0;// 'I'th lexicographic successor
+    uint8_t skipID=0;
     uint8_t *ptemp;
     uint8_t *ptroid;
     uint8_t *rxedCommunityName;
@@ -3324,7 +3325,8 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                             getbulkOverFlowFlag = true;
                             break;
                         }
-                        successor=repeatCntr;
+                        successor = repeatCntr + skipID;
+                        skipID = 0; // reset previous OID skip
                         // Decode variable length structure
                         temp = TCPIP_SNMP_StructureIsValid(&tempLen.Val);
                         if ( temp == 0U )
@@ -3477,6 +3479,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         else if(temp != 0U)//if(oidLookUpRet != SNMP_END_OF_MIB_VIEW)
                         {
                             temp = TCPIP_SNMP_ProcessGetBulkVar(&OIDInfo, &OIDValue[0],&OIDLen,&successor,pduDbPtr);
+                            if (successor != repeatCntr)
+                            {
+                                skipID += (successor - repeatCntr);
+                            }
                         }
                         else
                         {
@@ -4294,6 +4300,7 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
                 {
                     return 0U;
                 }
+                *successor += 1;
 
                 TCPIP_SNMP_MergeNodesOfOID(oidValuePtr, &OIDLen);
             }

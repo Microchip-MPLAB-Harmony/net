@@ -1943,7 +1943,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
     bool                    bSnmpV3GetBulkResError = false;
     ptrdiff_t               msgLen;
     int smSnmp = (int)SM_PKT_STRUCT_LEN_OFFSET;
-
+    uint8_t skipID = 0;
     
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;
@@ -2590,7 +2590,8 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                             bSnmpV3GetBulkResError = true;
                             break;
                         }
-                        succesor=repeatCntr;
+                        succesor = repeatCntr + skipID;
+                        skipID = 0;
 
                         // Decode variable length structure
                         if(TCPIP_SNMP_StructureIsValid(&varBindHeaderLen) == 0U)
@@ -2697,6 +2698,10 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                         else if(tempRet != 0U)//if(oidLookUpRet != SNMP_END_OF_MIB_VIEW)
                         {
                             tempRet = TCPIP_SNMP_ProcessGetBulkVar(&OIDInfo, &OIDValue[0],&OIDlen,&succesor,pduDbPtr);
+                            if (succesor != repeatCntr)
+                            {
+                                skipID += (succesor - repeatCntr);
+                            }
                         }
                         else
                         {

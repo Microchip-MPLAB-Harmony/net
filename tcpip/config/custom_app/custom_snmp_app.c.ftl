@@ -136,8 +136,7 @@ typedef struct tIPV6_SNMP_TRAP_INFO
 } IPV6_SNMP_TRAP_INFO;
 
 #define SNMP_MIB_II_INDX        0
-#define SNMP_LLDP_MIB_INDX      1
-#define SNMP_MAX_MIBS_SUPPORTED 2
+#define SNMP_MAX_MIBS_SUPPORTED 1
 
 #ifdef TCPIP_STACK_USE_SNMPV3_SERVER
 static char gSnmpv3UserSecurityName[TCPIP_SNMPV3_USER_SECURITY_NAME_LEN_MEM_USE];
@@ -146,18 +145,13 @@ static char gSnmpv3UserAuthPswdLoclizdKey[TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_K
 #endif
 
 static int SNMPv2_MIB_II_TrapParamGet(SNMP_ID var, SNMP_VAL *val, void *data);
-static int SNMPv2_LLDP_TrapParamGet(SNMP_ID var, SNMP_VAL *val, void *data);
-
 SNMP_TRAP_PARAM_INFO    g_mibIITrapParamInfo = {4, SNMP_DEMO_TRAP, 
                                                 {{ANALOG_POT0, POT_READING_MORE_512, SNMPv2_MIB_II_TrapParamGet},
                                                     {PUSH_BUTTON, BUTTON_PUSH_EVENT, SNMPv2_MIB_II_TrapParamGet}, 
                                                     {LED_D5, POT_READING_MORE_512, SNMPv2_MIB_II_TrapParamGet}, 
                                                     {TRAP_COMMUNITY, POT_READING_MORE_512, SNMPv2_MIB_II_TrapParamGet}}};
 
-SNMP_TRAP_PARAM_INFO    g_lldpTrapParamInfo = {1, LLDP_REM_TBL_CHNG,
-                                                {{LLDP_MSG_INTRVL, 1U, SNMPv2_LLDP_TrapParamGet}}};
-
-SNMP_TRAP_PARAM_INFO    *g_mibTrapParamInfo[SNMP_MAX_MIBS_SUPPORTED] = {&g_mibIITrapParamInfo, &g_lldpTrapParamInfo};
+SNMP_TRAP_PARAM_INFO    *g_mibTrapParamInfo[SNMP_MAX_MIBS_SUPPORTED] = {&g_mibIITrapParamInfo};
 
 /*
 *  Default STACK_USE_SMIV2 is enabled . For Stack V5.31,  STACK_USE_SMIV2 should be disabled.
@@ -198,7 +192,6 @@ static SNMP_NON_MIB_RECD_INFO gSnmpNonMibRecInfo[] =
     {{43,6,1,2,1,1,0,0,0,0,0,0,0,0,0,0},SNMP_V2C}, /* Max matching Subids of the iso+org (43),dod(6),internet(1),mgmt(2),MIB2(1),system(1) tree*/
     {{43,6,1,4,1,0x81,0x85,0x47,0x1,1,0,0,0,0,0,0},SNMP_V2C},
     /*Max matching Subids of the iso+org (43),dod(6),internet(1),private(4),ENTERPRISE(17095),MODULE-IDENTITY(1),product tree*/
-    {{40,196,98,1,1,2,0,0,0,0,0,0,0,0,0,0},SNMP_V2C}, /* Max matching Subids of the iso+org (43),dod(6),internet(1),mgmt(2),MIB2(1),system(1) tree*/
 
 };
 /*
@@ -241,8 +234,6 @@ static bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_I
 
 static uint8_t  gSendTrapSMstate=0U;
 static bool     gtrapSMStateUpdate=false;
-static uint32_t g_lldpMsgIntrvl = 1234;
-static uint32_t g_lldpMsgTxHoldMulti = 5;
 
 #define MAX_TRY_TO_SEND_TRAP (30)
 
@@ -327,16 +318,6 @@ static int SNMPv2_MIB_II_TrapParamGet(SNMP_ID var, SNMP_VAL *val, void *data)
         default:
             return 1;
     };
-    
-    return 0;
-}
-
-static int SNMPv2_LLDP_TrapParamGet(SNMP_ID var, SNMP_VAL *val, void *data)
-{
-    if(var == LLDP_MSG_INTRVL)
-    {
-        val->dword = g_lldpMsgIntrvl;
-    }
     
     return 0;
 }
@@ -1538,16 +1519,6 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
     bool retVal = false;
     switch(var)
     {
-        case LLDP_MSG_INTRVL:
-            g_lldpMsgIntrvl = val.dword;
-            retVal = true;
-            break;
-
-        case LLDP_MSG_TX_HOLD_MULTIPLIER:
-            g_lldpMsgTxHoldMulti = val.dword;
-            retVal = true;
-            break;
-
         case LED_D5:
             if(val.byte != 0U)          
             {
@@ -2334,16 +2305,6 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
     bool retVal = false;
     switch(var)
     {
-        case LLDP_MSG_INTRVL:
-            val->dword = g_lldpMsgIntrvl;
-            retVal = true;
-            break;
-
-        case LLDP_MSG_TX_HOLD_MULTIPLIER:
-            val->dword = g_lldpMsgTxHoldMulti;
-            retVal = true;
-            break;
-
         case SYS_UP_TIME:
             val->dword = SNMPGetTimeStamp();
             retVal = true;
@@ -2808,8 +2769,7 @@ bool TCPIP_SNMP_RecordIDValidation(uint8_t snmpVersion,bool idPresent,uint16_t v
         return false;
     }
     if(varId == MICROCHIP || varId == SYS_UP_TIME || varId == LED_D5 || 
-            varId == LED_D6 || varId == PUSH_BUTTON || varId == ANALOG_POT0 || 
-            varId == LLDP_MSG_INTRVL || varId == LLDP_MSG_TX_HOLD_MULTIPLIER)
+            varId == LED_D6 || varId == PUSH_BUTTON || varId == ANALOG_POT0)
     {
         return true;
     }
