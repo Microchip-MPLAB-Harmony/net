@@ -4300,7 +4300,7 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
                 {
                     return 0U;
                 }
-                *successor += 1;
+                *successor += 1U;
 
                 TCPIP_SNMP_MergeNodesOfOID(oidValuePtr, &OIDLen);
             }
