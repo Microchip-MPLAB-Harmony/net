@@ -165,7 +165,7 @@ static __inline__ SYS_STATUS __attribute__((always_inline)) SYS_TMR_Status ( SYS
 	
     if ( SYS_STATUS_ERROR <= tmrStatus )
     {
-        // Handle error
+        - Handle error
     }
 
     </code>
@@ -341,7 +341,7 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_TMR_SystemCountFre
     <code>
     uint64_t sysCount;
     sysCount = SYS_TMR_SystemCountGet ();
-    // the system has been running for sysCount/SYS_TMR_SystemCountFrequencyGet seconds
+    - the system has been running for sysCount/SYS_TMR_SystemCountFrequencyGet seconds
     </code>
 
   Remarks:
@@ -475,7 +475,7 @@ SYS_TMR_HANDLE SYS_TMR_CallbackPeriodic ( uint32_t periodMs, uintptr_t context,
 
 static __inline__ void  __attribute__((always_inline)) SYS_TMR_CallbackStop ( SYS_TMR_HANDLE handle )
 {
-	SYS_TIME_TimerDestroy(handle);
+	(void)SYS_TIME_TimerDestroy(handle);
 }
 
 // DOM-IGNORE-BEGIN

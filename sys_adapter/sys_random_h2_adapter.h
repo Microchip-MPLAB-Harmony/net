@@ -179,7 +179,7 @@ uint32_t SYS_RANDOM_CryptoGet( void );
 
 // *****************************************************************************
 /* Function:
-    size_t SYS_RANDOM_CryptoBlockGet( uint8_t buffer, size_t bufferSize );
+    size_t SYS_RANDOM_CryptoBlockGet( uint8_t dataBuffer, size_t bufferSize );
 
   Summary:
     Generates a sequence of random bytes using the cryptographic quality Random
@@ -193,7 +193,7 @@ uint32_t SYS_RANDOM_CryptoGet( void );
     None
 
   Parameters:
-    buffer - Pointer to the memory location to fill with random data.
+    dataBuffer - Pointer to the memory location to fill with random data.
     size - The amount of random data, in bytes, to put in memory.
 
   Returns:
@@ -204,7 +204,7 @@ uint32_t SYS_RANDOM_CryptoGet( void );
     None
 */
 
-size_t SYS_RANDOM_CryptoBlockGet( void *buffer, size_t size );
+size_t SYS_RANDOM_CryptoBlockGet( void *dataBuffer, size_t size );
 
 // *****************************************************************************
 /* Function:

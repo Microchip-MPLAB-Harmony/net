@@ -27,7 +27,7 @@ Microchip or any third party.
 static SYS_TIME_H2_ADAPTER_OBJ systemAdaptObj;
 
 
-void sy_time_h2_adapter_callback( uintptr_t context )
+static void sy_time_h2_adapter_callback( uintptr_t context )
 {
 	systemAdaptObj.callback(context,0);
 }
@@ -35,14 +35,14 @@ void sy_time_h2_adapter_callback( uintptr_t context )
 SYS_TMR_HANDLE SYS_TMR_CallbackPeriodic ( uint32_t periodMs, uintptr_t context, SYS_TMR_CALLBACK callback )
 {
 	systemAdaptObj.callback = callback;
-	return SYS_TIME_CallbackRegisterMS((SYS_TIME_CALLBACK)sy_time_h2_adapter_callback, context, periodMs, SYS_TIME_PERIODIC );
+	return SYS_TIME_CallbackRegisterMS((SYS_TIME_CALLBACK)&sy_time_h2_adapter_callback, context, periodMs, SYS_TIME_PERIODIC );
 }
 
 static uint32_t gTickConv = 0;
 
 uint32_t SYS_TMR_TickCountGet(void)
 {
-    if(gTickConv == 0)
+    if(gTickConv == 0U)
     {
         gTickConv = SYS_TIME_MSToCount(1);
     }
@@ -52,7 +52,7 @@ uint32_t SYS_TMR_TickCountGet(void)
 
 uint64_t SYS_TMR_TickCountGetLong(void)
 {
-    if(gTickConv == 0)
+    if(gTickConv == 0U)
     {
         gTickConv = SYS_TIME_MSToCount(1);
     }
@@ -62,7 +62,7 @@ uint64_t SYS_TMR_TickCountGetLong(void)
 
 uint32_t SYS_TMR_TickCounterFrequencyGet ( void )
 {
-    if(gTickConv == 0)
+    if(gTickConv == 0U)
     {
         gTickConv = SYS_TIME_MSToCount(1);
     }

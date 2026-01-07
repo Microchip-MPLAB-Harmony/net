@@ -29,7 +29,7 @@ Microchip or any third party.
 
 
 static CRYPT_RNG_CTX sysRandCtx;
-static CRYPT_RNG_CTX* pRandCtx = 0;
+static CRYPT_RNG_CTX* pRandCtx = NULL;
 
 static OSAL_SEM_HANDLE_TYPE randSemaphore;
 static int randLockCount = 0;       // initialization lock count: 0 - uninitialized; 1 - initialized; 2 - within initialization
@@ -40,7 +40,7 @@ static int randLockCount = 0;       // initialization lock count: 0 - uninitiali
 // Currently there is no protection against multiple threads performing initialization/de-initialization
 // only against multiple threads calling directly a SYS_RANDOM_Crypto service wich can perform initialization, if needed
 // stop all calls before calling SYS_RANDOM_CryptoDeinitialize()!
-static bool _InitSysRand(void)
+static bool F_InitSysRand(void)
 {
     bool initRes = false;
     bool doInit = false;
@@ -70,12 +70,12 @@ static bool _InitSysRand(void)
 
     if(doInit)
     {
-        pRandCtx = 0;
+        pRandCtx = NULL;
         initRes = false;
 
         while(true)
         {   // initialize
-            if(OSAL_SEM_Create(&randSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
+            if(OSAL_SEM_Create(&randSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_SUCCESS)
             {   // failed
                 break;
             }
@@ -88,7 +88,7 @@ static bool _InitSysRand(void)
             }
 
             // failure
-            OSAL_SEM_Delete(&randSemaphore);
+            (void)OSAL_SEM_Delete(&randSemaphore);
             break;
         }
     }
@@ -107,7 +107,7 @@ static bool _InitSysRand(void)
 
 SYS_MODULE_OBJ SYS_RANDOM_CryptoInitialize(void)
 {
-    _InitSysRand();
+    (void)F_InitSysRand();
 
     return (SYS_MODULE_OBJ)pRandCtx;    
 }
@@ -154,27 +154,27 @@ void SYS_RANDOM_CryptoDeinitialize( SYS_MODULE_OBJ object )
     if(doDeinit)
     {
         // CRYPT_RNG_Deinitialize(pRandCtx);
-        OSAL_SEM_Delete(&randSemaphore);
-        pRandCtx = 0;
+        (void)OSAL_SEM_Delete(&randSemaphore);
+        pRandCtx = NULL;
         randLockCount = 0;
     } 
 }
 
-static CRYPT_RNG_CTX* _SYS_RANDOM_CryptoLock(void)
+static CRYPT_RNG_CTX* F_SYS_RANDOM_CryptoLock(void)
 {
-    if(pRandCtx == 0)
+    if(pRandCtx == NULL)
     {
-        _InitSysRand();
+        (void)F_InitSysRand();
     }
 
-    if(pRandCtx != 0)
+    if(pRandCtx != NULL)
     {
          (void)OSAL_SEM_Pend(&randSemaphore, OSAL_WAIT_FOREVER);
     }
     return pRandCtx;    
 } 
 
-static __inline__ void  __attribute__((always_inline)) _SYS_RANDOM_CryptoUnlock(void)
+static __inline__ void  __attribute__((always_inline)) F_SYS_RANDOM_CryptoUnlock(void)
 {
     (void)OSAL_SEM_Post(&randSemaphore);
 }
@@ -188,33 +188,33 @@ uint32_t SYS_RANDOM_CryptoGet( void )
     }sUint;
 
     sUint.u32 = 0;
-    CRYPT_RNG_CTX* pCtx = _SYS_RANDOM_CryptoLock();
+    CRYPT_RNG_CTX* pCtx = F_SYS_RANDOM_CryptoLock();
 
-    if(pCtx)
+    if(pCtx != NULL)
     {
-        CRYPT_RNG_BlockGenerate(pCtx, (unsigned char*)sUint.u8, sizeof(sUint.u8));
+        (void)CRYPT_RNG_BlockGenerate(pCtx, (unsigned char*)sUint.u8, sizeof(sUint.u8));
     }
 
-    _SYS_RANDOM_CryptoUnlock();
+    F_SYS_RANDOM_CryptoUnlock();
 
     return sUint.u32;
 }
 
 
 
-size_t SYS_RANDOM_CryptoBlockGet( void *buffer, size_t size )
+size_t SYS_RANDOM_CryptoBlockGet( void *dataBuffer, size_t size )
 {
     size_t blkSize = 0;
 
-    if(buffer != 0 && size != 0)
+    if(dataBuffer != NULL && size != 0U)
     {
-        CRYPT_RNG_CTX* pCtx = _SYS_RANDOM_CryptoLock();
-        if(pCtx)
+        CRYPT_RNG_CTX* pCtx = F_SYS_RANDOM_CryptoLock();
+        if(pCtx != NULL)
         {
-            CRYPT_RNG_BlockGenerate(pCtx, (uint8_t*)buffer, size);
+            (void)CRYPT_RNG_BlockGenerate(pCtx, (uint8_t*)dataBuffer, size);
             blkSize = size;
         }
-        _SYS_RANDOM_CryptoUnlock();
+        F_SYS_RANDOM_CryptoUnlock();
     }
 
     return blkSize;
@@ -224,12 +224,12 @@ uint8_t SYS_RANDOM_CryptoByteGet( void )
 {
     uint8_t rNo = 0;
 
-    CRYPT_RNG_CTX* pCtx = _SYS_RANDOM_CryptoLock();
-    if(pCtx)
+    CRYPT_RNG_CTX* pCtx = F_SYS_RANDOM_CryptoLock();
+    if(pCtx != NULL)
     {
-        CRYPT_RNG_Get(pCtx, &rNo);
+        (void)CRYPT_RNG_Get(pCtx, &rNo);
     }
-    _SYS_RANDOM_CryptoUnlock();
+    F_SYS_RANDOM_CryptoUnlock();
 
     return rNo;
 }
