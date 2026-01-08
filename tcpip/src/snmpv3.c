@@ -2707,7 +2707,12 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                         {
                             // do nothing
                         }
-                        if ( tempRet == 0u )
+
+                        bool moreNodesAvailable = TCPIP_SNMP_NextLeafGet(TCPIP_SNMP_FileDescrGet(), &OIDInfo);
+#if (SNMP_DEBUG != 0)
+                        SYS_CONSOLE_PRINT("\r\n%s(%d): tempRet:moreNodesAvailable(%d:%d)", __FUNCTION__, __LINE__, tempRet, moreNodesAvailable);
+#endif
+                        if ( tempRet == 0u  || !moreNodesAvailable)
                         {
                             uint8_t templen=OIDlen;
                             uint8_t *ptroid=OIDValue;

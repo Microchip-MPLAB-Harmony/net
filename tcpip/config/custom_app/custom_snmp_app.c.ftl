@@ -1026,7 +1026,7 @@ trap information.
     }
 
         //Try for max 10 seconds to send TRAP, do not get block in while()
-        if((SYS_TMR_TickCountGet() - tempTimerRead) >= (10U * sysFreq))
+        if((SYS_TMR_TickCountGet() - tempTimerRead) >= (5U * SNMP_MAX_MIBS_SUPPORTED * sysFreq))
     {
             timeLock[mibCnt] = false;
 #ifdef TCPIP_STACK_USE_IPV6
