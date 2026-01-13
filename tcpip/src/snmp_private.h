@@ -343,7 +343,7 @@ typedef struct
     bool snmp_trapv2_use; /* true = agent uses Trap version v2 and false = uses Tarp version 1*/
     bool snmpv3_trapv1v2_use; /* SNMPv3 trap should be true , only if SNMP version is 3 */
     const TCPIP_NET_IF* pSnmpIf;
-	uint8_t snmpVersionType;
+    uint8_t snmpVersionType;
 }TCPIP_SNMP_DCPT;
 
 

@@ -796,7 +796,7 @@ void SNMPV2TrapDemo(void)
         tempTimerRead = SYS_TMR_TickCountGet();
         timeLock=true;
     }
-	if(!TCPIP_SNMP_IsTrapEnabled())
+    if(!TCPIP_SNMP_IsTrapEnabled())
     {
         return;
     }
@@ -938,7 +938,7 @@ void SNMPTrapDemo(void)
         timeLock=true;
     }
 
-	if(!TCPIP_SNMP_IsTrapEnabled())
+    if(!TCPIP_SNMP_IsTrapEnabled())
     {
         return;
     }
@@ -2365,15 +2365,15 @@ bool TCPIP_SNMP_NextIndexGet(SNMP_ID var, SNMP_INDEX* index)
  */
 bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL* val)
 {
-	uint8_t myRef;
-	static char AN0String[8];
+    uint8_t myRef;
+    static char AN0String[8];
     char*    endPtr = NULL;
 <#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && ((tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME70") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "SAMV71") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32CZCA7") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME54") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))) >
-	uint16_t     randPotVal=0;
+    uint16_t     randPotVal=0;
 </#if>
 
     // Convert potentiometer result into ASCII string
-	randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
+    randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
     uitoa(randPotVal, AN0String);
 
 

@@ -3847,7 +3847,7 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     uint8_t         OIDValue[TCPIP_SNMP_OID_MAX_LEN];
     uint8_t         snmptrap_oids[]  = {0x2bU,6U,1U,6U,3U,1U,1U,4U,1U }; /* len=10 */
     uint8_t         sysUpTime_oids[] = {0x2bU,6U,1U,2U,1U,1U,3U}; /* len = 8 */    uint8_t             
-	i=0;
+    i=0;
     uint16_t            contextIDlen=0;
     uint16_t            contextNameLength=0;
     SNMPV3MSGDATA   *dynTrapScopedPduBuf;
