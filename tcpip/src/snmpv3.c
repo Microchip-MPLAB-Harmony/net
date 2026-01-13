@@ -2235,7 +2235,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
             case (int)SM_FIND_OID_IN_MIB:
             {
                 uint8_t tmp_len = OIDlen;
-                uint8_t CorrOIDValue[50] = {0};
+                uint8_t CorrOIDValue[TCPIP_SNMP_OID_MAX_LEN + 1] = {0};
                 (void)memcpy(CorrOIDValue, OIDValue, OIDlen);
                 
                 while(tmp_len != 0U)
@@ -2244,14 +2244,14 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                     tmp_len--;
                 }
 
-                CorrOIDValue[1] = CorrOIDValue[0] % 40U;
-                CorrOIDValue[0] = CorrOIDValue[0] / 40U;
+                CorrOIDValue[1] = CorrOIDValue[0] % SNMP_ASN_ENCODE_FACTOR;
+                CorrOIDValue[0] = CorrOIDValue[0] / SNMP_ASN_ENCODE_FACTOR;
                 tmp_len = OIDlen + 1U;
 
                 //Searching the requested OID in the MIB database
                 oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,CorrOIDValue, tmp_len, &OIDInfo);
                 #if (SNMP_DEBUG != 0)
-                SYS_CONSOLE_PRINT("\n%s(): CorrOIDValue =", __FUNCTION__);
+                SYS_CONSOLE_PRINT("\nSNMP: %s(%d): CorrOIDValue =", __FUNCTION__, __LINE__);
                 for(int k =0; k < tmp_len; k++)
                     SYS_CONSOLE_PRINT(" %x", CorrOIDValue[k]);
                 #endif
@@ -2616,7 +2616,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                         }
 
                         uint8_t tmp_len = OIDlen;
-                        uint8_t CorrOIDValue[50] = {0};
+                        uint8_t CorrOIDValue[TCPIP_SNMP_OID_MAX_LEN + 1] = {0};
                         (void)memcpy(CorrOIDValue, OIDValue, OIDlen);
 
                         while(tmp_len != 0U)
@@ -2625,8 +2625,8 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                             tmp_len--;
                         }
 
-                        CorrOIDValue[1] = CorrOIDValue[0] % 40U;
-                        CorrOIDValue[0] = CorrOIDValue[0] / 40U;
+                        CorrOIDValue[1] = CorrOIDValue[0] % SNMP_ASN_ENCODE_FACTOR;
+                        CorrOIDValue[0] = CorrOIDValue[0] / SNMP_ASN_ENCODE_FACTOR;
                         tmp_len = OIDlen + 1U;
 
                         //Searching the requested OID in the MIB database
@@ -2710,7 +2710,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
 
                         bool moreNodesAvailable = TCPIP_SNMP_NextLeafGet(TCPIP_SNMP_FileDescrGet(), &OIDInfo);
 #if (SNMP_DEBUG != 0)
-                        SYS_CONSOLE_PRINT("\r\n%s(%d): tempRet:moreNodesAvailable(%d:%d)", __FUNCTION__, __LINE__, tempRet, moreNodesAvailable);
+                        SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): tempRet:moreNodesAvailable(%d:%d)", __FUNCTION__, __LINE__, tempRet, moreNodesAvailable);
 #endif
                         if ( tempRet == 0u  || !moreNodesAvailable)
                         {
@@ -4085,7 +4085,7 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
                 }
                 else if (len == (OIDLen - 1U))
                 {
-                    c = c + merged_node * 40U;
+                    c = c + merged_node * SNMP_ASN_ENCODE_FACTOR;
                     (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
                 }
                 else
@@ -4259,7 +4259,7 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             }
             else if (len == (OIDLen - 1U))
             {
-                c = c + merged_node * 40U;
+                c = c + merged_node * SNMP_ASN_ENCODE_FACTOR;
                 (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
             }
             else
@@ -4435,25 +4435,31 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
 
-    #if (SNMP_DEBUG != 0)
-    SYS_CONSOLE_PRINT("\r\n%s(): Enter(%d)", __FUNCTION__, __LINE__);
-    #endif
     //validate the trap user security name , message processing model 
     //, security model and the security level
     gSNMPV3TrapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet(Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityLevelType);
     if( gSNMPV3TrapSecurityLevel == (uint8_t)INVALID_MSG)
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): Invalid Message", __FUNCTION__, __LINE__);
+        #endif
         return false;
     }
 
     Snmpv3TrapFileDescrptr = TCPIP_SNMP_FileDescrGet();
     if(Snmpv3TrapFileDescrptr == SYS_FS_HANDLE_INVALID)
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): Invalid handle", __FUNCTION__, __LINE__);
+        #endif
         return false;
     }
     // set the file position to the begining
     if((*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr,0,SYS_FS_SEEK_SET) == -1)
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): File seek failed", __FUNCTION__, __LINE__);
+        #endif
         return false;
     }
     
@@ -4461,11 +4467,17 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     {
         if(TCPIP_SNMPv3_TrapMsgHeaderPDU(targetIndex)!= true)
         {       
+            #if (SNMP_DEBUG != 0)
+            SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): TCPIP_SNMPv3_TrapMsgHeaderPDU failed", __FUNCTION__, __LINE__);
+            #endif
             return false;
         }
     }
     if(TCPIP_SNMPv3_TrapScopedPDU(var, val, index, targetIndex) != true)
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): TCPIP_SNMPv3_TrapScopedPDU failed", __FUNCTION__, __LINE__);
+        #endif
         return false;
     }
 
@@ -4477,6 +4489,9 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     USM_Index = TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(targetIndex);
     if(USM_Index == INVALID_INDEX)
     {
+        #if (SNMP_DEBUG != 0)
+        SYS_CONSOLE_PRINT("\r\nSNMP: %s(%d): Invalid target index", __FUNCTION__, __LINE__);
+        #endif
         return false;
     }
 

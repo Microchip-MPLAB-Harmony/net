@@ -107,7 +107,7 @@ Microchip or any third party.
                                  (a) == (int)SNMP_V2C_GET_BULK)
 #define IS_SNMPV3_AUTH_STRUCTURE(a) ((a) == (uint8_t)SNMPV3_ENCRYPTION)
 
-
+#define SNMP_ASN_ENCODE_FACTOR  (40U)
 
 
 

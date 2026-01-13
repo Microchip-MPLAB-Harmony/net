@@ -87,22 +87,6 @@ Microchip or any third party.
     Global Variables
   ******* */
 
-#define TCPIP_SNMP_TRAP_PARAM_SIZE      5
-
-typedef int (*trap_param_fn)(SNMP_ID var, SNMP_VAL *val, void *data);
-
-typedef struct tSNMP_TRAP_PARAM_INFO
-{
-   uint8_t Size;
-    uint32_t        trap_id;
-   struct
-   {
-       SNMP_ID var;
-        uint8_t specTrap;
-       trap_param_fn    snmp_trap_param_fn;
-   } table[TCPIP_SNMP_TRAP_PARAM_SIZE];
-} SNMP_TRAP_PARAM_INFO;
-
 typedef struct tSNMP_TRAP_INFO
 {
    uint8_t Size;
@@ -115,8 +99,7 @@ typedef struct tSNMP_TRAP_INFO
        {
            unsigned int bEnabled : 1;   //Trap enabled flag
        } Flags;
-    } table[TCPIP_SNMP_TRAP_TABLE_SIZE];
-    SNMP_TRAP_PARAM_INFO *TrapParamsInfo;
+   } table[TCPIP_SNMP_TRAP_TABLE_SIZE];
 } SNMP_TRAP_INFO;
 
 typedef struct tIPV6_SNMP_TRAP_INFO
@@ -132,26 +115,13 @@ typedef struct tIPV6_SNMP_TRAP_INFO
            unsigned int bEnabled : 1;   //Trap enabled flag
        } Flags;
    } table[TCPIP_SNMP_TRAP_TABLE_SIZE];
-    SNMP_TRAP_PARAM_INFO *TrapParamsInfo;
 } IPV6_SNMP_TRAP_INFO;
-
-#define SNMP_MIB_II_INDX        0
-#define SNMP_MAX_MIBS_SUPPORTED 1
 
 #ifdef TCPIP_STACK_USE_SNMPV3_SERVER
 static char gSnmpv3UserSecurityName[TCPIP_SNMPV3_USER_SECURITY_NAME_LEN_MEM_USE];
 static char gSnmpv3UserPrivPswdLoclizdKey[TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE];
 static char gSnmpv3UserAuthPswdLoclizdKey[TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE];
 #endif
-
-static int SNMPv2_MIB_II_TrapParamGet(SNMP_ID var, SNMP_VAL *val, void *data);
-SNMP_TRAP_PARAM_INFO    g_mibIITrapParamInfo = {4, SNMP_DEMO_TRAP, 
-                                                {{ANALOG_POT0, POT_READING_MORE_512, SNMPv2_MIB_II_TrapParamGet},
-                                                    {PUSH_BUTTON, BUTTON_PUSH_EVENT, SNMPv2_MIB_II_TrapParamGet}, 
-                                                    {LED_D5, POT_READING_MORE_512, SNMPv2_MIB_II_TrapParamGet}, 
-                                                    {TRAP_COMMUNITY, POT_READING_MORE_512, SNMPv2_MIB_II_TrapParamGet}}};
-
-SNMP_TRAP_PARAM_INFO    *g_mibTrapParamInfo[SNMP_MAX_MIBS_SUPPORTED] = {&g_mibIITrapParamInfo};
 
 /*
 *  Default STACK_USE_SMIV2 is enabled . For Stack V5.31,  STACK_USE_SMIV2 should be disabled.
@@ -217,23 +187,32 @@ static SNMP_NON_MIB_RECD_INFO gSnmpNonMibRecInfo[] =
 
 #endif /* STACK_USE_SMIV2 */
 
+static SNMP_TRAP_IP_ADDRESS_TYPE snmpTrapIpAddresstype = IPV4_SNMP_TRAP;
+
 // local prototypes
 bool TCPIP_SNMP_SendTrapToSelctedInterface(size_t *netIx,TCPIP_NET_HANDLE netIf);
 void SNMPV2TrapDemo(void);
 void SNMPTrapDemo(void);
 
 /*Initialize trap table with no entries.*/
-static SNMP_TRAP_INFO trapInfo[SNMP_MAX_MIBS_SUPPORTED]={TCPIP_SNMP_TRAP_TABLE_SIZE};
+static SNMP_TRAP_INFO trapInfo={TCPIP_SNMP_TRAP_TABLE_SIZE};
 #ifdef TCPIP_STACK_USE_IPV6
-static IPV6_SNMP_TRAP_INFO ipv6TrapInfo[SNMP_MAX_MIBS_SUPPORTED]={TCPIP_SNMP_TRAP_TABLE_SIZE};
-static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t mibIndex, uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex);
+static IPV6_SNMP_TRAP_INFO ipv6TrapInfo={TCPIP_SNMP_TRAP_TABLE_SIZE};
+static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex);
 #endif
 static uint32_t SNMPGetTimeStamp(void);
 
-static bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex);
+static bool SNMPSendNotification(uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex);
 
 static uint8_t  gSendTrapSMstate=0U;
 static bool     gtrapSMStateUpdate=false;
+
+#define TCPIP_SNMP_TOTAL_TRAPS_SUPPORTED 1
+
+bool SNMPV2DemoTrapProcess(uint8_t *trapIndex);
+
+typedef bool (*snmp_TrapProcess)(uint8_t *trapIndex);
+snmp_TrapProcess    snmpTrapProcess[TCPIP_SNMP_TOTAL_TRAPS_SUPPORTED] = {SNMPV2DemoTrapProcess};
 
 #define MAX_TRY_TO_SEND_TRAP (30)
 
@@ -246,81 +225,6 @@ static uint8_t lcdMessage[16*2+1]="";
     SNMP Routines
   ===========================================================================
   ******* */
-static int SNMPv2_MIB_II_TrapParamGet(SNMP_ID var, SNMP_VAL *val, void *data)
-{
-    int *snmp_version = 0;
-    if(data)
-    {
-        snmp_version = (int *)data;
-    }
-    switch(var){
-        case ANALOG_POT0:
-            val->word = (uint16_t)SYS_RANDOM_PseudoGet();
-            if(val->word <= 12u)
-                return 1;
-            
-            break;
-            
-        case PUSH_BUTTON:
-            if(snmp_version == 0)
-            {               
-            val->byte = (uint8_t)APP_SWITCH_1StateGet();
-            }
-            else
-            {
-                if(*snmp_version == 1)
-                {
-                    if(APP_SWITCH_3StateGet() == 0u)
-                    {
-                        val->byte = 0;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            }
-            break;
-            
-        case LED_D5:
-            if(snmp_version == 0)
-            {   
-            val->byte = (uint8_t)APP_LED_1StateGet();//BSP_LEDStateGet(APP_LED_1);
-            }
-            else
-            {
-                if(*snmp_version == 1)
-                    return 1;
-            }
-            break;
-            
-        case TRAP_COMMUNITY:
-        {
-            uint8_t *asciiStr = malloc(20);
-            val->dword = (uint32_t)asciiStr;
-            memset(asciiStr, 0, 20);
-            strcpy(asciiStr, "ascii_str_trap");
-
-            if((snmp_version != 0) && (*snmp_version == 1)) 
-            {   
-                uint32_t led1 = APP_LED_1StateGet();
-                uint32_t led3 = APP_LED_3StateGet();
-
-                if((led1 == 0U) || (led3 == 0U)) 
-                {
-                    return 1;
-                }
-            }            
-            
-            break;
-        }
-        
-        default:
-            return 1;
-    };
-    
-    return 0;
-}
 
 bool TCPIP_SNMP_SendTrapToSelctedInterface(size_t *netIx,TCPIP_NET_HANDLE netIf)
 {
@@ -368,7 +272,7 @@ Return Values:
 Remarks:
      None.
  *************************************************************************/
-static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t mibIndex, uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex)
+static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex)
 {
     static enum { SM_PREPARE, SM_NOTIFY_WAIT } smState = SM_PREPARE;
     IP_MULTI_ADDRESS ipv6Address;
@@ -381,10 +285,10 @@ static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t mibIndex, uint8_t receiverI
     uint8_t     snmpv3SecModelType;
 #endif
 
-    ipv6TrapInfo[mibIndex].Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+    ipv6TrapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
 
     // Convert local to network order.
-    (void)memcpy(&ipv6Address.v6Add,&ipv6TrapInfo[mibIndex].table[receiverIndex].IPv6Address,sizeof(IPV6_ADDR));
+    (void)memcpy(&ipv6Address.v6Add,&ipv6TrapInfo.table[receiverIndex].IPv6Address,sizeof(IPV6_ADDR));
 
     if(gtrapSMStateUpdate == true)
     {
@@ -399,12 +303,12 @@ static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t mibIndex, uint8_t receiverI
             gSendTrapSMstate = (uint8_t)smState;
             tempRxIndex=receiverIndex;
             // Convert local to network order.
-            (void)memcpy(&tempIpv6Address,&ipv6TrapInfo[mibIndex].table[receiverIndex].IPv6Address,16);
+            (void)memcpy(&tempIpv6Address,&ipv6TrapInfo.table[receiverIndex].IPv6Address,16);
             // get the specific SNMP trap notification type
             TCPIP_SNMP_TrapSpecificNotificationGet(&specTrap);
             TCPIP_SNMP_NotifyPrepare(NULL,
-                  ipv6TrapInfo[mibIndex].table[receiverIndex].community,
-                  ipv6TrapInfo[mibIndex].table[receiverIndex].communityLen,
+                  ipv6TrapInfo.table[receiverIndex].community,
+                  ipv6TrapInfo.table[receiverIndex].communityLen,
                   MICROCHIP,  // Agent ID Var
                   specTrap,   // Specifc Trap notification code
                   SNMPGetTimeStamp());
@@ -483,7 +387,7 @@ static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t mibIndex, uint8_t receiverI
 
 /****************************************************************************
   Function:
-     bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex)
+     bool SNMPSendNotification(uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex)
 
   Summary:
     Prepare, validate remote node which will receive trap and send trap pdu.
@@ -510,7 +414,7 @@ static bool TCPIP_SNMP_IPv6_NotificationSend(uint8_t mibIndex, uint8_t receiverI
   Remarks:
      None.
  ***** */
-static bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex)
+static bool SNMPSendNotification(uint8_t receiverIndex, SNMP_ID var, SNMP_VAL val,uint8_t targetIndex)
 {
     static enum { SM_PREPARE, SM_NOTIFY_WAIT } smState = SM_PREPARE;
     static IP_MULTI_ADDRESS IPAddress;//IPV4_ADDR IPAddress;
@@ -523,13 +427,13 @@ static bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_I
     uint8_t     snmpv3SecModelType;
 #endif
 
-    trapInfo[mibIndex].Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+    trapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
 
     // Convert local to network order.
-    IPAddress.v4Add.v[0] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[3];
-    IPAddress.v4Add.v[1] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[2];
-    IPAddress.v4Add.v[2] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[1];
-    IPAddress.v4Add.v[3] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[0];
+    IPAddress.v4Add.v[0] = trapInfo.table[receiverIndex].IPAddress.v[3];
+    IPAddress.v4Add.v[1] = trapInfo.table[receiverIndex].IPAddress.v[2];
+    IPAddress.v4Add.v[2] = trapInfo.table[receiverIndex].IPAddress.v[1];
+    IPAddress.v4Add.v[3] = trapInfo.table[receiverIndex].IPAddress.v[0];
 
     if(gtrapSMStateUpdate == true)
     {
@@ -544,15 +448,15 @@ static bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_I
             gSendTrapSMstate = (uint8_t)smState;
             tempRxIndex=receiverIndex;
             // Convert local to network order.
-            tempIpAddress.v[0] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[3];
-            tempIpAddress.v[1] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[2];
-            tempIpAddress.v[2] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[1];
-            tempIpAddress.v[3] = trapInfo[mibIndex].table[receiverIndex].IPAddress.v[0];
+            tempIpAddress.v[0] = trapInfo.table[receiverIndex].IPAddress.v[3];
+            tempIpAddress.v[1] = trapInfo.table[receiverIndex].IPAddress.v[2];
+            tempIpAddress.v[2] = trapInfo.table[receiverIndex].IPAddress.v[1];
+            tempIpAddress.v[3] = trapInfo.table[receiverIndex].IPAddress.v[0];
             // get the specific SNMP trap notification type
             TCPIP_SNMP_TrapSpecificNotificationGet(&specTrap);
             TCPIP_SNMP_NotifyPrepare(&IPAddress,
-                    trapInfo[mibIndex].table[receiverIndex].community,
-                    trapInfo[mibIndex].table[receiverIndex].communityLen,
+                    trapInfo.table[receiverIndex].community,
+                    trapInfo.table[receiverIndex].communityLen,
                     MICROCHIP,                   // Agent ID Var
                     specTrap,   // Specifc Trap notification code
                     SNMPGetTimeStamp());
@@ -630,216 +534,206 @@ static bool SNMPSendNotification(uint8_t mibIndex, uint8_t receiverIndex, SNMP_I
     return retVal;
 }
 
-int SNMPv3_SendTrap(uint8_t mibIndex, SNMP_TRAP_INFO *pTrapInfo, 
-                    SNMP_TRAP_IP_ADDRESS_TYPE ipAddresstype, uint8_t trapIndex, uint8_t targetIndex)
+bool SNMPV2DemoTrapProcess(uint8_t *trapIndex)
 {
-    SNMP_TRAP_PARAM_INFO    *pTrapParamInfo = pTrapInfo->TrapParamsInfo;
-    uint8_t     snmpv3MsgModelType;
-    uint8_t     snmpv3SecModelType;
+    static SNMP_VAL     analogPotVal;
+    static SNMP_VAL     pushButtonVal;
+    static SNMP_VAL     ledVal;
+    static SNMP_VAL     communityVal;
+    static bool potReadLock = false;
+    uint8_t     targetIndex = 0;
     bool        retVal = false;
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+    static uint8_t userIndex=0;
+    static uint8_t     snmpv3MsgModelType;
+    static uint8_t     snmpv3SecModelType;
+#endif
+    uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
 
-    TCPIP_SNMP_TrapSendFlagSet(true);
-
-    int trap_param_cnt = pTrapParamInfo->Size;
-    int i = 0;
-    while(i < trap_param_cnt)
+    //Read POT reading once and send trap to all configured recipient
+    if(potReadLock == false)
     {
-        SNMP_VAL    val;
-        SNMP_ID     var;
-        uint32_t    ret_val = 0; 
+        analogPotVal.word= (uint16_t)SYS_RANDOM_PseudoGet();
+        potReadLock    = true;
+    }
 
-        if( i == (trap_param_cnt - 1))
+    if(analogPotVal.word >12u)
+    {
+        TCPIP_SNMP_TrapSpecificNotificationSet(1U,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+        
+        /*
+         * prepare  and send multivarbind pdu using pot meter value.
+         * for SNMP v2 trap sysUpTime.0 and SNMPv2TrapOID.0 are mandatory
+         * apart from these varbinds, push button and potmeter OID are included
+         * to this pdu.
+        */
+        // insert ANALOG_POT0 OID value and OID to the varbind pdu
+        //set global flag gSetTrapSendFlag to true , it signifies that there are more than one
+        // variable need to be the part of SNMP v2 TRAP.
+        // if there is  only varbind variable to be the part of SNMP v2 trap,
+        // then user should set gSetTrapSendFlag to false.
+        //snmpStkDcptMemStubPtr->gSetTrapSendFlag = false;
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+        if(TCPIP_SNMPV3_TrapTypeGet())
         {
-            TCPIP_SNMP_TrapSendFlagSet(false);
-        }
-
-        memset(&val, 0, sizeof(val));                        
-        var = pTrapParamInfo->table[i].var;
-        ret_val = pTrapParamInfo->table[i].snmp_trap_param_fn(var, &val, NULL);
-        if(ret_val != 0)
-        {
-            i++;
-            continue;
-        }
-
-        if( i == 0)
-        {
-            if(ipAddresstype == IPV4_SNMP_TRAP)
+            for(targetIndex=userIndex;targetIndex<TCPIP_SNMPV3_USM_MAX_USER;targetIndex++)
             {
-                retVal =SNMPSendNotification(mibIndex, trapIndex, var, val, targetIndex);
+                TCPIP_SNMP_TrapSendFlagSet(true);
+                if(snmpTrapIpAddresstype == IPV4_SNMP_TRAP)
+                {
+                    retVal =SNMPSendNotification(*trapIndex,ANALOG_POT0,analogPotVal,targetIndex);
+                    if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                    {
+                        retVal = SNMPSendNotification(*trapIndex, ANALOG_POT0, analogPotVal,targetIndex);
+                    }
+                }
+#ifdef TCPIP_STACK_USE_IPV6
+                else
+                {
+                    retVal =TCPIP_SNMP_IPv6_NotificationSend(*trapIndex,ANALOG_POT0,analogPotVal,targetIndex);
+                    if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                    {
+                        retVal = TCPIP_SNMP_IPv6_NotificationSend(*trapIndex, ANALOG_POT0, analogPotVal,targetIndex);
+                    }
+                }
+#endif      /* #ifdef TCPIP_STACK_USE_IPV6 */
+                if(retVal == false)
+                {
+                    userIndex = targetIndex;
+                    if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (1U * sysFreq))
+                    {
+                        *trapIndex++;
+                        gtrapSMStateUpdate = true;
+                    }
+                    return false;
+                }
+                pushButtonVal.byte = (uint8_t)APP_SWITCH_1StateGet();
+
+                // Get SNMPv3 messsage model type and security model type
+                TCPIP_SNMPv3_TrapConfigDataGet(targetIndex,&snmpv3MsgModelType,&snmpv3SecModelType);
+                if((snmpv3MsgModelType == SNMPV3_MSG_PROCESSING_MODEL)
+                    && (snmpv3SecModelType == SNMPV3_USM_SECURITY_MODEL))
+                {
+                    (void)TCPIP_SNMPv3_Notify(PUSH_BUTTON,pushButtonVal,0,targetIndex,snmpTrapIpAddresstype);
+                }
+                else if((snmpv3MsgModelType == SNMPV2C_MSG_PROCESSING_MODEL)
+                    && (snmpv3SecModelType == SNMPV2C_SECURITY_MODEL))
+                {
+                    (void)TCPIP_SNMP_TRAPv2Notify(PUSH_BUTTON,pushButtonVal,0,snmpTrapIpAddresstype);
+                }
+                else if((snmpv3MsgModelType == SNMPV1_MSG_PROCESSING_MODEL)
+                    && (snmpv3SecModelType == SNMPV1_SECURITY_MODEL))
+                {
+                    (void)TCPIP_SNMP_TRAPv1Notify(PUSH_BUTTON,pushButtonVal,0,snmpTrapIpAddresstype);
+                }
+                else
+                {
+                    *trapIndex++;
+                    continue;;
+                }
+                ledVal.byte = (uint8_t)APP_LED_1StateGet();//BSP_LEDStateGet(APP_LED_1);
+                // Get SNMPv3 messsage model type and security model type
+                TCPIP_SNMPv3_TrapConfigDataGet(targetIndex,&snmpv3MsgModelType,&snmpv3SecModelType);
+                if((snmpv3MsgModelType == SNMPV3_MSG_PROCESSING_MODEL) && (snmpv3SecModelType == SNMPV3_USM_SECURITY_MODEL))
+                {
+                    (void)TCPIP_SNMPv3_Notify(LED_D5,ledVal,0,targetIndex,snmpTrapIpAddresstype);
+                }
+                else if((snmpv3MsgModelType == SNMPV2C_MSG_PROCESSING_MODEL) && (snmpv3SecModelType == SNMPV2C_SECURITY_MODEL))
+                {
+                    (void)TCPIP_SNMP_TRAPv2Notify(LED_D5,ledVal,0,snmpTrapIpAddresstype);
+                }
+                else if((snmpv3MsgModelType == SNMPV1_MSG_PROCESSING_MODEL) && (snmpv3SecModelType == SNMPV1_SECURITY_MODEL))
+                {
+                    (void)TCPIP_SNMP_TRAPv1Notify(LED_D5,ledVal,0,snmpTrapIpAddresstype);
+                }
+                else
+                {
+                    // do nothing
+                }
+                TCPIP_SNMP_TrapSendFlagSet(false);
+
+            //ASCII String is the fouth varbind of the TRAP ODU
+            // for this TRAP_COMMUNITy string has been used as the
+            //  Fourth varbind.
+                {
+                    uint8_t asciiStr[] = {"ascii_str_trap"};
+                    communityVal.dword = (uint32_t)&asciiStr;
+                    // Get SNMPv3 messsage model type and security model type
+                    TCPIP_SNMPv3_TrapConfigDataGet(targetIndex,&snmpv3MsgModelType,&snmpv3SecModelType);
+                    if((snmpv3MsgModelType == SNMPV3_MSG_PROCESSING_MODEL) && (snmpv3SecModelType == SNMPV3_USM_SECURITY_MODEL))
+                    {
+                        (void)TCPIP_SNMPv3_Notify(TRAP_COMMUNITY,communityVal,0,targetIndex,snmpTrapIpAddresstype);
+                    }
+                    else if((snmpv3MsgModelType == SNMPV2C_MSG_PROCESSING_MODEL) && (snmpv3SecModelType == SNMPV2C_SECURITY_MODEL))
+                    {
+                        (void)TCPIP_SNMP_TRAPv2Notify(TRAP_COMMUNITY,communityVal,0,snmpTrapIpAddresstype);
+                    }
+                    else if((snmpv3MsgModelType == SNMPV1_MSG_PROCESSING_MODEL) && (snmpv3SecModelType == SNMPV1_SECURITY_MODEL))
+                    {
+                        (void)TCPIP_SNMP_TRAPv1Notify(TRAP_COMMUNITY,communityVal,0,snmpTrapIpAddresstype);
+                    }
+                    else
+                    {
+                        // do nothing
+                    }
+                }
+            }
+            if(userIndex == TCPIP_SNMPV3_USM_MAX_USER-1)
+            {
+                userIndex = 0;
+            }
+        }
+        else
+#endif
+        if(TCPIP_SNMP_TRAPTypeGet())
+        {
+            TCPIP_SNMP_TrapSendFlagSet(true);
+            if(snmpTrapIpAddresstype == IPV4_SNMP_TRAP)
+            {
+                retVal =SNMPSendNotification(*trapIndex,ANALOG_POT0,analogPotVal,targetIndex);
                 if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
                 {
-                    retVal = SNMPSendNotification(mibIndex, trapIndex, var, val,targetIndex);
+                    retVal = SNMPSendNotification(*trapIndex, ANALOG_POT0, analogPotVal,targetIndex);
                 }
             }
 #ifdef TCPIP_STACK_USE_IPV6
             else
             {
-                retVal =TCPIP_SNMP_IPv6_NotificationSend(mibIndex, trapIndex,var,val,targetIndex);
+                retVal =TCPIP_SNMP_IPv6_NotificationSend(*trapIndex,ANALOG_POT0,analogPotVal,targetIndex);
                 if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
                 {
-                    retVal = TCPIP_SNMP_IPv6_NotificationSend(mibIndex, trapIndex, var, val,targetIndex);
+                    retVal = TCPIP_SNMP_IPv6_NotificationSend(*trapIndex, ANALOG_POT0, analogPotVal,targetIndex);
                 }
             }
 #endif      /* #ifdef TCPIP_STACK_USE_IPV6 */
             if(retVal == false)
             {
-                return 1;
-            }                                
-        }
-        else
-        {
-            // Not the first element of the list
-            // Get SNMPv3 messsage model type and security model type
-            TCPIP_SNMPv3_TrapConfigDataGet(targetIndex,&snmpv3MsgModelType,&snmpv3SecModelType);
-            if((snmpv3MsgModelType == SNMPV3_MSG_PROCESSING_MODEL)
-                && (snmpv3SecModelType == SNMPV3_USM_SECURITY_MODEL))
-            {
-                (void)TCPIP_SNMPv3_Notify(var, val, 0, targetIndex, ipAddresstype);
+                if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (1U * sysFreq))
+                {
+                    *trapIndex++;
+                    gtrapSMStateUpdate = true;
+                }
+                return false;
             }
-            else if((snmpv3MsgModelType == SNMPV2C_MSG_PROCESSING_MODEL)
-                && (snmpv3SecModelType == SNMPV2C_SECURITY_MODEL))
-            {
-                (void)TCPIP_SNMP_TRAPv2Notify(var, val, 0, ipAddresstype);
-            }
-            else if((snmpv3MsgModelType == SNMPV1_MSG_PROCESSING_MODEL)
-                && (snmpv3SecModelType == SNMPV1_SECURITY_MODEL))
-            {
-                (void)TCPIP_SNMP_TRAPv1Notify(var, val, 0, ipAddresstype);
-            }
-            else
-            {
-                //do nothing
-            }
-        }
-        i++;
-    };     
-    
-    return 0;
-}
-
-int SNMPv2_SendTrap(uint8_t mibIndex, SNMP_TRAP_INFO *pTrapInfo, 
-                    SNMP_TRAP_IP_ADDRESS_TYPE ipAddresstype, uint8_t trapIndex, uint8_t targetIndex)
-{
-    SNMP_TRAP_PARAM_INFO    *pTrapParamInfo = pTrapInfo->TrapParamsInfo;
-    bool        retVal = false;
-    int trap_param_cnt = pTrapParamInfo->Size;
-    int i = 0;
-
-    TCPIP_SNMP_TrapSendFlagSet(true);
-
-    while(i < trap_param_cnt)
-    {
-        SNMP_VAL    val;
-        SNMP_ID     var;
-        uint32_t    ret_val = 0; 
-
-        if( i == (trap_param_cnt - 1))
-        {
+            pushButtonVal.byte = (uint8_t)APP_SWITCH_1StateGet();
+            (void)TCPIP_SNMP_TRAPv2Notify(PUSH_BUTTON,pushButtonVal,0,snmpTrapIpAddresstype);
+            ledVal.byte = (uint8_t)APP_LED_1StateGet(); //BSP_LEDStateGet(APP_LED_1);
+            (void)TCPIP_SNMP_TRAPv2Notify(LED_D5,ledVal,0,snmpTrapIpAddresstype);
             TCPIP_SNMP_TrapSendFlagSet(false);
-        }
-
-        memset(&val, 0, sizeof(val));                        
-        var = pTrapParamInfo->table[i].var;
-        ret_val = pTrapParamInfo->table[i].snmp_trap_param_fn(var, &val, NULL);
-        if(ret_val != 0)
-        {
-            i++;
-            continue;
-        }
-
-        if( i == 0)
-        {
-            if(ipAddresstype == IPV4_SNMP_TRAP)
             {
-                retVal =SNMPSendNotification(mibIndex, trapIndex, var, val, targetIndex);
-                if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
-                {
-                    retVal = SNMPSendNotification(mibIndex, trapIndex, var, val,targetIndex);
-                }
+                uint8_t asciiStr[] = {"ascii_str_trap"};
+                communityVal.dword = (uint32_t)&asciiStr;
+                (void)TCPIP_SNMP_TRAPv2Notify(TRAP_COMMUNITY,communityVal,0,snmpTrapIpAddresstype);
             }
-#ifdef TCPIP_STACK_USE_IPV6
-            else
-            {
-                retVal =TCPIP_SNMP_IPv6_NotificationSend(mibIndex, trapIndex,var,val,targetIndex);
-                if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
-                {
-                    retVal = TCPIP_SNMP_IPv6_NotificationSend(mibIndex, trapIndex, var, val,targetIndex);
-                }
-            }
-#endif      /* #ifdef TCPIP_STACK_USE_IPV6 */
-            if(retVal == false)
-            {
-                return 1;
-            }                                
         }
         else
         {
-            // Not the first element of the list
-            (void)TCPIP_SNMP_TRAPv2Notify(var, val, 0, ipAddresstype);
+            // do nothing
         }
-        i++;
-    };     
-    
-    return 0;
+    }
+    potReadLock = false;
+    return true;
 }
-
-int SNMPv1_SendTrap(uint8_t mibIndex, SNMP_TRAP_INFO *pTrapInfo, 
-                    SNMP_TRAP_IP_ADDRESS_TYPE ipAddresstype, uint8_t trapIndex, uint8_t targetIndex)
-{
-    SNMP_TRAP_PARAM_INFO    *pTrapParamInfo = pTrapInfo->TrapParamsInfo;
-    bool        retVal = false;
-    int trap_param_cnt = pTrapParamInfo->Size;
-    int i = 0;
-    int snmp_version = 1;
-
-    while(i < trap_param_cnt)
-    {
-        SNMP_VAL    val;
-        SNMP_ID     var;
-        uint32_t    ret_val = 0; 
-
-        memset(&val, 0, sizeof(val));                        
-        var = pTrapParamInfo->table[i].var;
-        ret_val = pTrapParamInfo->table[i].snmp_trap_param_fn(var, &val, &snmp_version);
-        if(ret_val != 0)
-        {
-            i++;
-            continue;
-        }
-
-        TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)pTrapParamInfo->table[i].specTrap,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);	
-        TCPIP_SNMP_TrapSendFlagSet(false);
-
-        if(ipAddresstype == IPV4_SNMP_TRAP)
-        {
-            retVal =SNMPSendNotification(mibIndex, trapIndex, var, val, targetIndex);
-            if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
-            {
-                retVal = SNMPSendNotification(mibIndex, trapIndex, var, val,targetIndex);
-            }
-        }
-#ifdef TCPIP_STACK_USE_IPV6
-        else
-        {
-            retVal =TCPIP_SNMP_IPv6_NotificationSend(mibIndex, trapIndex,var,val,targetIndex);
-            if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
-            {
-                retVal = TCPIP_SNMP_IPv6_NotificationSend(mibIndex, trapIndex, var, val,targetIndex);
-            }
-        }
-#endif      /* #ifdef TCPIP_STACK_USE_IPV6 */
-        if(retVal == false)
-        {
-            return 1;
-        }                                
-
-        i++;
-    };     
-    
-    return 0;
-}
-
 /**************************************************************************
   Function:
     void SNMPV2TrapDemo(void)
@@ -886,36 +780,21 @@ int SNMPv1_SendTrap(uint8_t mibIndex, SNMP_TRAP_INFO *pTrapInfo,
 void SNMPV2TrapDemo(void)
 {
     static uint32_t tempTimerRead=0;
-    static uint8_t  trapIndex[SNMP_MAX_MIBS_SUPPORTED] = {0};
-    static SNMP_VAL     analogPotVal;
-    static bool potReadLock = false;
-    static bool timeLock[SNMP_MAX_MIBS_SUPPORTED] = {false};
-    uint8_t     targetIndex[SNMP_MAX_MIBS_SUPPORTED] = {0};
+    static uint8_t  trapIndex=0;
+    static bool timeLock = false;
     bool        retVal = false;
-    static bool netStartForTrap[SNMP_MAX_MIBS_SUPPORTED] = {true};
-    static SNMP_TRAP_IP_ADDRESS_TYPE snmpTrapIpAddresstype = IPV4_SNMP_TRAP;
-    //UDP_SOCKET socket = INVALID_UDP_SOCKET;
-#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
-    static uint8_t userIndex=0;
-    uint8_t     snmpv3MsgModelType;
-    uint8_t     snmpv3SecModelType;
-#endif
+    static bool netStartForTrap = true;
     static size_t     netIx=0;
     static TCPIP_NET_HANDLE netIf=NULL;
-
-    for (int mibCnt = 0; mibCnt < SNMP_MAX_MIBS_SUPPORTED; mibCnt++)
-    {
-        SNMP_TRAP_INFO  *pTrapInfo = &trapInfo[mibCnt]; 
-        pTrapInfo->Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+    static uint8_t trapCnt = 0;
+    trapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
 #ifdef TCPIP_STACK_USE_IPV6
-        ipv6TrapInfo[mibCnt].Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+    ipv6TrapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
 #endif
-    
-        pTrapInfo->TrapParamsInfo = g_mibTrapParamInfo[mibCnt];
-        if(timeLock[mibCnt]==false)
+    if(timeLock==false)
     {
         tempTimerRead = SYS_TMR_TickCountGet();
-            timeLock[mibCnt]=true;
+        timeLock=true;
     }
 	if(!TCPIP_SNMP_IsTrapEnabled())
     {
@@ -924,111 +803,55 @@ void SNMPV2TrapDemo(void)
 
     uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
 
-        while(trapIndex[mibCnt] < TCPIP_SNMP_TRAP_TABLE_SIZE)
+    while(trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE)
     {
         if(snmpTrapIpAddresstype == IPV4_SNMP_TRAP)
         {
-                if(pTrapInfo->table[trapIndex[mibCnt]].Flags.bEnabled == 0U)
+            if(trapInfo.table[trapIndex].Flags.bEnabled == 0U)
             {
-                    trapIndex[mibCnt]++;
+                trapIndex++;
                 continue;
             }
         }
 #ifdef TCPIP_STACK_USE_IPV6
         else
         {
-                if(ipv6TrapInfo[mibCnt].table[trapIndex[mibCnt]].Flags.bEnabled == 0U)
+            if(ipv6TrapInfo.table[trapIndex].Flags.bEnabled == 0U)
             {
-                    trapIndex[mibCnt]++;
+                trapIndex++;
                 continue;
             }
         }
 #endif
-            if(netStartForTrap[mibCnt])
+        if(netStartForTrap)
         {
             // select and set the trap interface
             if(!TCPIP_SNMP_SendTrapToSelctedInterface(&netIx,netIf))
             {
-                    #if (SNMP_DEBUG != 0)
-                    SYS_CONSOLE_PRINT("\r\n %s(%d): mibCnt = %d ; trapIndex= %d", __FUNCTION__, __LINE__, mibCnt, trapIndex[mibCnt]);
-                    #endif
-                    trapIndex[mibCnt]++;
+                trapIndex++;
                 continue;
             }
-                /* Specify SNMPV2 specific trap ID Here. Which will help Ireasoning and other SNMP manager tools to
+            /*
+Specify SNMPV2 specific trap ID Here. Which will help Ireasoning and other SNMP manager tools to
 recognise the trap information and it will help the SNMP manager tool to decrypt the
 trap information.
-                This ID is only related to trap ID. and this implementaion is only for TRAPv2 specific. */
-                TCPIP_SNMP_TrapSpecificNotificationSet(1U,(uint8_t)ENTERPRISE_SPECIFIC,pTrapInfo->TrapParamsInfo->trap_id);
-                netStartForTrap[mibCnt] = false;
+
+This ID is only related to trap ID. and this implementaion is only for TRAPv2 specific.
+*/
+            netStartForTrap = false;
         }
 
-            /*
-             * prepare  and send multivarbind pdu using pot meter value.
-             * for SNMP v2 trap sysUpTime.0 and SNMPv2TrapOID.0 are mandatory
-             * apart from these varbinds, push button and potmeter OID are included
-             * to this pdu.
-            */
-            // insert ANALOG_POT0 OID value and OID to the varbind pdu
-            //set global flag gSetTrapSendFlag to true , it signifies that there are more than one
-            // variable need to be the part of SNMP v2 TRAP.
-            // if there is  only varbind variable to be the part of SNMP v2 trap,
-            // then user should set gSetTrapSendFlag to false.
-            //snmpStkDcptMemStubPtr->gSetTrapSendFlag = false;
-#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
-            if(TCPIP_SNMPV3_TrapTypeGet())
-            {
-                for(targetIndex[mibCnt]=userIndex;targetIndex[mibCnt]<TCPIP_SNMPV3_USM_MAX_USER;targetIndex[mibCnt]++)
-                {
-                    int ret; 
-                    ret = SNMPv3_SendTrap(mibCnt, pTrapInfo, snmpTrapIpAddresstype, 
-                            trapIndex[mibCnt], targetIndex[mibCnt]);
-                    if(ret != 0)
-                    {
-                                userIndex = targetIndex[mibCnt];
-                        if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (1U * sysFreq))
-                        {
-                                    trapIndex[mibCnt]++;
-                            gtrapSMStateUpdate = true;
-                        }
-                        return;
-                    }
-                        }
-                if(userIndex == TCPIP_SNMPV3_USM_MAX_USER-1)
-                {
-                    userIndex = 0;
-                }
-            }
-			else
-#endif
-            if(TCPIP_SNMP_TRAPTypeGet())
-            {
-                int ret; 
-                ret = SNMPv2_SendTrap(mibCnt, pTrapInfo, snmpTrapIpAddresstype, 
-                        trapIndex[mibCnt], targetIndex[mibCnt]);
-                if(ret != 0)
-                {
-                            userIndex = targetIndex[mibCnt];
-                    if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (1U * sysFreq))
-                    {
-                                trapIndex[mibCnt]++;
-                        gtrapSMStateUpdate = true;
-                    }
-                    return;
-                }
-                    }
-                    else
-                {
-                // do nothing
-            }
-            
-            trapIndex[mibCnt]++;
+        if(snmpTrapProcess[trapCnt](&trapIndex) == false)
+        {
+            return;
+        }
+        trapIndex++;
     }
 
-        //Try for max 10 seconds to send TRAP, do not get block in while()
-        if((SYS_TMR_TickCountGet() - tempTimerRead) >= (5U * SNMP_MAX_MIBS_SUPPORTED * sysFreq))
+    //Try for max 5 seconds to send TRAP, do not get block in while()
+    if((SYS_TMR_TickCountGet() - tempTimerRead) >= (5U * sysFreq))
     {
-            timeLock[mibCnt] = false;
+        timeLock = false;
 #ifdef TCPIP_STACK_USE_IPV6
         if(snmpTrapIpAddresstype == IPV4_SNMP_TRAP)
         {
@@ -1043,12 +866,15 @@ trap information.
             // do nothing
         }
 #endif
-            netStartForTrap[mibCnt] = true;
-            trapIndex[mibCnt] = 0;
-        analogPotVal.word = 0;
+        netStartForTrap = true;
+        trapIndex = 0;
+        if(snmpTrapIpAddresstype == IPV4_SNMP_TRAP)
+        {
+            trapCnt++;
+            trapCnt = trapCnt % TCPIP_SNMP_TOTAL_TRAPS_SUPPORTED;
+        }
         gSendTrapSMstate = 0U;
     }
-}
 }
 
 /**************************************************************************
@@ -1082,26 +908,34 @@ trap information.
  ***** */
 void SNMPTrapDemo(void)
 {
-    static uint32_t tempTimerRead=0;
-    static bool timeLock[SNMP_MAX_MIBS_SUPPORTED] = {false};
-    uint8_t     targetIndex[SNMP_MAX_MIBS_SUPPORTED] = {0};
-    static uint8_t  trapIndex[SNMP_MAX_MIBS_SUPPORTED]={0};
+    static uint32_t TimerRead=0;
+    static bool analogPotNotify = false,buttonPushNotify=false,asciiStrNotify=false;
+    static uint8_t anaPotNotfyCntr=0,buttonPushNotfyCntr=0;
+    static SNMP_VAL buttonPushval,analogPotVal;
+    static bool potReadLock=false,buttonLock=false;
+    static bool timeLock=false;
+    uint8_t     targetIndex;
+    bool        retVal=true;
+    static uint8_t  trapIndex=0;
     static size_t     netIx=0;
     static TCPIP_NET_HANDLE netIf;
-    static bool netStartForTrap[SNMP_MAX_MIBS_SUPPORTED] = {true};
-    uint32_t sysFreq;
+    static bool netStartForTrap = true;
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+    static uint8_t userIndex=0;
+    static uint8_t userIndex1=0,userIndex2=0;
+#endif
 
-    for (int mibCnt = 0; mibCnt < SNMP_MAX_MIBS_SUPPORTED; mibCnt++)
+    targetIndex = 0;
+
+
+    trapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+#ifdef TCPIP_STACK_USE_IPV6
+    ipv6TrapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+#endif
+    if(timeLock==false)
     {
-        SNMP_TRAP_INFO  *pTrapInfo = &trapInfo[mibCnt]; 
-
-        pTrapInfo->Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
-        pTrapInfo->TrapParamsInfo = g_mibTrapParamInfo[mibCnt];
-
-        if(timeLock[mibCnt]==false)
-    {
-            tempTimerRead = SYS_TMR_TickCountGet();
-            timeLock[mibCnt]=true;
+        TimerRead=SYS_TMR_TickCountGet();
+        timeLock=true;
     }
 
 	if(!TCPIP_SNMP_IsTrapEnabled())
@@ -1111,72 +945,330 @@ void SNMPTrapDemo(void)
 
     uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
 
-        while(trapIndex[mibCnt] < TCPIP_SNMP_TRAP_TABLE_SIZE)
+    if(anaPotNotfyCntr >= trapInfo.Size)
     {
-            if(pTrapInfo->table[trapIndex[mibCnt]].Flags.bEnabled == 0U)
+        anaPotNotfyCntr = 0;
+        potReadLock=false;
+        analogPotNotify = true;
+    }
+
+    if(!analogPotNotify)
     {
-                #if (SNMP_DEBUG != 0)
-                SYS_CONSOLE_PRINT("\r\n %s(%d): mibCnt = %d ; trapIndex= %d ; Flags.bEnabled == 0", __FUNCTION__, __LINE__, mibCnt, trapIndex[mibCnt]);
-                #endif
-                trapIndex[mibCnt]++;
-                continue;
+        //Read POT reading once and send trap to all configured recipient
+        if(potReadLock == false)
+        {
+            analogPotVal.word= (uint16_t)SYS_RANDOM_PseudoGet();
+            //Avoids Reading POT for every iteration unless trap sent to each configured recipients
+            potReadLock=true;
         }
-            if(netStartForTrap[mibCnt])
+        if(trapInfo.table[anaPotNotfyCntr].Flags.bEnabled != 0U)
+        {
+            if(netStartForTrap)
             {
                 // select and set the trap interface
                 if(!TCPIP_SNMP_SendTrapToSelctedInterface(&netIx,netIf))
                 {
-                    #if (SNMP_DEBUG != 0)
-                    SYS_CONSOLE_PRINT("\r\n %s(%d): mibCnt = %d ; trapIndex= %d", __FUNCTION__, __LINE__, mibCnt, trapIndex[mibCnt]);
-                    #endif
-                    trapIndex[mibCnt]++;
-                    continue;
+                    return;
                 }
-                /* Specify SNMPV2 specific trap ID Here. Which will help Ireasoning and other SNMP manager tools to
+            /*
+Specify SNMPV2 specific trap ID Here. Which will help Ireasoning and other SNMP manager tools to
 recognise the trap information and it will help the SNMP manager tool to decrypt the
 trap information.
-                This ID is only related to trap ID. and this implementaion is only for TRAPv2 specific. */
-                TCPIP_SNMP_TrapSpecificNotificationSet(1U,(uint8_t)ENTERPRISE_SPECIFIC,pTrapInfo->TrapParamsInfo->trap_id);
-                netStartForTrap[mibCnt] = false;
+
+This ID is only related to trap ID. and this implementaion is only for TRAPv2 specific.
+*/
+                TCPIP_SNMP_TrapSpecificNotificationSet(1U, (uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                netStartForTrap = false;
             }
 
-                /*
-             * prepare  and send multivarbind pdu using pot meter value.
-             * for SNMP v2 trap sysUpTime.0 and SNMPv2TrapOID.0 are mandatory
-             * apart from these varbinds, push button and potmeter OID are included
-             * to this pdu.
-    */
-            // insert ANALOG_POT0 OID value and OID to the varbind pdu
-            //set global flag gSetTrapSendFlag to true , it signifies that there are more than one
-            // variable need to be the part of SNMP v2 TRAP.
-            // if there is  only varbind variable to be the part of SNMP v2 trap,
-            // then user should set gSetTrapSendFlag to false.
-            //snmpStkDcptMemStubPtr->gSetTrapSendFlag = false;
-            int ret; 
-            ret = SNMPv1_SendTrap(mibCnt, pTrapInfo, IPV4_SNMP_TRAP, 
-                    trapIndex[mibCnt], targetIndex[mibCnt]);
-            if(ret != 0)
+            if(analogPotVal.word >12u)
+            {
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+                if(TCPIP_SNMPV3_TrapTypeGet())
+                {
+                    for(targetIndex=userIndex;targetIndex<TCPIP_SNMPV3_USM_MAX_USER;targetIndex++)
                     {
+                        TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)POT_READING_MORE_512,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                        TCPIP_SNMP_TrapSendFlagSet(false);
+                        retVal = SNMPSendNotification(anaPotNotfyCntr, ANALOG_POT0, analogPotVal,targetIndex);
+                        if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                        {
+                            retVal = SNMPSendNotification(anaPotNotfyCntr, ANALOG_POT0, analogPotVal,targetIndex);
+                        }
+                        if((retVal == true) && (targetIndex == (TCPIP_SNMPV3_USM_MAX_USER-1)))
+                        {
+                            anaPotNotfyCntr++;
+                        }
+                        else if(retVal == false)
+                        {
+                            userIndex = targetIndex;
+                            if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (2U * sysFreq))
+                            {
+                                anaPotNotfyCntr++;
+                                gtrapSMStateUpdate = true;
+                                return;
+                            }
+                            return ;
+                        }
+                        else
+                        {
+                            // do nothing
+                        }
+
+                        if(userIndex == TCPIP_SNMPV3_USM_MAX_USER-1)
+                        {
+                            userIndex = 0;
+                        }
+                    }
+                }
+                else
+#endif
+                {
+                    TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)POT_READING_MORE_512,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                    TCPIP_SNMP_TrapSendFlagSet(false);
+                    retVal = SNMPSendNotification(anaPotNotfyCntr, ANALOG_POT0, analogPotVal,targetIndex);
+                    if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                    {
+                        retVal = SNMPSendNotification(anaPotNotfyCntr, ANALOG_POT0, analogPotVal,targetIndex);
+                    }
+                    if(retVal == true)
+                    {
+                        anaPotNotfyCntr++;
+                    }
+                    else
+                    {
+                        if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (2 * sysFreq))
+                        {
+                            anaPotNotfyCntr++;
+                            gtrapSMStateUpdate = true;
+                            return;
+                        }
+                        return ;
+                    }
+                }
+            }
+        }
+        else
+        {
+            anaPotNotfyCntr++;
+        }
+    }
+
+
+    if(buttonPushNotfyCntr==trapInfo.Size)
+    {
+        buttonPushNotfyCntr = 0;
+        buttonLock=false;
+        buttonPushNotify = false;
+    }
+
+
+    if(buttonLock == false)
+    {
+        if(APP_SWITCH_3StateGet() == 0u)
+        {
+            buttonPushNotify = true;
+            buttonLock =true;
+        }
+    }
+
+    if(buttonPushNotify)
+    {
+        buttonPushval.byte = 0;
+        if ( trapInfo.table[buttonPushNotfyCntr].Flags.bEnabled != 0U )
+        {
+             if(netStartForTrap)
+            {
+                // select and set the trap interface
+                if(!TCPIP_SNMP_SendTrapToSelctedInterface(&netIx,netIf))
+                {
+                    return;
+                }
+                /*
+    Specify SNMPV2 specific trap ID Here. Which will help Ireasoning and other SNMP manager tools to
+    recognise the trap information and it will help the SNMP manager tool to decrypt the
+    trap information.
+
+    This ID is only related to trap ID. and this implementaion is only for TRAPv2 specific.
+    */
+                TCPIP_SNMP_TrapSpecificNotificationSet(1U,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                netStartForTrap = false;
+            }
+
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+            if(TCPIP_SNMPV3_TrapTypeGet())
+            {
+                for(targetIndex=userIndex1;targetIndex<TCPIP_SNMPV3_USM_MAX_USER;targetIndex++)
+                {
+                    TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)BUTTON_PUSH_EVENT,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                    TCPIP_SNMP_TrapSendFlagSet(false);
+                    retVal = SNMPSendNotification(buttonPushNotfyCntr, PUSH_BUTTON, buttonPushval,targetIndex);
+                    if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                    {
+                        retVal = SNMPSendNotification(buttonPushNotfyCntr, PUSH_BUTTON, buttonPushval,targetIndex);
+                    }
+                    if((retVal == true) && (targetIndex == (TCPIP_SNMPV3_USM_MAX_USER-1)))
+                    {
+                        buttonPushNotfyCntr++;
+                    }
+                    else
+                    {
+                        userIndex1 = targetIndex;
+                    }
+                    if(userIndex1 == TCPIP_SNMPV3_USM_MAX_USER-1)
+                    {
+                        userIndex1 = 0;
+                    }
+                }
+            }
+            else
+#endif
+            {
+                TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)BUTTON_PUSH_EVENT,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                TCPIP_SNMP_TrapSendFlagSet(false);
+                retVal = SNMPSendNotification(buttonPushNotfyCntr, PUSH_BUTTON, buttonPushval,targetIndex);
+                if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                {
+                    retVal = SNMPSendNotification(buttonPushNotfyCntr, PUSH_BUTTON, buttonPushval,targetIndex);
+                }
+                if(retVal == true)
+                {
+                    buttonPushNotfyCntr++;
+                }
+            }
+        }
+        else
+        {
+            buttonPushNotfyCntr++;
+        }
+    }
+/*
+    ASCII String trap support . When LED2 and LED1 are on then ASCII string trap will be send.
+    TrapCommunity(4) is used as a variable for both TRAPv1 and TRAPv2 PDU.
+*/
+    //if((!BSP_LEDStateGet(APP_LED_2) && !BSP_LEDStateGet(APP_LED_3)) && (trapIndex >= TCPIP_SNMP_TRAP_TABLE_SIZE))
+    uint32_t led1 = APP_LED_1StateGet();
+    uint32_t led2 = APP_LED_2StateGet();
+    uint32_t led3 = APP_LED_3StateGet();
+
+    if((led2 == 0U && led3 == 0U) && (trapIndex >= TCPIP_SNMP_TRAP_TABLE_SIZE))
+    {
+        asciiStrNotify = false;
+    }
+    //else if((BSP_LEDStateGet(APP_LED_1) && BSP_LEDStateGet(APP_LED_3)) && (trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE))
+    else if((led1 != 0U && led3 != 0U) && (trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE))
+    {
+        asciiStrNotify = true;
+    }
+    else
+    {
+        // do nothing
+    }
+
+    if(asciiStrNotify)
+    {
+        while(trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE)
+        {
+            uint8_t asciiStr[] = {"ascii_str_trap"};
+            SNMP_VAL asciistrVal;
+            asciistrVal.dword = (uint32_t)&asciiStr;
+
+            if(trapInfo.table[trapIndex].Flags.bEnabled == 0U)
+            {
+                trapIndex++;
+                continue;
+            }
+            if(netStartForTrap)
+            {
+                // select and set the trap interface
+                if(!TCPIP_SNMP_SendTrapToSelctedInterface(&netIx,netIf))
+                {
+                    trapIndex++;
+                    continue;
+                }
+                /*
+    Specify SNMPV2 specific trap ID Here. Which will help Ireasoning and other SNMP manager tools to
+    recognise the trap information and it will help the SNMP manager tool to decrypt the
+    trap information.
+
+    This ID is only related to trap ID. and this implementaion is only for TRAPv2 specific.
+    */
+                TCPIP_SNMP_TrapSpecificNotificationSet(1U,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                netStartForTrap = false;
+            }
+
+
+            if(analogPotVal.word <= 12u)
+            {
+                trapIndex++;
+                continue;
+            }
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+            if(TCPIP_SNMPV3_TrapTypeGet())
+            {
+                for(targetIndex=userIndex2;targetIndex<TCPIP_SNMPV3_USM_MAX_USER;targetIndex++)
+                {
+                    TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)POT_READING_MORE_512,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                    TCPIP_SNMP_TrapSendFlagSet(false);
+                    retVal =  SNMPSendNotification(trapIndex, TRAP_COMMUNITY, asciistrVal,targetIndex);
+                    if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                    {
+                        retVal = SNMPSendNotification(trapIndex, TRAP_COMMUNITY, asciistrVal,targetIndex);
+                    }
+                    if(retVal == false)
+                    {
+                        userIndex2 = targetIndex;
                         if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (2U * sysFreq))
                         {
-                    trapIndex[mibCnt]++;
+                            trapIndex++;
                             gtrapSMStateUpdate = true;
                         }
                         return ;
                     }
-			
-            trapIndex[mibCnt]++;
+                    if(userIndex2 == TCPIP_SNMPV3_USM_MAX_USER-1)
+                    {
+                        userIndex2 = 0;
+                    }
+                }
+            }
+            else
+#endif
+            {
+                TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)POT_READING_MORE_512,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
+                TCPIP_SNMP_TrapSendFlagSet(false);
+                retVal = SNMPSendNotification(trapIndex, TRAP_COMMUNITY, asciistrVal,targetIndex);
+                if((gSendTrapSMstate == 0x0U) && (retVal == false)) // gSendTrapSMstate == SM_PREPARE
+                {
+                    retVal = SNMPSendNotification(trapIndex, TRAP_COMMUNITY, asciistrVal,targetIndex);
+                }
+                if(retVal == false)
+                {
+                    if((SYS_TMR_TickCountGet() - TCPIP_SNMP_TrapTimeGet()) >= (2U * sysFreq))
+                    {
+                        trapIndex++;
+                        gtrapSMStateUpdate = true;
+                    }
+                    return ;
+                }
+            }
+        }
     }
 
-        //Try for max 10 seconds to send TRAP, do not get block in while()
-        if((SYS_TMR_TickCountGet() - tempTimerRead) >= (5U * sysFreq))
+     //Try for max 5 seconds to send TRAP, do not get block in while()
+    if((SYS_TMR_TickCountGet() - TimerRead) >= (5U * sysFreq))
     {
-            timeLock[mibCnt] = false;
-            netStartForTrap[mibCnt] = true;
-            trapIndex[mibCnt] = 0;
+        netStartForTrap = true;
+        trapIndex = 0;
+        buttonPushNotfyCntr = 0;
+        buttonLock=false;
+        buttonPushNotify = false;
+        anaPotNotfyCntr = 0;
+        potReadLock=false;
+        analogPotNotify = false;
+        timeLock=false;
+        TCPIP_SNMP_TrapSpecificNotificationSet((uint8_t)VENDOR_TRAP_DEFAULT,(uint8_t)ENTERPRISE_SPECIFIC,SNMP_DEMO_TRAP);
         gSendTrapSMstate = 0U;
     }
-}
 }
 
 void TCPIP_SNMP_SendFailureTrap(void)
@@ -1203,13 +1295,13 @@ void TCPIP_SNMP_SendFailureTrap(void)
     static TCPIP_NET_HANDLE netIf;
     static bool netStartForTrap = true;
 
-    trapInfo[SNMP_MIB_II_INDX].Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
-    if(trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].Flags.bEnabled != 0U)
+    trapInfo.Size = TCPIP_SNMP_TRAP_TABLE_SIZE;
+    if(trapInfo.table[receiverIndex].Flags.bEnabled != 0U)
     {
-        remHostIPAddress.v4Add.v[0] = trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].IPAddress.v[3];
-        remHostIPAddress.v4Add.v[1] = trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].IPAddress.v[2];
-        remHostIPAddress.v4Add.v[2] = trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].IPAddress.v[1];
-        remHostIPAddress.v4Add.v[3] = trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].IPAddress.v[0];
+        remHostIPAddress.v4Add.v[0] = trapInfo.table[receiverIndex].IPAddress.v[3];
+        remHostIPAddress.v4Add.v[1] = trapInfo.table[receiverIndex].IPAddress.v[2];
+        remHostIPAddress.v4Add.v[2] = trapInfo.table[receiverIndex].IPAddress.v[1];
+        remHostIPAddress.v4Add.v[3] = trapInfo.table[receiverIndex].IPAddress.v[0];
         remHostIpAddrPtr = &remHostIPAddress;
         if(timeLock==false)
         {
@@ -1251,8 +1343,8 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
     {
         case SM_PREPARE:
             TCPIP_SNMP_TrapSpecificNotificationGet(&specTrap);
-            TCPIP_SNMP_NotifyPrepare(remHostIpAddrPtr,trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].community,
-                    trapInfo[SNMP_MIB_II_INDX].table[receiverIndex].communityLen,
+            TCPIP_SNMP_NotifyPrepare(remHostIpAddrPtr,trapInfo.table[receiverIndex].community,
+                    trapInfo.table[receiverIndex].communityLen,
                     MICROCHIP,            // Agent ID Var
                     specTrap,  // Notification code.
                     SNMPGetTimeStamp());
@@ -1551,83 +1643,69 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
                 retVal = true;
                 break;
             }
-
-            for(int mibcnt = 0; mibcnt < SNMP_MAX_MIBS_SUPPORTED; mibcnt++)
-            {
             // Make sure that index is within our range.
-                if ( index < trapInfo[mibcnt].Size )
+            if ( index < trapInfo.Size )
             {
                 // This is just an update to an existing entry.
-                    trapInfo[mibcnt].table[index].IPAddress.Val = val.dword;
+                trapInfo.table[index].IPAddress.Val = val.dword;
                 retVal = true;
             }
             else if ( index < (uint8_t)TCPIP_SNMP_TRAP_TABLE_SIZE )
             {
                 // This is an addition to table.
-                    trapInfo[mibcnt].table[index].IPAddress.Val = val.dword;
-                    trapInfo[mibcnt].table[index].communityLen = 0;
-                    trapInfo[mibcnt].Size++;
+                trapInfo.table[index].IPAddress.Val = val.dword;
+                trapInfo.table[index].communityLen = 0;
+                trapInfo.Size++;
                 retVal = true;
             }
             else
             {
                 // do nothing
             }
-            }
             break;
 
         case TRAP_RECEIVER_ENABLED:
-            for(int mibcnt = 0; mibcnt < SNMP_MAX_MIBS_SUPPORTED; mibcnt++)
-            {
             if(!TCPIP_SNMP_IsTrapEnabled())
             {
                 retVal = true;
                 break;
             }
             // Make sure that index is within our range.
-                if ( index < trapInfo[mibcnt].Size )
+            if ( index < trapInfo.Size )
             {
                 // Value of '1' means Enabled".
                 if ( val.byte == 1u )
                 {
-                        #if (SNMP_DEBUG != 0)
-                        SYS_CONSOLE_PRINT("\r\n %s(%d): mibCnt = %d ; index= %d; Flags.bEnabled = 1U", __FUNCTION__, __LINE__, mibcnt, index);
-                        #endif
-                        trapInfo[mibcnt].table[index].Flags.bEnabled = 1U;
+                    trapInfo.table[index].Flags.bEnabled = 1U;
                 }
                 // Value of '0' means "Disabled.
                 else if ( val.byte == 0u )
                 {
-                        #if (SNMP_DEBUG != 0)
-                        SYS_CONSOLE_PRINT("\r\n %s(%d): mibCnt = %d ; index= %d; Flags.bEnabled = 0U", __FUNCTION__, __LINE__, mibcnt, index);
-                        #endif
-                        trapInfo[mibcnt].table[index].Flags.bEnabled = 0U;
+                    trapInfo.table[index].Flags.bEnabled = 0U;
                 }
                 else
                 {   // This is unknown value.
                     break;
                 }
                 retVal = true;
-                    continue;
+                break;
             }
             // Given index is more than our current table size.
             // If it is within our range, treat it as an addition to table.
             else if ( index < (uint8_t)TCPIP_SNMP_TRAP_TABLE_SIZE )
             {
                 // Treat this as an addition to table.
-                    trapInfo[mibcnt].Size++;
-                    trapInfo[mibcnt].table[index].communityLen = 0;
+                trapInfo.Size++;
+                trapInfo.table[index].communityLen = 0;
             }
             else
             {
                 // do nothing
             }
-            }
+
             break;
 
         case TRAP_COMMUNITY:
-            for(int mibcnt = 0; mibcnt < SNMP_MAX_MIBS_SUPPORTED; mibcnt++)
-            {
             if(!TCPIP_SNMP_IsTrapEnabled())
             {
                 retVal = true;
@@ -1640,28 +1718,27 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
             if ( ref ==  SNMP_END_OF_VAR )
             {
                 // Index equal to table size means that we have new row.
-                    if ( index == trapInfo[mibcnt].Size )
+                if ( index == trapInfo.Size )
                 {
-                        trapInfo[mibcnt].Size++;
+                    trapInfo.Size++;
                 }
 
                 // Length of string is one more than index.
-                    trapInfo[mibcnt].table[index].communityLen++;
+                trapInfo.table[index].communityLen++;
 
                 retVal = true;
-                    continue;
+                break;
             }
 
             // Make sure that index is within our range.
-                if ( index < trapInfo[mibcnt].Size )
+            if ( index < trapInfo.Size )
             {
                 // Copy given value into local buffer.
-                    trapInfo[mibcnt].table[index].community[ref] = (char)val.byte;
+                trapInfo.table[index].community[ref] = (char)val.byte;
                 // Keep track of length too.
                 // This may not be NULL terminate string.
-                    trapInfo[mibcnt].table[index].communityLen = (uint8_t)ref;
+                trapInfo.table[index].communityLen = (uint8_t)ref;
                 retVal = true;
-            }
             }
             break;
 
@@ -1673,10 +1750,10 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
                 break;
             }
             // Make sure that index is within our range.
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
                 // This is just an update to an existing entry.
-                ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].IPv6Address.v[ref] = val.byte;
+                ipv6TrapInfo.table[index].IPv6Address.v[ref] = val.byte;
                 retVal = true;
             }
             break;
@@ -1688,17 +1765,17 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
                 break;
             }
             // Make sure that index is within our range.
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
                 // Value of '1' means Enabled".
                 if ( val.byte == 1u )
                 {
-                    ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].Flags.bEnabled = 1U;
+                    ipv6TrapInfo.table[index].Flags.bEnabled = 1U;
                 }
                 // Value of '0' means "Disabled.
                 else if ( val.byte == 0u )
                 {
-                    ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].Flags.bEnabled = 0U;
+                    ipv6TrapInfo.table[index].Flags.bEnabled = 0U;
                 }
                 else
                 {   // This is unknown value.
@@ -1712,8 +1789,8 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
             else if ( index < (uint8_t)TCPIP_SNMP_TRAP_TABLE_SIZE )
             {
                 // Treat this as an addition to table.
-                ipv6TrapInfo[SNMP_MIB_II_INDX].Size++;
-                ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].communityLen = 0;
+                ipv6TrapInfo.Size++;
+                ipv6TrapInfo.table[index].communityLen = 0;
             }
             else
             {
@@ -1735,26 +1812,26 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
             if ( ref ==  SNMP_END_OF_VAR )
             {
                 // Index equal to table size means that we have new row.
-                if ( index == ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+                if ( index == ipv6TrapInfo.Size )
                 {
-                    ipv6TrapInfo[SNMP_MIB_II_INDX].Size++;
+                    ipv6TrapInfo.Size++;
                 }
 
                 // Length of string is one more than index.
-                ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].communityLen++;
+                ipv6TrapInfo.table[index].communityLen++;
 
                 retVal = true;
                 break;
             }
 
             // Make sure that index is within our range.
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
                 // Copy given value into local buffer.
-                ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].community[ref] = (char)val.byte;
+                ipv6TrapInfo.table[index].community[ref] = (char)val.byte;
                 // Keep track of length too.
                 // This may not be NULL terminate string.
-                ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].communityLen = (uint8_t)ref;
+                ipv6TrapInfo.table[index].communityLen = (uint8_t)ref;
                 retVal = true;
             }
             break;
@@ -1994,7 +2071,7 @@ bool TCPIP_SNMP_ExactIndexGet(SNMP_ID var, SNMP_INDEX *index)
                 break;
             }
             // There is no next possible index if table itself is empty.
-            if ( trapInfo[SNMP_MIB_II_INDX].Size == 0u )
+            if ( trapInfo.Size == 0u )
             {
                 break;
             }
@@ -2003,7 +2080,7 @@ bool TCPIP_SNMP_ExactIndexGet(SNMP_ID var, SNMP_INDEX *index)
                 *index = 0;
             }
 
-            if(*index < trapInfo[SNMP_MIB_II_INDX].Size)
+            if(*index < trapInfo.Size)
             {
                 retVal = true;
             }
@@ -2020,7 +2097,7 @@ bool TCPIP_SNMP_ExactIndexGet(SNMP_ID var, SNMP_INDEX *index)
                 break;
             }
             // There is no next possible index if table itself is empty.
-            if ( ipv6TrapInfo[SNMP_MIB_II_INDX].Size == 0u )
+            if ( ipv6TrapInfo.Size == 0u )
             {
                 break;
             }
@@ -2028,7 +2105,7 @@ bool TCPIP_SNMP_ExactIndexGet(SNMP_ID var, SNMP_INDEX *index)
             {
                 *index = 0;
             }
-            if(*index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size)
+            if(*index < ipv6TrapInfo.Size)
             {
                 retVal = true;
             }
@@ -2129,7 +2206,7 @@ bool TCPIP_SNMP_NextIndexGet(SNMP_ID var, SNMP_INDEX* index)
                 break;
             }
             // There is no next possible index if table itself is empty.
-            if ( trapInfo[SNMP_MIB_II_INDX].Size == 0u )
+            if ( trapInfo.Size == 0u )
             {
                 break;
             }
@@ -2139,7 +2216,7 @@ bool TCPIP_SNMP_NextIndexGet(SNMP_ID var, SNMP_INDEX* index)
                 *index = 0;
                 retVal = true;
             }
-            else if ( tempIndex < (trapInfo[SNMP_MIB_II_INDX].Size-1) )
+            else if ( tempIndex < (trapInfo.Size-1) )
             {
                 *index = tempIndex + 1U;
                 retVal = true;
@@ -2160,7 +2237,7 @@ bool TCPIP_SNMP_NextIndexGet(SNMP_ID var, SNMP_INDEX* index)
                 break;
             }
             // There is no next possible index if table itself is empty.
-            if ( ipv6TrapInfo[SNMP_MIB_II_INDX].Size == 0u )
+            if ( ipv6TrapInfo.Size == 0u )
             {
                 break;
             }
@@ -2170,7 +2247,7 @@ bool TCPIP_SNMP_NextIndexGet(SNMP_ID var, SNMP_INDEX* index)
                 *index = 0;
                 retVal = true;
             }
-            else if ( tempIndex < (ipv6TrapInfo[SNMP_MIB_II_INDX].Size-1) )
+            else if ( tempIndex < (ipv6TrapInfo.Size-1) )
             {
                 *index = tempIndex+1U;
                 retVal = true;
@@ -2344,7 +2421,7 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-            if ( index < trapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < trapInfo.Size )
             {
                 val->byte = index;
                 retVal = true;
@@ -2356,10 +2433,9 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-
-            if ( index < trapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < trapInfo.Size )
             {
-                val->byte = trapInfo[SNMP_MIB_II_INDX].table[index].Flags.bEnabled;
+                val->byte = trapInfo.table[index].Flags.bEnabled;
                 retVal = true;
             }
             break;
@@ -2369,10 +2445,9 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-
-            if ( index < trapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < trapInfo.Size )
             {
-                val->dword = trapInfo[SNMP_MIB_II_INDX].table[index].IPAddress.Val;
+                val->dword = trapInfo.table[index].IPAddress.Val;
                 retVal = true;
             }
             break;
@@ -2382,22 +2457,21 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-            
-            if ( index < trapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < trapInfo.Size )
             {
-                if ( myRef == trapInfo[SNMP_MIB_II_INDX].table[index].communityLen )
+                if ( myRef == trapInfo.table[index].communityLen )
                 {
                     *ref = SNMP_END_OF_VAR;
                     retVal = true;
                     break;
                 }
-                if ( trapInfo[SNMP_MIB_II_INDX].table[index].communityLen == 0u )
+                if ( trapInfo.table[index].communityLen == 0u )
                 {
                     *ref = SNMP_END_OF_VAR;
                 }
                 else
                 {
-                    val->byte = (uint8_t)trapInfo[SNMP_MIB_II_INDX].table[index].community[myRef];
+                    val->byte = (uint8_t)trapInfo.table[index].community[myRef];
                     myRef++;
                     *ref = myRef;
                 }
@@ -2410,7 +2484,7 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
                 val->byte = index;
                 retVal = true;
@@ -2422,9 +2496,9 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
-                val->byte = ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].Flags.bEnabled;
+                val->byte = ipv6TrapInfo.table[index].Flags.bEnabled;
                 retVal = true;
             }
             break;
@@ -2434,7 +2508,7 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
                 if ( myRef == sizeof(IPV6_ADDR) )
                 {
@@ -2442,7 +2516,7 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
                     retVal = true;
                     break;
                 }
-                val->byte = ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].IPv6Address.v[myRef];
+                val->byte = ipv6TrapInfo.table[index].IPv6Address.v[myRef];
 
                 myRef++;
                 *ref = myRef;
@@ -2455,21 +2529,21 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
             {
                 break;
             }
-            if ( index < ipv6TrapInfo[SNMP_MIB_II_INDX].Size )
+            if ( index < ipv6TrapInfo.Size )
             {
-                if ( myRef == ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].communityLen )
+                if ( myRef == ipv6TrapInfo.table[index].communityLen )
                 {
                     *ref = SNMP_END_OF_VAR;
                     retVal = true;
                     break;
                 }
-                if ( ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].communityLen == 0u )
+                if ( ipv6TrapInfo.table[index].communityLen == 0u )
                 {
                     *ref = SNMP_END_OF_VAR;
                 }
                 else
                 {
-                    val->byte = (uint8_t)ipv6TrapInfo[SNMP_MIB_II_INDX].table[index].community[myRef];
+                    val->byte = (uint8_t)ipv6TrapInfo.table[index].community[myRef];
                     myRef++;
                     *ref = myRef;
                 }
@@ -2716,9 +2790,6 @@ bool TCPIP_SNMP_RecordIDValidation(uint8_t snmpVersion,bool idPresent,uint16_t v
     {
         if(oidValuePtr == NULL)
         {
-            #if (SNMP_DEBUG != 0)
-            SYS_CONSOLE_PRINT("\r\n%s(%d): Exit", __FUNCTION__, __LINE__);
-            #endif
             return false;
         }
 
@@ -2749,9 +2820,6 @@ bool TCPIP_SNMP_RecordIDValidation(uint8_t snmpVersion,bool idPresent,uint16_t v
                 if(gSnmpNonMibRecInfo[i].oidstr[j] != oidValuePtr[j])
                 {
                     flag = false;
-                    #if (SNMP_DEBUG != 0)
-                    SYS_CONSOLE_PRINT("\r\n%s(%d): i = %d j = %d Exit", __FUNCTION__, __LINE__, i, j);
-                    #endif
                     j=0;
                     break;
                 }
@@ -2768,8 +2836,7 @@ bool TCPIP_SNMP_RecordIDValidation(uint8_t snmpVersion,bool idPresent,uint16_t v
         }
         return false;
     }
-    if(varId == MICROCHIP || varId == SYS_UP_TIME || varId == LED_D5 || 
-            varId == LED_D6 || varId == PUSH_BUTTON || varId == ANALOG_POT0)
+    if(varId == MICROCHIP || varId == SYS_UP_TIME || varId == LED_D5 || varId == LED_D6 || varId == PUSH_BUTTON || varId == ANALOG_POT0)
     {
         return true;
     }
@@ -2819,9 +2886,6 @@ bool TCPIP_SNMP_RecordIDValidation(uint8_t snmpVersion,bool idPresent,uint16_t v
     }
 #endif /* TCPIP_STACK_USE_SNMPV3_SERVER */
 
-    #if (SNMP_DEBUG != 0)
-    SYS_CONSOLE_PRINT("\r\n%s(%d): Exit", __FUNCTION__, __LINE__);
-    #endif
     return false;
 }
 
