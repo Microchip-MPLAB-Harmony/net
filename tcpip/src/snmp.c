@@ -1261,6 +1261,8 @@ uint8_t *TCPIP_SNMP_GenericTrapCodeToTrapOID(uint8_t generic_trap_code,uint8_t *
     static  uint8_t linkdown_oid   = {0x2b,6,1,6,3,1,1,5,3};
     static  uint8_t linkup_oid     = {0x2b,6,1,6,3,1,1,5,4};
 */
+    static uint8_t snmptrap_oids[]  = {0x2bU,6,1,6,3,1,1,4,1 };
+    
     *len = (uint8_t)sizeof(gen_trap_oid);
     uint8_t* retPtr = gen_trap_oid;
     switch (generic_trap_code) 
@@ -1286,7 +1288,8 @@ uint8_t *TCPIP_SNMP_GenericTrapCodeToTrapOID(uint8_t generic_trap_code,uint8_t *
             break;
 
         case (uint8_t)ENTERPRISE_SPECIFIC:
-            /* This will never come */
+            *len = (uint8_t)sizeof(snmptrap_oids);
+            retPtr = snmptrap_oids;
             break;
 
         default:
@@ -1436,7 +1439,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         // Get complete notification variable OID string.
 
         (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)ASN_OID,snmpTrapPutData);
-         OIDLen = (uint8_t)sizeof(sysUpTime_oids);
+        OIDLen = (uint8_t)sizeof(sysUpTime_oids);
         (void)TCPIP_SNMP_DataCopyToProcessBuffer((uint8_t)(OIDLen)+1U,snmpTrapPutData);
         pOIDValue = sysUpTime_oids;
         while( OIDLen-- != 0U)
@@ -1607,7 +1610,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         snmpTrapPutData->length = varPairStructLenOffset;
         // Snmp trap varbind length
         trapVarBindLen.Val = (uint16_t)(2U                   // Agent ID header bytes
-                + (uint16_t)strlen(snmptrap_oids)
+                + (uint16_t)sizeof(snmptrap_oids)
                 + 1U                        // index byte
                 + 2U                      // header
                 + (uint16_t)agentIDLen);                // Agent ID bytes
