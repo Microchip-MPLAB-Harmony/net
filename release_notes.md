@@ -11,17 +11,18 @@
 
         | Module              | Description |
         | ------------------- | ----------- |
-        | SNMP/SNMPv3         | Enabled the multiple MIBs support |
-        |                     | Fixed the SNMP state machine flow |
+        | SNMP/SNMPv3         | Fixed the multiple SNMP MIBs support |
+        |                     | Fixed the bug in SNMP state machine flow |
         |                     | Fixed the issue of SNMPv3 'Get' and 'Get Next' not working |
         |                     | Fixed the issue of 'Trap' not getting generated |
         |                     | Fixed the issue of 'SNMPv3 Only' Not Working |
-        |                     | Fixed the MISRA C Violations |
         | ETHMAC              | Fixed missing synchronization calls to the ETH MAC driver | 
         | TCP                 | Fixed code for persistent server socket remote binding |
         | GMAC                | Fixed missing GMAC driver GBit register setting in PIC32CK |
         | Presentation Layer  | Made net_pres default log setting as 'not verbose' |
         | DHCP Server         | Fixed INIT_REBOOT/RENEWING states detection for DHCPREQUEST received while BOUND |
+        | Multiple Modules    | Fixed the MISRA C Violations |
+        |                     | Updated the MISRA C 2012 deviation records to 2023 |
 
 ### TESTED WITH:
 
