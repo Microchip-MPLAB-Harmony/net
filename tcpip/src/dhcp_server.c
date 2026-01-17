@@ -13,7 +13,7 @@
 
 
 /*
-Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2026, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -2186,8 +2186,45 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT
 }
 
 // he == 0
-// no previous record of this client
-//  DHCPREQUEST generated during INIT-REBOOT state pg 32/46
+// no previous record of this client - somehow the lease info has been lost (no DB saved on a file system)
+//      server reset, admin delete of lease, etc.
+//  DHCPREQUEST should be generated during INIT-REBOOT/RENEWING/REBINDING states page 31-32/46
+//      SELECTING state should be a reply to DHCPOFFER so it cannot be, treated as an error.
+//  INIT_REBOOT client state:
+//      - 'server identifier’ MUST NOT be filled in
+//      - ’requested IP address’ option MUST be filled in with client’s notion of its previously assigned address.
+//      - ’ciaddr’ MUST be zero.
+//      - broadcast (pg 33/46)
+//      The client is seeking to verify a previously allocated, cached configuration.
+//      Server SHOULD send a DHCPNAK message to the client if the ’requested IP address’ is incorrect, or is on the wrong network.
+//      If the network is correct, then the DHCP server should check if the client’s notion of its IP address is correct.
+//      If not, then the server SHOULD send a DHCPNAK message to the client.
+//      If the DHCP server has no record of this client, then it MUST remain silent, and MAY output a warning to the network administrator.
+//      This behavior is necessary for peaceful coexistence of non-communicating DHCP servers on the same wire.
+//
+//  RENEWING client state:
+//      - ’server identifier’ MUST NOT be filled in
+//      - ’requested IP address’ option MUST NOT be filled in
+//      - ’ciaddr’ MUST be filled in with client’s IP address.
+//      - unicast (pg 33/46)
+//      In this situation, the client is completely configured, and is trying to extend its lease.
+//      This message will be unicast, so no relay agents will be involved in its transmission.
+//      Because ’giaddr’ is therefore not filled in, the DHCP server will trust the value in ’ciaddr’, and use it when replying to the client.      
+//      However, because the lease info was lost the Server will send a DHCPNAK message.
+//
+//  REBINDING client state:
+//      - ’server identifier’ MUST NOT be filled in
+//      - ’requested IP address’ option MUST NOT be filled in
+//      - ’ciaddr’ MUST be filled in with client’s IP address.
+//      - broadcast (pg 33/46)
+//      In this situation, the client is completely configured, and is trying to extend its lease.
+//      This message MUST be broadcast to the 0xffffffff IP broadcast address.
+//      The DHCP server SHOULD check ’ciaddr’ for correctness before replying to the DHCPREQUEST.
+//      The DHCPREQUEST from a REBINDING client is intended to accommodate sites that have multiple DHCP servers and a mechanism for
+//      maintaining consistency among leases managed by multiple servers.
+//      A DHCP server MAY extend a client’s lease only if it has local administrative authority to do so.
+//      However, because the lease info was lost the Server will remain silent.
+//
 static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     uint32_t requestedIpAddr = (pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) ? pRxOpt->requestAddress.reqIpAddr : 0U; 
@@ -2199,40 +2236,107 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFA
     evInfo.flags.infoIpValid = 1U;
     evInfo.ipAddress = requestedIpAddr; 
 
-    // do some sanity checks
-    if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT) != 0U)
-    {   // keep silent but report
-        evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
-    }
-    else if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
-    {   // there should NOT be a server identifier! ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
-        evInfo.flags.infoFmtMask = 1;
-        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
-    }
-    else if(pRxOpt->requestAddress.optionType != (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
-    {   // there should be a requested IP address. ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
-        evInfo.flags.infoFmtMask = 1;
-        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
-    }
-    else if(pHeader->ciaddr != 0U)
+    bool sendNak = false;
+    while(true)
     {
-        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
-        evInfo.flags.infoFmtMask = 1;
-        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR;
-    } 
-    else if( (pHeader->giaddr == 0U && ((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0U) ||
-            ((pIDcpt->startIPAddress.Val ^ pHeader->giaddr) & pIDcpt->ipMaskAddress.Val) == 0U)
-    {   // good client address... since we do not have any record for this client (he == 0) we should stay silent:
-        // Note: for giaddr != 0, the server should know the 'remote subnet mask' to check the giaddr
-        // DHCPREQUEST generated during INIT-REBOOT state pg 32/46:
-        //  If the DHCP server has no record of this client, then it MUST remain silent,
-        //  and MAY output a warning to the network administrator.
-        evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
+        // do some sanity checks
+        if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT) != 0U)
+        {   // keep silent but report: override flag takes precedence
+            evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
+            break;
+        }
+
+        if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
+        {   // server identifier should be only for a response to DHCPOFFER. So it should not be set! ignore but notify ill formatted message
+            evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
+            break;
+        }
+
+        // decide the client state: INIT_REBOOT, RENEWING or REBINDING
+        if((pIDcpt->msgFlags & (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST) != 0U && pHeader->ciaddr == 0U)
+        {   // bcast, ciaddr == 0: should be INIT_REBOOT
+            if(pRxOpt->requestAddress.optionType != (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
+            {   // there should be a requested IP address. ignore but notify ill formatted message
+                evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+                evInfo.flags.infoFmtMask = 1;
+                evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
+                break;
+            }
+            // verify the client's notion of its IP address
+            if( (pHeader->giaddr == 0U && ((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0U) ||
+                    ((pIDcpt->startIPAddress.Val ^ pHeader->giaddr) & pIDcpt->ipMaskAddress.Val) == 0U)
+            {   // good client address... since we do not have any record for this client (he == 0) we should stay silent:
+                // Note: for giaddr != 0, the server should know the 'remote subnet mask' to check the giaddr
+                // DHCPREQUEST generated during INIT-REBOOT state pg 32/46:
+                //  If the DHCP server has no record of this client, then it MUST remain silent,
+                //  and MAY output a warning to the network administrator.
+                evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
+                // if admin override, we can NAK it!
+                if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_MASTER_SERVER) != 0U)
+                {
+                    sendNak = true;
+                }
+            }
+            else
+            {   // wrong network address: should be NAK-ed
+                evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
+                evInfo.flags.infoReqIp = 1;
+                evInfo.data = requestedIpAddr;
+                sendNak = true;
+            }
+            break;
+        }
+        else if((pIDcpt->msgFlags & (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST) == 0U)
+        {   // unicast message should be RENEWING client state
+            // NO ’requested IP address’ and 'ciaddr' MUST be filled
+            if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS)
+            {
+                evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+                evInfo.flags.infoFmtMask = 1;
+                evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_SET;
+            }
+            else if(pHeader->ciaddr == 0U)
+            {
+                evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+                evInfo.flags.infoFmtMask = 1;
+                evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR;
+            }
+            else
+            {   // correct message but no lease info: should be NAK-ed
+                evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
+                evInfo.flags.infoReqIp = 1;
+                evInfo.data = requestedIpAddr;
+                sendNak = true;
+            }
+            break;
+        }
+        else
+        {   // bcast, ciaddr != 0 : REBINDING client state, 
+            if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS)
+            {
+                evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
+                evInfo.flags.infoFmtMask = 1;
+                evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_SET;
+            }
+            else
+            {   // correct message but no lease info: ignore unless we're sure we can NAK it
+                evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
+                evInfo.flags.infoReqIp = 1;
+                evInfo.data = pHeader->ciaddr;
+                if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_MASTER_SERVER) != 0U)
+                {
+                    sendNak = true;
+                }
+            }
+            break;
+        }
     }
-    else
-    {   // wrong network address: should be NAK-ed
+
+
+    if(sendNak)
+    {
         // create a 'fake' hash entry just for this NAK since there's no record
         // Note: if unicast is needed (giaddr != 0) and an ARP injection is needed
         // then this ARP entry will not be removed as this hash entry is fake
@@ -2241,13 +2345,13 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFA
         DHCPS_HASH_ENTRY* he = &fakeHe;
 
         // initialize it
+        (void)memset(he, 0, sizeof(&he));
         he->parent = pIDcpt;
         F_DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_REQUEST);
         he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_NAK;
         he->nakCode = (uint8_t)DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
         (void)F_DHCPS_SendMessage(he);
     }
-
 
     if((int)evType != 0)
     {   
@@ -2257,7 +2361,6 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFA
     return TCPIP_DHCPS_LEASE_STATE_IDLE;
     
 }
-
 
 
 // he->state == TCPIP_DHCPS_LEASE_STATE_IDLE
@@ -2866,7 +2969,7 @@ static bool F_DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
         uPtr.pOption->multByteType.optionType = (uint8_t)DHCP_OPTION_MESSAGE;
         uPtr.pOption->multByteType.optionLen = msgLen;
         (void)memcpy((void*)uPtr.pOption->multByteType.byteVal, (const void*)msg, msgLen);
-        uPtr.wrPtr += sizeof(uPtr.pOption->multByteType) + msgLen;
+        uPtr.wrPtr += sizeof(uPtr.pOption->bareOptType) + msgLen;
     }
 
     // Option: DHCP_OPTION_CLIENT_ID: MUST NOT or MAY for DHCP_MESSAGE_TYPE_NAK
@@ -2884,69 +2987,73 @@ static bool F_DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     //
     // other options: MAY
 
-    // Option: Subnet Mask
-    uPtr.pOption->subnetMaskType.optionType = (uint8_t)DHCP_OPTION_SUBNET_MASK;
-    uPtr.pOption->subnetMaskType.optionLen = (uint8_t)sizeof(IPV4_ADDR);
-    uPtr.pOption->subnetMaskType.intVal = pIDcpt->ipMaskAddress.Val;
-    uPtr.wrPtr += sizeof(uPtr.pOption->subnetMaskType);
-   
-    // Option: Router/Gateway address
+    while(he->srvMsgType != (uint8_t)DHCP_MESSAGE_TYPE_NAK)
+    {
+        // Option: Subnet Mask
+        uPtr.pOption->subnetMaskType.optionType = (uint8_t)DHCP_OPTION_SUBNET_MASK;
+        uPtr.pOption->subnetMaskType.optionLen = (uint8_t)sizeof(IPV4_ADDR);
+        uPtr.pOption->subnetMaskType.intVal = pIDcpt->ipMaskAddress.Val;
+        uPtr.wrPtr += sizeof(uPtr.pOption->subnetMaskType);
+
+        // Option: Router/Gateway address
 #if (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_ROUTER) != 0U) 
-    {   // send the router option
-        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_ROUTER, pIDcpt->cliOptions.cliRouter, sizeof(pIDcpt->cliOptions.cliRouter) / sizeof(*pIDcpt->cliOptions.cliRouter));
-    }
+        if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_ROUTER) != 0U) 
+        {   // send the router option
+            uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_ROUTER, pIDcpt->cliOptions.cliRouter, sizeof(pIDcpt->cliOptions.cliRouter) / sizeof(*pIDcpt->cliOptions.cliRouter));
+        }
 #endif  // (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0)
 
-    // Option: DNS server address
+        // Option: DNS server address
 #if (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_DNS) != 0U) 
-    {   // send the DNS option
-        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_DNS, pIDcpt->cliOptions.cliDNS, sizeof(pIDcpt->cliOptions.cliDNS) / sizeof(*pIDcpt->cliOptions.cliDNS));
-    }
+        if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_DNS) != 0U) 
+        {   // send the DNS option
+            uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_DNS, pIDcpt->cliOptions.cliDNS, sizeof(pIDcpt->cliOptions.cliDNS) / sizeof(*pIDcpt->cliOptions.cliDNS));
+        }
 #endif  // (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0)
 
-    // Option: Time server address
+        // Option: Time server address
 #if (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_TIME_SERVER) != 0U) 
-    {   // send the Time Server option
-        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_TIME_SERVER, pIDcpt->cliOptions.cliTServer, sizeof(pIDcpt->cliOptions.cliTServer) / sizeof(*pIDcpt->cliOptions.cliTServer));
-    }
+        if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_TIME_SERVER) != 0U) 
+        {   // send the Time Server option
+            uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_TIME_SERVER, pIDcpt->cliOptions.cliTServer, sizeof(pIDcpt->cliOptions.cliTServer) / sizeof(*pIDcpt->cliOptions.cliTServer));
+        }
 #endif  // (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0)
 
-    // Option: Name server address
+        // Option: Name server address
 #if (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NAME_SERVER) != 0U) 
-    {   // send the Time Server option
-        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_NAME_SERVER, pIDcpt->cliOptions.cliNServer, sizeof(pIDcpt->cliOptions.cliNServer) / sizeof(*pIDcpt->cliOptions.cliNServer));
-    }
+        if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NAME_SERVER) != 0U) 
+        {   // send the Time Server option
+            uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_NAME_SERVER, pIDcpt->cliOptions.cliNServer, sizeof(pIDcpt->cliOptions.cliNServer) / sizeof(*pIDcpt->cliOptions.cliNServer));
+        }
 #endif  // (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0)
 
 #if (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NTP_SERVER) != 0U) 
-    {   // send the Time Server option
-        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_NTP_SERVER, pIDcpt->cliOptions.cliNtpServer, sizeof(pIDcpt->cliOptions.cliNtpServer) / sizeof(*pIDcpt->cliOptions.cliNtpServer));
-    }
+        if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NTP_SERVER) != 0U) 
+        {   // send the Time Server option
+            uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_NTP_SERVER, pIDcpt->cliOptions.cliNtpServer, sizeof(pIDcpt->cliOptions.cliNtpServer) / sizeof(*pIDcpt->cliOptions.cliNtpServer));
+        }
 #endif  // (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
 
 #if (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
-    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != (uint8_t)DHCP_MESSAGE_TYPE_INFORM)
-    {
-        // option DHCP_OPTION_RENEWAL_T1 
-        uint32_t t1 = (he->cliLeaseTime * pIDcpt->cliOptions.t1Mult) / pIDcpt->cliOptions.t1Div;
-        uPtr.pOption->t1RenewalType.optionType = (uint8_t)DHCP_OPTION_RENEWAL_T1;
-        uPtr.pOption->t1RenewalType.optionLen = (uint8_t)sizeof(uint32_t);
-        uPtr.pOption->t1RenewalType.intVal = TCPIP_Helper_htonl(t1);
-        uPtr.wrPtr += sizeof(uPtr.pOption->t1RenewalType);
+        if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != (uint8_t)DHCP_MESSAGE_TYPE_INFORM)
+        {
+            // option DHCP_OPTION_RENEWAL_T1 
+            uint32_t t1 = (he->cliLeaseTime * pIDcpt->cliOptions.t1Mult) / pIDcpt->cliOptions.t1Div;
+            uPtr.pOption->t1RenewalType.optionType = (uint8_t)DHCP_OPTION_RENEWAL_T1;
+            uPtr.pOption->t1RenewalType.optionLen = (uint8_t)sizeof(uint32_t);
+            uPtr.pOption->t1RenewalType.intVal = TCPIP_Helper_htonl(t1);
+            uPtr.wrPtr += sizeof(uPtr.pOption->t1RenewalType);
 
-        // option DHCP_OPTION_REBINDING_T2 
-        uint32_t t2 = (he->cliLeaseTime * pIDcpt->cliOptions.t2Mult) / pIDcpt->cliOptions.t2Div;
-        uPtr.pOption->t2RebindingType.optionType = (uint8_t)DHCP_OPTION_REBINDING_T2;
-        uPtr.pOption->t2RebindingType.optionLen = (uint8_t)sizeof(uint32_t);
-        uPtr.pOption->t2RebindingType.intVal = TCPIP_Helper_htonl(t2);
-        uPtr.wrPtr += sizeof(uPtr.pOption->t2RebindingType);
-    }
+            // option DHCP_OPTION_REBINDING_T2 
+            uint32_t t2 = (he->cliLeaseTime * pIDcpt->cliOptions.t2Mult) / pIDcpt->cliOptions.t2Div;
+            uPtr.pOption->t2RebindingType.optionType = (uint8_t)DHCP_OPTION_REBINDING_T2;
+            uPtr.pOption->t2RebindingType.optionLen = (uint8_t)sizeof(uint32_t);
+            uPtr.pOption->t2RebindingType.intVal = TCPIP_Helper_htonl(t2);
+            uPtr.wrPtr += sizeof(uPtr.pOption->t2RebindingType);
+        }
 #endif  // (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+        break;
+    }
   
     // No more options, mark ending
     *uPtr.wrPtr++ = (uint8_t)DHCP_OPTION_END;

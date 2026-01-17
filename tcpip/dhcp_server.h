@@ -26,7 +26,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2026, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -111,6 +111,10 @@ typedef enum
     TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT = 0x0040, // keep silent when receiving a client request for which there is no previous record
                                                             // (i.e. don't verify the requested IP address and send NAK, etc.)
                                                             // By default the server will reply with NAK if the requested lease is invalid
+    TCPIP_DHCPS_CONFIG_FLAG_MASTER_SERVER       = 0x0080,   // this server is the master/only server on the network
+                                                            // Advanced: set this if this is the only DHCP server present.
+                                                            // It will speed up lease acquisition for Windows machines because of a disconnect, sending a NAK.
+                                                            // For example when an old lease is requested and the server has no lease knowledge (was reset, for example).
 
 }TCPIP_DHCPS_CONFIG_FLAGS;
 

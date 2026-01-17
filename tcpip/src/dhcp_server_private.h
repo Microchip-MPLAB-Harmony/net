@@ -16,7 +16,7 @@
 // DOM-IGNORE-BEGIN
 
 /*
-Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2026, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -279,6 +279,13 @@ typedef struct __attribute__((packed))
     uint8_t     byteVal[2]; // multiple 8 bit values
 }TCPIP_DHCPS_OPTION_MULT_BYTE_DATATYPE;
 
+// no data carrying option
+typedef struct __attribute__((packed))
+{
+    uint8_t     optionType; // Option type 
+    uint8_t     optionLen;  // Option len
+}TCPIP_DHCPS_OPTION_BARE_DATATYPE;
+
 // all supported options transmitted by the server
 typedef union 
 {
@@ -292,6 +299,7 @@ typedef union
     TCPIP_DHCPS_OPTION_INT_DATATYPE  t2RebindingType;   // T2 rebinding time type
     TCPIP_DHCPS_OPTION_MULT_INT_DATATYPE multIntType;   // multiple 32 bit values data type
     TCPIP_DHCPS_OPTION_MULT_BYTE_DATATYPE multByteType; // multiple byte values data type
+    TCPIP_DHCPS_OPTION_BARE_DATATYPE bareOptType;       // no payload option type
 }TCPIP_DHCPS_TX_OPTIONS;
 
 // descriptor for messages sent by the server
