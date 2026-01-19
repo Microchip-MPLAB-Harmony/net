@@ -21,6 +21,7 @@
         | GMAC                | Fixed missing GMAC driver GBit register setting in PIC32CK |
         | Presentation Layer  | Made net_pres default log setting as 'not verbose' |
         | DHCP Server         | Fixed INIT_REBOOT/RENEWING states detection for DHCPREQUEST received while BOUND |
+        |                     | Fixed/improved the behavior for DHCPREQUEST received with no previous lease info |
         | Multiple Modules    | Fixed the MISRA C Violations |
         |                     | Updated the MISRA C 2012 deviation records to 2023 |
 
