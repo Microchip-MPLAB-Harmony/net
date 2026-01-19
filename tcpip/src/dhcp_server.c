@@ -279,13 +279,13 @@ static __inline__ uint16_t __attribute__((always_inline)) FC_MaxLeases(void)
 
 // debug functions
 #if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
-volatile int v_DhcpsStayAssertLoop = 0;
+static volatile int v_DhcpsStayAssertLoop = 0;
 static void F_DhcpsAssert(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("DHCPS Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(v_DhcpsStayAssertLoop != 0);
+        while(v_DhcpsStayAssertLoop != 0) {;}
     }
 }
 
@@ -1107,7 +1107,7 @@ static void F_DHCPS_NotifyClients(const TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_T
     TCPIP_DHCPS_EVENT_NODE  registeredUsers[TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS];
     TCPIP_DHCPS_EVENT_DATA  evData;
 
-   F_DhcpsAssert(evType != 0, __func__, __LINE__);
+   F_DhcpsAssert((int)evType != 0, __func__, __LINE__);
 
     bool doNotify = false;
 
@@ -1510,7 +1510,7 @@ static void F_DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
         }
         
         pIfDcpt = gDhcpDcpt->ifDcpt + ifIx;
-        F_DhcpsAssert(pIfDcpt->hashDcpt != 0, __func__, __LINE__);
+        F_DhcpsAssert(pIfDcpt->hashDcpt != NULL, __func__, __LINE__);
 
         if(avlblBytes > sizeof(gDhcpProcPacket))
         {   // truncate if too big
@@ -2353,10 +2353,7 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFA
         (void)F_DHCPS_SendMessage(he);
     }
 
-    if((int)evType != 0)
-    {   
-        F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, NULL, &evInfo);
-    }
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, NULL, &evInfo);
 
     return TCPIP_DHCPS_LEASE_STATE_IDLE;
     
@@ -2475,8 +2472,10 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_
             evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
             break;
         }
-
-        // all good...
+        else
+        {
+            // all good...
+        }
         he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_ACK;
         newState = TCPIP_DHCPS_LEASE_STATE_BOUND; 
 
@@ -2569,7 +2568,7 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFAC
     else
     {
         // check that the client idea of its IP address is correct
-        F_DhcpsAssert(he->ipAddress.Val != 0, __func__, __LINE__);   // an he should have a valid address
+        F_DhcpsAssert(he->ipAddress.Val != 0U, __func__, __LINE__);   // an he should have a valid address
         if(pRxOpt->requestAddress.reqIpAddr == he->ipAddress.Val)
         {   // all looks good 
             // we can extend the lease
@@ -2757,7 +2756,7 @@ static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT
         int32_t entryIx = F_PoolIndexFromIpAddress(pIDcpt, he->ipAddress.Val); 
         // should be a valid IP address since it's in the database!
         F_DhcpsAssert(entryIx >= 0, __func__, __LINE__);
-        F_DhcpsAssert(IpIndexCheckFree(pIDcpt, entryIx, false) == false, __func__, __LINE__); 
+        F_DhcpsAssert(IpIndexCheckFree(pIDcpt, (size_t)entryIx, false) == false, __func__, __LINE__); 
 #endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
 
 #if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
@@ -2960,10 +2959,19 @@ static bool F_DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     // Option: DHCP_OPTION_MESSAGE: SHOULD (for DHCP_MESSAGE_TYPE_NAK)
     if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_NAK)
     {
+        const char* msg;
         F_DhcpsAssert(he->nakCode != 0U, __func__, __LINE__);
         F_DhcpsAssert(he->nakCode - 1U < sizeof(nak_messgage_tbl) / sizeof(*nak_messgage_tbl), __func__, __LINE__);
+        if(he->nakCode != 0U && he->nakCode - 1U < sizeof(nak_messgage_tbl) / sizeof(*nak_messgage_tbl))
+        {
+            msg = nak_messgage_tbl[he->nakCode - 1U];
+        }
+        else
+        {
+            F_DhcpsAssert(false, __func__, __LINE__);
+            msg = "";
+        }
 
-        const char* msg = nak_messgage_tbl[he->nakCode - 1U];
         uint8_t msgLen = (uint8_t)strlen(msg);
 
         uPtr.pOption->multByteType.optionType = (uint8_t)DHCP_OPTION_MESSAGE;
@@ -3235,14 +3243,14 @@ static void F_DHCPS_PingHandler(const TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_I
     F_DhcpsAssert(he->hEntry.flags.busy != 0U, __func__, __LINE__);
 
     OSAL_CRITSECT_DATA_TYPE lock = F_DHCPS_Lock();
-    F_DhcpsAssert((he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE) != 0, __func__, __LINE__);
+    F_DhcpsAssert((he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE) != false, __func__, __LINE__);
 
     if(result == TCPIP_ICMP_ECHO_REQUEST_RES_OK)
     {   // some host replied to this ping; address is taken, use some other
 #if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
         int32_t entryIx = F_PoolIndexFromIpAddress(he->parent, he->ipAddress.Val); 
         F_DhcpsAssert(entryIx >= 0, __func__, __LINE__);
-        F_DhcpsAssert(IpIndexCheckFree(he->parent, entryIx, false) == false, __func__, __LINE__);
+        F_DhcpsAssert(IpIndexCheckFree(he->parent, (size_t)entryIx, false) == false, __func__, __LINE__);
 #endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
         F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_REPROBE);
     }
@@ -3370,7 +3378,6 @@ static void F_DHCPS_ProcessTick(void)
             he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryGet(pOH, bktIx));
             if(he->hEntry.flags.busy != 0U)
             {
-                F_DhcpsAssert(0 < he->state && he->state <= (uint8_t)TCPIP_DHCPS_LEASE_STATE_INFORM, __func__, __LINE__); 
                 F_DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
                 // process run time flags
                 if((he->runFlags & (uint8_t)DHCPS_RUN_FLAG_ARP_INJECT) != 0U)
@@ -3382,12 +3389,19 @@ static void F_DHCPS_ProcessTick(void)
                     }
                 } 
 
-                // process state
                 F_DhcpsDisplayStat(he);
-                F_DHCPS_STAT_FUNC statF = T_DHCPS_StatTickFncTbl[he->state];
-                if(statF != NULL)
+                // process state
+                if(0U < he->state && he->state <= (uint8_t)TCPIP_DHCPS_LEASE_STATE_INFORM)
                 {
-                    statF(he);
+                    F_DHCPS_STAT_FUNC statF = T_DHCPS_StatTickFncTbl[he->state];
+                    if(statF != NULL)
+                    {
+                        statF(he);
+                    }
+                }
+                else
+                {
+                    F_DhcpsAssert(false, __func__, __LINE__); 
                 }
             }
         }
@@ -4309,7 +4323,7 @@ static DHCPS_HASH_ENTRY* F_DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDc
     he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryLookupOrInsert(pIDcpt->hashDcpt, pRxOpt->clientId));
     if(he != NULL)
     {   
-        F_DhcpsAssert(he->hEntry.flags.newEntry != 0, __func__, __LINE__);   // this should be a new entry
+        F_DhcpsAssert(he->hEntry.flags.newEntry != 0U, __func__, __LINE__);   // this should be a new entry
 #if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
         // set the prevState for a new entry
         // if(he->hEntry.flags.newEntry != 0)
