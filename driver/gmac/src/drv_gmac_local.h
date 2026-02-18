@@ -184,7 +184,8 @@ typedef struct {
     TCPIP_MAC_PKT_FreeF             pktFreeF;
     TCPIP_MAC_PKT_AckF              pktAckF;
     
-    TCPIP_MAC_PKT_RetrieveF pktRetrF;
+    TCPIP_MAC_PKT_RetrieveF         pktRetrF;
+    const void*                     retrParam;
     
     // synchronization
     TCPIP_MAC_SynchReqF             macSynchF;

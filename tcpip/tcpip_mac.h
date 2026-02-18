@@ -1677,7 +1677,7 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
 // *****************************************************************************
 /*
   Retrieve packet Function:
-    typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, TCPIP_MAC_RETRIEVE_REQUEST retrReq);
+    typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, TCPIP_MAC_RETRIEVE_REQUEST retrReq, const void* retrieveParam);
 
   Summary:
     Helper function for the MAC driver to retrieve a TCPIP_MAC_PACKET packet belonging to a segment buffer
@@ -1696,6 +1696,7 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
     retrReq         - a TCPIP_MAC_RETRIEVE_REQUEST value specifying if an RX/TX packet is needed
                       This allows implementing different RX/TX mappings/tables
                       Also, peek request are supported, if needed.
+    retrieveParam   - a parameter to be used when the function is called. Not used by the MAC driver 
 
   Returns:
    - a valid TCPIP_MAC_PACKET pointer if the call was successful and the corresponding packet was found
@@ -1712,7 +1713,7 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
     The TCPIP_MAC_RETRIEVE_REQUEST parameter is not used.
 
 */
-typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, TCPIP_MAC_RETRIEVE_REQUEST retrReq);
+typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, TCPIP_MAC_RETRIEVE_REQUEST retrReq, const void* retrieveParam);
 
 
 // *****************************************************************************
@@ -1942,6 +1943,9 @@ typedef struct
     The Harmony TCP/IP stack uses this mechanism only for VLAN traffic
     Otherwise the retrieveF should == 0. */
     TCPIP_MAC_PKT_RetrieveF retrieveF;
+
+    /*  Parameter to be used when the event function is called. */
+    const void*             retrieveParam;    
 
     /*  number of the interfaces supported in this session */
     uint16_t                nIfs;         

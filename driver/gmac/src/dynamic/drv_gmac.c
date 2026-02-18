@@ -465,6 +465,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     pMACDrv->sGmacData.pktFreeF = macControl->pktFreeF;
     pMACDrv->sGmacData.pktAckF = macControl->pktAckF;
     pMACDrv->sGmacData.pktRetrF = macControl->retrieveF;
+    pMACDrv->sGmacData.retrParam = macControl->retrieveParam;
 
     pMACDrv->sGmacData.macSynchF = macControl->synchF;
     
@@ -2311,7 +2312,7 @@ TCPIP_MAC_PACKET * DRV_PIC32CGMAC_Buff2PktPtr(DRV_GMAC_DRIVER * pMACDrv, uintptr
 
     if(pMACDrv->sGmacData.pktRetrF != NULL)
     {
-        return pMACDrv->sGmacData.pktRetrF(U_PTR8_SEG_GAP_DSC.u8Ptr, retrReq);
+        return pMACDrv->sGmacData.pktRetrF(U_PTR8_SEG_GAP_DSC.u8Ptr, retrReq, pMACDrv->sGmacData.retrParam);
     }
 
     // regular pointer recovery

@@ -327,6 +327,7 @@ SYS_MODULE_OBJ MAC_DRVR_Initialize( const SYS_MODULE_INDEX index, const SYS_MODU
     pMacDrvr->controlFlags = macControl->controlFlags;
     pMacDrvr->dataOffset = (macControl->controlFlags & (uint16_t)TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) != 0U ? 2U : 0U;
     pMacDrvr->pktRetrF = macControl->retrieveF;
+    pMacDrvr->retrParam = macControl->retrParam;
 
     // copy the configuration data
     pMacDrvr->config = *initData;
@@ -1714,7 +1715,7 @@ TCPIP_MAC_PACKET * DRV_EMAC_Buff2PktPtr(MAC_DRIVER * pMacDrvr, uintptr_t buffAdd
 
     if(pMacDrvr->pktRetrF != NULL)
     {
-        return pMacDrvr->pktRetrF(U_PTR8_SEG_GAP_DSC.u8Ptr, retrReq);
+        return pMacDrvr->pktRetrF(U_PTR8_SEG_GAP_DSC.u8Ptr, retrReq, pMacDrvr->retrParam);
     }
 
     // regular pointer recovery

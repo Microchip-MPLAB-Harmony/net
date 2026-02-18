@@ -365,7 +365,7 @@ static TCPIP_MAC_PACKET * F_DRV_ETHMAC_Buff2PktPtr(DRV_ETHMAC_INSTANCE_DCPT* pMa
 {
     if(pMacD->mData.pktRetrF != NULL)
     {
-        return pMacD->mData.pktRetrF(pBuff, retrReq);
+        return pMacD->mData.pktRetrF(pBuff, retrReq, pMacD->mData.retrParam);
     }
 
     // regular pointer recovery
@@ -492,6 +492,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     pMacD->mData.pktFreeF = macControl->pktFreeF;
     pMacD->mData.pktAckF = macControl->pktAckF;
     pMacD->mData.pktRetrF = macControl->retrieveF;
+    pMacD->mData.retrParam = macControl->retrieveParam;
 
     pMacD->mData.macSynchF = macControl->synchF;
 

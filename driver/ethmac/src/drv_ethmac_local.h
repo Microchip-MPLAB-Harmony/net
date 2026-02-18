@@ -213,6 +213,7 @@ typedef struct
     TCPIP_MAC_PKT_AckF      pktAckF;
     
     TCPIP_MAC_PKT_RetrieveF pktRetrF;
+    const void*             retrParam;
     
     // synchronization
     TCPIP_MAC_SynchReqF     macSynchF;

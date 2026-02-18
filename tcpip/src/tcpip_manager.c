@@ -2362,7 +2362,7 @@ TCPIP_VLAN_RETR_STRUCT dbgTxRetr = {0};
 
 // helper to retrieve the pointer to the corresponding TCPIP_MAC_PACKET from a buffer pointer
 // segLoad should be the pointer that the MAC uses for TX, i.e. pPkt->pDSeg->segLoad!
-static TCPIP_MAC_PACKET* F_TCPIP_MAC_PKT_Retrieve(uint8_t* segLoad, TCPIP_MAC_RETRIEVE_REQUEST retrReq)
+static TCPIP_MAC_PACKET* F_TCPIP_MAC_PKT_Retrieve(uint8_t* segLoad, TCPIP_MAC_RETRIEVE_REQUEST retrReq, const void* retrieveParam)
 {
 #if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VRETR_F) != 0) 
     TCPIP_VLAN_RETR_STRUCT* pRetr = (retrReq == TCPIP_MAC_RETRIEVE_RX) ? &dbgRxRetr : &dbgTxRetr;
@@ -4959,6 +4959,7 @@ static void TCPIP_STACK_StacktoMacCtrl(TCPIP_MAC_MODULE_CTRL* pMacCtrl, TCPIP_ST
     if((pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_VLAN_USE_VID_NULL) == 0U)
     {
         pMacCtrl->retrieveF = &F_TCPIP_MAC_PKT_Retrieve;
+        pMacCtrl->retrieveParam = NULL;
     }
 #endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
 

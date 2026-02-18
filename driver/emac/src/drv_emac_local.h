@@ -237,6 +237,7 @@ typedef struct
     // control flags from the stack
     uint16_t                        controlFlags;
     TCPIP_MAC_PKT_RetrieveF         pktRetrF;
+    const void*                     retrParam;
 
 
     // general stuff
