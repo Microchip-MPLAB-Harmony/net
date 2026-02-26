@@ -896,6 +896,10 @@ void TCPIP_UDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         UserGblUnlock();
     }
 }
+#else
+void TCPIP_UDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+{
+}
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
@@ -1052,7 +1056,7 @@ UDP_SOCKET TCPIP_UDP_OpenClientSkt(IP_ADDRESS_TYPE addType, UDP_PORT remotePort,
     {
         UDP_SOCKET_DCPT* pSkt = udpSocketDcpt[skt];
 #if defined (TCPIP_STACK_USE_IPV6)
-        if(addType == IP_ADDRESS_TYPE_IPV6)
+        if(pSkt->addType == (uint8_t)IP_ADDRESS_TYPE_IPV6)
         {   // IPv6 clients require explicit binding; use the default interface; user can change the binding
             (void) UDPSocketBind(pSkt, (const TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet(), NULL);
             pSkt->flags.openBindIf = 1;
@@ -1887,6 +1891,11 @@ static uint16_t UDPv4Flush(UDP_SOCKET_DCPT* pSkt)
     return 0;
 }
 
+#else
+bool TCPIP_UDP_BcastIPV4AddressSet(UDP_SOCKET hUDP, UDP_SOCKET_BCAST_TYPE bcastType, TCPIP_NET_HANDLE hNet)
+{
+    return false;
+}
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
@@ -3143,7 +3152,9 @@ static UDP_SOCKET_DCPT* UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEAD
         else if( (looseMatch | exactMatch) == (uint16_t)TCPIP_UDP_PKT_MATCH_MASK )
         {   // overall match; adjust and return
 #if defined (TCPIP_STACK_USE_IPV6)
+#if defined (TCPIP_STACK_USE_IPV4)
             if (addressType == IP_ADDRESS_TYPE_IPV6)
+#endif  // defined (TCPIP_STACK_USE_IPV4)
             {   // lazy allocation does not work for IPv6
                 // This is expensive and IPv6 should be able to delay the allocation, like IPv4 does!
                 // avoid user threads mess with this
@@ -3861,6 +3872,11 @@ bool TCPIP_UDP_SetSplitPayload(UDP_SOCKET s, void* pLoad, uint16_t loadSize)
     }
 
     return success;
+}
+#else
+bool TCPIP_UDP_SetSplitPayload(UDP_SOCKET s, void* pLoad, uint16_t loadSize)
+{
+    return false;
 }
 #endif // defined (TCPIP_STACK_USE_IPV4)
 

@@ -195,6 +195,10 @@ void TCPIP_ICMPV6_Deinitialize (const TCPIP_STACK_MODULE_CTRL* const stackInit)
         }
     }
 }
+#else
+void TCPIP_ICMPV6_Deinitialize (const TCPIP_STACK_MODULE_CTRL* const stackInit)
+{
+}
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 /*****************************************************************************

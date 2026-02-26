@@ -258,6 +258,10 @@ static void F_TCPIP_NDP_Cleanup(void)
         ndpAsyncHandle = NULL;
     }
 }
+#else
+void TCPIP_NDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+{
+}
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 /*****************************************************************************

@@ -1167,9 +1167,9 @@ void TCPIP_Helper_Memcpy (void *dst, const void *src, size_t len)
     uint32_t count = 0;
     uint32_t remaining_bytes = 0;
 
-    if(((uint32_t)dst & WORD_ALIGN_MASK) || ((uint32_t)src & WORD_ALIGN_MASK))
+    if( (FC_CvPtr2U32(dst) & WORD_ALIGN_MASK) != 0U || (FC_CvPtr2U32(src) & WORD_ALIGN_MASK) != 0U)
     {
-        memcpy(dst, src, len);
+        (void)memcpy(dst, src, len);
     }
     else
     {       

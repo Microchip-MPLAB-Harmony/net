@@ -631,6 +631,10 @@ void TCPIP_IPV6_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         }
     }
 }
+#else
+void TCPIP_IPV6_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+{
+}
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 
@@ -3707,8 +3711,11 @@ static void TCPIP_IPV6_Process (const TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* p
     uint16_t currentOffset = 0U;
     uint8_t cIPFrameType;
     uint16_t dataCount;
-    bool ackPacket;
+#if (defined (TCPIP_STACK_USE_TCP) || defined (TCPIP_STACK_USE_UDP))
+    bool ackPacket = true;
     bool rxInsert;
+#endif  // (defined (TCPIP_STACK_USE_TCP) || defined (TCPIP_STACK_USE_UDP))
+
 
     const IPV6_ADDR* constLocalIPv6Addr;
     const IPV6_ADDR* constRemoteIPv6Addr;
@@ -3794,7 +3801,6 @@ static void TCPIP_IPV6_Process (const TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* p
 
     extensionHeaderLen = 0;
     action = IPV6_ACTION_BEGIN_EX_HEADER_PROCESSING;
-    ackPacket = true;
 
     // Process frame
     while (cIPFrameType != (uint8_t)IPV6_PROT_NONE)
@@ -3969,10 +3975,15 @@ static void TCPIP_IPV6_Process (const TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* p
         }
     }
 
+#if (defined (TCPIP_STACK_USE_TCP) || defined (TCPIP_STACK_USE_UDP))
     if(ackPacket)
     {
         TCPIP_PKT_PacketAcknowledge(pRxPkt, (TCPIP_MAC_PKT_ACK_RES)pRxPkt->ipv6PktData); 
     }
+#else
+    TCPIP_PKT_PacketAcknowledge(pRxPkt, (TCPIP_MAC_PKT_ACK_RES)pRxPkt->ipv6PktData); 
+#endif  // (defined (TCPIP_STACK_USE_TCP) || defined (TCPIP_STACK_USE_UDP))
+
 }
 
 

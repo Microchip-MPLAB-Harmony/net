@@ -3373,5 +3373,36 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
 {
     return false;
 }
+bool TCPIP_DHCP_IsBound(TCPIP_NET_HANDLE hNet)
+{
+    return false;
+}
+bool TCPIP_DHCP_IsServerDetected(TCPIP_NET_HANDLE hNet)
+{
+    return false;
+}
+bool TCPIP_DHCP_RequestTimeoutSet(TCPIP_NET_HANDLE hNet, uint16_t initTmo, uint16_t dhcpBaseTmo)
+{
+    return false;
+}
+TCPIP_DHCP_HANDLE TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER handler, const void* hParam)
+{
+    return NULL;
+}
+TCPIP_DHCP_HANDLE TCPIP_DHCP_HandlerRegisterEx(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER_EX exHandler, const void* hParam)
+{
+    return NULL;
+}
+bool TCPIP_DHCP_HandlerDeRegister(TCPIP_DHCP_HANDLE hDhcp)
+{
+    return false;
+}
+bool TCPIP_DHCP_HostNameCallbackRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_HOST_NAME_CALLBACK nameCallback, bool writeBack)
+{
+    return false;
+}
+void  TCPIP_DHCP_Task(void)
+{
+}
 </#if>
 

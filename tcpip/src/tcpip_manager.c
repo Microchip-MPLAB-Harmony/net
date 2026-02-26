@@ -84,7 +84,7 @@ static const char* TCPIP_STACK_IF_ALIAS_NAME_TBL[TCPIP_MAC_TYPES] =
 
 
 // notification modules
-// Since the modules that need connection notification is
+// Since the modules that need connection notification are
 // known to the stack manager no dynamic approach is taken.
 // But simply a call table is maintained.
 #if (M_TCPIP_STACK_RUN_TIME_INIT == 0)
@@ -1500,6 +1500,15 @@ bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
     return false;
 
 }
+#else
+bool TCPIP_STACK_NetUp(TCPIP_NET_HANDLE netH, const TCPIP_NETWORK_CONFIG* pUsrConfig)
+{
+    return false;
+}
+bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
+{
+    return false;
+}
 #endif  // (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 
 
@@ -1512,6 +1521,10 @@ void TCPIP_STACK_Deinitialize(SYS_MODULE_OBJ object)
     }
 
     TCPIP_STACK_KillStack();
+}
+#else
+void TCPIP_STACK_Deinitialize(SYS_MODULE_OBJ object)
+{
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
@@ -1684,12 +1697,12 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
     if(TCPIPStackNetIsPrimary(pNetIf))
     {   // primary interface
         // kill the MAC anyway
-        if(pNetIf->hIfMac != 0)
+        if(pNetIf->hIfMac != 0U)
         {
             (*pNetIf->pMacObj->MAC_Close)(pNetIf->hIfMac);
         }
 
-        if(pNetIf->macObjHandle != 0)
+        if(pNetIf->macObjHandle != 0U)
         {   
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
             (*pNetIf->pMacObj->MAC_Deinitialize)(pNetIf->macObjHandle);
@@ -1700,7 +1713,8 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
     pNetIf->hIfMac = 0;
     pNetIf->macObjHandle = 0;
 
-    pNetIf->Flags.bInterfaceEnabled = pNetIf->Flags.bMacInitialize = false;
+    pNetIf->Flags.bInterfaceEnabled = 0;
+    pNetIf->Flags.bMacInitialize = 0;
 
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -1916,9 +1930,10 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
             } 
             pNetIf->exFlags.connEvent = 0;
 
+            size_t nConnMods = sizeof(TCPIP_STACK_CONN_EVENT_TBL) / sizeof(*TCPIP_STACK_CONN_EVENT_TBL);
             for(pAliasIf = TCPIPStackNetGetPrimary(pNetIf); pAliasIf != NULL; pAliasIf = TCPIPStackNetGetAlias(pAliasIf))
             {
-                for(modIx = 0; modIx < sizeof(TCPIP_STACK_CONN_EVENT_TBL)/sizeof(*TCPIP_STACK_CONN_EVENT_TBL); modIx++)
+                for(modIx = 0; modIx < nConnMods; modIx++)
                 {
                     (*TCPIP_STACK_CONN_EVENT_TBL[modIx])(pAliasIf, activeEvents);
                 }
@@ -3330,15 +3345,6 @@ TCPIP_NET_IF* TCPIP_STACK_MatchNetAddress(const TCPIP_NET_IF* pNetIf, const IPV4
     return NULL;
 }
 
-#if defined(TCPIP_STACK_USE_IPV4)
-uint32_t TCPIP_STACK_NetAddress(TCPIP_NET_HANDLE netH)
-{
-    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(netH);
-    return TCPIP_STACK_NetAddressGet(pNetIf);
-}
-#endif  // defined(TCPIP_STACK_USE_IPV4)
-
-
 #if defined(TCPIP_STACK_USE_IPV6)
 IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_TYPE addType, IPV6_ADDR_STRUCT* pAddStruct, IPV6_ADDR_HANDLE addHandle)
 {
@@ -3469,8 +3475,82 @@ TCPIP_NET_IF* TCPIPStackIPv6AddToNet(IPV6_ADDR* pIPv6Address, IPV6_ADDR_TYPE add
     return pSrchIf;
 }
 
+// Note: the scope of the ipv6Address should match the scope of an unicast IPv6 net addresses
+bool  TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address)
+{
+    if(ipv6Address != NULL)
+    {
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf != NULL)
+        {
+            IPV6_ADDR_HANDLE    ip6AddHndl = NULL;
+            IPV6_ADDR_STRUCT    ip6AddStr, *pAddStr;
+            IPV6_ADDRESS_TYPE   dnsType;
 
+            (void)memset(&ip6AddStr, 0, sizeof(ip6AddStr));
+            pAddStr = &ip6AddStr;
+
+            dnsType.byte = TCPIP_IPV6_AddressTypeGet(pNetIf, ipv6Address);
+
+            bool res = false;
+            while(true)
+            {
+                ip6AddHndl = TCPIP_STACK_NetIPv6AddressGet(pNetIf, IPV6_ADDR_TYPE_UNICAST, pAddStr, ip6AddHndl);
+                if(ip6AddHndl == NULL)
+                {   // no more valid IPv6 addresses;
+                    break; 
+                }
+                else if(pAddStr->flags.scope == dnsType.bits.scope)
+                {   // found it
+                    res = true;
+                    break;
+                }
+                else
+                {
+                    // continue
+                }
+            }
+
+            if(res != false)
+            {
+                pNetIf->netIPv6Dns[0] = *ipv6Address;
+                pNetIf->Flags.bIpv6DnsValid = 1;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool  TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress)
+{
+    if(dnsAddress != NULL)
+    {
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf != NULL)
+        {
+            (void)memset(dnsAddress->v, 0, sizeof(*dnsAddress));
+            if(pNetIf->Flags.bIpv6DnsValid == 1U)
+            {
+                *dnsAddress = pNetIf->netIPv6Dns[0];
+            }
+            return true;
+        }
+    }
+
+    return false;
+}
 #else
+bool TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address)
+{
+    return false;
+}
+bool TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress)
+{
+    return false;
+}
+
 IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_TYPE addType, IPV6_ADDR_STRUCT* pAddStruct, IPV6_ADDR_HANDLE addHandle)
 {
     return NULL;
@@ -3484,6 +3564,11 @@ TCPIP_NET_IF* TCPIPStackIPv6AddToNet(IPV6_ADDR* pIPv6Address, IPV6_ADDR_TYPE add
 
 // user thread
 #if defined(TCPIP_STACK_USE_IPV4)
+uint32_t TCPIP_STACK_NetAddress(TCPIP_NET_HANDLE netH)
+{
+    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(netH);
+    return TCPIP_STACK_NetAddressGet(pNetIf);
+}
 bool TCPIP_STACK_NetAddressSet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress, IPV4_ADDR* mask, bool setDefault)
 {
     bool success = false;
@@ -3572,85 +3657,6 @@ bool TCPIP_STACK_NetDnsSecondSet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress)
     return false;
 }
 
-#if defined(TCPIP_STACK_USE_IPV6)
-// Note: the scope of the ipv6Address should match the scope of an unicast IPv6 net addresses
-bool  TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address)
-{
-    if(ipv6Address != NULL)
-    {
-        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
-        if(pNetIf != NULL)
-        {
-            IPV6_ADDR_HANDLE    ip6AddHndl = NULL;
-            IPV6_ADDR_STRUCT    ip6AddStr, *pAddStr;
-            IPV6_ADDRESS_TYPE   dnsType;
-
-            (void)memset(&ip6AddStr, 0, sizeof(ip6AddStr));
-            pAddStr = &ip6AddStr;
-
-            dnsType.byte = TCPIP_IPV6_AddressTypeGet(pNetIf, ipv6Address);
-
-            bool res = false;
-            while(true)
-            {
-                ip6AddHndl = TCPIP_STACK_NetIPv6AddressGet(pNetIf, IPV6_ADDR_TYPE_UNICAST, pAddStr, ip6AddHndl);
-                if(ip6AddHndl == NULL)
-                {   // no more valid IPv6 addresses;
-                    break; 
-                }
-                else if(pAddStr->flags.scope == dnsType.bits.scope)
-                {   // found it
-                    res = true;
-                    break;
-                }
-                else
-                {
-                    // continue
-                }
-            }
-
-            if(res != false)
-            {
-                pNetIf->netIPv6Dns[0] = *ipv6Address;
-                pNetIf->Flags.bIpv6DnsValid = 1;
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-bool  TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress)
-{
-    if(dnsAddress != NULL)
-    {
-        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
-        if(pNetIf != NULL)
-        {
-            (void)memset(dnsAddress->v, 0, sizeof(*dnsAddress));
-            if(pNetIf->Flags.bIpv6DnsValid == 1U)
-            {
-                *dnsAddress = pNetIf->netIPv6Dns[0];
-            }
-            return true;
-        }
-    }
-
-    return false;
-}
-#else
-bool TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address)
-{
-    return false;
-}
-bool TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress)
-{
-    return false;
-}
-#endif  // defined(TCPIP_STACK_USE_IPV6)
-
-
 uint32_t TCPIP_STACK_NetMask(TCPIP_NET_HANDLE netH)
 {
     TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(netH);
@@ -3660,6 +3666,43 @@ uint32_t TCPIP_STACK_NetMask(TCPIP_NET_HANDLE netH)
     }
 
     return 0;
+}
+#else
+uint32_t TCPIP_STACK_NetAddress(TCPIP_NET_HANDLE netH)
+{
+    return 0;
+}
+uint32_t TCPIP_STACK_NetAddressGateway(TCPIP_NET_HANDLE netH)
+{
+    return 0;
+}
+uint32_t TCPIP_STACK_NetAddressDnsPrimary(TCPIP_NET_HANDLE netH)
+{
+    return 0;
+}
+uint32_t TCPIP_STACK_NetAddressDnsSecond(TCPIP_NET_HANDLE netH)
+{
+    return 0;
+}
+uint32_t TCPIP_STACK_NetMask(TCPIP_NET_HANDLE netH)
+{
+    return 0;
+}
+bool TCPIP_STACK_NetAddressSet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress, IPV4_ADDR* mask, bool setDefault)
+{
+    return false;
+}
+bool TCPIP_STACK_NetAddressGatewaySet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress)
+{
+    return false;
+}
+bool TCPIP_STACK_NetDnsPrimarySet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress)
+{
+    return false;
+}
+bool TCPIP_STACK_NetDnsSecondSet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress)
+{
+    return false;
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
@@ -3971,6 +4014,19 @@ TCPIP_NETWORK_CONFIG*   TCPIP_STACK_NetConfigSet(void* configStoreBuff, void* ne
     return NULL;
 
 }
+#else
+size_t TCPIP_STACK_ModuleConfigGet(TCPIP_STACK_MODULE modId, void* configBuff, size_t buffSize, size_t* pNeededSize)
+{
+    return 0;
+}
+size_t TCPIP_STACK_NetConfigGet(TCPIP_NET_HANDLE netH, void* configStoreBuff, size_t configStoreSize, size_t* pNeededSize)
+{
+    return 0;
+}
+TCPIP_NETWORK_CONFIG*   TCPIP_STACK_NetConfigSet(void* configStoreBuff, void* netConfigBuff, size_t buffSize, size_t* pNeededSize)
+{
+    return NULL;
+}
 #endif  // (TCPIP_STACK_CONFIGURATION_SAVE_RESTORE != 0)
 
 TCPIP_STACK_MODULE TCPIP_STACK_StringToMACId(const char* str)
@@ -4105,6 +4161,11 @@ TCPIP_STACK_DNS_SERVICE_TYPE TCPIP_STACK_DNSServiceSelect(TCPIP_NET_IF* pNetIf, 
     // couldn't select a DNS service
     return TCPIP_STACK_DNS_SERVICE_NONE;
 }
+#else
+TCPIP_STACK_DNS_SERVICE_TYPE TCPIP_STACK_DNSServiceSelect(TCPIP_NET_IF* pNetIf, TCPIP_NETWORK_CONFIG_FLAGS configFlags)
+{
+    return TCPIP_STACK_DNS_SERVICE_NONE;
+}
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
 
@@ -4182,8 +4243,7 @@ TCPIP_STACK_ADDR_SRVC_TYPE TCPIPStackAddressServiceIsRunning(TCPIP_NET_IF* pNetI
     return (TCPIP_STACK_ADDR_SRVC_TYPE)(tempflag);
 }
 
-void TCPIP_STACK_AddressServiceEvent(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC_TYPE adSvcType,
-                                    TCPIP_ADDR_SRVC_EV evType)
+void TCPIP_STACK_AddressServiceEvent(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC_TYPE adSvcType, TCPIP_ADDR_SRVC_EV evType)
 {
 
     if(evType == TCPIP_ADDR_SRVC_EV_RUN_RESTORE)
@@ -4257,6 +4317,18 @@ void TCPIP_STACK_AddressServiceEvent(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC
     // no other address service or it couldn't be started
     // select the default/static addresses
     TCPIP_STACK_AddressServiceDefaultSet(pNetIf);
+}
+#else
+bool TCPIP_STACK_AddressServiceCanStart(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC_TYPE adSvcType)
+{
+    return false;
+}
+void TCPIP_STACK_AddressServiceEvent(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC_TYPE adSvcType, TCPIP_ADDR_SRVC_EV evType)
+{
+}
+TCPIP_STACK_ADDR_SRVC_TYPE TCPIPStackAddressServiceIsRunning(TCPIP_NET_IF* pNetIf)
+{
+    return TCPIP_STACK_ADDR_SRVC_NONE; 
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
@@ -4697,6 +4769,10 @@ void  TCPIPStackSetConfigAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* ipAddres
         OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
         F_TCPIPStackSetConfig(pNetIf, config);
     }
+}
+#else
+void  TCPIPStackSetConfigAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* ipAddress, const IPV4_ADDR* mask, const IPV4_ADDR* gw, bool config)
+{
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 

@@ -2550,43 +2550,39 @@ bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache)
 
 <#else>
 bool TCPIP_DNS_IsEnabled(TCPIP_NET_HANDLE hNet){return false;}
+
 bool TCPIP_DNS_Enable(TCPIP_NET_HANDLE hNet, TCPIP_DNS_ENABLE_FLAGS flags){return false;}
+
 bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache){return false;}
 
-TCPIP_DNS_RESULT  TCPIP_DNS_Resolve(const char* HostName, TCPIP_DNS_RESOLVE_TYPE Type)
-{
-    return TCPIP_DNS_RES_NO_SERVICE; 
-}
+TCPIP_DNS_RESULT TCPIP_DNS_Resolve(const char* hostName, TCPIP_DNS_RESOLVE_TYPE type) { return TCPIP_DNS_RES_NO_SERVICE; }
 
-TCPIP_DNS_RESULT  TCPIP_DNS_IsResolved(const char* hostName, IP_MULTI_ADDRESS* hostIP, IP_ADDRESS_TYPE type)
-{
-    return TCPIP_DNS_RES_NO_SERVICE; 
-}
+TCPIP_DNS_RESULT  TCPIP_DNS_IsResolved(const char* hostName, IP_MULTI_ADDRESS* hostIP, IP_ADDRESS_TYPE type) { return TCPIP_DNS_RES_NO_SERVICE; }
 
-TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* hostIPv4, IPV6_ADDR* hostIPv6)
-{
-    return TCPIP_DNS_RES_NO_SERVICE; 
-}
+TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* hostIPv4, IPV6_ADDR* hostIPv6) { return TCPIP_DNS_RES_NO_SERVICE; }
 
-TCPIP_DNS_RESULT TCPIP_DNS_RemoveEntry(const char *hostName)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
+TCPIP_DNS_RESULT TCPIP_DNS_RemoveEntry(const char *hostName) { return TCPIP_DNS_RES_NO_SERVICE; }
 
-TCPIP_DNS_RESULT TCPIP_DNS_RemoveAll(void)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
+TCPIP_DNS_RESULT TCPIP_DNS_RemoveAll(void) { return TCPIP_DNS_RES_NO_SERVICE; }
 
-TCPIP_DNS_RESULT TCPIP_DNS_ClientInfoGet(TCPIP_DNS_CLIENT_INFO* pClientInfo)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
+TCPIP_DNS_RESULT TCPIP_DNS_ClientInfoGet(TCPIP_DNS_CLIENT_INFO* pClientInfo) { return TCPIP_DNS_RES_NO_SERVICE; }
 
-TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, size_t queryIndex)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
+TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, size_t queryIndex) { return TCPIP_DNS_RES_NO_SERVICE; }
 
+size_t TCPIP_DNS_GetIPv4Addresses(const char* hostName, size_t startIndex, IPV4_ADDR* pIPv4Addr, size_t nIPv4Addresses) { return 0; }
+
+size_t TCPIP_DNS_GetIPv6Addresses(const char* hostName, size_t startIndex, IPV6_ADDR* pIPv6Addr, size_t nIPv6Addresses) { return 0; }
+
+size_t TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type) { return 0; }
+
+TCPIP_DNS_HANDLE TCPIP_DNS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DNS_EVENT_HANDLER handler, const void* hParam) { return NULL; }
+
+bool TCPIP_DNS_HandlerDeRegister(TCPIP_DNS_HANDLE hDns) { return false; }
+
+TCPIP_DNS_RESULT TCPIP_DNS_Send_Query(const char* hostName, TCPIP_DNS_RESOLVE_TYPE type) { return TCPIP_DNS_RES_NO_SERVICE; }
+
+void  TCPIP_DNS_ClientTask(void)
+{
+}
 </#if>
 
