@@ -36,7 +36,7 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 <#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "LAN9303">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_LAN9303,
 <#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
-    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_KSZ8863,
 <#elseif (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE) == "LAN9354">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_lan9354,
 <#elseif (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE) == "Dummy">

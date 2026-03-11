@@ -164,7 +164,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
     <#lt><#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "LAN9303">
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_lan9303, 
     <#lt><#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
-        <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
+        <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_KSZ8863,
     <#lt><#elseif (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE) == "LAN9354">
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_lan9354,
     <#lt><#elseif (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE) == "Dummy">
