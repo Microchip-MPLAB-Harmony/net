@@ -35,6 +35,18 @@ Microchip or any third party.
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_TELNET_SERVER
 
+#include <stdio.h>
+#include <string.h>
+
+/* MISRA C-2023 Rule 17.1 deviated:1 Deviation record ID -  H3_MISRAC_2023_R_17_1_NET_DR_2 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:1 "MISRA C-2023 Rule 17.1" "H3_MISRAC_2023_R_17_1_NET_DR_2" 
+#include <stdarg.h>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 17.1"
+#pragma GCC diagnostic pop
+/* MISRAC 2023 deviation block end */
+
 #include "tcpip/src/tcpip_private.h"
 
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
