@@ -1,5 +1,5 @@
 """
-Copyright (C) 2022-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2022-2026, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -220,6 +220,13 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigVSC8540.setVisible(True)
     tcpipAutoConfigVSC8540.setDescription("Enable VSC8540")
     tcpipAutoConfigVSC8540.setDependencies(tcpipAutoConfigVSC8540Enable, ["TCPIP_AUTOCONFIG_ENABLE_VSC8540"])  
+    
+    # Enable VSC8541
+    tcpipAutoConfigVSC8541 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_VSC8541", tcpipAutoConfigPhyMenu)
+    tcpipAutoConfigVSC8541.setLabel("VSC8541")
+    tcpipAutoConfigVSC8541.setVisible(True)
+    tcpipAutoConfigVSC8541.setDescription("Enable VSC8541")
+    tcpipAutoConfigVSC8541.setDependencies(tcpipAutoConfigVSC8541Enable, ["TCPIP_AUTOCONFIG_ENABLE_VSC8541"])  
     
     # Enable LAN867x
     tcpipAutoConfigLAN867x = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN867x", tcpipAutoConfigPhyMenu)
@@ -512,6 +519,15 @@ def tcpipAutoConfigVSC8540Enable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyVsc8540"])
+
+def tcpipAutoConfigVSC8541Enable(symbol, event):
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvExtPhyVsc8541"],"DRIVER LAYER")  
+        if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
+            Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
+    else:
+        res = Database.deactivateComponents(["drvExtPhyVsc8541"])
 
 def tcpipAutoConfigLAN867xEnable(symbol, event):
     enableTcpipAutoConfigDrv(True)

@@ -365,6 +365,13 @@ def loadModule():
     drvExtPhyVsc8540Component.setDisplayType("PHY Layer")
     drvExtPhyVsc8540Component.setHelpKeyword("drv_ethphy")
 
+    #Driver for Microchip VSC8541 PHY
+    drvExtPhyVsc8541Component = Module.CreateGeneratorComponent("drvExtPhyVsc8541", "VSC8541", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_vsc8541_common.py", "driver/ethphy/config/drv_extphy_vsc8541.py")
+    drvExtPhyVsc8541Component.addCapability("libdrvExtPhyVsc8541","PHY",False)   
+    drvExtPhyVsc8541Component.addDependency("VSC8541_MIIM_Dependency", "MIIM", None, True, True)    
+    drvExtPhyVsc8541Component.setDisplayType("PHY Layer")
+    drvExtPhyVsc8541Component.setHelpKeyword("drv_ethphy")
+
     #Driver for Micrel KSZ8041 PHY
     drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")
     drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",False)   

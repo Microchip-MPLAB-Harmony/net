@@ -259,7 +259,7 @@ static const DRV_PHY_OperPhaseF_T DRV_PHY_ResetPhasesTbl[] =
 };
 
 // conversion functions/helpers
-static __inline__ DRV_ETHPHY_INIT* __attribute__((always_inline)) CF_ModInit2PhyInit(SYS_MODULE_INIT const * const init)
+static __inline__ DRV_ETHPHY_INIT* __attribute__((always_inline)) FC_ModInit2PhyInit(SYS_MODULE_INIT const * const init)
 {
     union
     {
@@ -271,7 +271,7 @@ static __inline__ DRV_ETHPHY_INIT* __attribute__((always_inline)) CF_ModInit2Phy
     return U_PHY_INIT.pPhyinit;
 }
 
-static __inline__ void* __attribute__((always_inline)) CF_SysObj2pVoid(SYS_MODULE_OBJ obj)
+static __inline__ void* __attribute__((always_inline)) FC_SysObj2pVoid(SYS_MODULE_OBJ obj)
 {
     union
     {
@@ -565,6 +565,8 @@ static void F_DRV_PHY_SetOperPhase(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t 
 
 static DRV_ETHPHY_INSTANCE              gPhyDrvInst[M_DRV_ETHPHY_INSTANCES_NUMBER];
 
+static int gPhyDrvInitCount = 0;        // initialization counter
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -696,6 +698,11 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX  iModule,
         return SYS_MODULE_OBJ_INVALID;
     }
 
+    if(gPhyDrvInitCount == 0)
+    {   // clean up
+        (void)memset(gPhyDrvInst, 0, sizeof(gPhyDrvInst));
+    }
+
     hSysObj = gPhyDrvInst + iModule;
     if( hSysObj->objInUse == (uint8_t)true )
     {   // already initalized
@@ -703,7 +710,7 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX  iModule,
     }
 
     /* Assign to the local pointer the init data passed */
-    ethphyInit = CF_ModInit2PhyInit(init);
+    ethphyInit = FC_ModInit2PhyInit(init);
 
     if((hSysObj->pMiimBase = ethphyInit->pMiimObject) == NULL)
     {
@@ -735,6 +742,7 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX  iModule,
     M_PhyDebugCond(true, __func__, __LINE__);
 
     /* Return the driver handle */
+    gPhyDrvInitCount++;
     return ( SYS_MODULE_OBJ )hSysObj ;
 
 }
@@ -744,10 +752,10 @@ void DRV_ETHPHY_Reinitialize( SYS_MODULE_OBJ        object ,
                               const SYS_MODULE_INIT * const init )
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(CF_SysObj2pVoid(object));
+    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(FC_SysObj2pVoid(object));
     if(phyInst != NULL)
     {
-        DRV_ETHPHY_INIT * ethphyInit = CF_ModInit2PhyInit(init);
+        DRV_ETHPHY_INIT * ethphyInit = FC_ModInit2PhyInit(init);
 
         phyInst->status = (int16_t)SYS_STATUS_READY; // Set module state
         phyInst->ethphyId = ethphyInit->ethphyId; // Store PLIB ID
@@ -764,7 +772,7 @@ void DRV_ETHPHY_Reinitialize( SYS_MODULE_OBJ        object ,
 void DRV_ETHPHY_Deinitialize( SYS_MODULE_OBJ object )
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(CF_SysObj2pVoid(object));
+    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(FC_SysObj2pVoid(object));
     if(phyInst != NULL)
     {
         /* Set the Device Status */
@@ -774,6 +782,7 @@ void DRV_ETHPHY_Deinitialize( SYS_MODULE_OBJ object )
         phyInst->objInUse  = (uint8_t)false;
 
         phyInst->pPhyObj = NULL;
+        gPhyDrvInitCount--;
     }
 
 } 
@@ -782,7 +791,7 @@ void DRV_ETHPHY_Deinitialize( SYS_MODULE_OBJ object )
 SYS_STATUS DRV_ETHPHY_Status( SYS_MODULE_OBJ object )
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(CF_SysObj2pVoid(object));
+    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(FC_SysObj2pVoid(object));
     if(phyInst != NULL)
     {
         /* Return the status associated with the driver handle */
@@ -796,7 +805,7 @@ SYS_STATUS DRV_ETHPHY_Status( SYS_MODULE_OBJ object )
 void DRV_ETHPHY_Tasks( SYS_MODULE_OBJ object )
 {
     /* Check for the valid driver object passed */
-    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(CF_SysObj2pVoid(object));
+    DRV_ETHPHY_INSTANCE * phyInst = F_ETHPHY_HandleToInst(FC_SysObj2pVoid(object));
     if(phyInst != NULL)
     {
         DRV_ETHPHY_CLIENT_OBJ* hClientObj = &phyInst->objClient;
@@ -965,6 +974,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
     if((pSetUp == NULL) || (pSetupFlags == NULL))
     {
         return DRV_ETHPHY_RES_OPERATION_ERR;
+    }
+
+    if( ((uint32_t)(pSetUp->openFlags) & (uint32_t)TCPIP_ETH_OPEN_1000) != 0U &&  ((uint16_t)(pSetUp->configFlags) & ((uint16_t)DRV_ETHPHY_CFG_RMII | (uint16_t)DRV_ETHPHY_CFG_MII)) != 0U )
+    {   // MII/RMII do not work in 1000 Mbps
+        return DRV_ETHPHY_RES_CFG_ERR; 
     }
 
     // check the PHY set up parameters
@@ -1656,7 +1670,7 @@ static void F_SetupPhaseNeg_SubPhase_Read_Std_Status(DRV_ETHPHY_CLIENT_OBJ * hCl
 
     // we're ok, we can configure the PHY
     hClientObj->hDriver->openFlags = openFlags;
-    hClientObj->operReg[0] = matchStdCpbl;
+    hClientObj->matchStdCpbl = matchStdCpbl;
     hClientObj->vendorData = 0;
     
     // Check Phy is extended register capable and extended status capable
@@ -1679,7 +1693,7 @@ static void F_SetupPhaseNeg_SubPhase_Read_Std_Status(DRV_ETHPHY_CLIENT_OBJ * hCl
 static void F_SetupPhaseNeg_SubPhase_Read_Ext_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     uint32_t  openFlags;      // flags required at open time
-    static uint16_t phyExtCpbl = 0;
+    uint16_t phyExtCpbl = 0;
     uint16_t  matchExtCpbl = 0;
     uint16_t  extReqs = 0;
     
@@ -1716,7 +1730,7 @@ static void F_SetupPhaseNeg_SubPhase_Read_Ext_Status(DRV_ETHPHY_CLIENT_OBJ * hCl
     
     matchExtCpbl = (extReqs & PHY_EXT_CPBL_MASK) & phyExtCpbl;
     
-    hClientObj->operReg[1] = matchExtCpbl;
+    hClientObj->matchExtCpbl = matchExtCpbl;
     hClientObj->vendorData = 0;
     F_DRV_PHY_SetOperPhase(hClientObj, (uint16_t)DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, (uint16_t)SETUP_NEG_SUBPHASE_CONFIG_MII);  
     
@@ -1783,7 +1797,8 @@ static void F_SetupPhaseNeg_SubPhase_ANAD_Write(DRV_ETHPHY_CLIENT_OBJ * hClientO
 {
     DRV_ETHPHY_INSTANCE *hDriver = hClientObj->hDriver;
     // restore match capabilities
-    uint16_t  matchStdCpbl = hClientObj->operReg[0];
+    uint16_t  matchStdCpbl = hClientObj->matchStdCpbl;
+    uint16_t  matchExtCpbl = hClientObj->matchExtCpbl;
     uint32_t  openFlags = hClientObj->hDriver->openFlags;
 
     if(((matchStdCpbl & (uint16_t)BMSTAT_AN_ABLE_MASK) != 0U) && ((openFlags & (uint32_t)TCPIP_ETH_OPEN_AUTO) != 0U))
@@ -1823,10 +1838,19 @@ static void F_SetupPhaseNeg_SubPhase_ANAD_Write(DRV_ETHPHY_CLIENT_OBJ * hClientO
         uint16_t  ctrlReg;
 
         ctrlReg = 0;
-        // set 100Mbps request/capability
-        if(((matchStdCpbl & ((uint16_t)BMSTAT_BASE100TX_HDX_MASK | (uint16_t)BMSTAT_BASE100TX_FDX_MASK))!= 0U) && ((openFlags & (uint32_t)TCPIP_ETH_OPEN_100) != 0U))  
+        // set the speed request/capability
+        
+        if(((matchExtCpbl & ((uint16_t)EXTSTAT_1000BASET_FDX_MASK | (uint16_t)EXTSTAT_1000BASET_HDX_MASK)) != 0U) && ((openFlags & (uint32_t)TCPIP_ETH_OPEN_1000) != 0U))  
+        {
+            ctrlReg |= (uint16_t)BMCON_SPEED1000_MASK;
+        }
+        else if(((matchStdCpbl & ((uint16_t)BMSTAT_BASE100TX_HDX_MASK | (uint16_t)BMSTAT_BASE100TX_FDX_MASK))!= 0U) && ((openFlags & (uint32_t)TCPIP_ETH_OPEN_100) != 0U))  
         {
             ctrlReg |= (uint16_t)BMCON_SPEED100_MASK;
+        }
+        else
+        {
+            // do nothing; leave 10 Mbps
         }
 
         if((matchStdCpbl & ((uint16_t)BMSTAT_BASE10T_FDX_MASK | (uint16_t)BMSTAT_BASE100TX_FDX_MASK ))!= 0U)
@@ -1841,6 +1865,9 @@ static void F_SetupPhaseNeg_SubPhase_ANAD_Write(DRV_ETHPHY_CLIENT_OBJ * hClientO
 
         if(F_DRV_PHY_SMIWriteStart(hClientObj, (uint16_t)PHY_REG_BMCON, ctrlReg))
         {   
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_SETUP) != 0)
+            SYS_CONSOLE_PRINT("SETUP_NEG_SUBPHASE_WRITE_ANAD no negotiation phase set BMCON: 0x%04x, used matchExtCpbl: 0x%04x\r\n", ctrlReg, matchExtCpbl);
+#endif // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_SETUP) != 0)
             F_DRV_PHY_SetOperPhase(hClientObj, (uint16_t)DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, (uint16_t)SETUP_NEG_SUBPHASE_FINISH);
         }
     }
@@ -1860,16 +1887,16 @@ static void F_SetupPhaseNeg_SubPhase_Read_1000B_Ctrl(DRV_ETHPHY_CLIENT_OBJ * hCl
 // SETUP_NEG_SUBPHASE_WRITE_1000B_CTRL
 static void F_SetupPhaseNeg_SubPhase_1000BCtrl_Write(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    uint16_t ext1000baseCtrl = 0, matchExtStat = 0;
+    uint16_t ext1000baseCtrl = 0, matchExtCpbl = 0;
     
     if(!F_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
     ext1000baseCtrl = hClientObj->smiData;
-    matchExtStat = hClientObj->operReg[1];
+    matchExtCpbl = hClientObj->matchExtCpbl;
     
-    if((matchExtStat & (uint16_t)EXTSTAT_1000BASET_FDX_MASK) != 0U)
+    if((matchExtCpbl & (uint16_t)EXTSTAT_1000BASET_FDX_MASK) != 0U)
     {
         ext1000baseCtrl |= (uint16_t)TCTRL_1000BASE_TFDX_MASK;
     }
@@ -1877,7 +1904,7 @@ static void F_SetupPhaseNeg_SubPhase_1000BCtrl_Write(DRV_ETHPHY_CLIENT_OBJ * hCl
     {
         ext1000baseCtrl &= ~(uint16_t)TCTRL_1000BASE_TFDX_MASK;
     }
-    if((matchExtStat & (uint16_t)EXTSTAT_1000BASET_HDX_MASK) != 0U)
+    if((matchExtCpbl & (uint16_t)EXTSTAT_1000BASET_HDX_MASK) != 0U)
     {
         ext1000baseCtrl |= (uint16_t)TCTRL_1000BASE_THDX_MASK;
     }
@@ -1936,8 +1963,8 @@ static void F_SetupPhaseNeg_SubPhase_Start_AutoNeg(DRV_ETHPHY_CLIENT_OBJ * hClie
 static void F_SetupPhaseNeg_SubPhase_Finish(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     uint32_t openFlags = (uint32_t)TCPIP_ETH_OPEN_DEFAULT;
-    uint16_t  matchStdCpbl = hClientObj->operReg[0];
-    uint16_t  matchExtCpbl = hClientObj->operReg[1];
+    uint16_t  matchStdCpbl = hClientObj->matchStdCpbl;
+    uint16_t  matchExtCpbl = hClientObj->matchExtCpbl;
     
     // now update the open flags
     // the upper layer needs to know the PHY set-up to further set-up the MAC.
@@ -1985,6 +2012,9 @@ static void F_SetupPhaseNeg_SubPhase_Finish(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     // deposit result
     TCPIP_ETH_OPEN_FLAGS* pSetUpFlags = (TCPIP_ETH_OPEN_FLAGS*)hClientObj->operParam;
     *pSetUpFlags = (TCPIP_ETH_OPEN_FLAGS)openFlags;
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_SETUP) != 0)
+        SYS_CONSOLE_PRINT("SETUP_NEG_SUBPHASE_FINISH phase setup flags: 0x%08x\r\n", *pSetUpFlags);
+#endif // ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_SETUP) != 0)
      F_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
 
 } 

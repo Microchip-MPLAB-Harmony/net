@@ -345,6 +345,11 @@ static DRV_ETHPHY_RESULT DRV_ETHPHY_DummySetup(DRV_HANDLE handle, DRV_ETHPHY_SET
         return DRV_ETHPHY_RES_OPERATION_ERR;
     }
 
+    if( ((uint32_t)(pSetUp->openFlags) & (uint32_t)TCPIP_ETH_OPEN_1000) != 0U &&  ((uint16_t)(pSetUp->configFlags) & ((uint16_t)DRV_ETHPHY_CFG_RMII | (uint16_t)DRV_ETHPHY_CFG_MII)) != 0U )
+    {   // MII/RMII do not work in 1000 Mbps
+        return DRV_ETHPHY_RES_CFG_ERR; 
+    }
+
     if(pSetUp->resetFunction != NULL)
     {
         (*pSetUp->resetFunction)(&DRV_ETHPHY_OBJECT_BASE_Dummy, handle);

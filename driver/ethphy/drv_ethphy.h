@@ -128,7 +128,7 @@ typedef enum
       requested ones */
     DRV_ETHPHY_RES_CPBL_ERR               /*DOM-IGNORE-BEGIN*/ =  -6, /*DOM-IGNORE-END*/
 
-    /* Hardware configuration doesn't match the requested open mode */
+    /* Configuration error (or hardware configuration doesn't match the requested open mode) */
     DRV_ETHPHY_RES_CFG_ERR                /*DOM-IGNORE-BEGIN*/ =  -7, /*DOM-IGNORE-END*/
 
     /* No negotiation active */
@@ -712,6 +712,10 @@ typedef struct DRV_ETHPHY_INIT
     /* Could be NULL if the MIIM driver is not used */
     const struct S_DRV_MIIM_INIT* pMiimInit;
 
+    /* PHY module index to be used if multiple instances of the same PHY */
+    /* Should be 0 for single instance */ 
+    SYS_MODULE_INDEX            phyIndex; 
+            
     /* MIIM module index to be used */
     /* Not needed if the MIIM driver is not used */
     SYS_MODULE_INDEX            miimIndex; 

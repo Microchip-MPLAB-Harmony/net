@@ -210,6 +210,10 @@ typedef struct
     /* number of Queues supported by MAC*/
     uint8_t macQueNum;
     
+    /* MAC module index to be used if multiple instances of the same MACs */
+    /* Should be 0 for single instance */ 
+    SYS_MODULE_INDEX                macIndex; 
+
     /*  Delay to wait after the lomk is coming up (milliseconds) */
     /*  for insuring that the PHY is ready to transmit data. */
     uint16_t                        linkInitDelay;

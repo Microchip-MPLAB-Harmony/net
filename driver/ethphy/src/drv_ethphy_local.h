@@ -371,8 +371,13 @@ typedef struct
     uintptr_t                   vendorData;
     DRV_ETHPHY_VENDOR_DETECT    vendorDetect;    
         
+    // other PHY capabilities data
     uint16_t                    phyId_1;        // PHYY Identifier 1 register value
     uint16_t                    phyId_2;        // PHYY Identifier 2 register value
+
+    uint16_t                    matchStdCpbl;   // Standard PHY Capabilities matched with Standard features Requested in configuration
+    uint16_t                    matchExtCpbl;   // Extended PHY Capabilities matched with requested configuration
+
 
 } DRV_ETHPHY_CLIENT_OBJ;
 
