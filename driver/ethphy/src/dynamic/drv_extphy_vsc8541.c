@@ -78,7 +78,7 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
     BMCONbits_t phyBMCON;
     uint16_t phyReg = 0;
 
-    VSC8541_CONF_PHASE configPhase;
+    uint32_t configPhase;     // VSC8541_CONF_PHASE
     int phyAddress = 0; 
 
     DRV_ETHPHY_RESULT res = pBaseObj->phy_VendorDataGet(hClientObj, &vendorData.w);
@@ -88,15 +88,15 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
         return res;
     }
 
-    configPhase = vendorData.low;
+    configPhase = (uint32_t)vendorData.low;
 
     (void)pBaseObj->phy_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch (configPhase)
     {
-        case  MAIN_REG_SEL1:
+        case  (uint32_t)MAIN_REG_SEL1:
             // RMII_BYPASS is in page 0; select page 0
-            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, VSC8541_REG_EXTENDED_PAGE_ACCESS, 0, phyAddress);
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, VSC8541_REG_EXTEND_PAGE_ACCESS, 0, phyAddress);
             if ((int)res < 0)
             { // some error
                 break;
@@ -111,11 +111,11 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
             }
 
             // advance to the next phase
-            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, configPhase + 1U);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case PHYCTRL1_READ:
+        case (uint32_t)PHYCTRL1_READ:
             // read main reg 23 VSC8541_REG_EXTEND_PHY_CTRL_1 and set the MAC_INTERFACE_SEL RMII/RGMII/etc.!
             res = pBaseObj->phy_VendorSMIReadStart(hClientObj, VSC8541_REG_EXTEND_PHY_CTRL_1, phyAddress);
             if ((int)res < 0)
@@ -132,11 +132,11 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
             }
 
             // advance to the next phase
-            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, configPhase + 1U);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case PHYCTRL1_MODIFY:
+        case (uint32_t)PHYCTRL1_MODIFY:
             res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
             if ((int)res < 0)
             { // some error
@@ -153,22 +153,22 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
 
             // got VSC8541_REG_EXTEND_PHY_CTRL_1 result; update the interface mode
             phyCtrl1.w = phyReg;
-            phyCtrl1.w &= ~M_EXT_PHY_CTRL_MAC_INTERFACE_SEL_MASK;
+            phyCtrl1.w &= ~(uint16_t)M_EXT_PHY_CTRL_MAC_INTERFACE_SEL_MASK;
             if (((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_RMII) != 0U)
             {
-                phyCtrl1.w |= M_MAC_INTERFACE_SEL_RMII_MASK;
+                phyCtrl1.w |= (uint16_t)M_MAC_INTERFACE_SEL_RMII_MASK;
             }
             else if (((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_MII) != 0U)
             {
-                phyCtrl1.w |= M_MAC_INTERFACE_SEL_MII_MASK;
+                phyCtrl1.w |= (uint16_t)M_MAC_INTERFACE_SEL_MII_MASK;
             }
             else if (((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_RGMII) != 0U)
             {
-                phyCtrl1.w |= M_MAC_INTERFACE_SEL_RGMII_MASK;
+                phyCtrl1.w |= (uint16_t)M_MAC_INTERFACE_SEL_RGMII_MASK;
             }
             else if (((uint8_t)cFlags & (uint8_t)DRV_ETHPHY_CFG_GMII) != 0U)
             {
-                phyCtrl1.w |= M_MAC_INTERFACE_SEL_GMII_MASK;
+                phyCtrl1.w |= (uint16_t)M_MAC_INTERFACE_SEL_GMII_MASK;
             }
             else
             {   // error
@@ -178,12 +178,12 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
 
             // save the phyReg for the next state
             vendorData.high = phyCtrl1.w;
-            vendorData.low = configPhase + 1U;
+            vendorData.low = (uint16_t)(configPhase + 1U);
             (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case PHYCTRL1_WRITE:
+        case (uint32_t)PHYCTRL1_WRITE:
             phyReg = vendorData.high;
             // now update VSC8541_REG_EXTEND_PHY_CTRL_1 Register
             res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, VSC8541_REG_EXTEND_PHY_CTRL_1, phyReg, phyAddress);
@@ -201,11 +201,11 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
             }
 
             // advance to the next phase
-            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, configPhase + 1U);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case BMCON_RST_READ:
+        case (uint32_t)BMCON_RST_READ:
             // got to reset the PHY after writing the VSC8541_REG_EXTEND_PHY_CTRL_1!
             // read the register for software reset
             res = pBaseObj->phy_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
@@ -222,11 +222,11 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
                 // OK
             }
             // advance to the next phase
-            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, configPhase + 1U);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case BMCON_RST_MODIFY:
+        case (uint32_t)BMCON_RST_MODIFY:
             res = pBaseObj->phy_VendorSMIReadResultGet(hClientObj, &phyReg);
             if ((int)res < 0)
             { // some error
@@ -246,12 +246,12 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
 
             // save the phyReg for the next state
             vendorData.high = phyBMCON.w;
-            vendorData.low = configPhase + 1U;
+            vendorData.low = (uint16_t)(configPhase + 1U);
             (void)pBaseObj->phy_VendorDataSet(hClientObj, vendorData.w);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case BMCON_RST_WRITE:
+        case (uint32_t)BMCON_RST_WRITE:
             phyReg = vendorData.high;
             // now update PHY_REG_BMCON Register
             res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, phyReg, phyAddress);
@@ -269,13 +269,13 @@ static DRV_ETHPHY_RESULT VSC8541_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE *pBas
             }
 
             // advance to the next phase
-            (void)pBaseObj->phy_VendorDataSet(hClientObj, ++configPhase);
+            (void)pBaseObj->phy_VendorDataSet(hClientObj, configPhase + 1U);
             res = DRV_ETHPHY_RES_PENDING;
             break;
 
-        case MAIN_REG_SEL2:
+        case (uint32_t)MAIN_REG_SEL2:
             // Restore access to the main register page
-            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, VSC8541_REG_EXTENDED_PAGE_ACCESS, 0, phyAddress);
+            res = pBaseObj->phy_VendorSMIWriteStart(hClientObj, VSC8541_REG_EXTEND_PAGE_ACCESS, 0, phyAddress);
             if ((int)res < 0)
             { // some error
                 break;

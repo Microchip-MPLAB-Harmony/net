@@ -64,13 +64,13 @@ typedef enum
     PHY_REG_ANLPRNP  = 8,
     */
     // specific vendor registers : 16-31
-    VSC8541_REG_1000BASE_T_CTRL = 9,
-    VSC8541_REG_1000BASE_T_STAT = 10,
+    VSC8541_REG_1000BT_CTRL = 9,
+    VSC8541_REG_1000BT_STAT = 10,
     VSC8541_REG_MMD_ACCESS_CTRL = 13,
-    VSC8541_REG_MMD_ACCESS_DATA_ADDR = 14,
-    VSC8541_REG_1000BASE_T_STAT_EXENTSION_1 = 15,
-    VSC8541_REG_100BASE_TX_STAT_EXENTSION = 16,
-    VSC8541_REG_1000BASE_T_STAT_EXENTSION_2 = 17,
+    VSC8541_REG_MMD_ACCESS_DADDR = 14,
+    VSC8541_REG_1000BT_STAT_EXT_1 = 15,
+    VSC8541_REG_100BTX_STAT_EXT = 16,
+    VSC8541_REG_1000BT_STAT_EXT_2 = 17,
     VSC8541_REG_BYPASS_CTRL = 18,
     VSC8541_REG_ERR_COUNTER_1 = 19,
     VSC8541_REG_ERR_COUNTER_2 = 20,
@@ -80,42 +80,42 @@ typedef enum
     VSC8541_REG_EXTEND_PHY_CTRL_2 = 24,
     VSC8541_REG_INT_MASK = 25,
     VSC8541_REG_INT_STAT = 26,
-    VSC8541_REG_AUXILIARY_CTRL_STAT = 28,
+    VSC8541_REG_AUX_CTRL_STAT = 28,
     VSC8541_REG_LED_MODE_SELECT = 29,
     VSC8541_REG_LED_BEHAVIOR = 30,
-    VSC8541_REG_EXTENDED_PAGE_ACCESS = 31,
+    VSC8541_REG_EXTEND_PAGE_ACCESS = 31,
     //
     // PHY_REGISTERS  = 32 // total number of registers
 
     // Extend Page 1 Registers
-    VSC8541_REG_EXT1_CU_MEDIA_CRC_GOOD_COUNTER = 18,
-    VSC8541_REG_EXT1_EXTENDED_MODE_CTRL = 19,
-    VSC8541_REG_EXT1_EXTENDED_PHY_CTRL_3 = 20,
-    VSC8541_REG_EXT1_EXTENDED_PHY_CTRL_4 = 23,
-    VSC8541_REG_EXT1_ETH_PACKET_GEN_1 = 29,
-    VSC8541_REG_EXT1_ETH_PACKET_GEN_2 = 30,
+    VSC8541_REG_E1_CU_CRC_COUNTER = 18,
+    VSC8541_REG_E1_EXT_MODE_CTRL = 19,
+    VSC8541_REG_E1_EXT_PHY_CTRL_3 = 20,
+    VSC8541_REG_E1_EXT_PHY_CTRL_4 = 23,
+    VSC8541_REG_E1_EPG_1 = 29,
+    VSC8541_REG_E1_EPG_2 = 30,
 
     // Extend Page 2 Registers
-    VSC8541_REG_EXT2_CU_PMD_TRANSMIT_CTRL = 16,
-    VSC8541_REG_EXT2_EEE_CTRL = 17,
-    VSC8541_REG_EXT2_RGMII_CTRL = 20,
-    VSC8541_REG_EXT2_WOL_MAC_ADD_15_0 = 21,
-    VSC8541_REG_EXT2_WOL_MAC_ADD_31_16 = 22,
-    VSC8541_REG_EXT2_WOL_MAC_ADD_47_32 = 23,
-    VSC8541_REG_EXT2_SECURE_ON_PASSWORD_15_0 = 24,
-    VSC8541_REG_EXT2_SECURE_ON_PASSWORD_31_16 = 25,
-    VSC8541_REG_EXT2_SECURE_ON_PASSWORD_47_32 = 26,
-    VSC8541_REG_EXT2_WOL_MAC_INTERFACE_CTRL = 27,
-    VSC8541_REG_EXT2_EXTENDED_INT_MASK = 28,
-    VSC8541_REG_EXT2_EXTENDED_INT_STAT = 29,
-    VSC8541_REG_EXT2_RING_RESILIENCY_CTRL = 30,
+    VSC8541_REG_E2_CU_PMD_TX_CTRL = 16,
+    VSC8541_REG_E2_EEE_CTRL = 17,
+    VSC8541_REG_E2_RGMII_CTRL = 20,
+    VSC8541_REG_E2_WOL_MAC_ADD1 = 21,
+    VSC8541_REG_E2_WOL_MAC_ADD2 = 22,
+    VSC8541_REG_E2_WOL_MAC_ADD3 = 23,
+    VSC8541_REG_E2_SECON_PWD1 = 24,
+    VSC8541_REG_E2_SECON_PWD2 = 25,
+    VSC8541_REG_E2_SECON_PWD3 = 26,
+    VSC8541_REG_E2_WOL_MAC_IF_CTRL = 27,
+    VSC8541_REG_E2_EXT_INT_MASK = 28,
+    VSC8541_REG_E2_EXT_INT_STAT = 29,
+    VSC8541_REG_E2_RING_RESIL_CTRL = 30,
 
     // Extend General Purpose Registers
-    VSC8541_REG_EXTG_CLKOUT_CTRL = 13,
-    VSC8541_REG_EXTG_GPIO_CTRL_2 = 14,
-    VSC8541_REG_EXTG_FAST_LINK_REG = 19,
-    VSC8541_REG_EXTG_RECOVERED_CLK_CTRL = 23,
-    VSC8541_REG_EXTG_ENHANCED_LED_CTRL = 25,
+    VSC8541_REG_EG_CLKOUT_CTRL = 13,
+    VSC8541_REG_EG_GPIO_CTRL_2 = 14,
+    VSC8541_REG_EG_FAST_LINK_REG = 19,
+    VSC8541_REG_EG_RECOV_CLK_CTRL = 23,
+    VSC8541_REG_EG_ENH_LED_CTRL = 25,
 
 }VSC8541_VENDOR_REG;
 
@@ -128,15 +128,15 @@ typedef union
     struct __attribute__((packed)) 
     {    
         unsigned : 8;        
-        unsigned F_1000BASE_T_HDX_CAPBL  : 1;
-        unsigned F_1000BASE_T_FDX_CAPBL  : 1;
+        unsigned F_1000BT_HDX_CAPBL  : 1;
+        unsigned F_1000BT_FDX_CAPBL  : 1;
         unsigned PORT_TYPE  : 1;
         unsigned MASTER_SLAVE_VAL   : 1;
         unsigned MASTER_SLAVE_MAN_CONFIG    : 1;
         unsigned TX_TEST_MODE : 3;
     };
     unsigned short w;
-}VSC8541_REG_1000BASE_T_CTRL_bits_t;    // reg 9
+}VSC8541_REG_1000BT_CTRL_bits_t;    // reg 9
 
 typedef union
 {
@@ -144,15 +144,15 @@ typedef union
     {    
         unsigned IDLE_ERROR_COUNT   : 8;
         unsigned : 2;
-        unsigned LP_1000BASE_T_HDX_CAPBL  : 1;
-        unsigned LP_1000BASE_T_FDX_CAPBL  : 1;
+        unsigned LP_1000BT_HDX_CAPBL  : 1;
+        unsigned LP_1000BT_FDX_CAPBL  : 1;
         unsigned REM_RECEIVE_STAT  : 1;
         unsigned LCL_RECEIVE_STAT  : 1;
         unsigned MASTER_SLAVE_CONFIG_RES    : 1;
         unsigned MASTER_SLAVE_CONFIG_FAULT    : 1;
     };
     unsigned short w;
-}VSC8541_REG_1000BASE_T_STAT_bits_t;    // reg 10
+}VSC8541_REG_1000BT_STAT_bits_t;    // reg 10
 
 typedef union 
 {
@@ -175,7 +175,7 @@ typedef union
         unsigned REGISTER_ADD_DATA : 16;
     };
     unsigned short w;
-} VSC8541_REG_MMD_ACCESS_DATA_ADDR_bits_t; // reg 14:
+} VSC8541_REG_MMD_ACCESS_DADDR_bits_t; // reg 14:
 #define M_MMD_REGISTER_ADD_DATA_MASK     0x0002U
 
 
@@ -184,13 +184,13 @@ typedef union
     struct __attribute__((packed)) 
     {    
         unsigned    : 12;
-        unsigned F_1000BASE_X_HDX_CAPBL  : 1;
-        unsigned F_1000BASE_T_FDX_CAPBL  : 1;
-        unsigned F_1000BASE_T_HDX_CAPBL : 1;
+        unsigned F_1000BX_HDX_CAPBL  : 1;
+        unsigned F_1000BT_FDX_CAPBL  : 1;
+        unsigned F_1000BT_HDX_CAPBL : 1;
         unsigned    : 1;
     };
     unsigned short w;
-} VSC8541_REG_1000BASE_T_STAT_EXENTSION_1_bits_t; // reg 15: 
+} VSC8541_REG_1000BT_STAT_EXT_1_bits_t; // reg 15: 
 
 typedef union 
 {
@@ -207,15 +207,15 @@ typedef union
         unsigned DESCRAMBLER_LOCK : 1;
     };
     unsigned short w;
-} VSC8541_REG_100BASE_TX_STAT_EXENTSION_bits_t; // reg 16: 
-#define M_100BASE_TX_DESCRAMBLER_LOCK_MASK       0x8000U
-#define M_100BASE_TX_LOCK_ERR_MASK               0x4000U
-#define M_100BASE_TX_DISCONNECT_STATE_MASK       0x2000U
-#define M_100BASE_TX_CURRENT_LINK_STAT_MASK      0x1000U
-#define M_100BASE_TX_RECEIVE_ERR_MASK            0x0800U
-#define M_100BASE_TX_TRANSMIT_ERR_MASK           0x0400U
-#define M_100BASE_TX_SSD_ERR_MASK                0x0200U
-#define M_100BASE_TX_ESD_ERR_MASK                0x0100U
+} VSC8541_REG_100BTX_STAT_EXT_bits_t; // reg 16: 
+#define M_100BTX_DESCRAMBLER_LOCK_MASK       0x8000U
+#define M_100BTX_LOCK_ERR_MASK               0x4000U
+#define M_100BTX_DISCONNECT_STATE_MASK       0x2000U
+#define M_100BTX_CURRENT_LINK_STAT_MASK      0x1000U
+#define M_100BTX_RECEIVE_ERR_MASK            0x0800U
+#define M_100BTX_TRANSMIT_ERR_MASK           0x0400U
+#define M_100BTX_SSD_ERR_MASK                0x0200U
+#define M_100BTX_ESD_ERR_MASK                0x0100U
 
 typedef union 
 {
@@ -235,18 +235,18 @@ typedef union
         unsigned DESCRAMBLER_LOCK    : 1;
     };
     unsigned short w;
-} VSC8541_REG_1000BASE_T_STAT_EXENTSION_2_bits_t; // reg 17: 
-#define M_1000BASE_T_DESCRAMBLER_LOCK_MASK       0x8000U
-#define M_1000BASE_T_LOCK_ERR_MASK               0x4000U
-#define M_1000BASE_T_DISCONNECT_STATE_MASK       0x2000U
-#define M_1000BASE_T_CURRENT_LINK_STAT_MASK      0x1000U
-#define M_1000BASE_T_RECEIVE_ERR_MASK            0x0800U
-#define M_1000BASE_T_TRANSMIT_ERR_MASK           0x0400U
-#define M_1000BASE_T_SSD_ERR_MASK                0x0200U
-#define M_1000BASE_T_ESD_ERR_MASK                0x0100U
-#define M_1000BASE_T_CARRIER_EXT_ERR_MASK        0x0080U
-#define M_1000BASE_T_NON_COMPL_BCM5400_MASK      0x0040U
-#define M_1000BASE_T_MDI_XOVR_ERR_MASK           0x0020U
+} VSC8541_REG_1000BT_STAT_EXT_2_bits_t; // reg 17: 
+#define M_1000BT_DESCRAMBLER_LOCK_MASK       0x8000U
+#define M_1000BT_LOCK_ERR_MASK               0x4000U
+#define M_1000BT_DISCONNECT_STATE_MASK       0x2000U
+#define M_1000BT_CURRENT_LINK_STAT_MASK      0x1000U
+#define M_1000BT_RECEIVE_ERR_MASK            0x0800U
+#define M_1000BT_TRANSMIT_ERR_MASK           0x0400U
+#define M_1000BT_SSD_ERR_MASK                0x0200U
+#define M_1000BT_ESD_ERR_MASK                0x0100U
+#define M_1000BT_CARRIER_EXT_ERR_MASK        0x0080U
+#define M_1000BT_NON_COMPL_BCM5400_MASK      0x0040U
+#define M_1000BT_MDI_XOVR_ERR_MASK           0x0020U
 
 
 typedef union 
@@ -254,7 +254,7 @@ typedef union
     struct __attribute__((packed)) 
     {    
         unsigned : 1;
-        unsigned DISABLE_AUTO_1000BASE_T_NEXT_PAGE_XCHG : 1;
+        unsigned DISABLE_AUTO_1000BT_NEXT_PAGE_XCHG : 1;
         unsigned DISABLE_PULSE_SHAPE_FILTER : 1;
         unsigned PARALLEL_DETECT_CTRL : 1;
         unsigned DISABLE_POLARITY_CORRECTION : 1;
@@ -285,7 +285,7 @@ typedef union
 #define M_BYPASS_DISABLE_POLARITY_CORRECTION_MASK      0x0010U
 #define M_BYPASS_PARALLEL_DETECT_CTRL_MASK             0x0008U
 #define M_BYPASS_PULSE_SHAPE_FILTER_MASK               0x0004U
-#define M_BYPASS_AUTO_1000BASE_T_NEXT_PAGE_XCHG_MASK   0x0002U
+#define M_BYPASS_AUTO_1000BT_NEXT_PAGE_XCHG_MASK       0x0002U
 
 
 typedef union 
@@ -330,28 +330,28 @@ typedef union
     {    
         unsigned SMI_BROADCAST_WR : 1;
         unsigned : 5;
-        unsigned F_10BASE_T_LINK_STAT : 1;
-        unsigned F_10BASE_T_DISCONNECT_STATE : 1;
+        unsigned F_10BT_LINK_STAT : 1;
+        unsigned F_10BT_DISCONNECT_STATE : 1;
         unsigned EOF_ERR : 1;
         unsigned STICKY_RST_ENABLE : 1;
-        unsigned F_10BASE_T_SQUELCH_CTRL : 2;
+        unsigned F_10BT_SQUELCH_CTRL : 2;
         unsigned SQE_DISABLE : 1;
-        unsigned F_10BASE_T_ECHO_DISABLE : 1;
+        unsigned F_10BT_ECHO_DISABLE : 1;
         unsigned JABBER_DETECT_DISABLE : 1;
-        unsigned F_10BASE_T_LINK_H : 1;
+        unsigned F_10BT_LINK_H : 1;
     };
     unsigned short w;
 } VSC8541_REG_EXTEND_CTRL_STAT_bits_t; // reg 22: 
-#define M_EXT_CTRL_STAT_10BASE_T_LINK_H_MASK             0x8000U
-#define M_EXT_CTRL_STAT_JABBER_DETECT_DISABLE_MASK       0x4000U
-#define M_EXT_CTRL_STAT_10BASE_T_ECHO_DISABLE_MASK       0x2000U
-#define M_EXT_CTRL_STAT_SQE_DISABLE_MASK                 0x1000U
-#define M_EXT_CTRL_STAT_10BASE_T_SQUELCH_CTRL_MASK       0x0C00U
-#define M_EXT_CTRL_STAT_STICKY_RST_ENABLE_MASK           0x0200U
-#define M_EXT_CTRL_STAT_EOF_ERR_MASK                     0x0100U
-#define M_EXT_CTRL_STAT_10BASE_T_DISCONNECT_STATE_MASK   0x0080U
-#define M_EXT_CTRL_STAT_10BASE_T_LINK_STAT_MASK          0x0040U
-#define M_EXT_CTRL_STAT_SMI_BROADCAST_WR_MASK            0x0000U
+#define M_EXT_CTRL_STAT_10BT_LINK_H_MASK             0x8000U
+#define M_EXT_CTRL_STAT_JABBER_DETECT_DISABLE_MASK   0x4000U
+#define M_EXT_CTRL_STAT_10BT_ECHO_DISABLE_MASK       0x2000U
+#define M_EXT_CTRL_STAT_SQE_DISABLE_MASK             0x1000U
+#define M_EXT_CTRL_STAT_10BT_SQUELCH_CTRL_MASK       0x0C00U
+#define M_EXT_CTRL_STAT_STICKY_RST_ENABLE_MASK       0x0200U
+#define M_EXT_CTRL_STAT_EOF_ERR_MASK                 0x0100U
+#define M_EXT_CTRL_STAT_10BT_DISCONNECT_STATE_MASK   0x0080U
+#define M_EXT_CTRL_STAT_10BT_LINK_STAT_MASK          0x0040U
+#define M_EXT_CTRL_STAT_SMI_BROADCAST_WR_MASK        0x0000U
 
 
 typedef union 
@@ -367,15 +367,15 @@ typedef union
     };
     unsigned short w;
 } VSC8541_REG_EXTEND_PHY_CTRL_1_bits_t; // reg 23: 
-#define M_EXT_PHY_CTRL_MAC_CLK_ENABLE_MASK              0x2000U
-#define M_EXT_PHY_CTRL_MAC_INTERFACE_SEL_MASK           0x1800U
+#define M_EXT_PHY_CTRL_MAC_CLK_ENABLE_MASK          0x2000U
+#define M_EXT_PHY_CTRL_MAC_INTERFACE_SEL_MASK       0x1800U
 // mask values for the MAC_INTERFACE_SEL field 
-#define M_MAC_INTERFACE_SEL_GMII_MASK           0x0000U
-#define M_MAC_INTERFACE_SEL_MII_MASK            0x0000U
-#define M_MAC_INTERFACE_SEL_RMII_MASK           0x0800U
-#define M_MAC_INTERFACE_SEL_RGMII_MASK          0x1000U
+#define M_MAC_INTERFACE_SEL_GMII_MASK               0x0000U
+#define M_MAC_INTERFACE_SEL_MII_MASK                0x0000U
+#define M_MAC_INTERFACE_SEL_RMII_MASK               0x0800U
+#define M_MAC_INTERFACE_SEL_RGMII_MASK              0x1000U
 
-#define M_EXT_PHY_CTRL_FAREND_LOOPBACK_MODE_MASK        0x0008U
+#define M_EXT_PHY_CTRL_FAREND_LOOPBACK_MODE_MASK    0x0008U
 
 
 typedef union 
@@ -387,14 +387,14 @@ typedef union
         unsigned JUMBO_PKT_MODE : 2;
         unsigned : 6;
         unsigned PICMG_REDUCE_PWR_MODE : 1;
-        unsigned F_100BASE_T_EDGE_RATE_CTRL : 3;
+        unsigned F_100BT_EDGE_RATE_CTRL : 3;
     };
     unsigned short w;
 } VSC8541_REG_EXTEND_PHY_CTRL_2_bits_t; // reg 24: 
-#define M_EXT_PHY_CTRL_STAT_100BASE_T_EDGE_RATE_CTRL_MASK   0xE000U
-#define M_EXT_PHY_CTRL_STAT_PICMG_REDUCE_PWR_MODE_MASK      0x1000U
-#define M_EXT_PHY_CTRL_STAT_JUMBO_PKT_MODE_MASK             0x0030U
-#define M_EXT_PHY_CTRL_STAT_CONNECTOR_LOOPBACK_MASK         0x0000U
+#define M_EXT_PHY_CTRL_STAT_100BT_EDGE_RATE_CTRL_MASK   0xE000U
+#define M_EXT_PHY_CTRL_STAT_PICMG_REDUCE_PWR_MODE_MASK  0x1000U
+#define M_EXT_PHY_CTRL_STAT_JUMBO_PKT_MODE_MASK         0x0030U
+#define M_EXT_PHY_CTRL_STAT_CONNECTOR_LOOPBACK_MASK     0x0000U
 
 
 typedef union 
@@ -497,7 +497,7 @@ typedef union
         unsigned AUTONEG_COMPLETED : 1;
     };
     unsigned short w;
-} VSC8541_REG_AUXILIARY_CTRL_STAT_bits_t; // reg 28: 
+} VSC8541_REG_AUX_CTRL_STAT_bits_t; // reg 28: 
 #define M_AUTONEG_COMPLETED_MASK                    0x8000U
 #define M_AUTONEG_DISABLED_MASK                     0x4000U
 #define M_HP_AUTO_MDIX_XOVR_INDICATION_MASK         0x2000U
@@ -559,7 +559,7 @@ typedef union
         unsigned EXT_PAGE_REGISTER_ACCESS : 16;
     };
     unsigned short w;
-} VSC8541_REG_EXTENDED_PAGE_ACCESS_bits_t; // reg 31: 
+} VSC8541_REG_EXTEND_PAGE_ACCESS_bits_t; // reg 31: 
 
 
 
@@ -576,9 +576,9 @@ typedef union
         unsigned PKT_SINCE_LAST_READ : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT1_CU_MEDIA_CRC_GOOD_COUNTER_bits_t; // reg 18E1: 
-#define M_EXT1_PKT_SINCE_LAST_READ_MASK              0x8000U
-#define M_EXT1_CRC_GOOD_COUNTER_CONTENTS_MASK        0x3FFFU
+} VSC8541_REG_E1_CU_CRC_COUNTER_bits_t; // reg 18E1: 
+#define M_E1_PKT_SINCE_LAST_READ_MASK              0x8000U
+#define M_E1_CRC_GOOD_COUNTER_CONTENTS_MASK        0x3FFFU
 
 
 typedef union 
@@ -595,12 +595,12 @@ typedef union
         unsigned : 2;
     };
     unsigned short w;
-} VSC8541_REG_EXT1_EXTENDED_MODE_CTRL_bits_t; // reg 19E1: 
-#define M_EXT1_LED1_EXT_MODE_MASK                0x2000U
-#define M_EXT1_LED0_EXT_MODE_MASK                0x1000U
-#define M_EXT1_LED_RST_BLINK_SUPPRESS_MASK       0x0800U
-#define M_EXT1_FAST_LINK_FAILURE_MASK            0x0010U
-#define M_EXT1_FORCE_MDI_XOVER_MASK              0x000CU
+} VSC8541_REG_E1_EXT_MODE_CTRL_bits_t; // reg 19E1: 
+#define M_E1_LED1_EXT_MODE_MASK                0x2000U
+#define M_E1_LED0_EXT_MODE_MASK                0x1000U
+#define M_E1_LED_RST_BLINK_SUPPRESS_MASK       0x0800U
+#define M_E1_FAST_LINK_FAILURE_MASK            0x0010U
+#define M_E1_FORCE_MDI_XOVER_MASK              0x000CU
 
 
 typedef union 
@@ -608,10 +608,10 @@ typedef union
     struct __attribute__((packed)) 
     {  
         unsigned : 1;
-        unsigned LINK_SPEED_AUTO_DOWN_SHIFT_STAT : 1;
-        unsigned LINK_SPEED_AUTO_DOWN_SHIFT_CTRL : 2;
-        unsigned LINK_SPEED_AUTO_DOWN_SHIFT_EN : 1;
-        unsigned EN_10BASE_T_NO_PREAMBLE_MODE : 1;
+        unsigned LINK_SPEED_DOWNSHIFT_STAT : 1;
+        unsigned LINK_SPEED_DOWNSHIFT_CTRL : 2;
+        unsigned LINK_SPEED_DOWNSHIFT_EN : 1;
+        unsigned EN_10BT_NO_PREAMBLE_MODE : 1;
         unsigned MEDIA_MODE_STAT : 2;
         unsigned : 2;
         unsigned SLOW_MDC : 1;
@@ -620,17 +620,17 @@ typedef union
         unsigned DISABLE_CARRIER_EXT : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT1_EXTENDED_PHY_CTRL_3_bits_t; // reg 20E1: 
-#define M_EXT1_DISABLE_CARRIER_EXT_MASK                  0x8000U
-#define M_EXT1_ACTIPHY_SLEEP_TIMER_MASK                  0x6000U
-#define M_EXT1_ACTIPHY_WAKE_UP_TIMER_MASK                0x1800U
-#define M_EXT1_SLOW_MDC_MASK                             0x0400U
-#define M_EXT1_MEDIA_MODE_STAT_MASK                      0x00C0U
-#define M_EXT1_EN_10BASE_T_NO_PREAMBLE_MODE_MASK         0x0020U
+} VSC8541_REG_E1_EXT_PHY_CTRL_3_bits_t; // reg 20E1: 
+#define M_E1_DISABLE_CARRIER_EXT_MASK                  0x8000U
+#define M_E1_ACTIPHY_SLEEP_TIMER_MASK                  0x6000U
+#define M_E1_ACTIPHY_WAKE_UP_TIMER_MASK                0x1800U
+#define M_E1_SLOW_MDC_MASK                             0x0400U
+#define M_E1_MEDIA_MODE_STAT_MASK                      0x00C0U
+#define M_E1_EN_10BT_NO_PREAMBLE_MODE_MASK             0x0020U
 
-#define M_EXT1_LINK_SPEED_AUTO_DOWN_SHIFT_EN_MASK        0x0010U
-#define M_EXT1_LINK_SPEED_AUTO_DOWN_SHIFT_CTRL_MASK      0x000CU
-#define M_EXT1_LINK_SPEED_AUTO_DOWN_SHIFT_STAT_MASK      0x0002U
+#define M_E1_LINK_SPEED_DOWNSHIFT_EN_MASK              0x0010U
+#define M_E1_LINK_SPEED_DOWNSHIFT_CTRL_MASK            0x000CU
+#define M_E1_LINK_SPEED_DOWNSHIFT_STAT_MASK            0x0002U
 
 typedef union 
 {
@@ -642,11 +642,11 @@ typedef union
         unsigned PHY_ADDR : 5;
     };
     unsigned short w;
-} VSC8541_REG_EXT1_EXTENDED_PHY_CTRL_4_bits_t; // reg 23E1: 
-#define M_EXT1_PHY_ADDR_MASK                          0xF800U
-#define M_EXT1_INLINE_PWRD_DEVICE_DETECT_MASK         0x0400U
-#define M_EXT1_INLINE_PWRD_DEVICE_DETECT_STAT_MASK    0x0300U
-#define M_EXT1_CU_MEDIA_CRC_ERROR_COUNTER_MASK        0x00FFU
+} VSC8541_REG_E1_EXT_PHY_CTRL_4_bits_t; // reg 23E1: 
+#define M_E1_PHY_ADDR_MASK                          0xF800U
+#define M_E1_INL_PWRD_DEV_DETECT_MASK               0x0400U
+#define M_E1_INL_PWRD_DEV_DETECT_STAT_MASK          0x0300U
+#define M_E1_CU_MEDIA_CRC_ERROR_COUNTER_MASK        0x00FFU
 
 
 typedef union 
@@ -664,16 +664,16 @@ typedef union
         unsigned EPG_ENABLE : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT1_ETH_PACKET_GEN_1_bits_t; // reg 29E1: 
-#define M_EXT1_EPG_ENABLE_MASK                   0x8000U
-#define M_EXT1_EPG_RUN_STOP_MASK                 0x4000U
-#define M_EXT1_TRANSMISSION_DURATION_MASK        0x2000U
-#define M_EXT1_PKT_LENGTH_MASK                   0x1800U
-#define M_EXT1_INTER_PKT_GAP_MASK                0x0400U
-#define M_EXT1_DEST_ADDR_MASK                    0x03C0U
-#define M_EXT1_SOURCE_ADDR_MASK                  0x003CU
-#define M_EXT1_PAYLOAD_TYPE_MASK                 0x0002U
-#define M_EXT1_BAD_FCS_GEN_MASK                  0x0001U
+} VSC8541_REG_E1_EPG_1_bits_t; // reg 29E1: 
+#define M_E1_EPG_ENABLE_MASK                   0x8000U
+#define M_E1_EPG_RUN_STOP_MASK                 0x4000U
+#define M_E1_TRANSMISSION_DURATION_MASK        0x2000U
+#define M_E1_PKT_LENGTH_MASK                   0x1800U
+#define M_E1_INTER_PKT_GAP_MASK                0x0400U
+#define M_E1_DEST_ADDR_MASK                    0x03C0U
+#define M_E1_SOURCE_ADDR_MASK                  0x003CU
+#define M_E1_PAYLOAD_TYPE_MASK                 0x0002U
+#define M_E1_BAD_FCS_GEN_MASK                  0x0001U
 
 typedef union 
 {
@@ -682,8 +682,8 @@ typedef union
         unsigned EPG_PKT_PAYLOAD : 16;
     };
     unsigned short w;
-} VSC8541_REG_EXT1_ETH_PACKET_GEN_2_bits_t; // reg 30E1: 
-#define M_EXT1_EPG_PKT_PAYLOAD_MASK                         0xFFFFU
+} VSC8541_REG_E1_EPG_2_bits_t; // reg 30E1: 
+#define M_E1_EPG_PKT_PAYLOAD_MASK                         0xFFFFU
 
 
 /*----------------------------------------------------------------*/
@@ -694,51 +694,50 @@ typedef union
 {
     struct __attribute__((packed)) 
     {  
-        unsigned F_10BASE_Te_SIGNAL_AMP_TRIM : 4;
-        unsigned F_10BASE_T_SIGNAL_AMP_TRIM : 4;
-        unsigned F_100BASE_TX_SIGNAL_AMP_TRIM : 4;
-        unsigned F_1000BASE_T_SIG_AMP_TRIM : 4;
+        unsigned F_10BTe_SIGNAL_AMP_TRIM : 4;
+        unsigned F_10BT_SIGNAL_AMP_TRIM : 4;
+        unsigned F_100BTX_SIGNAL_AMP_TRIM : 4;
+        unsigned F_1000BT_SIG_AMP_TRIM : 4;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_CU_PMD_TRANSMIT_CTRL_bits_t; // reg 16E2: 
-#define M_EXT2_1000BASE_T_SIGNAL_AMP_TRIM_MASK          0xF000U
-#define M_EXT2_100BASE_TX_SIGNAL_AMP_TRIM_MASK          0x0F00U
-#define M_EXT2_10BASE_T_SIGNAL_AMP_TRIM_MASK            0x00F0U
-#define M_EXT2_10BASE_Te_SIGNAL_AMP_TRIM_MASK           0x000FU
+} VSC8541_REG_E2_CU_PMD_TX_CTRL_bits_t; // reg 16E2: 
+#define M_E2_1000BT_SIGNAL_AMP_TRIM_MASK          0xF000U
+#define M_E2_100BTX_SIGNAL_AMP_TRIM_MASK          0x0F00U
+#define M_E2_10BT_SIGNAL_AMP_TRIM_MASK            0x00F0U
+#define M_E2_10BTe_SIGNAL_AMP_TRIM_MASK           0x000FU
 
 
 typedef union 
 {
     struct __attribute__((packed)) 
     {  
-        unsigned INH_1000BASE_T_RECEIVE_EEE_LPI : 1;
-        unsigned INH_1000BASE_T_TRANSMIT_EEE_LPI : 1;
-        unsigned INH_100BASE_TX_RECEIVE_EEE_LPI : 1;
-        unsigned INH_100BASE_TX_TRANSMIT_EEE_LPI : 1;
+        unsigned INH_1000BT_RECEIVE_EEE_LPI : 1;
+        unsigned INH_1000BT_TRANSMIT_EEE_LPI : 1;
+        unsigned INH_100BTX_RECEIVE_EEE_LPI : 1;
+        unsigned INH_100BTX_TRANSMIT_EEE_LPI : 1;
         unsigned FORCE_TRANSMIT_LPI : 1;
-        unsigned EN_1000BASE_T_FORCE : 1;
-        unsigned F_100BASE_TX_EEE_EN : 1;
-        unsigned F_1000BASE_T_EEE_EN : 1;
+        unsigned EN_1000BT_FORCE : 1;
+        unsigned F_100BTX_EEE_EN : 1;
+        unsigned F_1000BT_EEE_EN : 1;
         unsigned LINK_STAT : 1;
         unsigned : 1;
         unsigned INVERT_LED_POLARITY : 2;
         unsigned : 3;
-        unsigned EN_10BASE_Te : 1;
+        unsigned EN_10BTe : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_EEE_CTRL_bits_t; // reg 17E2: 
-#define M_EXT2_EN_10BASE_Te_MASK                        0x8000U
-#define M_EXT2_INVERT_LED_POLARITY_MASK                 0x0C00U
-#define M_EXT2_LINK_STAT_MASK                           0x0100U
-#define M_EXT2_1000BASE_T_EEE_EN_MASK                   0x0080U
-#define M_EXT2_100BASE_TX_EEE_EN_MASK                   0x0040U
-#define M_EXT2_EN_1000BASE_T_FORCE_MASK                 0x0020U
-#define M_EXT2_FORCE_TRANSMIT_LPI_MASK                  0x0010U
-#define M_EXT2_INH_100BASE_TX_TRANSMIT_EEE_LPI_MASK     0x0008U
-#define M_EXT2_INH_100BASE_TX_RECEIVE_EEE_LPI_MASK      0x0004U
-#define M_EXT2_INH_1000BASE_T_TRANSMIT_EEE_LPI_MASK     0x0002U
-#define M_EXT2_INH_1000BASE_T_RECEIVE_EEE_LPI_MASK      0x0001U
-
+} VSC8541_REG_E2_EEE_CTRL_bits_t; // reg 17E2: 
+#define M_E2_EN_10BTe_MASK                        0x8000U
+#define M_E2_INVERT_LED_POLARITY_MASK             0x0C00U
+#define M_E2_LINK_STAT_MASK                       0x0100U
+#define M_E2_1000BT_EEE_EN_MASK                   0x0080U
+#define M_E2_100BTX_EEE_EN_MASK                   0x0040U
+#define M_E2_EN_1000BT_FORCE_MASK                 0x0020U
+#define M_E2_FORCE_TRANSMIT_LPI_MASK              0x0010U
+#define M_E2_INH_100BTX_TRANSMIT_EEE_LPI_MASK     0x0008U
+#define M_E2_INH_100BTX_RECEIVE_EEE_LPI_MASK      0x0004U
+#define M_E2_INH_1000BT_TRANSMIT_EEE_LPI_MASK     0x0002U
+#define M_E2_INH_1000BT_RECEIVE_EEE_LPI_MASK      0x0001U
 
 
 typedef union 
@@ -755,13 +754,13 @@ typedef union
         unsigned FLF2_EN : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_RGMII_CTRL_bits_t; // reg 20E2: 
-#define M_EXT2_FLF2_EN_MASK                         0x8000U
-#define M_EXT2_SOF_EN_MASK                          0x1000U
-#define M_EXT2_RGMII_GMII_RXD_BIT_REVERSAL_MASK     0x0080U
-#define M_EXT2_RX_CLK_DELAY_MASK                    0x0070U
-#define M_EXT2_RGMII_GMII_TXD_BIT_REVERSAL_MASK     0x0008U
-#define M_EXT2_TX_CLK_DELAY_MASK                    0x0007U
+} VSC8541_REG_E2_RGMII_CTRL_bits_t; // reg 20E2: 
+#define M_E2_FLF2_EN_MASK                         0x8000U
+#define M_E2_SOF_EN_MASK                          0x1000U
+#define M_E2_RGMII_GMII_RXD_BIT_REVERSAL_MASK     0x0080U
+#define M_E2_RX_CLK_DELAY_MASK                    0x0070U
+#define M_E2_RGMII_GMII_TXD_BIT_REVERSAL_MASK     0x0008U
+#define M_E2_TX_CLK_DELAY_MASK                    0x0007U
 
 
 typedef union 
@@ -771,8 +770,8 @@ typedef union
         unsigned WOL_MAC_ADD_15_0: 16;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_WOL_MAC_ADD_15_0_bits_t; // reg 21E2: 
-#define M_EXT2_WOL_MAC_ADD_15_0_MASK                         0xFFFFU
+} VSC8541_REG_E2_WOL_MAC_ADD1_bits_t; // reg 21E2: 
+#define M_E2_WOL_MAC_ADD_15_0_MASK                         0xFFFFU
 
 
 typedef union 
@@ -782,8 +781,8 @@ typedef union
         unsigned WOL_MAC_ADD_31_16: 16;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_WOL_MAC_ADD_31_16_bits_t; // reg 22E2: 
-#define M_EXT2_WOL_MAC_ADD_31_16_MASK                         0xFFFFU
+} VSC8541_REG_E2_WOL_MAC_ADD2_bits_t; // reg 22E2: 
+#define M_E2_WOL_MAC_ADD_31_16_MASK                         0xFFFFU
 
 
 typedef union 
@@ -793,8 +792,8 @@ typedef union
         unsigned WOL_MAC_ADD_47_32: 16;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_WOL_MAC_ADD_47_32_bits_t; // reg 23E2: 
-#define M_EXT2_WOL_MAC_ADD_47_32_MASK                         0xFFFFU
+} VSC8541_REG_E2_WOL_MAC_ADD3_bits_t; // reg 23E2: 
+#define M_E2_WOL_MAC_ADD_47_32_MASK                         0xFFFFU
 
 
 typedef union 
@@ -804,8 +803,8 @@ typedef union
         unsigned SECURE_ON_PASSWORD_15_0: 16;
     };
     unsigned short w;
-}VSC8541_REG_EXT2_SECURE_ON_PASSWORD_15_0_bits_t; // reg 24E2: 
-#define M_EXT2_SECURE_ON_PASSWORD_15_0_MASK                         0xFFFFU
+}VSC8541_REG_E2_SECON_PWD1_bits_t; // reg 24E2: 
+#define M_E2_SECON_PWD1_MASK                     0xFFFFU
 
 typedef union 
 {
@@ -814,8 +813,8 @@ typedef union
         unsigned SECURE_ON_PASSWORD_31_16: 16;
     };
     unsigned short w;
-}VSC8541_REG_EXT2_SECURE_ON_PASSWORD_31_16_bits_t; // reg 25E2: 
-#define M_EXT2_SECURE_ON_PASSWORD_31_16_MASK                         0xFFFFU
+}VSC8541_REG_E2_SECON_PWD2_bits_t; // reg 25E2: 
+#define M_E2_SECON_PWD2_MASK                        0xFFFFU
 
 
 typedef union 
@@ -825,8 +824,8 @@ typedef union
         unsigned SECURE_ON_PASSWORD_47_32: 16;
     };
     unsigned short w;
-}VSC8541_REG_EXT2_SECURE_ON_PASSWORD_47_32_bits_t; // reg 26E2: 
-#define M_EXT2_SECURE_ON_PASSWORD_47_32_MASK                         0xFFFFU
+}VSC8541_REG_E2_SECON_PWD3_bits_t; // reg 26E2: 
+#define M_E2_SECON_PWD3_MASK                         0xFFFFU
 
 
 typedef union 
@@ -843,13 +842,13 @@ typedef union
         unsigned SECURE_ON_EN : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_WOL_MAC_INTERFACE_CTRL_bits_t; // reg 27E2: 
-#define M_EXT2_SECURE_ON_EN_MASK                    0x8000U
-#define M_EXT2_SECURE_ON_PASSWORD_LENGTH_MASK       0x4000U
-#define M_EXT2_ADD_REP_COUNT_MAGIC_PKT_MASK         0x00F0U
-#define M_EXT2_PAD_EDGE_RATE_CTRL_MASK              0x00E0U
-#define M_EXT2_RMII_CLKOUT_EN_MASK                  0x0010U
-#define M_EXT2_MDINT_CMOS_DRIVE_MASK                0x0001U
+} VSC8541_REG_E2_WOL_MAC_IF_CTRL_bits_t; // reg 27E2: 
+#define M_E2_SECURE_ON_EN_MASK                    0x8000U
+#define M_E2_SECON_PWD_LENGTH_MASK                0x4000U
+#define M_E2_ADD_REP_COUNT_MAGIC_PKT_MASK         0x00F0U
+#define M_E2_PAD_EDGE_RATE_CTRL_MASK              0x00E0U
+#define M_E2_RMII_CLKOUT_EN_MASK                  0x0010U
+#define M_E2_MDINT_CMOS_DRIVE_MASK                0x0001U
 
 
 typedef union 
@@ -867,14 +866,14 @@ typedef union
         unsigned : 2;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_EXTENDED_INT_MASK_bits_t; // reg 28E2: 
-#define M_EXT2_RX_FIFO_FLOW_INT_MASK                0x2000U
-#define M_EXT2_TX_FIFO_FLOW_INT_MASK                0x1000U
-#define M_EXT2_RR_SWITCH_COMPLETE_INT_MASK          0x0010U
-#define M_EXT2_EEE_LINK_FAIL_INT_MASK               0x0008U
-#define M_EXT2_EEE_RX_TQ_TIMER_INT_MASK             0x0004U
-#define M_EXT2_EEE_WAIT_QUIET_TMR_INT_MASK          0x0002U
-#define M_EXT2_EEE_WAKE_ERR_INT_MASK                0x0001U
+} VSC8541_REG_E2_EXT_INT_MASK_bits_t; // reg 28E2: 
+#define M_E2_RX_FIFO_FLOW_INT_MASK                0x2000U
+#define M_E2_TX_FIFO_FLOW_INT_MASK                0x1000U
+#define M_E2_RR_SWITCH_COMPLETE_INT_MASK          0x0010U
+#define M_E2_EEE_LINK_FAIL_INT_MASK               0x0008U
+#define M_E2_EEE_RX_TQ_TIMER_INT_MASK             0x0004U
+#define M_E2_EEE_WAIT_QUIET_TMR_INT_MASK          0x0002U
+#define M_E2_EEE_WAKE_ERR_INT_MASK                0x0001U
 
 typedef union 
 {
@@ -891,14 +890,14 @@ typedef union
         unsigned : 2;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_EXTENDED_INT_STAT_bits_t; // reg 29E2: 
-#define M_EXT2_RX_FIFO_FLOW_INT_STAT_MASK               0x2000U
-#define M_EXT2_TX_FIFO_FLOW_INT_STAT_MASK               0x1000U
-#define M_EXT2_RR_SWITCH_COMPLETE_INT_STAT_MASK         0x0010U
-#define M_EXT2_EEE_LINK_FAIL_INT_STAT_MASK              0x0008U
-#define M_EXT2_EEE_RX_TQ_TIMER_INT_STAT_MASK            0x0004U
-#define M_EXT2_EEE_WAIT_QUIET_TMR_INT_STAT_MASK         0x0002U
-#define M_EXT2_EEE_WAKE_ERR_INT_STAT_MASK               0x0001U
+} VSC8541_REG_E2_EXT_INT_STAT_bits_t; // reg 29E2: 
+#define M_E2_RX_FIFO_FLOW_INT_STAT_MASK               0x2000U
+#define M_E2_TX_FIFO_FLOW_INT_STAT_MASK               0x1000U
+#define M_E2_RR_SWITCH_COMPLETE_INT_STAT_MASK         0x0010U
+#define M_E2_EEE_LINK_FAIL_INT_STAT_MASK              0x0008U
+#define M_E2_EEE_RX_TQ_TIMER_INT_STAT_MASK            0x0004U
+#define M_E2_EEE_WAIT_QUIET_TMR_INT_STAT_MASK         0x0002U
+#define M_E2_EEE_WAKE_ERR_INT_STAT_MASK               0x0001U
 
 typedef union 
 {
@@ -906,21 +905,21 @@ typedef union
     {  
         unsigned START_SWITCHOVER : 1;
         unsigned : 3;
-        unsigned RING_RESILIENCY_STAT : 2;
+        unsigned RING_RESIL_STAT : 2;
         unsigned : 6;
-        unsigned FORCE_RING_RESILIENCY_EN : 1;
-        unsigned LP_ADV_RING_RESILIENCY : 1;
-        unsigned ADV_RING_RESILIENCY : 1;
-        unsigned RING_RESILIENCY_START_EN : 1;
+        unsigned FORCE_RING_RESIL_EN : 1;
+        unsigned LP_ADV_RING_RESIL : 1;
+        unsigned ADV_RING_RESIL : 1;
+        unsigned RING_RESIL_START_EN : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXT2_RING_RESILIENCY_CTRL_bits_t; // reg 30E2: 
-#define M_EXT2_RING_RESILIENCY_START_EN_MASK            0x8000U
-#define M_EXT2_ADV_RING_RESILIENCY_MASK                 0x4000U
-#define M_EXT2_LP_ADV_RING_RESILIENCY_MASK              0x2000U
-#define M_EXT2_FORCE_RING_RESILIENCY_EN_MASK            0x1000U
-#define M_EXT2_RING_RESILIENCY_STAT_MASK                0x00C0U
-#define M_EXT2_START_SWITCHOVER_MASK                    0x0001U
+} VSC8541_REG_E2_RING_RESIL_CTRL_bits_t; // reg 30E2: 
+#define M_E2_RING_RESIL_START_EN_MASK            0x8000U
+#define M_E2_ADV_RING_RESIL_MASK                 0x4000U
+#define M_E2_LP_ADV_RING_RESIL_MASK              0x2000U
+#define M_E2_FORCE_RING_RESIL_EN_MASK            0x1000U
+#define M_E2_RING_RESIL_STAT_MASK                0x00C0U
+#define M_E2_START_SWITCHOVER_MASK               0x0001U
 
 /*----------------------------------------------------------------*/
 // General Purpose Registers: Page 0x10
@@ -935,7 +934,7 @@ typedef union
         unsigned CLKOUT_EN : 1;
     };
     unsigned short w;
-}VSC8541_REG_EXTG_CLKOUT_CTRL_bits_t; // reg 13G: 
+}VSC8541_REG_EG_CLKOUT_CTRL_bits_t; // reg 13G: 
 #define M_EXT_GP_CLKOUT_EN_MASK             0x8000U
 #define M_EXT_GP_CLKOUT_FREQ_SELECT_MASK    0x6000U
 
@@ -953,7 +952,7 @@ typedef union
         unsigned : 2;
     };
     unsigned short w;
-} VSC8541_REG_EXTG_GPIO_CTRL_2_bits_t; // reg 14G: 
+} VSC8541_REG_EG_GPIO_CTRL_2_bits_t; // reg 14G: 
 #define M_EXT_GP_COMA_MODE_OUTPUT_EN_MASK       0x2000U
 #define M_EXT_GP_COMA_MODE_OUTPUT_DATA_MASK     0x1000U
 #define M_EXT_GP_COMA_MODE_INPUT_DATA_MASK      0x0800U
@@ -968,7 +967,7 @@ typedef union
         unsigned : 12;
     };
     unsigned short w;
-} VSC8541_REG_EXTG_FAST_LINK_REG_bits_t; // reg 19G: 
+} VSC8541_REG_EG_FAST_LINK_REG_bits_t; // reg 19G: 
 #define M_EXT_GP_FAST_LINK_FAILURE_SETTING_MASK             0x000FU
 
 
@@ -982,11 +981,11 @@ typedef union
         unsigned : 2;
         unsigned CLK_FREQ_SELECT : 3;
         unsigned : 4;
-        unsigned EN_RCVRD_CLK : 1;
+        unsigned EN_RECOV_CLK : 1;
     };
     unsigned short w;
-} VSC8541_REG_EXTG_RECOVERED_CLK_CTRL_bits_t; // reg 23G: 
-#define M_EXT_GP_EN_RCVRD_CLK_MASK        0x8000U
+} VSC8541_REG_EG_RECOV_CLK_CTRL_bits_t; // reg 23G: 
+#define M_EXT_GP_EN_RECOV_CLK_MASK        0x8000U
 #define M_EXT_GP_CLK_FREQ_SELECT_MASK     0x0700U
 #define M_EXT_GP_CLK_SQUELCH_LVL_MASK     0x0030U
 #define M_EXT_GP_CLK_SEL_MASK             0x0004U
@@ -1000,7 +999,7 @@ typedef union
         unsigned LED_PULSE_DUTY_CYCLE_CTRL : 8;
     };
     unsigned short w;
-} VSC8541_REG_EXTG_ENHANCED_LED_CTRL_bits_t; // reg 25G: 
+} VSC8541_REG_EG_ENH_LED_CTRL_bits_t; // reg 25G: 
 #define M_EXT_GP_LED_PULSE_DUTY_CYCLE_CTRL_MASK            0xFF000U
 
 
