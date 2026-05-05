@@ -38,41 +38,34 @@ source software license terms, no license or other rights, whether express or
 implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 -->
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>
-	<#assign emac_phy_type = "drvExtPhyVsc8541_"+idx+".TCPIP_EMAC_PHY_TYPE_IDX" + idx>
-	<#assign emac_phy_rgmii = "drvExtPhyVsc8541_"+idx+".TCPIP_INTMAC_PHY_CONFIG_RGMII_IDX" + idx>
-	<#assign emac_phy_rmii = "drvExtPhyVsc8541_"+idx+".TCPIP_INTMAC_PHY_CONFIG_RMII_IDX" + idx>
-	<#assign emac_phy_auto = "drvExtPhyVsc8541_"+idx+".TCPIP_INTMAC_PHY_CONFIG_AUTO_IDX" + idx>
-	<#assign link_init_delay = "drvExtPhyVsc8541_"+idx+".TCPIP_INTMAC_PHY_LINK_INIT_DELAY_IDX" + idx>
-	<#assign phy_address = "drvExtPhyVsc8541_"+idx+".TCPIP_INTMAC_PHY_ADDRESS_IDX" + idx>
-	<#assign peripheral_id = "drvExtPhyVsc8541_"+idx+".DRV_ETHPHY_PERIPHERAL_ID_IDX" + idx>
-	<#assign net_init_tmo = "drvExtPhyVsc8541_"+idx+".DRV_ETHPHY_NEG_INIT_TMO_IDX" + idx>
-	<#assign net_done_tmo = "drvExtPhyVsc8541_"+idx+".DRV_ETHPHY_NEG_DONE_TMO_IDX" + idx>
-	<#assign reset_clr_tmo = "drvExtPhyVsc8541_"+idx+".DRV_ETHPHY_RESET_CLR_TMO_IDX" + idx>
-	<#lt>#define DRV_${emac_phy_type?eval}_PHY_CONFIG_FLAGS_IDX${idx}       ( 0 \
-	<#if (emac_phy_rgmii?eval)>              
-	<#lt>													| DRV_ETHPHY_CFG_RGMII \
-	<#elseif (emac_phy_rmii?eval)>              
-	<#lt>													| DRV_ETHPHY_CFG_RMII \
-	<#elseif (emac_phy_mii?eval)>              
-	<#lt>													| DRV_ETHPHY_CFG_MII \
-	</#if>
-	<#if (emac_phy_alternate?eval)?has_content && (emac_phy_alternate?eval) == true>
-	<#lt>													| DRV_ETHPHY_CFG_ALTERNATE \
-	<#else>
-	<#lt>													| DRV_ETHPHY_CFG_DEFAULT \
-	</#if>															
-	<#if (emac_phy_auto?eval)?has_content && (emac_phy_auto?eval) == true>
-	<#lt>													| DRV_ETHPHY_CFG_AUTO \
-	</#if>
-	<#lt>													)
-	<#lt>#define DRV_${emac_phy_type?eval}_PHY_LINK_INIT_DELAY_IDX${idx}            ${link_init_delay?eval}
-	<#lt>#define DRV_${emac_phy_type?eval}_PHY_ADDRESS_IDX${idx}                    ${phy_address?eval}
-	<#lt>#define DRV_${emac_phy_type?eval}_PHY_PERIPHERAL_ID_IDX${idx}              ${peripheral_id?eval}
-	<#lt>#define DRV_ETHPHY_${emac_phy_type?eval}_NEG_INIT_TMO_IDX${idx}            ${net_init_tmo?eval}
-	<#lt>#define DRV_ETHPHY_${emac_phy_type?eval}_NEG_DONE_TMO_IDX${idx}            ${net_done_tmo?eval}
-	<#lt>#define DRV_ETHPHY_${emac_phy_type?eval}_RESET_CLR_TMO_IDX${idx}           ${reset_clr_tmo?eval}
-</#list>
+
+<#assign emac_phy_type = TCPIP_EMAC_PHY_TYPE>
+#define DRV_${emac_phy_type}_PHY_CONFIG_FLAGS               ( 0 \
+<#if TCPIP_INTMAC_PHY_CONFIG_RGMII>    
+                                                    | DRV_ETHPHY_CFG_RGMII \
+<#elseif TCPIP_INTMAC_PHY_CONFIG_RMII>              
+                                                    | DRV_ETHPHY_CFG_RMII \
+<#elseif TCPIP_INTMAC_PHY_CONFIG_MII>              
+                                                    | DRV_ETHPHY_CFG_MII \
+<#elseif TCPIP_INTMAC_PHY_CONFIG_GMII>              
+                                                    | DRV_ETHPHY_CFG_GMII \
+</#if>
+<#if TCPIP_INTMAC_PHY_CONFIG_ALTERNATE?has_content && TCPIP_INTMAC_PHY_CONFIG_ALTERNATE == true>
+                                                    | DRV_ETHPHY_CFG_ALTERNATE \
+<#else>
+                                                    | DRV_ETHPHY_CFG_DEFAULT \
+</#if>
+<#if TCPIP_INTMAC_PHY_CONFIG_AUTO?has_content && TCPIP_INTMAC_PHY_CONFIG_AUTO == true>
+                                                    | DRV_ETHPHY_CFG_AUTO \
+</#if>
+                                                    )
+
+#define DRV_${emac_phy_type}_PHY_LINK_INIT_DELAY            ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
+#define DRV_${emac_phy_type}_PHY_ADDRESS                    ${TCPIP_INTMAC_PHY_ADDRESS}
+#define DRV_${emac_phy_type}_PHY_PERIPHERAL_ID              ${DRV_ETHPHY_PERIPHERAL_ID}
+#define DRV_ETHPHY_${emac_phy_type}_NEG_INIT_TMO            ${DRV_ETHPHY_NEG_INIT_TMO}
+#define DRV_ETHPHY_${emac_phy_type}_NEG_DONE_TMO            ${DRV_ETHPHY_NEG_DONE_TMO}
+#define DRV_ETHPHY_${emac_phy_type}_RESET_CLR_TMO           ${DRV_ETHPHY_RESET_CLR_TMO}
 
 <#--
 /*******************************************************************************
