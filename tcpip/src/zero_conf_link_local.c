@@ -747,24 +747,24 @@ static void TCPIP_ZCLL_Process(void)
                     hZcll->conflict_count++;
                     TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
                 }
-                else if((hZcll->conflict_count == 0U) &&
-                        hZcll->temp_IP_addr.Val != 0UL &&
-                        pNetIf->netIPAddr.Val != 0UL &&
-                        (TCPIP_ARP_IsResolved(cNetIf,&hZcll->temp_IP_addr, &hZcll->temp_MAC_addr)) )
+                else if((hZcll->conflict_count == 0U) && hZcll->temp_IP_addr.Val != 0UL && pNetIf->netIPAddr.Val != 0UL)
                 {
-                    if(memcmp (hZcll->temp_MAC_addr.v, cNetIf->netMACAddr.v, 6) == 0)
+                    if(TCPIP_ARP_IsResolved(cNetIf,&hZcll->temp_IP_addr, &hZcll->temp_MAC_addr))
                     {
-                        DEBUG_ZCLL_PRINT("SM_ADDR_PROBE: Resolved with our address only. " \
-                                "Rare Case !!!! \r\n");
-                    }
-                    else
-                    {
-                        /* Conflict with selected address */
-                        INFO_ZCLL_PRINT("Probe Conflict-2 Detected. Need to select diff addr \r\n");
-                        hZcll->temp_IP_addr.Val = 0x0;
+                        if(memcmp (hZcll->temp_MAC_addr.v, cNetIf->netMACAddr.v, 6) == 0)
+                        {
+                            DEBUG_ZCLL_PRINT("SM_ADDR_PROBE: Resolved with our address only. " \
+                                    "Rare Case !!!! \r\n");
+                        }
+                        else
+                        {
+                            /* Conflict with selected address */
+                            INFO_ZCLL_PRINT("Probe Conflict-2 Detected. Need to select diff addr \r\n");
+                            hZcll->temp_IP_addr.Val = 0x0;
 
-                        hZcll->conflict_count++;
-                        TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
+                            hZcll->conflict_count++;
+                            TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
+                        }
                     }
                 }
                 else

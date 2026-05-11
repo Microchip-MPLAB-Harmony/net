@@ -395,7 +395,7 @@ static __inline__ mDNSProcessCtx_common* __attribute__((always_inline)) FC_CtxHo
 /* Forward declarations */
 static void F_mDNSSetAddresses(DNSDesc_t *pDNSdesc);
 static void F_mDNSResponder(DNSDesc_t *pDNSdesc);
-static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_t cElement, uint8_t cDepth, DNSDesc_t *pDNSdesc);
+static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, uint8_t cElement, DNSDesc_t *pDNSdesc);
 static size_t F_mDNSSDFormatServiceInstance(char *string, size_t strSize );
 static MDNSD_ERR_CODE F_mDNSHostRegister( char *host_name,DNSDesc_t *pDNSdesc);
 static void F_mDNSFillHostRecord(DNSDesc_t *pDNSdesc);
@@ -412,6 +412,52 @@ static TCPIP_SIGNAL_HANDLE   mdnsSignalHandle = NULL;  // mDNS asynchronous hand
 /////////////////////////////////////////
 
 
+// debugging helpers
+#if (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_DECOMP_NAME) != 0
+static void F_DbgMdns_DecompName(const char* caller, const char* decompName, uint16_t rec_len)
+{
+    const char* printName;
+
+    if(decompName == NULL || *decompName == '\0')
+    {
+       printName = "None";
+    }
+    else
+    {
+        printName = decompName; 
+    }
+    SYS_CONSOLE_PRINT("%s - rec_len: %d, @decompName: %s\r\n", caller, rec_len, printName);
+}
+#else
+#define F_DbgMdns_DecompName(caller, decompName, rec_len)
+#endif  // (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_DECOMP_NAME) != 0
+
+#if (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_COMPRESS_DEPTH) != 0
+static void F_DbgMdns_CompressDepth(const char* caller, uint16_t cDepth, uint16_t offset)
+{
+    SYS_CONSOLE_PRINT("%s FOLLOW - cDepth: %d, offset: %d\r\n", caller, cDepth, offset);
+}
+#else
+#define F_DbgMdns_CompressDepth(caller, cDepth, offset)
+#endif  // (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_COMPRESS_DEPTH) != 0
+
+#if (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_DISCARD) != 0
+static void F_DbgMdns_Discard(const char* caller, uint16_t discardLen)
+{
+    SYS_CONSOLE_PRINT("%s - discardLen: %d\r\n", caller, discardLen);
+}
+#else
+#define F_DbgMdns_Discard(caller, rec_len)
+#endif  // (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_DISCARD) != 0
+
+#if (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_TRACE_CALL) != 0
+static void F_Dbg_Mdns_DecompTrace(const char* target, const char* caller, int lineNo)
+{
+    SYS_CONSOLE_PRINT("%s called by %s in line: %d\r\n", target, caller, lineNo);
+}
+#else
+#define F_Dbg_Mdns_DecompTrace(target, caller, lineNo)
+#endif  // (TCPIP_MDNS_DEBUG_MASK & TCPIP_MDNS_DEBUG_TRACE_CALL) != 0
 
 
 /************* Local String Functions ******************/
@@ -1476,7 +1522,7 @@ static uint16_t F_mDNSFetch(uint16_t wOffset, uint16_t wLen, uint8_t *pcString,D
 
 /***************************************************************
   Function:
-   static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_t cElement, uint8_t cDepth)
+   static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, uint8_t cElement, DNSDesc_t *pDNSdesc)
 
   Summary:
    Read a string from a resource record, from the Multicast-DNS socket buffer.
@@ -1488,13 +1534,8 @@ static uint16_t F_mDNSFetch(uint16_t wOffset, uint16_t wLen, uint8_t *pcString,D
     String may be reconstructed through decompression if necessary.
    Decompression pointer traversal is done in place, recursively, in UDP's RxBuffer.
 
-   cDepth represents the recursion depth, for debugging purpose.
-
    cElement represents the number of elements in the string. For example,
     "ezconfig._http._tcp.local" has 4 elements.
-
-   bFollowPtr indicates if DNS compression offset needs to be followed. That is, if
-   we should reconstruct a compressed string.
 
    The reconstructed string is placed in pcString, if it is not NULL.
 
@@ -1515,17 +1556,20 @@ static uint16_t F_mDNSFetch(uint16_t wOffset, uint16_t wLen, uint8_t *pcString,D
 
 // Note: the resursive form of the F_mDNSDeCompress is currently maintained for comparison/debugging purposes
 // it will be eventually removed
-#define M_MDNS_DECOMP_ENABLE_RECURSION     0
+#define M_MDNS_DECOMP_ENABLE_RECURSION    0
 
 #if (M_MDNS_DECOMP_ENABLE_RECURSION != 0)
-static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_t cElement, uint8_t cDepth, DNSDesc_t *pDNSdesc)
+static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, uint8_t cElement, DNSDesc_t *pDNSdesc)
 {
     uint16_t rr_len = 0U; // As is in the packet. Could be in compressed format.
     uint16_t startOffset, endOffset;
     uint8_t temp8;
     uint16_t offset_in_ptr, substr_len;
+    static uint16_t cDepth = 0;  // debugging purposes
 
     startOffset = wPos;
+    (void)cDepth;
+    cDepth++;
 
     while (true)
     {
@@ -1555,17 +1599,13 @@ static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr,
             (void)TCPIP_UDP_Get(pDNSdesc->mDNS_socket, &temp8);
             offset_in_ptr += temp8;
 
-            if (bFollowPtr)
-            {
-                cDepth++;
+            F_DbgMdns_CompressDepth(__func__, cDepth, offset_in_ptr);
 
-                TCPIP_UDP_RxOffsetSet(pDNSdesc->mDNS_socket, offset_in_ptr);
-                (void)F_mDNSDeCompress(offset_in_ptr, pcString, bFollowPtr, cElement, cDepth,pDNSdesc);
+            TCPIP_UDP_RxOffsetSet(pDNSdesc->mDNS_socket, offset_in_ptr);
+            F_Dbg_Mdns_DecompTrace("F_mDNSDeCompress", __func__, __LINE__);
+            (void)F_mDNSDeCompress(offset_in_ptr, pcString, cElement, pDNSdesc);
 
-                // compressed ptr is always the last element
-                break;
-            }
-
+            // compressed ptr is always the last element
             break;
         }
         else
@@ -1584,6 +1624,7 @@ static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr,
             else
             {   // discard
                 (void)TCPIP_UDP_ArrayGet(pDNSdesc->mDNS_socket, NULL, substr_len);
+                F_DbgMdns_Discard(__func__, substr_len);
             }
 
             cElement++;
@@ -1594,6 +1635,8 @@ static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr,
     endOffset = startOffset + rr_len;
     TCPIP_UDP_RxOffsetSet(pDNSdesc->mDNS_socket, endOffset);
 
+    F_DbgMdns_DecompName(__func__, pcString, rr_len);
+    cDepth--;
     return rr_len;
 }
 #else  // (M_MDNS_DECOMP_ENABLE_RECURSION == 0)
@@ -1614,24 +1657,20 @@ typedef enum
     DNS_DECOMP_STEP_ERROR,          // some error occurred
 }DNS_DECOMP_STEP;
 
-typedef union
-{
-    SGL_LIST_NODE*                  lNode;      // safe cast to SGL_LIST_NODE
-    struct S_tag_DNS_DECOMP_DCPT*   dcptNode;   // DECOMP next/node
-}U_DECOMP_DCPT_SGL_NODE;        
-
 typedef struct S_tag_DNS_DECOMP_DCPT
 {
-    U_DECOMP_DCPT_SGL_NODE      uNode;      // for a PROC node, next is always ADJUST
-                                            // for an ADJUST node, next is always ADJUST or NULL
-    uint16_t    wPos;           // PROC/ADJUST: current offset position in the UDP RX buffer
-    uint16_t    rr_len;         // PROC/ADJUST current RR len; this is used for the adjust offset stage
+
+    SGL_LIST_NODE   lNode;      // safe cast to SGL_LIST_NODE
+                                    // for a PROC node, next is always ADJUST
+                                    // for an ADJUST node, next is always ADJUST or NULL
     UDP_SOCKET  mDNS_socket;    // PROC/ADJUST
-    uint8_t     decompStep;     // PROC/ADJUST: current step to execute
+    uint16_t    wPos;           // PROC only: current offset position in the UDP RX buffer
+    uint16_t    rr_len;         // set by PROC; used by ADJUST
+                                //      current RR len; this is used for the adjust offset stage
+    uint16_t    startOffset;    // ADJUST: start offset in the UDP RX buffer to adjust
+    uint8_t     decompStep;     // PROC/ADJUST: current step to execute; a DNS_DECOMP_STEP value
                                 // also used to signal an error if == DNS_DECOMP_STEP_ERROR
     uint8_t     cElement;       // PROC only
-    uint8_t     cDepth;         // PROC only
-    uint8_t     bFollowPtr;     // PROC only
     char*       pcString;       // PROC only
 }DNS_DECOMP_DCPT;
 
@@ -1643,6 +1682,19 @@ static DNS_DECOMP_DCPT  dns_decomp_pool[M_MDNS_DECOMP_DEPTH];
 static SINGLE_LIST decompFreeList;      // list of DNS_DECOMP_DCPT holding available decompress requests
 static SINGLE_LIST decompBusyList;      // list of DNS_DECOMP_DCPT holding active decompress requests
 
+// conversion helpers
+static DNS_DECOMP_DCPT* FC_SglNode2Dcpt(SGL_LIST_NODE* pNode)
+{
+    union
+    {
+        SGL_LIST_NODE*      pNode;
+        DNS_DECOMP_DCPT*    pDcpt;
+    }U_NODE_DCPT;
+
+    U_NODE_DCPT.pNode = pNode;
+    return U_NODE_DCPT.pDcpt;
+} 
+
 static void F_Decomp_InitPool(void)
 {
     size_t ix;
@@ -1653,22 +1705,19 @@ static void F_Decomp_InitPool(void)
     DNS_DECOMP_DCPT* pDcpt = dns_decomp_pool;
     for(ix = 0; ix < sizeof(dns_decomp_pool) / sizeof(*dns_decomp_pool); ix++)
     {
-        TCPIP_Helper_SingleListTailAdd(&decompFreeList, pDcpt->uNode.lNode);
+        TCPIP_Helper_SingleListTailAdd(&decompFreeList, &pDcpt->lNode);
         pDcpt++;
     } 
 }
 
-// pushes a new (PROC, ADJUST) request to the stack
-static bool F_Decomp_Push(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_t cElement, uint8_t cDepth, UDP_SOCKET mDNS_socket)
+// pushes a new (PROC, ADJUST) request to the stack head
+// needed at head, so I can have D + (D, A) + A!
+static bool F_Decomp_Push(uint16_t wPos, char *pcString, uint8_t cElement, UDP_SOCKET mDNS_socket)
 {
-    // get an adjust node
-    U_DECOMP_DCPT_SGL_NODE uDcpt;
-    uDcpt.lNode = TCPIP_Helper_SingleListHeadRemove(&decompFreeList);
-    DNS_DECOMP_DCPT* pAdjust = uDcpt.dcptNode; 
+    // get a (proc, adjust) pair
+    DNS_DECOMP_DCPT* pAdjust = FC_SglNode2Dcpt(TCPIP_Helper_SingleListHeadRemove(&decompFreeList));
+    DNS_DECOMP_DCPT* pProc = FC_SglNode2Dcpt(TCPIP_Helper_SingleListHeadRemove(&decompFreeList));
 
-    // get a proc node
-    uDcpt.lNode = TCPIP_Helper_SingleListHeadRemove(&decompFreeList);
-    DNS_DECOMP_DCPT* pProc = uDcpt.dcptNode;
     if(pAdjust == NULL || pProc == NULL)
     {   // maximum allowable depth exceeded
         TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
@@ -1686,13 +1735,11 @@ static bool F_Decomp_Push(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_
     pProc->decompStep = (uint8_t)DNS_DECOMP_STEP_PROC;
     pProc->wPos = wPos; 
     pProc->pcString = pcString; 
-    pProc->bFollowPtr = (uint8_t)bFollowPtr;
     pProc->cElement = cElement;
-    pProc->cDepth = cDepth;
     pProc->mDNS_socket = mDNS_socket;
 
-    TCPIP_Helper_SingleListHeadAdd(&decompBusyList, pAdjust->uNode.lNode);
-    TCPIP_Helper_SingleListHeadAdd(&decompBusyList, pProc->uNode.lNode);
+    TCPIP_Helper_SingleListHeadAdd(&decompBusyList, &pAdjust->lNode);
+    TCPIP_Helper_SingleListHeadAdd(&decompBusyList, &pProc->lNode);
 
     return true;
 }
@@ -1700,22 +1747,33 @@ static bool F_Decomp_Push(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_
 // DNS_DECOMP_STEP_ADJUST step
 static void F_DecompAdjust(DNS_DECOMP_DCPT* pDcpt)
 {
-    uint16_t endOffset = pDcpt->wPos + pDcpt->rr_len;
+    uint16_t endOffset = pDcpt->startOffset + pDcpt->rr_len;
     TCPIP_UDP_RxOffsetSet(pDcpt->mDNS_socket, endOffset);
 }
 
 // DNS_DECOMP_STEP_PROC step
 static void F_DecompProcess(DNS_DECOMP_DCPT* pDcpt)
 {
-    uint16_t rr_len = 0U; // As is in the packet. Could be in compressed format.
     uint8_t temp8;
     uint16_t offset_in_ptr, substr_len;
+    char *pcString;
+    DNS_DECOMP_DCPT* pAdjust;
+    static uint16_t cDepth = 0;  // debugging purposes
 
-    TCPIPStack_Assert(pDcpt->uNode.dcptNode != NULL && pDcpt->uNode.dcptNode->decompStep == (uint8_t)DNS_DECOMP_STEP_ADJUST, __FILE__, __func__, __LINE__);
+    (void)cDepth;
+    cDepth++;
 
+    pAdjust = FC_SglNode2Dcpt(pDcpt->lNode.next);
+    TCPIPStack_Assert(pAdjust != NULL, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(pAdjust->decompStep == (uint8_t)DNS_DECOMP_STEP_ADJUST, __FILE__, __func__, __LINE__);
+
+    pAdjust->rr_len = 0;
+    pAdjust->startOffset = pDcpt->wPos;
+
+    pcString = pDcpt->pcString;     // just local meaning
     while (true)
     {
-        rr_len++;
+        pAdjust->rr_len++;
         if(TCPIP_UDP_Get(pDcpt->mDNS_socket, &temp8) == 0U)
         {
             break;
@@ -1724,9 +1782,9 @@ static void F_DecompProcess(DNS_DECOMP_DCPT* pDcpt)
         substr_len = (uint16_t)temp8;
         if(substr_len == 0u)
         {
-            if (pDcpt->pcString != NULL)
+            if (pcString != NULL)
             {
-                *pDcpt->pcString++ = '\0';
+                *pcString++ = '\0';
             }
             break;
         }
@@ -1737,56 +1795,52 @@ static void F_DecompProcess(DNS_DECOMP_DCPT* pDcpt)
             offset_in_ptr = offset_in_ptr << 8;
 
             /* Remove label-ptr byte */
-            rr_len++;
+            pAdjust->rr_len++;
             (void)TCPIP_UDP_Get(pDcpt->mDNS_socket, &temp8);
             offset_in_ptr += temp8;
 
-            if (pDcpt->bFollowPtr != 0U)
-            {
-                TCPIP_UDP_RxOffsetSet(pDcpt->mDNS_socket, offset_in_ptr);
-                // prepare the data for the ADJUST step!
-                DNS_DECOMP_DCPT* pAdjust = pDcpt->uNode.dcptNode;
-                pAdjust->wPos = pDcpt->wPos;
-                pAdjust->rr_len = rr_len;
-                // exec another proc step
-                // compressed ptr is always the last element
-                bool pushRes = F_Decomp_Push(offset_in_ptr, pDcpt->pcString, pDcpt->bFollowPtr != 0U, pDcpt->cElement, pDcpt->cDepth + 1U, pDcpt->mDNS_socket);
-                if(pushRes == false)
-                {   // too deep
-                    TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
-                    pDcpt->decompStep = (uint8_t)DNS_DECOMP_STEP_ERROR;
-                }
+            TCPIP_UDP_RxOffsetSet(pDcpt->mDNS_socket, offset_in_ptr);
+            // exec another proc step
+            // compressed ptr should always be the last element
+            F_DbgMdns_CompressDepth(__func__, cDepth, offset_in_ptr);
+            bool pushRes = F_Decomp_Push(offset_in_ptr, pcString, pDcpt->cElement, pDcpt->mDNS_socket);
+            if(pushRes == false)
+            {   // too deep
+                TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+                pDcpt->decompStep = (uint8_t)DNS_DECOMP_STEP_ERROR;
             }
             break;
         }
         else
         {
-            if (pDcpt->pcString != NULL)
+            if (pcString != NULL)
             {
                 if (pDcpt->cElement > 0U)
                 {
                     // not the first element in name
-                    *pDcpt->pcString++ = '.';
+                    *pcString++ = '.';
                 }
 
-                (void)TCPIP_UDP_ArrayGet(pDcpt->mDNS_socket, (uint8_t*)pDcpt->pcString, substr_len);
-                pDcpt->pcString += substr_len;
+                (void)TCPIP_UDP_ArrayGet(pDcpt->mDNS_socket, (uint8_t*)pcString, substr_len);
+                pcString += substr_len;
             }
             else
             {   // discard
                 (void)TCPIP_UDP_ArrayGet(pDcpt->mDNS_socket, NULL, substr_len);
+                F_DbgMdns_Discard(__func__, substr_len);
             }
 
             pDcpt->cElement++;
-            rr_len += substr_len;
+            pAdjust->rr_len += substr_len;
         }
     }
+    cDepth--;
 }
 
-static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr, uint8_t cElement, uint8_t cDepth, DNSDesc_t *pDNSdesc)
+static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, uint8_t cElement, DNSDesc_t *pDNSdesc)
 {
     F_Decomp_InitPool();
-    bool pushRes = F_Decomp_Push(wPos, pcString, bFollowPtr, cElement, cDepth, pDNSdesc->mDNS_socket);
+    bool pushRes = F_Decomp_Push(wPos, pcString, cElement, pDNSdesc->mDNS_socket);
 
     if(pushRes == false)
     {   // the 1st push should NOT fail
@@ -1796,13 +1850,12 @@ static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr,
 
     uint8_t lastStep = (uint8_t)DNS_DECOMP_STEP_NONE;   // DNS_DECOMP_STEP
     uint16_t last_rr = 0xffffU;
+    char* lastPcString = NULL;
 
     DNS_DECOMP_DCPT* pDcpt;
     while(true)
     {
-        U_DECOMP_DCPT_SGL_NODE uDcpt;
-        uDcpt.lNode = TCPIP_Helper_SingleListHeadRemove(&decompBusyList);
-        pDcpt = uDcpt.dcptNode;
+        pDcpt = FC_SglNode2Dcpt(TCPIP_Helper_SingleListHeadRemove(&decompBusyList));
 
         if(pDcpt == NULL)
         {   // done
@@ -1818,6 +1871,7 @@ static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr,
         else if(pDcpt->decompStep == (uint8_t)DNS_DECOMP_STEP_PROC)
         {
             F_DecompProcess(pDcpt);
+            lastPcString = pDcpt->pcString;
         }
         else
         {
@@ -1825,11 +1879,13 @@ static uint16_t F_mDNSDeCompress(uint16_t wPos, char *pcString, bool bFollowPtr,
         }
         lastStep = pDcpt->decompStep;
         last_rr = pDcpt->rr_len;
-        TCPIP_Helper_SingleListTailAdd(&decompFreeList, pDcpt->uNode.lNode);
+        TCPIP_Helper_SingleListTailAdd(&decompFreeList, &pDcpt->lNode);
     }
 
     // done
     TCPIPStack_Assert(lastStep == (uint8_t)DNS_DECOMP_STEP_ADJUST, __FILE__, __func__, __LINE__);
+    (void)lastPcString;
+    F_DbgMdns_DecompName(__func__, lastPcString, last_rr);
     return last_rr;
 }
 
@@ -1900,7 +1956,8 @@ static uint8_t F_mDNSProcessIncomingRR(MDNS_RR_GROUP tag, MDNS_MSG_HEADER *pmDNS
 
     // NAME
     (void)memset(name, 0, sizeof(name));
-    len = F_mDNSDeCompress(pDNSdesc->mDNS_offset, name, true, 0, 0,pDNSdesc);
+    F_Dbg_Mdns_DecompTrace("F_mDNSDeCompress", __func__, __LINE__);
+    len = F_mDNSDeCompress(pDNSdesc->mDNS_offset, name, 0, pDNSdesc);
     pDNSdesc->mDNS_offset += len;
 
     // TYPE & CLASS
@@ -1962,7 +2019,8 @@ static uint8_t F_mDNSProcessIncomingRR(MDNS_RR_GROUP tag, MDNS_MSG_HEADER *pmDNS
             case (uint16_t)QTYPE_PTR:
 
                 (void)memset(name, 0 , sizeof(name));
-                len = F_mDNSDeCompress(pDNSdesc->mDNS_offset, name, true, 0, 0,pDNSdesc);
+                F_Dbg_Mdns_DecompTrace("F_mDNSDeCompress", __func__, __LINE__);
+                len = F_mDNSDeCompress(pDNSdesc->mDNS_offset, name, 0, pDNSdesc);
                 pDNSdesc->mDNS_offset += len;
 
                 break;
@@ -1979,7 +2037,8 @@ static uint8_t F_mDNSProcessIncomingRR(MDNS_RR_GROUP tag, MDNS_MSG_HEADER *pmDNS
                 pDNSdesc->mDNS_offset += 6U;
 
                 (void)memset(name, 0 , sizeof(name));
-                len = F_mDNSDeCompress(pDNSdesc->mDNS_offset, name, true, 0, 0,pDNSdesc);
+                F_Dbg_Mdns_DecompTrace("F_mDNSDeCompress", __func__, __LINE__);
+                len = F_mDNSDeCompress(pDNSdesc->mDNS_offset, name, 0, pDNSdesc);
                 pDNSdesc->mDNS_offset += len;
 
                 break;

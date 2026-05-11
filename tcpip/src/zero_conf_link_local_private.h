@@ -173,6 +173,15 @@ typedef struct
 } ZCLL_NET_HANDLE;
 
 
+// extra debugging for mDNS
+#define TCPIP_MDNS_DEBUG_DECOMP_NAME    0x01    // show decompressed names
+#define TCPIP_MDNS_DEBUG_COMPRESS_DEPTH 0x02    // show recursive/compressed calls
+#define TCPIP_MDNS_DEBUG_DISCARD        0x04    // show discarded data
+#define TCPIP_MDNS_DEBUG_TRACE_CALL     0x08    // show calls trace
+
+
+
+#define TCPIP_MDNS_DEBUG_MASK                   (0)
 
 
 #endif
