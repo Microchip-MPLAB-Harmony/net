@@ -327,7 +327,7 @@ SYS_MODULE_OBJ MAC_DRVR_Initialize( const SYS_MODULE_INDEX index, const SYS_MODU
     pMacDrvr->controlFlags = macControl->controlFlags;
     pMacDrvr->dataOffset = (macControl->controlFlags & (uint16_t)TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) != 0U ? 2U : 0U;
     pMacDrvr->pktRetrF = macControl->retrieveF;
-    pMacDrvr->retrParam = macControl->retrParam;
+    pMacDrvr->retrParam = macControl->retrieveParam;
 
     // copy the configuration data
     pMacDrvr->config = *initData;

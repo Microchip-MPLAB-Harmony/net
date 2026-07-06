@@ -81,17 +81,12 @@ typedef enum
     MAC_EV_RETRYLIMITEXCEED     = EMAC_ISR_RLEX_Msk,                        // 0x0020
     MAC_EV_TXFRAMECORRUPT       = EMAC_ISR_TXERR_Msk,                       // 0x0040
     MAC_EV_TXCOMPLETE           = EMAC_ISR_TCOMP_Msk,                       // 0x0080
-    MAC_EV_LINK                 = EMAC_ISR_LINK_Msk,                        // 0x0100
     MAC_EV_RXOVERRUN            = EMAC_ISR_ROVR_Msk,                        // 0x0200
     MAC_EV_HRESPNOTOK           = EMAC_ISR_HRESP_Msk,                       // 0x0400
     MAC_EV_PAUSEFRAMENZRECV     = EMAC_ISR_PFRE_Msk,                        // 0x0800
     MAC_EV_PAUSETIMEZERO        = EMAC_ISR_PTZ_Msk,                         // 0x1000
     MAC_EV_WAKE_ON_LAN          = EMAC_ISR_WOL_Msk,                         // 0x2000
     //
-    MAC_EV_IGNORED              = ( 0
-                                    | MAC_EV_MGMTFRAMESENT
-                                    | MAC_EV_LINK
-                                    ),
     MAC_EV_RX                   = ( 0
                                     | MAC_EV_WAKE_ON_LAN
                                     | MAC_EV_RXCOMPLETE
