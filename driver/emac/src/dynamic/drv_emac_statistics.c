@@ -51,7 +51,6 @@ static uint32_t macDrvrGetEmacLcol( emac_registers_t * pToMacRegs );
 static uint32_t macDrvrGetEmacMcf(  emac_registers_t * pToMacRegs );
 static uint32_t macDrvrGetEmacScf(  emac_registers_t * pToMacRegs );
 static uint32_t macDrvrGetEmacSte(  emac_registers_t * pToMacRegs );
-static uint32_t macDrvrGetEmacTpf(  emac_registers_t * pToMacRegs );
 static uint32_t macDrvrGetEmacTund( emac_registers_t * pToMacRegs );
 
 // Statistics register access
@@ -77,7 +76,6 @@ static const MAC_DRVR_HW_REG_DCPT macHwRegDcpt[] =
     { "Tx MCF : Multi Collision Frames    ", &macDrvrGetEmacMcf },
     { "Tx SCF : Single Collision Frames   ", &macDrvrGetEmacScf },
     { "Tx STE : SQE Test Errors           ", &macDrvrGetEmacSte },
-    { "Tx TPF : Transmitted Pause Frames  ", &macDrvrGetEmacTpf },
     { "Tx TUND: Transmit Under Runs       ", &macDrvrGetEmacTund },
 };
 
@@ -401,17 +399,6 @@ static uint32_t macDrvrGetEmacSte( emac_registers_t * pToMacRegs )
 #if CUMULATIVE_STATISTICS
     regTotal[ RegTotalEmacSte ] += lastCount;
     return regTotal[ RegTotalEmacSte ];
-#else
-    return lastCount;
-#endif
-}
-
-static uint32_t macDrvrGetEmacTpf( emac_registers_t * pToMacRegs )
-{
-    uint32_t lastCount = pToMacRegs->EMAC_TPF;
-#if CUMULATIVE_STATISTICS
-    regTotal[ RegTotalEmacTpf ] += lastCount;
-    return regTotal[ RegTotalEmacTpf ];
 #else
     return lastCount;
 #endif
