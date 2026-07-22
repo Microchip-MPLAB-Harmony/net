@@ -483,6 +483,7 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr )
         pMacDrvr->pRxDesc[ pMacDrvr->rxHardStop ].status.val = 0; // reset status value
         // assert seg load is properly aligned
         F_EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segBuffer & ~(EMAC_RX_ADDRESS_MASK)) == 0U, __func__, __LINE__);
+        DCACHE_INVALIDATE_BY_ADDR( FC_U8Ptr2U32Ptr(pMacPacket->pDSeg->segBuffer), (int32_t)pMacDrvr->config.rxBufferSize );
         dataAddress = (uint32_t) pMacPacket->pDSeg->segBuffer;
         if( pMacDrvr->rxHardStop == (pMacDrvr->config.nRxDescCnt - 1U) )
         {
