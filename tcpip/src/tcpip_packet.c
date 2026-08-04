@@ -168,6 +168,13 @@ static bool F_CheckVlanPkt(TCPIP_MAC_PACKET* pPkt, int callCode)
 #endif // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VCHK_PKT) != 0) 
 #endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
 
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+
+static TCPIP_PKT_ACK_ERR_TRACE ackErrTraceTbl[23 + 1] = {0};    // save ack errors; last slot is for unexpected ACK result
+                                                                // the # of entries corresponds to the negative values of the tcpip_mac.h::TCPIP_MAC_PKT_ACK_RES
+                                                                // adjust as needed
+
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
 
 // API
 
@@ -224,6 +231,28 @@ void TCPIP_PKT_Deinitialize(void)
     pktMemH = NULL;
 }
 
+// size of the table, for export purposes (tcpip_commands
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+// returns a pointer to the internal table itself and size of the table
+// for export purposes (tcpip_commands may display this)
+const TCPIP_PKT_ACK_ERR_TRACE* F_AckErrTraceTbl(size_t* pTblSize)
+{
+    if(pTblSize != NULL)
+    {
+        *pTblSize = sizeof(ackErrTraceTbl) / sizeof(*ackErrTraceTbl);
+    }
+
+    return ackErrTraceTbl; 
+}
+
+// clears the error counters
+void F_AckErrTraceTblClear(void)
+{
+    memset(ackErrTraceTbl, 0, sizeof(ackErrTraceTbl));
+}
+
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+
 // acknowledges a packet
 // should setup the packet exacly as after allocation!
 static void F_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, TCPIP_STACK_MODULE moduleId)
@@ -232,6 +261,21 @@ static void F_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ac
     {
         pPkt->ackRes = (int8_t)ackRes;
     }
+
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+    if((int)ackRes < 0)
+    {
+        int ackIx = -(int)ackRes;
+        if(ackIx >= sizeof(ackErrTraceTbl) / sizeof(*ackErrTraceTbl) - 1)
+        {   // out of bounds
+            ackIx = sizeof(ackErrTraceTbl) / sizeof(*ackErrTraceTbl) - 1;
+        }
+        TCPIP_PKT_ACK_ERR_TRACE* pErrTrace = ackErrTraceTbl + ackIx;
+        pErrTrace->ackErrCount++;       // Increment the error count
+        pErrTrace->moduleMask |= (1 << (int)moduleId);
+    }
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+
 #if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0) 
     if((pPkt->pktFlags & (uint32_t)TCPIP_MAC_PKT_FLAG_TX) != 0U)
     {   // TX packet

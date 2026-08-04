@@ -584,6 +584,10 @@ static void F_CommandWsc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void F_CommandVlan(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
 
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+static void F_CommandAckError(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
@@ -713,6 +717,9 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
     {"vlan",        &F_CommandVlan,                  ": VLAN commands"},
 #endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+    {"ackerr",        &F_CommandAckError,           ": ACK errors"},
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
 };
 
 #if defined(M_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((M_TCPIP_STACK_DOWN_OPERATION != 0) || (M_TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
@@ -9792,6 +9799,46 @@ static void F_CommandVlan(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #endif // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_VSTAT) != 0) 
 #endif  // (M_TCPIP_STACK_VLAN_INTERFACE_SUPPORT != 0)
 
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+static void F_CommandAckError(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // ackerr <clr>
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    bool doClear = false;
+    if(argc > 1 && strcmp(argv[1], "clr") == 0)
+    {
+        doClear = true;
+    }
+
+    size_t errTblSize;
+    const TCPIP_PKT_ACK_ERR_TRACE* pAckErrTrace = F_AckErrTraceTbl(&errTblSize);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "ackErrTblSize: %d\r\n", errTblSize);
+    uint32_t errCnt;
+    size_t ix;
+    size_t foundCnt = 0;
+    for(ix = 0; ix < errTblSize; ix++)
+    {
+        errCnt = pAckErrTrace->ackErrCount;
+        if(errCnt != 0)
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t ix: %d, errCnt: %d, moduleMask: 0x%04x\r\n", ix, errCnt, pAckErrTrace->moduleMask);
+            foundCnt++;
+        }
+        pAckErrTrace++;
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "ackerr done - found %d errors\r\n", foundCnt);
+
+
+    if(doClear)
+    {
+        F_AckErrTraceTblClear();
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "counters cleared\r\n");
+    }
+}
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 

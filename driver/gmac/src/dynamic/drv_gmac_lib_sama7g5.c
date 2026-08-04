@@ -468,10 +468,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
             
             if(pPacket != NULL)
             {
-                uint32_t segBuffer = (uint32_t)(pPacket->pDSeg->segBuffer) & GMAC_RX_ADDRESS_MASK;   // should be 4-byte aligned                
-                // Invalidate Cache : at address 'segBuffer' and for Cache line size
-                // 'segBuffer' is a Cache Aligned address
-                DCACHE_INVALIDATE_BY_ADDR((uint32_t *)segBuffer, (int32_t)CACHE_LINE_SIZE);
+                uint32_t segBuffer = (uint32_t)(pPacket->pDSeg->segBuffer) & GMAC_RX_ADDRESS_MASK;   // should be Cache Aligned address  
+                // Invalidate Cache : at address 'segBuffer' and for the RX buffer size
+                DCACHE_INVALIDATE_BY_ADDR((uint32_t *)segBuffer, (int32_t)pPacket->pDSeg->segSize);
                 
                 F_DRV_GMAC_RxLock(pMACDrv);
                 /* Reset status value. */

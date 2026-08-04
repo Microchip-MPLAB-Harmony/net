@@ -209,6 +209,26 @@ typedef struct
                                                                             // is not properly configured
                                                                             // probably a stack configuration packet
 
+// internal trace/debugging of the acknowledge errors 
+#define TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE    false
+
+#if (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+// simple ack error trace/counting; when TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE == true
+typedef struct
+{
+    uint32_t    ackErrCount;    // # or ack errors
+    uint32_t    moduleMask;     // binary mask of modules reporting the error: (1 <<  tcpip.h::TCPIP_STACK_MODULE)
+                                // only the internal stack modules supported
+}TCPIP_PKT_ACK_ERR_TRACE;
+
+// returns a pointer to the internal table itself and size of the table
+// for export purposes (tcpip_commands may display this)
+const TCPIP_PKT_ACK_ERR_TRACE*    F_AckErrTraceTbl(size_t* pTblSize);
+
+// clears the error counters
+void F_AckErrTraceTblClear(void);
+#endif  // (TCPIP_PACKET_ACK_ERROR_TRACE_ENABLE != 0)
+
 
 // initialization API
 
