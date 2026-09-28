@@ -4269,7 +4269,7 @@ static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu
         pHdr = FC_U8Ptr2HdrBare(pFragPkt->pNetLayer);
         pHdr->TotalLength = TCPIP_Helper_htons(ipv4HeaderSize + currFragSize);
         fragInfo.val = 0;
-        fragInfo.fragOffset = (uint8_t)(FC_PtrDiff2UI16(pIpv4Load - pMacPkt->pTransportLayer) / 8U); 
+        fragInfo.fragOffset = (uint16_t)(FC_PtrDiff2UI16(pIpv4Load - pMacPkt->pTransportLayer) / 8U);
         if(ix != nFrags - 1U)
         {
             fragInfo.MF = 1U;
