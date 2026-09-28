@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="net">
     <Dependencies>
-        <Dependency name="core" version="v3.16.2"/>
-        <Dependency name="csp" version="v3.25.1"/>
+        <Dependency name="core" version="v3.17.1"/>
+        <Dependency name="csp" version="v3.26.1"/>
         <Dependency name="bsp" version="v3.25.0"/>
-        <Dependency name="crypto" version="v3.8.2"/>
+        <Dependency name="crypto" version="v3.9.0"/>
         <Dependency name="wolfMQTT" version="v1.19.2"/>
         <Dependency name="harmony-services" version="v1.5.0"/>
     </Dependencies>
