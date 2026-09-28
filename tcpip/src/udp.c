@@ -2908,7 +2908,7 @@ uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET hUDP, uint8_t *cData, uint16_t wDataLen)
                 if(pFrag != NULL)
                 {   // there is another fragment
                     pSkt->pCurrRxSeg = pFrag->pDSeg;
-                    pSkt->rxSegLen = pFrag->totTransportLen;
+                    pSkt->rxSegLen = pFrag->pDSeg->segLen;
                     pSkt->rxCurr = pFrag->pTransportLayer;
                 } 
 #endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
