@@ -13,6 +13,8 @@
 
         | Module               | Description |
         | -------------------- | ----------- |
+        | UDP                  | Bug fixed when fragmentation is enabled |
+        | IPv4                 | Bug fixed when fragmentation is enabled |
         | Ethernet MAC Drivers | GMAC and EMAC - Fixed the cache synchronization issue in the RX path and added ACK error trace |
         |                      | EMAC - Updated the driver to be in-synch with the DFP |
         | ZEROCONF (mDNS)      | Bug fixes and enabled debugging features |
