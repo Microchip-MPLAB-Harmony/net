@@ -646,6 +646,7 @@ static void TCPIP_ZCLL_Process(void)
     char zeroconf_dbg_msg[256];
 #endif
 
+    uint32_t ipv4_llbase = IPV4_LLBASE();
     uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet(); 
     for(netIx = 0; netIx < TCPIP_STACK_NumberOfNetworksGet(); netIx++)
     {
@@ -803,7 +804,7 @@ static void TCPIP_ZCLL_Process(void)
 #endif  // CONFIG_TCPIP_ZC_WARN_ZCLL(TCPIP_ZC_INFO_ZCLL)
                             WARN_ZCLL_PRINT((char *)zeroconf_dbg_msg);
                             // First probe, if the default IP is a valid IPv4 LL then use it.
-                            hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, (uint32_t)IPV4_LLBASE, (uint32_t)IPV4_LLBASE + 0xfdffUL);
+                            hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, ipv4_llbase, ipv4_llbase + 0xfdffUL);
                         }
                         else
                         {
@@ -814,7 +815,7 @@ static void TCPIP_ZCLL_Process(void)
                     }
                     else
                     {
-                        hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, (uint32_t)IPV4_LLBASE, (uint32_t)IPV4_LLBASE + 0xfdffUL);
+                        hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, ipv4_llbase, ipv4_llbase + 0xfdffUL);
                     }
 
 #if defined(TCPIP_ZC_INFO_ZCLL)
@@ -911,7 +912,7 @@ static void TCPIP_ZCLL_Process(void)
                 {
                     // Claim it. Goto DEFEND state
                     IPV4_ADDR   zcllMask;
-                    zcllMask.Val = IPV4_LLBASE_MASK;
+                    zcllMask.Val = IPV4_LLBASE_MASK();
                     TCPIPStackSetConfigAddress(pNetIf, &hZcll->temp_IP_addr, &zcllMask, NULL, false);
                     hZcll->zcll_state = SM_ADDR_DEFEND;
 #if defined(TCPIP_ZC_INFO_ZCLL)
@@ -1002,7 +1003,7 @@ static void TCPIP_ZCLL_Process(void)
                 TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
 
                 // Need New Addr
-                hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, (uint32_t)IPV4_LLBASE, (uint32_t)IPV4_LLBASE + 0xfdffUL);
+                hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, ipv4_llbase, ipv4_llbase + 0xfdffUL);
                 hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl((uint32_t) hZcll->temp_IP_addr.Val);
 
                 hZcll->zcll_state = SM_ADDR_INIT;

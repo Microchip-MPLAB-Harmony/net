@@ -34,7 +34,6 @@ Microchip or any third party.
 */
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_FTP_SERVER
-#include <stdarg.h>
 
 #include "tcpip/src/tcpip_private.h"
 

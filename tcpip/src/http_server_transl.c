@@ -40,7 +40,6 @@ Microchip or any third party.
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_HTTP_SERVER_V2
 
 #include <stdio.h>
-#include <stdarg.h>
 #include <string.h>
 
 #include "tcpip/src/tcpip_private.h"

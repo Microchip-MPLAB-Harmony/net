@@ -55,7 +55,7 @@ Microchip or any third party.
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
 {
     *certPtr = ${NET_PRES_BLOB_CLIENT_CERT_VARIABLE};
-    *certSize = ${NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE};
+    *certSize = (int32_t)${NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE};
     return true;
 }
     </#if>
@@ -63,9 +63,9 @@ bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, 
 bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
 {
     *serverCertPtr = ${NET_PRES_BLOB_SERVER_CERT_VARIABLE};
-    *serverCertSize = ${NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE};
+    *serverCertSize = (int32_t)${NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE};
     *serverKeyPtr = ${NET_PRES_BLOB_SERVER_KEY_VARIABLE};
-    *serverKeySize = ${NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE};
+    *serverKeySize = (int32_t)${NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE};
     return true;
 }
     </#if>
@@ -85,7 +85,7 @@ bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, int32_t * ce
 {
 <#if (NET_PRES_BLOB_CERT_REPO && NET_PRES_BLOB_CLIENT_SUPPORT && NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT)>    
     *certPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_VARIABLE};
-    *certSize = ${NET_PRES_BLOB_CLIENT_DEVICE_CERT_LEN_VARIABLE};
+    *certSize = (int32_t)${NET_PRES_BLOB_CLIENT_DEVICE_CERT_LEN_VARIABLE};
     *pvtKeyPtr = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_VARIABLE};
     *pvtKeySize = ${NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_LEN_VARIABLE};
     return true;
