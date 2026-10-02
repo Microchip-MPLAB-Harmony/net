@@ -18,6 +18,7 @@
         | Ethernet MAC Drivers | GMAC and EMAC - Fixed the cache synchronization issue in the RX path and added ACK error trace |
         |                      | EMAC - Updated the driver to be in-synch with the DFP |
         | ZEROCONF (mDNS)      | Bug fixes and enabled debugging features |
+        | Multiple Modules     | Fixed the MISRA C Violations |
 
 ### TESTED WITH:
 
