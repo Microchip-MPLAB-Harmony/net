@@ -111,8 +111,8 @@ typedef enum
 #define DEFEND_INTERVAL     TCPIP_ZC_LL_DEFEND_INTERVAL /*seconds (min. wait between defensive ARPs)  */
 
 /* compilation constants */
-#define IPV4_LLBASE()       ((uint32_t)TCPIP_ZC_LL_IPV4_LLBASE) /* 169.254.1.0 */
-#define IPV4_LLBASE_MASK()  ((uint32_t)TCPIP_ZC_LL_IPV4_LLBASE_MASK) /* corresponding network mask */
+#define IPV4_LLBASE         TCPIP_ZC_LL_IPV4_LLBASE /* 169.254.1.0 */
+#define IPV4_LLBASE_MASK    TCPIP_ZC_LL_IPV4_LLBASE_MASK /* corresponding network mask */
 
 
 #define ZCLL_TASK_TICK_RATE TCPIP_ZC_LL_TASK_TICK_RATE     // task processing rate, ms

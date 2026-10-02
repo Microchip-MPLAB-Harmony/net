@@ -17,7 +17,7 @@
 -->
 
 <#--
-Copyright (C) 2014-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2026, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -60,8 +60,8 @@ Microchip or any third party.
 #define TCPIP_ZC_LL_MAX_CONFLICTS ${TCPIP_ZC_LL_MAX_CONFLICTS}
 #define TCPIP_ZC_LL_RATE_LIMIT_INTERVAL ${TCPIP_ZC_LL_RATE_LIMIT_INTERVAL}
 #define TCPIP_ZC_LL_DEFEND_INTERVAL ${TCPIP_ZC_LL_DEFEND_INTERVAL}
-#define TCPIP_ZC_LL_IPV4_LLBASE 0x${TCPIP_ZC_LL_IPV4_LLBASE}
-#define TCPIP_ZC_LL_IPV4_LLBASE_MASK 0x${TCPIP_ZC_LL_IPV4_LLBASE_MASK}
+#define TCPIP_ZC_LL_IPV4_LLBASE 0x${TCPIP_ZC_LL_IPV4_LLBASE}UL
+#define TCPIP_ZC_LL_IPV4_LLBASE_MASK 0x${TCPIP_ZC_LL_IPV4_LLBASE_MASK}UL
 #define TCPIP_ZC_LL_TASK_TICK_RATE ${TCPIP_ZC_LL_TASK_TICK_RATE}
 	<#if TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG == true>
 #define TCPIP_STACK_USE_ZEROCONF_MDNS_SD
